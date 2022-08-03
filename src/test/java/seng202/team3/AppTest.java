@@ -25,4 +25,7 @@ public class AppTest {
     public void celiaExampleTest() {
         assertTrue(true);
     }
+
+    @Test
+    public void angusExampleTest() { assertTrue(true); }
 }
