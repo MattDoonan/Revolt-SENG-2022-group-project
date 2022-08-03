@@ -3,7 +3,11 @@ package seng202.team3.cucumber;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Basic step definitions for math operations as example cucumber tests
@@ -34,4 +38,5 @@ public class MathStepDefs {
     public void theResultIs(Integer resultIn) {
         Assertions.assertEquals(result, resultIn);
     }
+
 }
