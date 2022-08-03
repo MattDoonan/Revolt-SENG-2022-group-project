@@ -20,4 +20,9 @@ public class AppTest {
     public void harrisonExampleTest() {
         assertTrue(true);
     }
+
+    @Test
+    public void celiaExampleTest() {
+        assertTrue(true);
+    }
 }
