@@ -39,8 +39,4 @@ public class MathStepDefs {
         Assertions.assertEquals(result, resultIn);
     }
 
-    @Test
-    public void JamesTest() {
-        assertTrue(true);
-    }
 }
