@@ -1,5 +1,6 @@
 package seng202.team3;
 
+import jdk.jfr.StackTrace;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -25,4 +26,7 @@ public class AppTest {
     public void celiaExampleTest() {
         assertTrue(true);
     }
+
+    @Test
+    public void michelleTest() { assertTrue(true);}
 }
