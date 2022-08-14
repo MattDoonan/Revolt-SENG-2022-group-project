@@ -20,6 +20,16 @@ public class Connector {
     boolean inUse;
 
     /**
+     * Constructor for the connector
+     */
+    public Connector(String type, String power, boolean isOperational, boolean inUse) {
+        setType(type);
+        setPower(power);
+        setOperational(isOperational);
+        setInUse(inUse);
+    }
+
+    /**
      * Gets the type of the connector
      * 
      * @return the type of the connector
