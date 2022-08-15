@@ -6,9 +6,15 @@ import java.util.ArrayList;
  * Representation of chargers that users can find and connect vehicles to
  * 
  * @author Harrison Tyson
- * @version 1.0.0, Aug 22
+ * @version 1.0.1, Aug 22
  */
 public class Charger {
+    /** Unique identifier */
+    int chargerId;
+
+    /** When the charger was first available */
+    String dateOpened;
+
     /** {@link Connector Connectors} available on charger */
     ArrayList<Connector> connectors = new ArrayList<Connector>();
 
@@ -24,11 +30,23 @@ public class Charger {
     /** Business that manages the charger */
     String operator;
 
+    /** Business that owns the charger */
+    String owner;
+
     /** Accessible to the public */
     boolean isPublic;
 
     /** Has tourist attraction nearby */
     boolean hasAttraction;
+
+    /** Can be accessed 24 hours in the day */
+    boolean is24Hrs;
+
+    /** Has cost for parking */
+    boolean hasParkingCost;
+
+    /** Has cost for charging */
+    boolean hasChargeCost;
 
     /** Constructor for the Charger */
     public Charger(ArrayList<Connector> connectors, Coordinate location, int availableParks,
@@ -40,6 +58,42 @@ public class Charger {
         setOperator(operator);
         setPublic(isPublic);
         setHasAttraction(hasAttraction);
+    }
+
+    /**
+     * Get unique identifier for the charger
+     * 
+     * @return unique identification number
+     */
+    public int getChargerId() {
+        return chargerId;
+    }
+
+    /**
+     * Set unique identifier for the charger
+     * 
+     * @param chargerId unique identifier for the charger
+     */
+    public void setChargerId(int chargerId) {
+        this.chargerId = chargerId;
+    }
+
+    /**
+     * Get the date the charger was first opened
+     * 
+     * @return date first opened
+     */
+    public String getDateOpened() {
+        return dateOpened;
+    }
+
+    /**
+     * Set the date the charger was first opened
+     * 
+     * @param dateOpened date first opened
+     */
+    public void setDateOpened(String dateOpened) {
+        this.dateOpened = dateOpened;
     }
 
     /**
@@ -141,19 +195,27 @@ public class Charger {
         this.operator = operator;
     }
 
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
     /**
-     * Get the public availablity of the charger
+     * Get the public availability of the charger
      * 
-     * @return public availablity of the charger
+     * @return public availability of the charger
      */
     public boolean getPublic() {
         return isPublic;
     }
 
     /**
-     * Set the public availablity of the charger
+     * Set the public availability of the charger
      * 
-     * @param isPublic public availablity of the charger
+     * @param isPublic public availability of the charger
      */
     public void setPublic(boolean isPublic) {
         this.isPublic = isPublic;
@@ -175,5 +237,59 @@ public class Charger {
      */
     public void setHasAttraction(boolean hasAttraction) {
         this.hasAttraction = hasAttraction;
+    }
+
+    /**
+     * Get all day availability
+     * 
+     * @return bool indicating all day availability
+     */
+    public boolean getAvailable24Hrs() {
+        return is24Hrs;
+    }
+
+    /**
+     * Set all day availability
+     * 
+     * @param available24Hrs bool indicating all day availability
+     */
+    public void setAvailable24Hrs(boolean available24Hrs) {
+        is24Hrs = available24Hrs;
+    }
+
+    /**
+     * Get has a parking cost
+     * 
+     * @return bool indicating parking cost
+     */
+    public boolean getParkingCost() {
+        return hasParkingCost;
+    }
+
+    /**
+     * Set has a parking cost
+     * 
+     * @param parkingCost bool indicating parking cost
+     */
+    public void setParkingCost(boolean parkingCost) {
+        hasParkingCost = parkingCost;
+    }
+
+    /**
+     * Get has charge cost
+     * 
+     * @return bool indicating charging cost
+     */
+    public boolean getChargeCost() {
+        return hasChargeCost;
+    }
+
+    /**
+     * Set has charger cost
+     * 
+     * @param chargeCost bool indicating charging cost
+     */
+    public void setChargeCost(boolean chargeCost) {
+        hasChargeCost = chargeCost;
     }
 }
