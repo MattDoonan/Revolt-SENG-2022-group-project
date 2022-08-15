@@ -69,29 +69,32 @@ public class ChargerManagerTest {
     }
 
     /**
-     * distanceBetweenChargers test
+     * distanceBetweenChargers tests
      */
     @Test
-    public void testDistanceChargers() {
-        double distance1 = manager.distanceBetweenChargers(charger2);
-        double distance2 = manager.distanceBetweenChargers(charger3);
-        double distance3 = manager.distanceBetweenChargers(charger1);
-
-        manager.setSelectedCharger(charger3);
-
-        double distance4 = manager.distanceBetweenChargers(charger3);
+    public void testDistanceChargersSameLocation() {
+        double distance1 = manager.distanceBetweenChargers(charger1);
 
         //Checks if the distance from hospital to itself is 0
-        assertEquals(0.0,distance3, 0.001);
+        assertEquals(0.0, distance1, 0.001);
+    }
+
+    @Test
+    public void testDistanceChargersFurther() {
+        double distance1 = manager.distanceBetweenChargers(charger2);
+        double distance2 = manager.distanceBetweenChargers(charger3);
 
         //Checks if the distance from hospital to boys is less than hospital to grammar
         assertTrue(distance2 > distance1);
+    }
 
-        //Changes selected charger and checks if it's equal to itself
-        assertEquals(0.0,distance4, 0.001);
+    @Test
+    public void testDistanceChargersSensibleDistance() {
+        manager.setSelectedCharger(charger3);
+        double distance = manager.distanceBetweenChargers(charger1);
 
-        //Checks if distance2 is around 764km (results from online calculator)
-        assertEquals(764, distance2, 2.0);
+        //Checks if distance is around 764km (results from online calculator)
+        assertEquals(764, distance, 2.0);
     }
 
 }
