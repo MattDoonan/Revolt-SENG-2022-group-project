@@ -1,5 +1,8 @@
 package seng202.team3.data.entity;
 
+import com.opencsv.bean.CsvBindAndSplitByName;
+import com.opencsv.bean.CsvBindByName;
+import com.opencsv.bean.CsvRecurse;
 import java.util.ArrayList;
 
 /**
@@ -10,43 +13,59 @@ import java.util.ArrayList;
  */
 public class Charger {
     /** Unique identifier */
+    @CsvBindByName(column = "OBJECTID")
     int chargerId;
 
     /** When the charger was first available */
+    @CsvBindByName(column = "dateFirstOperational")
     String dateOpened;
 
     /** {@link Connector Connectors} available on charger */
-    ArrayList<Connector> connectors = new ArrayList<Connector>();
+    @CsvBindAndSplitByName(column = "connectorsList", elementType = Connector.class, splitOn = "},", converter = ConnectorConverter.class)
+    ArrayList<Connector> connectors;
 
     /** {@link Coordinate Coordinate} information for the charger */
+    @CsvRecurse
     Coordinate location;
 
     /** Number of parks available at the charger */
+    @CsvBindByName(column = "carParkCount")
     int availableParks;
 
     /** Maximum amount of time that can be spent at a charger */
+    // @CsvBindByName(column = "maxTimeLimit")
     Double timeLimit;
 
     /** Business that manages the charger */
+    @CsvBindByName(column = "operator")
     String operator;
 
     /** Business that owns the charger */
+    @CsvBindByName(column = "owner")
     String owner;
 
     /** Accessible to the public */
     boolean isPublic;
 
     /** Has tourist attraction nearby */
+    @CsvBindByName(column = "hasTouristAttraction")
     boolean hasAttraction;
 
     /** Can be accessed 24 hours in the day */
+    @CsvBindByName(column = "is24Hours")
     boolean is24Hrs;
 
     /** Has cost for parking */
+    @CsvBindByName(column = "hasCarparkCost")
     boolean hasParkingCost;
 
     /** Has cost for charging */
+    @CsvBindByName(column = "hasChargingCost")
     boolean hasChargeCost;
+
+    /** Empty constructor for CSV object builder */
+    public Charger() {
+    }
 
     /** Constructor for the Charger */
     public Charger(ArrayList<Connector> connectors, Coordinate location, int availableParks,
@@ -56,7 +75,7 @@ public class Charger {
         setAvailableParks(availableParks);
         setTimeLimit(timeLimit);
         setOperator(operator);
-        setPublic(isPublic);
+        setPublic(false); // TODO: retrieve from data once implemented
         setHasAttraction(hasAttraction);
     }
 

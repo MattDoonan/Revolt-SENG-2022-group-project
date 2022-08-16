@@ -11,22 +11,28 @@ public class Connector {
     String type;
 
     /** Type of current */
-    String power;
+    String current;
 
-    /** If it is able to be used */
-    boolean isOperational;
+    /** Power draw */
+    String powerDraw;
 
-    /** If it is currently in use */
-    boolean inUse;
+    /** Operational Status */
+    String status;
+
+    /**
+     * Number attached to {@link Charger charger}
+     */
+    int count;
 
     /**
      * Constructor for the connector
      */
-    public Connector(String type, String power, boolean isOperational, boolean inUse) {
+    public Connector(String type, String power, String status, String current, int count) {
         setType(type);
         setPower(power);
-        setOperational(isOperational);
-        setInUse(inUse);
+        setOperational(status);
+        setCurrent(current);
+        setCount(count);
     }
 
     /**
@@ -53,7 +59,7 @@ public class Connector {
      * @return style of current the connector uses
      */
     public String getPower() {
-        return power;
+        return powerDraw;
     }
 
     /**
@@ -62,43 +68,62 @@ public class Connector {
      * @param newPower value for the connector's power
      */
     public void setPower(String newPower) {
-        power = newPower;
+        powerDraw = newPower;
     }
 
     /**
      * Gets the operational status of the connector
      * 
-     * @return boolean indicating operational status
+     * @return operational status
      */
-    public boolean isOperational() {
-        return isOperational;
+    public String getStatus() {
+        return status;
     }
 
     /**
      * Sets the operational status of the connector
      * 
-     * @param newIsOperational new operational status
+     * @param newStatus new operational status
      */
-    public void setOperational(boolean newIsOperational) {
-        isOperational = newIsOperational;
+    public void setOperational(String newStatus) {
+        status = newStatus;
     }
 
     /**
-     * Gets the current use state of the connector
+     * Gets the current of the connector
      * 
-     * @return boolean indicating if the connector is being used
+     * @return current used by connector
      */
-    public boolean isInUse() {
-        return inUse;
+    public String getCurrent() {
+        return current;
     }
 
     /**
-     * Sets the current use state of the connector
+     * Sets the current of the connector
      * 
-     * @param newIsInUse new use state of the connector
+     * @param newCurrent new current of the connector
      */
-    public void setInUse(boolean newIsInUse) {
-        inUse = newIsInUse;
+    public void setCurrent(String newCurrent) {
+        current = newCurrent;
+    }
+
+    /**
+     * Gets the number of the connector attached to a {@link Charger charger}
+     * 
+     * 
+     * @return number of connectors
+     */
+    public int getCount() {
+        return count;
+    }
+
+    /**
+     * Sets the number of connectors attached to a {@link Charger charger}
+     * 
+     * @param newCount new number of connectors
+     */
+    public void setCount(int newCount) {
+        count = newCount;
     }
 
 }
