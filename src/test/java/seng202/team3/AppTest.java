@@ -15,14 +15,4 @@ public class AppTest {
     public void testApp() {
         assertTrue(true);
     }
-
-    @Test
-    public void harrisonExampleTest() {
-        assertTrue(true);
-    }
-
-    @Test
-    public void celiaExampleTest() {
-        assertTrue(true);
-    }
 }
