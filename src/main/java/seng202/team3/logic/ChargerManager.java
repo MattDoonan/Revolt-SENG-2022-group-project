@@ -1,7 +1,10 @@
 package seng202.team3.logic;
 
 import seng202.team3.data.entity.Charger;
+import seng202.team3.data.entity.Coordinate;
+
 import java.lang.Math;
+import java.util.ArrayList;
 
 import static java.lang.Math.cos;
 
@@ -52,6 +55,11 @@ public class ChargerManager {
         return 6378.8 * Math.acos(Math.sin(lat1) * Math.sin(lat2) + Math.cos(lat1) * Math.cos(lat2)
                 * cos(lon2-lon1));
 
+    }
+
+    public ArrayList<Charger> getNearbyChargers(ArrayList<Charger> chargers, Coordinate location, double distance) {
+        //TO DO
+        return null;
     }
 
 }

@@ -29,6 +29,7 @@ public class ChargerManagerTest {
     private Charger charger1;
     private Charger charger2;
     private Charger charger3;
+    private Charger charger4;
 
     /**
      * BeforeEach Charger, Coordinate and Connector setup
@@ -45,10 +46,13 @@ public class ChargerManagerTest {
         Coordinate coord2 = new Coordinate(3.5, 4.4, -43.52425, 172.60019);
         //Auckland Grammar School
         Coordinate coord3 = new Coordinate(4.5, 5.7, -36.85918, 174.76602);
+        //Otago Boys School
+        Coordinate coord4 = new Coordinate(4.8, 7.7, -45.87135, 170.49551);
 
         charger1 = new Charger(connectorList, coord1, 2, 1.2, "Hosp", true, true);
         charger2 = new Charger(connectorList, coord2, 2, 34.2, "Boys", true, false);
         charger3 = new Charger(connectorList, coord3, 3, 23.3, "Grammar", true, true);
+        charger4 = new Charger(connectorList, coord4, 6, 12.2, "Otago", true, false);
 
         manager = new ChargerManager(charger1);
     }
@@ -62,10 +66,12 @@ public class ChargerManagerTest {
         charger1 = null;
         charger2 = null;
         charger3 = null;
+        charger4 = null;
         assertNull(manager);
         assertNull(charger1);
         assertNull(charger2);
         assertNull(charger3);
+        assertNull(charger4);
     }
 
     /**
@@ -97,4 +103,24 @@ public class ChargerManagerTest {
         assertEquals(764, distance, 2.0);
     }
 
+    /**
+     * Tests for getNearbyChargers
+     */
+    @Test
+    public void testAllChargersNearLocation() {
+        manager.setSelectedCharger(charger1);
+        double distance = 400.0;
+
+        //Coordinate same as hospital
+        Coordinate coordinate = new Coordinate(1.1, 2.3,  -43.53418, 172.627572);
+
+        ArrayList<Charger> chargerList = new ArrayList<>();
+        chargerList.add(charger1);
+        chargerList.add(charger2);
+        chargerList.add(charger3);
+        chargerList.add(charger4);
+
+        ArrayList<Charger> filteredChargers = manager.getNearbyChargers(chargerList, coordinate, distance);
+        assertEquals(3, filteredChargers.size());
+    }
 }
