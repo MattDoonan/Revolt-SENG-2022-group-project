@@ -1,6 +1,7 @@
 package seng202.team3.data.database;
 
-import java.util.ArrayList;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * Interface for objects that interact with raw data storage
@@ -12,9 +13,12 @@ public interface DataManager {
     /**
      * Queries data from the relevant data source
      * 
-     * @param query data request
+     * @param query               data request
+     * @param objectToInterpretAs entity to convert data into
      * 
      * @return ArrayList of string records
+     * @throws IOException file cannot be read
      */
-    public ArrayList<String> readData(Query query);
+    public List<Object> readData(Query query, Class<?> objectToInterpretAs)
+            throws IOException;
 }
