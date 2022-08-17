@@ -8,22 +8,15 @@ import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
 
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import seng202.team3.services.CounterService;
 
 /**
  * Controller for the main.fxml window
@@ -51,7 +44,12 @@ public class MainController {
     @FXML
     private TextField searchBar;
 
-    
+    @FXML
+    private TextField searchCharger;
+
+    public List<Charger> chargerList = new ArrayList<Charger>();
+
+
     /**
      * Initialize the window
      *
@@ -60,7 +58,6 @@ public class MainController {
     public void init(Stage stage) {
         // List<String> values = Arrays.asList("one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve");
 
-        List<Charger> chargerList = new ArrayList<Charger>();
         chargerList.add(new Charger(new ArrayList<Connector>(), new Coordinate(34.0, 34.0, 34.0, 34.0, "here"), 12, 100.0, "Tesla", true, true));
         chargerList.add(new Charger(new ArrayList<Connector>(), new Coordinate(0.0, 100.0, 50.0, 50.0, "Ilam"), 1, 120.0, "New World", true, true));
         chargerList.add(new Charger(new ArrayList<Connector>(), new Coordinate(99.0, 53.0, 96.0, 27.0, "Auckland"), 24, 20.0, "Warehouse", true, false));
@@ -68,7 +65,7 @@ public class MainController {
         // List<Charger> chargerList = Arrays.asList(new Charger(ArrayList<Connector> connectors, Coordinate location, int availableParks,
         // Double timeLimit, String operator, boolean isPublic, boolean hasAttraction));
 
-        chargers.setItems(FXCollections.observableList(chargerList));
+        updateChargerList(chargerList);
 
         chargers.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
@@ -77,8 +74,23 @@ public class MainController {
                 chargerLabel.setText("Charger '" + chargers.getSelectionModel().getSelectedItem() + "' was selected.");
             }
         });
+        insetText();
+
     }
 
+    public void updateChargerList(List charge) {
+        chargers.setItems(FXCollections.observableList(charge));
+    }
+
+    /**
+     * Update for chargers when user searches
+     *
+     */
+    public void insetText() {
+        searchCharger.textProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println(searchCharger.getText());
+        });
+    }
 
     /**
      * Method to call when our counter button is clicked
