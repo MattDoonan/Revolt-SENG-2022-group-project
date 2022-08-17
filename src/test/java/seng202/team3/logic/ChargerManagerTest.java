@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for ChargerManager Class in Logic
+ * Unit tests for {@link ChargerManager} ChargerManager Class in Logic
  *
  * @author Michelle Hsieh
  * @version 1.0.0, Aug 22
@@ -100,7 +100,7 @@ public class ChargerManagerTest {
         double distance = manager.distanceBetweenChargers(charger1);
 
         //Checks if distance is around 764km (results from online calculator)
-        assertEquals(764, distance, 2.0);
+        assertEquals(764, distance, 0.2);
     }
 
     /**
@@ -122,5 +122,25 @@ public class ChargerManagerTest {
 
         ArrayList<Charger> filteredChargers = manager.getNearbyChargers(chargerList, coordinate, distance);
         assertEquals(3, filteredChargers.size());
+    }
+
+    @Test
+    public void sortedDistanceCorrectOrder() {
+        manager.setSelectedCharger(charger1);
+
+        double distance = 1000.0;
+        //Coordinate same as hospital
+        Coordinate coordinate = new Coordinate(1.1, 2.3,  -43.53418, 172.627572);
+
+        ArrayList<Charger> chargerList = new ArrayList<>();
+        chargerList.add(charger4);
+        chargerList.add(charger3);
+        chargerList.add(charger2);
+        chargerList.add(charger1);
+
+        ArrayList<Charger> filteredChargers = manager.getNearbyChargers(chargerList, coordinate, distance);
+
+        assertTrue(filteredChargers.get(0).equals(charger1) && filteredChargers.get(1).equals(charger2)
+                && filteredChargers.get(2).equals(charger4) && filteredChargers.get(3).equals(charger3));
     }
 }

@@ -5,6 +5,9 @@ import seng202.team3.data.entity.Coordinate;
 
 import java.lang.Math;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.lang.Math.cos;
 
@@ -46,20 +49,27 @@ public class ChargerManager {
      * @return double; the distance between chargers in kilometres.
      */
     public double distanceBetweenChargers(Charger toCharger) {
-        double lat1 = selectedCharger.getLocation().getLat()/(180/Math.PI);
-        double lon1 = selectedCharger.getLocation().getLon()/(180/Math.PI);
-        double lat2 = toCharger.getLocation().getLat()/(180/Math.PI);
-        double lon2 = toCharger.getLocation().getLon()/(180/Math.PI);
-
-        //The distance between the selectedCharger and another charger. Is this because the world is round.
-        return 6378.8 * Math.acos(Math.sin(lat1) * Math.sin(lat2) + Math.cos(lat1) * Math.cos(lat2)
-                * cos(lon2-lon1));
-
+        Coordinate location1 = selectedCharger.getLocation();
+        Coordinate location2 = toCharger.getLocation();
+        return (Calculations.calculateDistance(location1, location2));
     }
 
+    /**
+     * Returns the list of the closest chargers, in order from closest to furthest away.
+     *
+     * @param chargers {@link Charger} An ArrayList of Chargers
+     * @param location {@link Coordinate} A coordinate of the location to calculate distance from
+     * @param distance double, the maximum distance to filter chargers by
+     * @return ArrayList<Charger> of the {@link Charger} chargers sorted from closest to furthest away
+     */
     public ArrayList<Charger> getNearbyChargers(ArrayList<Charger> chargers, Coordinate location, double distance) {
-        //TO DO
-        return null;
+
+        List<Charger> sortedChargers = chargers.stream()
+                .filter(dist -> Calculations.calculateDistance(dist.getLocation(), location) <= distance)
+                .sorted(Comparator.comparingDouble(dist -> Calculations.calculateDistance(dist.getLocation(), location)))
+                .toList();
+
+        return (new ArrayList<>(sortedChargers));
     }
 
 }
