@@ -42,6 +42,9 @@ public class MainController {
     @FXML
     private Label chargerLabel;
 
+    @FXML
+    private TextField searchBar;
+
     
     /**
      * Initialize the window
