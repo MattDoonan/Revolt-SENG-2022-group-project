@@ -10,13 +10,13 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.MainController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.MainController">
    <children>
-      <Label fx:id="mapLabel" layoutX="333.0" layoutY="155.0" prefHeight="90.0" prefWidth="227.0" text="Pretend there's a really cool map displayed here" AnchorPane.leftAnchor="333.0" AnchorPane.topAnchor="155.0">
+      <Label fx:id="mapLabel" contentDisplay="CENTER" layoutX="270.0" layoutY="53.0" prefHeight="473.0" prefWidth="689.0" text="The Best Map EVER!!!!" textAlignment="CENTER" AnchorPane.leftAnchor="270.0" AnchorPane.topAnchor="53.0">
          <font>
-            <Font size="8.0" />
+            <Font size="28.0" />
          </font></Label>
-      <MenuBar layoutY="2.0" prefHeight="26.0" prefWidth="600.0">
+      <MenuBar layoutY="2.0" prefHeight="50.0" prefWidth="960.0">
         <menus>
           <Menu fx:id="homeMenu" mnemonicParsing="false" text="Home">
             <items>
@@ -41,12 +41,13 @@
         </menus>
       </MenuBar>
       <TextField fx:id="searchField" layoutX="14.0" layoutY="69.0" prefHeight="26.0" prefWidth="143.0" visible="false" />
-      <Label fx:id="chargerLabel" layoutX="14.0" layoutY="66.0" prefHeight="26.0" prefWidth="200.0" text="No charger selected" />
-      <TableView fx:id="chargers" layoutX="14.0" layoutY="107.0" prefHeight="279.0" prefWidth="244.0">
+      <Label fx:id="chargerLabel" layoutX="14.0" layoutY="115.0" prefHeight="98.0" prefWidth="250.0" text="No charger selected" />
+      <TableView fx:id="chargers" layoutX="14.0" layoutY="221.0" prefHeight="305.0" prefWidth="250.0">
         <columns>
           <TableColumn prefWidth="75.0" text="C1" />
           <TableColumn prefWidth="75.0" text="C2" />
         </columns>
       </TableView>
+      <TextField layoutX="14.0" layoutY="75.0" prefHeight="32.0" prefWidth="250.0" text="Search Charger" />
    </children>
 </AnchorPane>
