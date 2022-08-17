@@ -1,5 +1,6 @@
 package seng202.team3.gui;
 
+import javafx.collections.ObservableList;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
@@ -15,6 +16,7 @@ import javafx.stage.Stage;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 
+import javax.swing.table.TableColumn;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +35,9 @@ public class MainController {
     private TableView chargers;
 
     @FXML
+    private TableColumn chargerID;
+
+    @FXML
     private Button searchButton;
 
     @FXML
@@ -47,7 +52,7 @@ public class MainController {
     @FXML
     private TextField searchCharger;
 
-    public List<Charger> chargerList = new ArrayList<Charger>();
+    public List<String> chargerList = new ArrayList<String>();
 
 
     /**
@@ -57,18 +62,11 @@ public class MainController {
      */
     public void init(Stage stage) {
         // List<String> values = Arrays.asList("one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve");
-
-        chargerList.add(new Charger(new ArrayList<Connector>(), new Coordinate(34.0, 34.0, 34.0, 34.0, "here"), 12, 100.0, "Tesla", true, true));
-        chargerList.add(new Charger(new ArrayList<Connector>(), new Coordinate(0.0, 100.0, 50.0, 50.0, "Ilam"), 1, 120.0, "New World", true, true));
-        chargerList.add(new Charger(new ArrayList<Connector>(), new Coordinate(99.0, 53.0, 96.0, 27.0, "Auckland"), 24, 20.0, "Warehouse", true, false));
-
         // List<Charger> chargerList = Arrays.asList(new Charger(ArrayList<Connector> connectors, Coordinate location, int availableParks,
         // Double timeLimit, String operator, boolean isPublic, boolean hasAttraction));
-
+        makeTestChargers();
         updateChargerList(chargerList);
-
         chargers.setOnMouseClicked(new EventHandler<MouseEvent>() {
-
             @Override
             public void handle(MouseEvent event) {
                 chargerLabel.setText("Charger '" + chargers.getSelectionModel().getSelectedItem() + "' was selected.");
@@ -78,8 +76,15 @@ public class MainController {
 
     }
 
+    public void makeTestChargers() {
+        chargerList.add((new Charger(new ArrayList<Connector>(), new Coordinate(34.0, 32.0, 22.0, 33.0, "UC"), 14, 100.0, "Tesla", true, true)).getOperator());
+        chargerList.add((new Charger(new ArrayList<Connector>(), new Coordinate(44.0, 53.0, 34.0, 35.0, "Mc Donalds"), 10, 100.0, "Tesla", true, true)).getOperator());
+        chargerList.add((new Charger(new ArrayList<Connector>(), new Coordinate(42.0, 23.0, 32.0, 54.0, "BK"), 20, 100.0, "Tesla", true, true)).getOperator());
+        chargerList.add((new Charger(new ArrayList<Connector>(), new Coordinate(30.0, 43.0, 55.0, 44.0, "Target"), 55, 100.0, "Tesla", true, true)).getOperator());
+    }
+
     public void updateChargerList(List charge) {
-        chargers.setItems(FXCollections.observableList(charge));
+        // idk
     }
 
     /**

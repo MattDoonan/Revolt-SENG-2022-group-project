@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
@@ -11,7 +12,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="frame" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.MainController">
+<AnchorPane fx:id="frame" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.MainController">
    <children>
       <Label fx:id="mapLabel" contentDisplay="CENTER" layoutX="383.0" layoutY="53.0" prefHeight="474.0" prefWidth="577.0" text="       The Best Map EVER!!!!" textAlignment="CENTER" AnchorPane.leftAnchor="383.0" AnchorPane.topAnchor="53.0">
          <font>
@@ -41,17 +42,11 @@
       <TextField fx:id="searchField" layoutX="14.0" layoutY="69.0" prefHeight="26.0" prefWidth="143.0" visible="false" />
       <TableView fx:id="chargers" layoutX="14.0" layoutY="247.0" prefHeight="280.0" prefWidth="302.0">
         <columns>
-          <TableColumn fx:id="chargerID" prefWidth="75.0" text="ID/Name" />
-          <TableColumn fx:id="chargerLocation" prefWidth="75.0" text="Location" />
-            <TableColumn fx:id="chargerCost" prefWidth="75.0" text="Cost" />
-            <TableColumn fx:id="chargerTime" prefWidth="75.19999084472659" text="Time limit" />
+          <TableColumn fx:id="chargerID" prefWidth="301.0" text="Chargers" />
         </columns>
       </TableView>
       <TextField fx:id="searchCharger" layoutX="14.0" layoutY="75.0" prefHeight="32.0" prefWidth="302.0" text="Search Charger" />
-      <ScrollPane layoutX="14.0" layoutY="122.0" prefHeight="118.0" prefWidth="302.0">
-        <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="118.0" prefWidth="302.0" />
-        </content>
-      </ScrollPane>
+      <ScrollPane hbarPolicy="NEVER" layoutX="14.0" layoutY="122.0" prefHeight="118.0" prefWidth="302.0" vbarPolicy="ALWAYS" />
+      <ButtonBar layoutX="383.0" layoutY="181.0" prefHeight="40.0" prefWidth="200.0" />
    </children>
 </AnchorPane>
