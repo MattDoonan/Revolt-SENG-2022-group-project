@@ -1,17 +1,23 @@
 package seng202.team3.gui;
 
+import seng202.team3.data.entity.Charger;
+import seng202.team3.data.entity.Connector;
+import seng202.team3.data.entity.Coordinate;
 import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,7 +37,7 @@ public class MainController {
     // private Label defaultLabel;
 
     @FXML
-    private ListView chargers;
+    private TableView chargers;
 
     @FXML
     private Button searchButton;
@@ -52,8 +58,17 @@ public class MainController {
      * @param stage Top level container for this window
      */
     public void init(Stage stage) {
-        List<String> values = Arrays.asList("one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve");
-        chargers.setItems(FXCollections.observableList(values));
+        // List<String> values = Arrays.asList("one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve");
+
+        List<Charger> chargerList = new ArrayList<Charger>();
+        chargerList.add(new Charger(new ArrayList<Connector>(), new Coordinate(34.0, 34.0, 34.0, 34.0, "here"), 12, 100.0, "Tesla", true, true));
+        chargerList.add(new Charger(new ArrayList<Connector>(), new Coordinate(0.0, 100.0, 50.0, 50.0, "Ilam"), 1, 120.0, "New World", true, true));
+        chargerList.add(new Charger(new ArrayList<Connector>(), new Coordinate(99.0, 53.0, 96.0, 27.0, "Auckland"), 24, 20.0, "Warehouse", true, false));
+
+        // List<Charger> chargerList = Arrays.asList(new Charger(ArrayList<Connector> connectors, Coordinate location, int availableParks,
+        // Double timeLimit, String operator, boolean isPublic, boolean hasAttraction));
+
+        chargers.setItems(FXCollections.observableList(chargerList));
 
         chargers.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
