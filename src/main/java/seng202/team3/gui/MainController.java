@@ -1,6 +1,5 @@
 package seng202.team3.gui;
 
-import javafx.beans.property.ReadOnlyIntegerWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -15,11 +14,6 @@ import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.stage.Stage;
 
-import javafx.event.EventHandler;
-import javafx.scene.input.MouseEvent;
-
-import javax.swing.table.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.*;
 
@@ -35,8 +29,8 @@ public class MainController {
     // private Label defaultLabel;
 
 
-    @FXML
-    private ListView listOfChargers;
+    // @FXML
+    // private ListView listOfChargers;
 
     @FXML
     private TextField searchField;
@@ -48,7 +42,7 @@ public class MainController {
     private TextArea displayInfo;
 
     @FXML
-    private TableView table;
+    private TableView chargerTable;
 
     @FXML
     private TableColumn<Integer, String> operatorCol = new TableColumn<>("Operator");
@@ -62,19 +56,11 @@ public class MainController {
     @FXML
     private TableColumn<Integer, String> attractionCol = new TableColumn<>("Attraction");
 
-    @FXML
-    private TextArea textBox;
     
 
     public List<Charger> chargerList = new ArrayList<Charger>();
 
-    private ObservableList<Charger> chargerData =
-        FXCollections.observableArrayList(
-            new Charger(new ArrayList<Connector>(), new Coordinate(34.0, 32.0, 22.0, 33.0, "UC"), 14, 100.0, "Tesla", true, true),
-            new Charger(new ArrayList<Connector>(), new Coordinate(44.0, 53.0, 34.0, 35.0, "Mc Donalds"), 10, 100.0, "BMW", true, true),
-            new Charger(new ArrayList<Connector>(), new Coordinate(42.0, 23.0, 32.0, 54.0, "BK"), 20, 100.0, "Ford", true, true),
-            new Charger(new ArrayList<Connector>(), new Coordinate(30.0, 43.0, 55.0, 44.0, "Target"), 55, 100.0, "Mazda", true, true)
-        );  
+    private ObservableList<Charger> chargerData = FXCollections.observableArrayList();  
 
     /**
      * Initialize the window
@@ -83,21 +69,75 @@ public class MainController {
      */
     public void init(Stage stage) {
 
-        
-        table.setColumnResizePolicy( TableView.CONSTRAINED_RESIZE_POLICY );
+        makeTestChargers();
+        //chargers.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        //     @Override
+        //    public void handle(MouseEvent event) {
+        //        chargerLabel.setText("Charger '" + chargers.getSelectionModel().getSelectedItem() + "' was selected.");
+        //    }
+    //    });
+        addChargersToDisplay();
+        viewChargers(chargerData.get(0));
+        insetText();
+        selectToView();
+
+    }
+
+    public void makeTestChargers() {
+        chargerData.add((new Charger(new ArrayList<Connector>(), new Coordinate(34.0, 32.0, 22.0, 33.0, "UC"), 14, 100.0, "Tesla", true, true)));
+        chargerData.add((new Charger(new ArrayList<Connector>(), new Coordinate(44.0, 53.0, 34.0, 35.0, "Mc Donalds"), 10, 100.0, "BMW", true, true)));
+        chargerData.add((new Charger(new ArrayList<Connector>(), new Coordinate(42.0, 23.0, 32.0, 54.0, "BK"), 20, 100.0, "Ford", true, true)));
+        chargerData.add((new Charger(new ArrayList<Connector>(), new Coordinate(30.0, 43.0, 55.0, 44.0, "Target"), 55, 100.0, "Mazda", true, true)));
+    }
+
+    public void viewChargers(Charger c) {
+        displayInfo.clear();
+        displayInfo.appendText("Operator: "+ c.getOperator() +"\n"+ "Location: " + c.getLocation() +"\n"+ "Number of parks: " +c.getAvailableParks() +"\nHas Attraction = "+c.getHasAttraction()+"\n");
+    }
+
+
+    // public void selectToView(){
+    //     listOfChargers.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
+    //         @Override
+    //         public void changed(ObservableValue observableValue, Object o, Object t1) {
+    //             viewChargers(chargerList.get(listOfChargers.getSelectionModel().getSelectedIndex()));
+
+    //         }
+    //     });
+    // }
+
+    public void selectToView(){
+        chargerTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue observableValue, Object o, Object t1) {
+                viewChargers(chargerData.get(chargerTable.getSelectionModel().getSelectedIndex()));
+
+            }
+        });
+
+    }
+
+    // public void addChargersToDisplay() {
+    //     ObservableList<String> chargernames = FXCollections.observableArrayList();
+    //     for(int i = 0; i < chargerList.size(); i++) {
+    //             chargernames.add(chargerList.get(i).getOperator());
+    //     }
+    //     listOfChargers.setItems(chargernames);
+    // }
+
+
+    public void addChargersToDisplay() {
+  
+        chargerTable.setColumnResizePolicy( TableView.CONSTRAINED_RESIZE_POLICY );
         operatorCol.setMaxWidth( 1f * Integer.MAX_VALUE * 25 );
         locationCol.setMaxWidth( 1f * Integer.MAX_VALUE * 25 );
         parksCol.setMaxWidth( 1f * Integer.MAX_VALUE * 25 );
         attractionCol.setMaxWidth( 1f * Integer.MAX_VALUE * 25 );
 
-
-
         for (int i = 0; i < chargerData.size(); i++) {
-            table.getItems().add(i);
+            chargerTable.getItems().add(i);
         }
-
-
-
+        
         operatorCol.setCellValueFactory(cellData -> {
             Integer rowIndex = cellData.getValue();
             return new ReadOnlyStringWrapper(chargerData.get(rowIndex).getOperator());
@@ -118,72 +158,10 @@ public class MainController {
             return new ReadOnlyStringWrapper(String.valueOf(chargerData.get(rowIndex).getHasAttraction()));
         });
 
-        table.getColumns().add(operatorCol);
-        table.getColumns().add(locationCol);
-        table.getColumns().add(parksCol);
-        table.getColumns().add(attractionCol);
-
-
-        
-        makeTestChargers();
-        //chargers.setOnMouseClicked(new EventHandler<MouseEvent>() {
-        //     @Override
-        //    public void handle(MouseEvent event) {
-        //        chargerLabel.setText("Charger '" + chargers.getSelectionModel().getSelectedItem() + "' was selected.");
-        //    }
-    //    });
-        addChargersToDisplay();
-        viewChargers(chargerList.get(0));
-        insetText();
-        selectToView();
-        selectText();
-
-    }
-
-    public void makeTestChargers() {
-        chargerList.add((new Charger(new ArrayList<Connector>(), new Coordinate(34.0, 32.0, 22.0, 33.0, "UC"), 14, 100.0, "Tesla", true, true)));
-        chargerList.add((new Charger(new ArrayList<Connector>(), new Coordinate(44.0, 53.0, 34.0, 35.0, "Mc Donalds"), 10, 100.0, "BMW", true, true)));
-        chargerList.add((new Charger(new ArrayList<Connector>(), new Coordinate(42.0, 23.0, 32.0, 54.0, "BK"), 20, 100.0, "Ford", true, true)));
-        chargerList.add((new Charger(new ArrayList<Connector>(), new Coordinate(30.0, 43.0, 55.0, 44.0, "Target"), 55, 100.0, "Mazda", true, true)));
-    }
-
-    public void viewChargers(Charger c) {
-        displayInfo.clear();
-        displayInfo.appendText(""+ c.getOperator() +"\n"+ c.getLocation() +"\n"+ c.getOwner() +"\nAttraction = "+c.getHasAttraction()+"\n");
-    }
-
-    public void viewText(Charger c) {
-        textBox.clear();
-        textBox.appendText(""+c+"\n");
-    }
-
-    public void selectToView(){
-        listOfChargers.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
-            @Override
-            public void changed(ObservableValue observableValue, Object o, Object t1) {
-                viewChargers(chargerList.get(listOfChargers.getSelectionModel().getSelectedIndex()));
-
-            }
-        });
-    }
-
-    public void selectText(){
-        table.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
-            @Override
-            public void changed(ObservableValue observableValue, Object o, Object t1) {
-                viewText(chargerData.get(table.getSelectionModel().getSelectedIndex()));
-
-            }
-        });
-
-    }
-
-    public void addChargersToDisplay() {
-        ObservableList<String> chargernames = FXCollections.observableArrayList();
-        for(int i = 0; i < chargerList.size(); i++) {
-                chargernames.add(chargerList.get(i).getOperator());
-        }
-        listOfChargers.setItems(chargernames);
+        chargerTable.getColumns().add(operatorCol);
+        chargerTable.getColumns().add(locationCol);
+        chargerTable.getColumns().add(parksCol);
+        chargerTable.getColumns().add(attractionCol);
     }
 
     /**

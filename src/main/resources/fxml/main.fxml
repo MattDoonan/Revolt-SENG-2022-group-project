@@ -43,8 +43,7 @@
       <TextField fx:id="searchCharger" layoutX="14.0" layoutY="75.0" prefHeight="32.0" prefWidth="302.0" text="Search Charger" />
       <ButtonBar layoutX="383.0" layoutY="181.0" prefHeight="40.0" prefWidth="200.0" />
       <TextArea fx:id="displayInfo" editable="false" layoutX="14.0" layoutY="120.0" prefHeight="120.0" prefWidth="302.0" />
-      <ListView fx:id="listOfChargers" fixedCellSize="75.0" layoutX="14.0" layoutY="251.0" prefHeight="272.0" prefWidth="302.0" />
-      <TableView fx:id="table" layoutX="377.0" layoutY="101.0" prefHeight="200.0" prefWidth="360.0" />
-      <TextArea fx:id="textBox" layoutX="724.0" layoutY="309.0" prefHeight="200.0" prefWidth="200.0" />
+      <ListView fx:id="listOfChargers" fixedCellSize="75.0" layoutX="14.0" layoutY="251.0" prefHeight="272.0" prefWidth="302.0" visible="false" />
+      <TableView fx:id="chargerTable" layoutX="14.0" layoutY="251.0" prefHeight="272.0" prefWidth="378.0" />
    </children>
 </AnchorPane>
