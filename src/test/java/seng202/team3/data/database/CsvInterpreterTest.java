@@ -27,4 +27,34 @@ public class CsvInterpreterTest {
         });
     }
 
+    @Test
+    public void missingHeaderTest() {
+
+    }
+
+    @Test
+    public void invalidDataTypeTest() {
+
+    }
+
+    @Test
+    public void missingDataValueTest() {
+
+    }
+
+    @Test
+    public void multipleErrorMessagesCombineTest() {
+
+    }
+
+    @Test
+    public void convertsToValidObjectTest() {
+
+    }
+
+    @Test
+    public void convertsToInvalidObjectTest() {
+
+    }
+
 }
