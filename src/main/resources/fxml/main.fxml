@@ -47,8 +47,8 @@
       <ListView fx:id="listOfChargers" fixedCellSize="75.0" layoutX="14.0" layoutY="251.0" prefHeight="272.0" prefWidth="302.0" />
       <TableView fx:id="table" layoutX="377.0" layoutY="101.0" prefHeight="200.0" prefWidth="362.0">
         <columns>
-          <TableColumn fx:id="nameCol" prefWidth="75.0" text="Name" />
-            <TableColumn fx:id="surnameCol" prefWidth="75.0" text="Surname" />
+          <TableColumn fx:id="intColumn" prefWidth="75.0" text="Name" />
+            <TableColumn fx:id="nameColumn" prefWidth="75.0" text="Surname" />
         </columns>
       </TableView>
       <TextArea fx:id="textBox" layoutX="724.0" layoutY="309.0" prefHeight="200.0" prefWidth="200.0" />

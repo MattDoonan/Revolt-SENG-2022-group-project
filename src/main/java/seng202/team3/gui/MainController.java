@@ -7,7 +7,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.cell.PropertyValueFactory;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
@@ -52,10 +51,10 @@ public class MainController {
     private TableView table;
 
     @FXML
-    private TableColumn<Integer, String> nameColumn;
+    private TableColumn<Integer, String> intColumn;
 
     @FXML
-    private TableColumn<Integer, String> surnameColumn;
+    private TableColumn<Integer, String> nameColumn ;
 
     @FXML
     private TextArea textBox;
@@ -64,7 +63,6 @@ public class MainController {
     public List<String> stringValues = Arrays.asList("One", "Two", "Three", "Four", "Five");
 
     public List<Charger> chargerList = new ArrayList<Charger>();
-    public List<Person> dataNew = new ArrayList<Person>();
 
     private ObservableList<Person> dataPerson =
         FXCollections.observableArrayList(
@@ -83,55 +81,28 @@ public class MainController {
     public void init(Stage stage) {
         // table.setItems(data);
         // table.getItems().addAll(data);
-        TableColumn firstNameCol = new TableColumn("First Name");
-        firstNameCol.setCellValueFactory(new PropertyValueFactory<Person,String>("firstName"));
-
-        TableColumn lastNameCol = new TableColumn("Last Name");
-        lastNameCol.setCellValueFactory(
-            new PropertyValueFactory<Person,String>("lastName")
-        );
-
-        // table.setItems(dataPerson);
-        table.getItems().addAll(dataPerson);
-
-        table.getColumns().addAll(firstNameCol, lastNameCol);
-        // table.getItems().addAll(dataPerson);
-        // table.setItems(dataPerson);
-
-        // dataNew.add(new Person("Jacob", "Smith"));
-        // dataNew.add(new Person("John", "Doe"));
-
-
-        // ObservableList<Person> datanames = FXCollections.observableArrayList();
-        // for(int i = 0; i < chargerList.size(); i++) {
-        //     datanames.add(dataNew.get(i));
-        // }
-        // table.setItems(datanames);
-
-
-        // table.setItems((ObservableList) dataNew);
-
-        // table.getItems().add("jacob", "smith");
+        
 
 
 
-        // for (int i = 0; i < intValues.size(); i++) {
-        //     table.getItems().add(i);
-        // }
+
+        for (int i = 0; i < intValues.size(); i++) {
+            table.getItems().add(i);
+        }
 
 
-        // intColumn.setCellValueFactory(cellData -> {
-        //     Integer rowIndex = cellData.getValue();
-        //     return new ReadOnlyIntegerWrapper(intValues.get(rowIndex));
-        // });
+        intColumn.setCellValueFactory(cellData -> {
+            Integer rowIndex = cellData.getValue();
+            return new ReadOnlyStringWrapper(dataPerson.get(rowIndex).getName());
+        });
 
-        // nameColumn.setCellValueFactory(cellData -> {
-        //     Integer rowIndex = cellData.getValue();
-        //     return new ReadOnlyStringWrapper(stringValues.get(rowIndex));
-        // });
+        nameColumn.setCellValueFactory(cellData -> {
+            Integer rowIndex = cellData.getValue();
+            return new ReadOnlyStringWrapper(dataPerson.get(rowIndex).getSurname());
+        });
 
-        // table.getColumns().add(intColumn);
-        // table.getColumns().add(nameColumn);
+        table.getColumns().add(intColumn);
+        table.getColumns().add(nameColumn);
 
         // ObservableList<String> list = FXCollections.observableArrayList();
         // table.setItems(list);
@@ -178,7 +149,7 @@ public class MainController {
 
     public void viewText(Person c) {
         textBox.clear();
-        textBox.appendText(""+c+"\n"+c.getName()+"\n");
+        textBox.appendText(""+c+"\n");
     }
 
     public void selectToView(){
