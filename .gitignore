@@ -10,8 +10,8 @@
 *.iml
 *.iws
 
-#VSCode
-.vscode/
+# VsCode
+/.vscode
 
 # Mac
 .DS_Store
