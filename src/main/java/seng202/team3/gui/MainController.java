@@ -162,6 +162,9 @@ public class MainController {
         chargerTable.getColumns().add(locationCol);
         chargerTable.getColumns().add(parksCol);
         chargerTable.getColumns().add(attractionCol);
+
+        chargerTable.requestFocus();
+        chargerTable.getSelectionModel().select(0);
     }
 
     /**
