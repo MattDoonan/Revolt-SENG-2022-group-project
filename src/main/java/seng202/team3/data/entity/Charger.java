@@ -21,7 +21,9 @@ public class Charger {
     String dateOpened;
 
     /** {@link Connector Connectors} available on charger */
-    @CsvBindAndSplitByName(column = "connectorsList", elementType = Connector.class, splitOn = ",(?=( )*\\{)", converter = ConnectorConverter.class)
+    @CsvBindAndSplitByName(column = "connectorsList", elementType = Connector.class, 
+                           splitOn = ",(?=( )*\\{)", converter = ConnectorConverter.class, 
+                           required = true)
     ArrayList<Connector> connectors;
 
     /** {@link Coordinate Coordinate} information for the charger */

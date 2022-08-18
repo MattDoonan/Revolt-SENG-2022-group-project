@@ -14,10 +14,12 @@ import seng202.team3.data.entity.Charger;
  */
 public class CsvInterpreter implements DataManager {
 
+    private final String filepath = "src/main/resources/";
+
     @Override
     public List<Object> readData(Query query, Class<?> objectToInterpretAs)
             throws IOException {
-        return new CsvToBeanBuilder<Object>(new FileReader(query.toString()))
+        return new CsvToBeanBuilder<Object>(new FileReader(filepath + query.toString() + ".csv"))
                 .withType(objectToInterpretAs)
                 .build()
                 .parse();
@@ -31,7 +33,7 @@ public class CsvInterpreter implements DataManager {
     public static void main(String[] args) throws IOException {
         List<Object> test = new CsvInterpreter().readData(
                 new QueryBuilderImpl()
-                        .withSource("src/main/resources/EV_Roam_charging_stations.csv")
+                        .withSource("charger")
                         .build(),
                 Charger.class);
         test.forEach(System.out::println);
