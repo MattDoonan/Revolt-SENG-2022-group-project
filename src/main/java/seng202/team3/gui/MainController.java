@@ -1,9 +1,13 @@
 package seng202.team3.gui;
 
+import javafx.beans.property.ReadOnlyIntegerWrapper;
+import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.cell.PropertyValueFactory;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
@@ -15,7 +19,7 @@ import javafx.stage.Stage;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 
-import javax.swing.table.TableColumn;
+import javax.swing.table.*;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.*;
@@ -44,9 +48,32 @@ public class MainController {
     @FXML
     private TextArea displayInfo;
 
+    @FXML
+    private TableView table;
+
+    @FXML
+    private TableColumn<Integer, String> nameColumn;
+
+    @FXML
+    private TableColumn<Integer, String> surnameColumn;
+
+    @FXML
+    private TextArea textBox;
+    
+    public List<Integer> intValues = Arrays.asList(1, 2, 3, 4, 5);
+    public List<String> stringValues = Arrays.asList("One", "Two", "Three", "Four", "Five");
 
     public List<Charger> chargerList = new ArrayList<Charger>();
+    public List<Person> dataNew = new ArrayList<Person>();
 
+    private ObservableList<Person> dataPerson =
+        FXCollections.observableArrayList(
+            new Person("A", "Z"),
+            new Person("B", "X"),
+            new Person("C", "W"),
+            new Person("D", "Y"),
+            new Person("E", "V")
+        );  
 
     /**
      * Initialize the window
@@ -54,6 +81,71 @@ public class MainController {
      * @param stage Top level container for this window
      */
     public void init(Stage stage) {
+        // table.setItems(data);
+        // table.getItems().addAll(data);
+        TableColumn firstNameCol = new TableColumn("First Name");
+        firstNameCol.setCellValueFactory(new PropertyValueFactory<Person,String>("firstName"));
+
+        TableColumn lastNameCol = new TableColumn("Last Name");
+        lastNameCol.setCellValueFactory(
+            new PropertyValueFactory<Person,String>("lastName")
+        );
+
+        // table.setItems(dataPerson);
+        table.getItems().addAll(dataPerson);
+
+        table.getColumns().addAll(firstNameCol, lastNameCol);
+        // table.getItems().addAll(dataPerson);
+        // table.setItems(dataPerson);
+
+        // dataNew.add(new Person("Jacob", "Smith"));
+        // dataNew.add(new Person("John", "Doe"));
+
+
+        // ObservableList<Person> datanames = FXCollections.observableArrayList();
+        // for(int i = 0; i < chargerList.size(); i++) {
+        //     datanames.add(dataNew.get(i));
+        // }
+        // table.setItems(datanames);
+
+
+        // table.setItems((ObservableList) dataNew);
+
+        // table.getItems().add("jacob", "smith");
+
+
+
+        // for (int i = 0; i < intValues.size(); i++) {
+        //     table.getItems().add(i);
+        // }
+
+
+        // intColumn.setCellValueFactory(cellData -> {
+        //     Integer rowIndex = cellData.getValue();
+        //     return new ReadOnlyIntegerWrapper(intValues.get(rowIndex));
+        // });
+
+        // nameColumn.setCellValueFactory(cellData -> {
+        //     Integer rowIndex = cellData.getValue();
+        //     return new ReadOnlyStringWrapper(stringValues.get(rowIndex));
+        // });
+
+        // table.getColumns().add(intColumn);
+        // table.getColumns().add(nameColumn);
+
+        // ObservableList<String> list = FXCollections.observableArrayList();
+        // table.setItems(list);
+        // table.getItems().add("New Item");
+
+
+        // table.getColumns().add(intColumn);
+
+
+
+
+        // ------------------------------------------------------------------------------------------
+
+
         // List<String> values = Arrays.asList("one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve");
         // List<Charger> chargerList = Arrays.asList(new Charger(ArrayList<Connector> connectors, Coordinate location, int availableParks,
         // Double timeLimit, String operator, boolean isPublic, boolean hasAttraction));
@@ -68,6 +160,7 @@ public class MainController {
         viewChargers(chargerList.get(0));
         insetText();
         selectToView();
+        selectText();
 
     }
 
@@ -83,11 +176,26 @@ public class MainController {
         displayInfo.appendText(""+ c.getOperator() +"\n"+ c.getLocation() +"\n"+ c.getOwner() +"\nAttraction = "+c.getHasAttraction()+"\n");
     }
 
+    public void viewText(Person c) {
+        textBox.clear();
+        textBox.appendText(""+c+"\n"+c.getName()+"\n");
+    }
+
     public void selectToView(){
         listOfChargers.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
             @Override
             public void changed(ObservableValue observableValue, Object o, Object t1) {
                 viewChargers(chargerList.get(listOfChargers.getSelectionModel().getSelectedIndex()));
+
+            }
+        });
+    }
+
+    public void selectText(){
+        table.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue observableValue, Object o, Object t1) {
+                viewText(dataPerson.get(table.getSelectionModel().getSelectedIndex()));
 
             }
         });
