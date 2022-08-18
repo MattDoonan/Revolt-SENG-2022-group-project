@@ -41,7 +41,7 @@
       <TextField fx:id="searchField" layoutX="14.0" layoutY="69.0" prefHeight="26.0" prefWidth="143.0" visible="false" />
       <TextField fx:id="searchCharger" layoutX="14.0" layoutY="75.0" prefHeight="32.0" prefWidth="302.0" text="Search Charger" />
       <ButtonBar layoutX="383.0" layoutY="181.0" prefHeight="40.0" prefWidth="200.0" />
-      <TextArea fx:id="displayInfo" layoutX="14.0" layoutY="120.0" prefHeight="120.0" prefWidth="302.0" editable="false" />
+      <TextArea fx:id="displayInfo" editable="false" layoutX="14.0" layoutY="120.0" prefHeight="120.0" prefWidth="302.0" />
       <ListView fx:id="listOfChargers" fixedCellSize="75.0" layoutX="14.0" layoutY="251.0" prefHeight="272.0" prefWidth="302.0" />
    </children>
 </AnchorPane>
