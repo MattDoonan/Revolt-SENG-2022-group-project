@@ -20,6 +20,10 @@ public class Charger {
     @CsvBindByName(column = "dateFirstOperational")
     String dateOpened;
 
+    /** Name of the charger */
+    @CsvBindByName(column = "name", required = true)
+    String name;
+
     /** {@link Connector Connectors} available on charger */
     @CsvBindAndSplitByName(column = "connectorsList", elementType = Connector.class, splitOn = ",(?=( )*\\{)", converter = ConnectorConverter.class, required = true)
     ArrayList<Connector> connectors;
@@ -68,8 +72,9 @@ public class Charger {
     }
 
     /** Constructor for the Charger */
-    public Charger(ArrayList<Connector> connectors, Coordinate location, int availableParks,
-            Double timeLimit, String operator, boolean isPublic, boolean hasAttraction) {
+    public Charger(ArrayList<Connector> connectors, String name, Coordinate location,
+            int availableParks, Double timeLimit, String operator, boolean isPublic,
+            boolean hasAttraction) {
         this.connectors = connectors;
         setLocation(location);
         setAvailableParks(availableParks);
@@ -77,6 +82,7 @@ public class Charger {
         setOperator(operator);
         setPublic(false); // TODO: retrieve from data once implemented
         setHasAttraction(hasAttraction);
+        setName(name);
     }
 
     /**
@@ -310,5 +316,23 @@ public class Charger {
      */
     public void setChargeCost(boolean chargeCost) {
         hasChargeCost = chargeCost;
+    }
+
+    /**
+     * Get the name of the charger
+     * 
+     * @return name of the charger
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Set the name of the charger
+     * 
+     * @param name new name of the charger
+     */
+    public void setName(String name) {
+        this.name = name;
     }
 }

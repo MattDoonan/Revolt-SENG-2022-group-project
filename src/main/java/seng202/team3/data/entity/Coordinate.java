@@ -18,15 +18,15 @@ public class Coordinate {
     Double ypos;
 
     /** Latitude coordinate */
-    @CsvBindByName(column = "latitude")
+    @CsvBindByName(column = "latitude", required = true)
     Double lat;
 
     /** Longitude coordinate */
-    @CsvBindByName(column = "longitude")
+    @CsvBindByName(column = "longitude", required = true)
     Double lon;
 
     /** Physical address */
-    @CsvBindByName(column = "address")
+    @CsvBindByName(column = "address", required = true)
     String address;
 
     /**
