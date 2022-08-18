@@ -19,7 +19,7 @@ public class CsvInterpreter implements DataManager {
     @Override
     public List<Object> readData(Query query, Class<?> objectToInterpretAs)
             throws IOException {
-        return new CsvToBeanBuilder<Object>(new FileReader(filepath + query.toString() + ".csv"))
+        return new CsvToBeanBuilder<Object>(new FileReader(filepath + query.getSource() + ".csv"))
                 .withType(objectToInterpretAs)
                 .build()
                 .parse();
