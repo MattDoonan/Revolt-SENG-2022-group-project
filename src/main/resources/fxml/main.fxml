@@ -5,6 +5,7 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
@@ -12,13 +13,13 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="frame" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.MainController">
+<AnchorPane fx:id="frame" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.MainController">
    <children>
-      <Label fx:id="mapLabel" contentDisplay="CENTER" layoutX="383.0" layoutY="53.0" prefHeight="474.0" prefWidth="577.0" text="       The Best Map EVER!!!!" textAlignment="CENTER" AnchorPane.leftAnchor="383.0" AnchorPane.topAnchor="53.0">
+      <Label fx:id="mapLabel" contentDisplay="CENTER" layoutX="383.0" layoutY="53.0" prefHeight="833.0" prefWidth="1430.0" text="       The Best Map EVER!!!!" textAlignment="CENTER" AnchorPane.leftAnchor="383.0" AnchorPane.topAnchor="53.0">
          <font>
             <Font size="28.0" />
          </font></Label>
-      <MenuBar layoutY="2.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="50.0" prefWidth="960.0">
+      <MenuBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="60.0" prefWidth="1920.0">
         <menus>
             <Menu fx:id="accountMenu" mnemonicParsing="false" text="Account">
               <items>
@@ -40,10 +41,22 @@
         </menus>
       </MenuBar>
       <TextField fx:id="searchField" layoutX="14.0" layoutY="69.0" prefHeight="26.0" prefWidth="143.0" visible="false" />
-      <TextField fx:id="searchCharger" layoutX="14.0" layoutY="75.0" prefHeight="32.0" prefWidth="302.0" text="Search Charger" />
+      <TextField fx:id="searchCharger" layoutX="14.0" layoutY="82.0" prefHeight="40.0" prefWidth="400.0" text="Search Charger">
+         <font>
+            <Font size="16.0" />
+         </font></TextField>
       <ButtonBar layoutX="383.0" layoutY="181.0" prefHeight="40.0" prefWidth="200.0" />
-      <TextArea fx:id="displayInfo" editable="false" layoutX="14.0" layoutY="120.0" prefHeight="120.0" prefWidth="302.0" />
+      <TextArea fx:id="displayInfo" editable="false" layoutX="14.0" layoutY="177.0" prefHeight="194.0" prefWidth="400.0" />
       <ListView fx:id="listOfChargers" fixedCellSize="75.0" layoutX="14.0" layoutY="251.0" prefHeight="272.0" prefWidth="302.0" visible="false" />
-      <TableView fx:id="chargerTable" layoutX="14.0" layoutY="251.0" prefHeight="272.0" prefWidth="378.0" />
+      <TableView fx:id="chargerTable" layoutX="14.0" layoutY="385.0" prefHeight="656.0" prefWidth="400.0" />
+      <MenuButton layoutX="14.0" layoutY="128.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="400.0" text="MenuButton">
+        <items>
+          <MenuItem mnemonicParsing="false" text="Action 1" />
+          <MenuItem mnemonicParsing="false" text="Action 2" />
+        </items>
+         <font>
+            <Font size="16.0" />
+         </font>
+      </MenuButton>
    </children>
 </AnchorPane>

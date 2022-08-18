@@ -56,9 +56,6 @@ public class MainController {
     @FXML
     private TableColumn<Integer, String> attractionCol = new TableColumn<>("Attraction");
 
-    
-
-    public List<Charger> chargerList = new ArrayList<Charger>();
 
     private ObservableList<Charger> chargerData = FXCollections.observableArrayList();  
 
