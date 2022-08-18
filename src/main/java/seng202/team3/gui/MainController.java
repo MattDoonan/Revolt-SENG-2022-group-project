@@ -51,26 +51,29 @@ public class MainController {
     private TableView table;
 
     @FXML
-    private TableColumn<Integer, String> intColumn;
+    private TableColumn<Integer, String> operatorCol = new TableColumn<>("Operator");
 
     @FXML
-    private TableColumn<Integer, String> nameColumn ;
+    private TableColumn<Integer, String> locationCol = new TableColumn<>("Location");
+
+    @FXML
+    private TableColumn<Integer, String> parksCol = new TableColumn<>("Num. Parks");
+
+    @FXML
+    private TableColumn<Integer, String> attractionCol = new TableColumn<>("Attraction");
 
     @FXML
     private TextArea textBox;
     
-    public List<Integer> intValues = Arrays.asList(1, 2, 3, 4, 5);
-    public List<String> stringValues = Arrays.asList("One", "Two", "Three", "Four", "Five");
 
     public List<Charger> chargerList = new ArrayList<Charger>();
 
-    private ObservableList<Person> dataPerson =
+    private ObservableList<Charger> chargerData =
         FXCollections.observableArrayList(
-            new Person("A", "Z"),
-            new Person("B", "X"),
-            new Person("C", "W"),
-            new Person("D", "Y"),
-            new Person("E", "V")
+            new Charger(new ArrayList<Connector>(), new Coordinate(34.0, 32.0, 22.0, 33.0, "UC"), 14, 100.0, "Tesla", true, true),
+            new Charger(new ArrayList<Connector>(), new Coordinate(44.0, 53.0, 34.0, 35.0, "Mc Donalds"), 10, 100.0, "BMW", true, true),
+            new Charger(new ArrayList<Connector>(), new Coordinate(42.0, 23.0, 32.0, 54.0, "BK"), 20, 100.0, "Ford", true, true),
+            new Charger(new ArrayList<Connector>(), new Coordinate(30.0, 43.0, 55.0, 44.0, "Target"), 55, 100.0, "Mazda", true, true)
         );  
 
     /**
@@ -79,47 +82,49 @@ public class MainController {
      * @param stage Top level container for this window
      */
     public void init(Stage stage) {
-        // table.setItems(data);
-        // table.getItems().addAll(data);
+
         
+        table.setColumnResizePolicy( TableView.CONSTRAINED_RESIZE_POLICY );
+        operatorCol.setMaxWidth( 1f * Integer.MAX_VALUE * 25 );
+        locationCol.setMaxWidth( 1f * Integer.MAX_VALUE * 25 );
+        parksCol.setMaxWidth( 1f * Integer.MAX_VALUE * 25 );
+        attractionCol.setMaxWidth( 1f * Integer.MAX_VALUE * 25 );
 
 
 
-
-        for (int i = 0; i < intValues.size(); i++) {
+        for (int i = 0; i < chargerData.size(); i++) {
             table.getItems().add(i);
         }
 
 
-        intColumn.setCellValueFactory(cellData -> {
+
+        operatorCol.setCellValueFactory(cellData -> {
             Integer rowIndex = cellData.getValue();
-            return new ReadOnlyStringWrapper(dataPerson.get(rowIndex).getName());
+            return new ReadOnlyStringWrapper(chargerData.get(rowIndex).getOperator());
         });
 
-        nameColumn.setCellValueFactory(cellData -> {
+        locationCol.setCellValueFactory(cellData -> {
             Integer rowIndex = cellData.getValue();
-            return new ReadOnlyStringWrapper(dataPerson.get(rowIndex).getSurname());
+            return new ReadOnlyStringWrapper(chargerData.get(rowIndex).getLocation().toString());
         });
 
-        table.getColumns().add(intColumn);
-        table.getColumns().add(nameColumn);
+        parksCol.setCellValueFactory(cellData -> {
+            Integer rowIndex = cellData.getValue();
+            return new ReadOnlyStringWrapper(Integer.toString(chargerData.get(rowIndex).getAvailableParks()));
+        });
 
-        // ObservableList<String> list = FXCollections.observableArrayList();
-        // table.setItems(list);
-        // table.getItems().add("New Item");
+        attractionCol.setCellValueFactory(cellData -> {
+            Integer rowIndex = cellData.getValue();
+            return new ReadOnlyStringWrapper(String.valueOf(chargerData.get(rowIndex).getHasAttraction()));
+        });
+
+        table.getColumns().add(operatorCol);
+        table.getColumns().add(locationCol);
+        table.getColumns().add(parksCol);
+        table.getColumns().add(attractionCol);
 
 
-        // table.getColumns().add(intColumn);
-
-
-
-
-        // ------------------------------------------------------------------------------------------
-
-
-        // List<String> values = Arrays.asList("one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve");
-        // List<Charger> chargerList = Arrays.asList(new Charger(ArrayList<Connector> connectors, Coordinate location, int availableParks,
-        // Double timeLimit, String operator, boolean isPublic, boolean hasAttraction));
+        
         makeTestChargers();
         //chargers.setOnMouseClicked(new EventHandler<MouseEvent>() {
         //     @Override
@@ -147,7 +152,7 @@ public class MainController {
         displayInfo.appendText(""+ c.getOperator() +"\n"+ c.getLocation() +"\n"+ c.getOwner() +"\nAttraction = "+c.getHasAttraction()+"\n");
     }
 
-    public void viewText(Person c) {
+    public void viewText(Charger c) {
         textBox.clear();
         textBox.appendText(""+c+"\n");
     }
@@ -166,7 +171,7 @@ public class MainController {
         table.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
             @Override
             public void changed(ObservableValue observableValue, Object o, Object t1) {
-                viewText(dataPerson.get(table.getSelectionModel().getSelectedIndex()));
+                viewText(chargerData.get(table.getSelectionModel().getSelectedIndex()));
 
             }
         });
