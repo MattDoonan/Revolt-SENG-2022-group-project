@@ -13,7 +13,7 @@ import java.util.ArrayList;
  */
 public class Charger {
     /** Unique identifier */
-    @CsvBindByName(column = "OBJECTID")
+    @CsvBindByName(column = "OBJECTID", required = true)
     int chargerId;
 
     /** When the charger was first available */
@@ -21,9 +21,7 @@ public class Charger {
     String dateOpened;
 
     /** {@link Connector Connectors} available on charger */
-    @CsvBindAndSplitByName(column = "connectorsList", elementType = Connector.class, 
-                           splitOn = ",(?=( )*\\{)", converter = ConnectorConverter.class, 
-                           required = true)
+    @CsvBindAndSplitByName(column = "connectorsList", elementType = Connector.class, splitOn = ",(?=( )*\\{)", converter = ConnectorConverter.class, required = true)
     ArrayList<Connector> connectors;
 
     /** {@link Coordinate Coordinate} information for the charger */
@@ -31,7 +29,7 @@ public class Charger {
     Coordinate location;
 
     /** Number of parks available at the charger */
-    @CsvBindByName(column = "carParkCount")
+    @CsvBindByName(column = "carParkCount", required = true)
     int availableParks;
 
     /** Maximum amount of time that can be spent at a charger */
@@ -39,30 +37,30 @@ public class Charger {
     Double timeLimit;
 
     /** Business that manages the charger */
-    @CsvBindByName(column = "operator")
+    @CsvBindByName(column = "operator", required = true)
     String operator;
 
     /** Business that owns the charger */
-    @CsvBindByName(column = "owner")
+    @CsvBindByName(column = "owner", required = true)
     String owner;
 
     /** Accessible to the public */
     boolean isPublic;
 
     /** Has tourist attraction nearby */
-    @CsvBindByName(column = "hasTouristAttraction")
+    @CsvBindByName(column = "hasTouristAttraction", required = true)
     boolean hasAttraction;
 
     /** Can be accessed 24 hours in the day */
-    @CsvBindByName(column = "is24Hours")
+    @CsvBindByName(column = "is24Hours", required = true)
     boolean is24Hrs;
 
     /** Has cost for parking */
-    @CsvBindByName(column = "hasCarparkCost")
+    @CsvBindByName(column = "hasCarparkCost", required = true)
     boolean hasParkingCost;
 
     /** Has cost for charging */
-    @CsvBindByName(column = "hasChargingCost")
+    @CsvBindByName(column = "hasChargingCost", required = true)
     boolean hasChargeCost;
 
     /** Empty constructor for CSV object builder */
