@@ -8,7 +8,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import seng202.team3.data.entity.Charger;
 
 /**
  * Manages data reading and parsing from CSV files
@@ -83,18 +82,4 @@ public class CsvInterpreter implements DataManager {
 
         return data;
     }
-
-    /**
-     * Example usage for csv-interpreter
-     * TODO: Currently using for testing - eventually remove
-     */
-    public static void main(String[] args) throws IOException {
-        List<Object> test = new CsvInterpreter().readData(
-                new QueryBuilderImpl()
-                        .withSource("charger")
-                        .build(),
-                Charger.class);
-        test.forEach(System.out::println);
-    }
-
 }

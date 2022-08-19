@@ -2,6 +2,7 @@ package seng202.team3.data.entity;
 
 import com.opencsv.bean.CsvBindAndSplitByName;
 import com.opencsv.bean.CsvBindByName;
+import com.opencsv.bean.CsvCustomBindByName;
 import com.opencsv.bean.CsvRecurse;
 import java.util.ArrayList;
 
@@ -25,7 +26,9 @@ public class Charger {
     String name;
 
     /** {@link Connector Connectors} available on charger */
-    @CsvBindAndSplitByName(column = "connectorsList", elementType = Connector.class, splitOn = ",(?=( )*\\{)", converter = ConnectorConverter.class, required = true)
+    @CsvBindAndSplitByName(column = "connectorsList", elementType = Connector.class, 
+                           splitOn = ",(?=( )*\\{)", converter = ConnectorConverter.class, 
+                           required = true)
     ArrayList<Connector> connectors;
 
     /** {@link Coordinate Coordinate} information for the charger */
@@ -37,7 +40,7 @@ public class Charger {
     int availableParks;
 
     /** Maximum amount of time that can be spent at a charger */
-    // @CsvBindByName(column = "maxTimeLimit")
+    @CsvCustomBindByName(column = "maxTimeLimit", converter = TimeLimitConverter.class)
     Double timeLimit;
 
     /** Business that manages the charger */

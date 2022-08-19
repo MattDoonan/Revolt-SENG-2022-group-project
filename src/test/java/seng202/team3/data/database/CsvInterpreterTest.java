@@ -162,7 +162,8 @@ public class CsvInterpreterTest {
         assertEquals(5153202.164200, c.getLocation().getYpos());
         assertEquals(-43.737450, c.getLocation().getLat());
         assertEquals(170.100913, c.getLocation().getLon());
-        assertEquals("4 Kitchener Dr, Mount Cook National Park 7999, New Zealand", c.getLocation().getAddress());
+        assertEquals("4 Kitchener Dr, Mount Cook National Park 7999, New Zealand", 
+                        c.getLocation().getAddress());
         assertEquals("YHA MT COOK", c.getName());
         assertEquals("MERIDIAN ENERGY LIMITED", c.getOperator());
         assertEquals("MERIDIAN ENERGY LIMITED", c.getOwner());
