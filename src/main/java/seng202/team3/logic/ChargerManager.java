@@ -1,15 +1,10 @@
 package seng202.team3.logic;
 
-import seng202.team3.data.entity.Charger;
-import seng202.team3.data.entity.Coordinate;
-
-import java.lang.Math;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static java.lang.Math.cos;
+import seng202.team3.data.entity.Charger;
+import seng202.team3.data.entity.Coordinate;
 
 /**
  * Manages charger-related functionality
@@ -31,7 +26,9 @@ public class ChargerManager {
      *
      * @param selectedCharger {@link Charger} the Charger which is being selected.
      */
-    public void setSelectedCharger(Charger selectedCharger) { this.selectedCharger = selectedCharger; }
+    public void setSelectedCharger(Charger selectedCharger) {
+        this.selectedCharger = selectedCharger;
+    }
 
     /**
      * Gets the selectedCharger
@@ -43,9 +40,9 @@ public class ChargerManager {
     }
 
     /**
-     * Calculates the distance between two {@link Charger} Chargers (selectedCharger and param input charger).
+     * Calculates the distance between two {@link Charger} (selectedCharger, input charger).
      *
-     * @param toCharger {@link Charger} Charger, the charger which selectedCharger is calculating from.
+     * @param toCharger {@link Charger} Charger which selectedCharger is calculating from.
      * @return double; the distance between chargers in kilometres.
      */
     public double distanceBetweenChargers(Charger toCharger) {
@@ -60,13 +57,16 @@ public class ChargerManager {
      * @param chargers {@link Charger} An ArrayList of Chargers
      * @param location {@link Coordinate} A coordinate of the location to calculate distance from
      * @param distance double, the maximum distance to filter chargers by
-     * @return ArrayList<Charger> of the {@link Charger} chargers sorted from closest to furthest away
+     * @return ArrayList<> of the {@link Charger} chargers sorted from closest to furthest
      */
-    public ArrayList<Charger> getNearbyChargers(ArrayList<Charger> chargers, Coordinate location, double distance) {
+    public ArrayList<Charger> getNearbyChargers(ArrayList<Charger> chargers, Coordinate location,
+                                                double distance) {
 
         List<Charger> sortedChargers = chargers.stream()
-                .filter(dist -> Calculations.calculateDistance(dist.getLocation(), location) <= distance)
-                .sorted(Comparator.comparingDouble(dist -> Calculations.calculateDistance(dist.getLocation(), location)))
+                .filter(dist -> Calculations.calculateDistance(dist.getLocation(),
+                        location) <= distance)
+                .sorted(Comparator.comparingDouble(dist -> Calculations.calculateDistance(
+                        dist.getLocation(), location)))
                 .toList();
 
         return (new ArrayList<>(sortedChargers));

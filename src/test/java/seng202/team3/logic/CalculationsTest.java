@@ -4,9 +4,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import seng202.team3.data.entity.Coordinate;
-import seng202.team3.logic.Calculations;
-
-import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
