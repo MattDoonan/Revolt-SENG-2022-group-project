@@ -1,17 +1,17 @@
 package seng202.team3.logic;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import seng202.team3.data.entity.Charger;
-import seng202.team3.logic.ChargerManager;
-import seng202.team3.data.entity.Coordinate;
 import seng202.team3.data.entity.Connector;
-
-import java.util.ArrayList;
-
-import static org.junit.jupiter.api.Assertions.*;
+import seng202.team3.data.entity.Coordinate;
 
 /**
  * Unit tests for {@link ChargerManager} ChargerManager Class in Logic
@@ -142,5 +142,28 @@ public class ChargerManagerTest {
 
         assertTrue(filteredChargers.get(0).equals(charger1) && filteredChargers.get(1).equals(charger2)
                 && filteredChargers.get(2).equals(charger4) && filteredChargers.get(3).equals(charger3));
+    }
+
+    /**
+     * Tests for toggleWarning
+     */
+    @Test
+    public void testToggleWarning() {
+        manager.setSelectedCharger(charger1);
+        manager.toggleWarning("low availability", true);
+        manager.toggleWarning("high cost", true);
+        manager.toggleWarning("long wait", false);
+        ArrayList<String> test = new ArrayList<>(Arrays.asList("high cost", "low availability"));
+        assertEquals(test, manager.selectedCharger.getWarnings());
+    }
+
+    @Test
+    public void testRemovalToggleWarning() {
+        manager.setSelectedCharger(charger1);
+        manager.toggleWarning("low availability", true);
+        manager.toggleWarning("high cost", true);
+        manager.toggleWarning("low availability", false);
+        ArrayList<String> test = new ArrayList<>(Arrays.asList("high cost"));
+        assertEquals(test, manager.selectedCharger.getWarnings());
     }
 }
