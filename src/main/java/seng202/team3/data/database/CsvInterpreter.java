@@ -18,14 +18,20 @@ import seng202.team3.data.entity.Charger;
  */
 public class CsvInterpreter implements DataManager {
 
-    private final String filepath = "src/main/resources/";
+    private final String defaultFilepath = "src/main/resources/";
 
     @Override
     public List<Object> readData(Query query, Class<?> objectToInterpretAs)
             throws IOException {
         List<Object> data = new ArrayList<>();
         // Initialize File
-        FileReader file = new FileReader(filepath + query.getSource() + ".csv");
+        String filepath;
+        if (query.getSource().contains("\\") || query.getSource().contains("/")) {
+            filepath = query.getSource();
+        } else {
+            filepath = defaultFilepath + query.getSource() + ".csv";
+        }
+        FileReader file = new FileReader(filepath);
 
         // Initialize the raw data to object converter
         CsvToBean<Object> builder = new CsvToBeanBuilder<Object>(file)
@@ -43,22 +49,28 @@ public class CsvInterpreter implements DataManager {
         // Compile messages from non lethal errors to send back
         String errorMessage = "";
         for (CsvException e : builder.getCapturedExceptions()) {
+            if (builder.getCapturedExceptions().indexOf(e) != 0) {
+                errorMessage += "\n";
+            }
+
+            errorMessage += String.format("CSV error reading file %s.csv on line %d: ",
+                    query.getSource(), e.getLineNumber());
             switch (e.getClass().getSimpleName()) { // Custom error lines for internal exceptions
                 case "CsvRequiredFieldEmptyException": // Missing required field
-                    errorMessage += String.format("CSV error reading file %s.csv on line %d: %s\n",
-                            query.getSource(), e.getLineNumber(), e.getMessage());
+                    errorMessage += String.format("%s",
+                            e.getMessage());
                     break;
 
                 case "CsvDataTypeMismatchException": // Field is incorrect data type
+                    CsvDataTypeMismatchException exception = (CsvDataTypeMismatchException) e;
                     errorMessage += String.format(
-                            "CSV error reading file %s.csv on line %d: Value (%s) could not be converted to Type (%s)",
-                            query.getSource(), e.getLineNumber(),
-                            ((CsvDataTypeMismatchException) e).getSourceObject(),
-                            ((CsvDataTypeMismatchException) e).getDestinationClass().getSimpleName());
+                            "Value (%s) could not be converted to Type (%s)",
+                            exception.getSourceObject(),
+                            exception.getDestinationClass().getSimpleName());
                     break;
 
                 default:
-                    errorMessage += e.getMessage() + "\n";
+                    errorMessage += e.getMessage();
                     break;
 
             }

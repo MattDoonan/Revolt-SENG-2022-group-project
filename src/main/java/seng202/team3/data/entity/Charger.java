@@ -73,7 +73,7 @@ public class Charger {
 
     /** Constructor for the Charger */
     public Charger(ArrayList<Connector> connectors, String name, Coordinate location,
-            int availableParks, Double timeLimit, String operator, boolean isPublic,
+            int availableParks, Double timeLimit, String operator,
             boolean hasAttraction) {
         this.connectors = connectors;
         setLocation(location);

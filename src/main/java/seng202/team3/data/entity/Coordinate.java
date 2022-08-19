@@ -10,11 +10,11 @@ import com.opencsv.bean.CsvBindByName;
  */
 public class Coordinate {
     /** X-Coordinate on Waka-Kotahi map */
-    @CsvBindByName(column = "X")
+    @CsvBindByName(column = "X", required = true)
     Double xpos;
 
     /** Y-Coordinate on Waka-Kotahi map */
-    @CsvBindByName(column = "Y")
+    @CsvBindByName(column = "Y", required = true)
     Double ypos;
 
     /** Latitude coordinate */
