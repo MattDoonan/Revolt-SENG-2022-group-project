@@ -19,6 +19,14 @@
   </properties>
 
   <dependencies>
+
+  <!-- https://mvnrepository.com/artifact/org.javatuples/javatuples -->
+    <dependency>
+      <groupId>org.javatuples</groupId>
+      <artifactId>javatuples</artifactId>
+      <version>1.2</version>
+    </dependency>
+
     <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>

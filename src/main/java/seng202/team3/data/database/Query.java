@@ -1,5 +1,8 @@
 package seng202.team3.data.database;
 
+import java.util.ArrayList;
+import org.javatuples.Triplet;
+
 /**
  * Represents a request to retrieve information from data storage
  * 
@@ -10,9 +13,21 @@ public class Query {
     /** Location to get information from */
     private String source;
 
-    /** Constructor for the query */
-    public Query(String source) {
+    /**
+     * Filter criteria for the query
+     * In the form: Triplet(Field, Criteria, ComparisonMethod)
+     */
+    ArrayList<Triplet<String, String, ComparisonType>> filters;
+
+    /**
+     * Constructor for the query
+     * 
+     * @param source  Location to get information from
+     * @param filters Filter criteria for the query
+     */
+    public Query(String source, ArrayList<Triplet<String, String, ComparisonType>> filters) {
         this.source = source;
+        this.filters = filters;
     }
 
     /**
@@ -22,5 +37,14 @@ public class Query {
      */
     public String getSource() {
         return source;
+    }
+
+    /**
+     * Get the list of filters for the query
+     * 
+     * @return list of filters for the query
+     */
+    public ArrayList<Triplet<String, String, ComparisonType>> getFilters() {
+        return filters;
     }
 }

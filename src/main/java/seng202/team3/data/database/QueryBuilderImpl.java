@@ -1,5 +1,8 @@
 package seng202.team3.data.database;
 
+import java.util.ArrayList;
+import org.javatuples.Triplet;
+
 /**
  * Implementation of the {@link QueryBuilder query builder}.
  * Used to build query objects
@@ -11,6 +14,9 @@ public class QueryBuilderImpl implements QueryBuilder {
     /** Source of the query */
     private String source;
 
+    /** Filters of the query */
+    private ArrayList<Triplet<String, String, ComparisonType>> filters = new ArrayList<>();
+
     @Override
     public QueryBuilder withSource(String source) {
         this.source = source;
@@ -18,7 +24,14 @@ public class QueryBuilderImpl implements QueryBuilder {
     }
 
     @Override
+    public QueryBuilder withFilter(String field, String criteria, ComparisonType compareMethod) {
+        // Store each filter as a 3-tuple
+        filters.add(new Triplet<>(field, criteria, compareMethod));
+        return this;
+    }
+
+    @Override
     public Query build() {
-        return new Query(source);
+        return new Query(source, filters);
     }
 }
