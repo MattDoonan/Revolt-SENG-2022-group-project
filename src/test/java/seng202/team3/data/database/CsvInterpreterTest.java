@@ -1,24 +1,57 @@
 package seng202.team3.data.database;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import io.cucumber.java.After;
+import org.javatuples.Tuple;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
+import seng202.team3.data.entity.Coordinate;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Testing suite for CSV importing and parsing
  * 
- * @author Harrison Tyson
- * @version 1.0.0, Aug 22
+ * @author Harrison Tyson, Michelle Hsieh
+ * @version 1.0.1, Aug 22
  */
 public class CsvInterpreterTest {
+    /**
+     * Sets up a functional version of CsvInterpreter Query object
+     * and List for results.
+     */
+    Query query;
+    List<Object> result;
+
+    /**
+     * Before each set-up a valid version
+     */
+    @BeforeEach
+    public void setUp() throws IOException {
+       query = new QueryBuilderImpl()
+                .withSource("src/test/resources/csvtest/validChargers.csv")
+                .build();
+       result = new CsvInterpreter().readData(query, Charger.class);
+    }
+
+    /**
+     * Tears down each created object
+     */
+    @AfterEach
+    public void tearDown() {
+        query = null;
+        result = null;
+        assertNull(query);
+        assertNull(result);
+    }
 
     /**
      * Check that IOException is thrown if filepath does not exist
@@ -116,12 +149,7 @@ public class CsvInterpreterTest {
      * Check that csv data is converted into target objects
      */
     @Test
-    public void convertsToValidObjectTest() throws IOException {
-        Query query = new QueryBuilderImpl()
-                .withSource("src/test/resources/csvtest/validChargers.csv")
-                .build();
-        List<Object> result = new CsvInterpreter().readData(query, Charger.class);
-
+    public void convertsToValidObjectTest(){
         for (Object o : result) {
             assertEquals(Charger.class, o.getClass());
         }
@@ -131,44 +159,47 @@ public class CsvInterpreterTest {
      * Converted objects have all fields defined
      */
     @Test
-    public void allAttributesConvertedTest() throws IOException {
-        Query query = new QueryBuilderImpl()
-                .withSource("src/test/resources/csvtest/validChargers.csv")
-                .build();
-        List<Object> result = new CsvInterpreter().readData(query, Charger.class);
-
+    public void checkConnectorsSizeTest() {
         Charger c = (Charger) result.get(0);
         List<Connector> expectedConnectors = Arrays
                 .asList(new Connector("Type 2 Socketed", "22 kW", "Operative", "AC", 1));
         assertEquals(expectedConnectors.size(), c.getConnectors().size());
-        for (int i = 0; i < expectedConnectors.size(); i++) {
-            assertEquals(expectedConnectors.get(i).getType(), c.getConnectors().get(i).getType());
-            assertEquals(expectedConnectors.get(i).getPower(), c.getConnectors().get(i).getPower());
-            assertEquals(expectedConnectors.get(i).getStatus(),
-                    c.getConnectors().get(i).getStatus());
-            assertEquals(expectedConnectors.get(i).getCurrent(),
-                    c.getConnectors().get(i).getCurrent());
-            assertEquals(expectedConnectors.get(i).getCount(), c.getConnectors().get(i).getCount());
-        }
-
-        assertEquals(1, c.getAvailableParks());
-        assertEquals(1, c.getChargerId());
-        assertEquals("2020/05/01 00:00:00+00", c.getDateOpened());
-        assertEquals(false, c.getHasAttraction());
-        assertEquals(true, c.getChargeCost());
-        assertEquals(false, c.getParkingCost());
-        assertEquals(1, c.getAvailableParks());
-        assertEquals(1366541.235400, c.getLocation().getXpos());
-        assertEquals(5153202.164200, c.getLocation().getYpos());
-        assertEquals(-43.737450, c.getLocation().getLat());
-        assertEquals(170.100913, c.getLocation().getLon());
-        assertEquals("4 Kitchener Dr, Mount Cook National Park 7999, New Zealand", 
-                        c.getLocation().getAddress());
-        assertEquals("YHA MT COOK", c.getName());
-        assertEquals("MERIDIAN ENERGY LIMITED", c.getOperator());
-        assertEquals("MERIDIAN ENERGY LIMITED", c.getOwner());
-        assertEquals(0, c.getTimeLimit());
 
     }
 
+    @Test
+    public void checkConnectorsSame() {
+        Charger c = (Charger) result.get(0);
+        List<Connector> expectedConnectors = Arrays
+                .asList(new Connector("Type 2 Socketed", "22 kW", "Operative", "AC", 1));
+
+        boolean isIdentical = true;
+
+        for (int i = 0; i < expectedConnectors.size(); i++) {
+            if (!(expectedConnectors.get(i).getType().equals(c.getConnectors().get(i).getType())) ||
+                    !(expectedConnectors.get(i).getPower().equals(c.getConnectors().get(i).getPower())) ||
+                    !(expectedConnectors.get(i).getStatus().equals(c.getConnectors().get(i).getStatus())) ||
+                    !(expectedConnectors.get(i).getCurrent().equals(c.getConnectors().get(i).getCurrent())) ||
+                    (expectedConnectors.get(i).getCount() != c.getConnectors().get(i).getCount())) {
+                isIdentical = false;
+                break;
+            }
+        }
+        assertTrue(isIdentical);
+    }
+
+    @Test
+    public void checkChargerObjects() {
+        boolean isDifferent = false;
+
+        Charger c = (Charger) result.get(0);
+        if ((c.getChargerId() != 1) || (c.getAvailableParks() != 1) ||
+                (!c.getDateOpened().equals("2020/05/01 00:00:00+00")) ||
+                (c.getHasAttraction()) || (!c.getChargeCost()) || (c.getParkingCost() ||
+                (c.getLocation().getLon() != 170.100913))) {
+            isDifferent = true;
+        }
+
+        assertFalse(isDifferent);
+    }
 }
