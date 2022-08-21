@@ -1,5 +1,7 @@
 package seng202.team3.data.entity;
 
+import com.opencsv.bean.CsvBindByName;
+
 /**
  * Stores location information
  * 
@@ -8,18 +10,23 @@ package seng202.team3.data.entity;
  */
 public class Coordinate {
     /** X-Coordinate on Waka-Kotahi map */
+    @CsvBindByName(column = "X", required = true)
     Double xpos;
 
     /** Y-Coordinate on Waka-Kotahi map */
+    @CsvBindByName(column = "Y", required = true)
     Double ypos;
 
     /** Latitude coordinate */
+    @CsvBindByName(column = "latitude", required = true)
     Double lat;
 
     /** Longitude coordinate */
+    @CsvBindByName(column = "longitude", required = true)
     Double lon;
 
     /** Physical address */
+    @CsvBindByName(column = "address", required = true)
     String address;
 
     /**
@@ -31,6 +38,13 @@ public class Coordinate {
         setLat(lat);
         setLon(lon);
         setAddress(address);
+    }
+
+    /**
+     * Empty constructor for the CSV object builder
+     */
+    public Coordinate() {
+
     }
 
     /**

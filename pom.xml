@@ -19,6 +19,14 @@
   </properties>
 
   <dependencies>
+
+  <!-- https://mvnrepository.com/artifact/org.javatuples/javatuples -->
+    <dependency>
+      <groupId>org.javatuples</groupId>
+      <artifactId>javatuples</artifactId>
+      <version>1.2</version>
+    </dependency>
+
     <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
@@ -87,6 +95,13 @@
       <scope>test</scope>
     </dependency>
 
+    <!-- https://mvnrepository.com/artifact/com.opencsv/opencsv -->
+    <dependency>
+      <groupId>com.opencsv</groupId>
+      <artifactId>opencsv</artifactId>
+      <version>5.2</version>
+    </dependency>
+
   </dependencies>
 
   <build>
@@ -144,4 +159,18 @@
       </plugin>
     </plugins>
   </build>
+
+
+  <dependencyManagement>
+  
+
+    <dependencies>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>3.10</version>
+      </dependency>
+    </dependencies>
+
+  </dependencyManagement>
 </project>
