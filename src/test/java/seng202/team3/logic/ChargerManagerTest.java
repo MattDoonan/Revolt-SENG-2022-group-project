@@ -17,7 +17,7 @@ import seng202.team3.data.entity.Coordinate;
  * Unit tests for {@link ChargerManager} ChargerManager Class in Logic
  *
  * @author Michelle Hsieh
- * @version 1.0.0, Aug 22
+ * @version 1.0.1, Aug 22
  */
 public class ChargerManagerTest {
 
