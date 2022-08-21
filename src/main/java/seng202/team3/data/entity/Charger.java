@@ -48,9 +48,16 @@ public class Charger {
     /** Has cost for charging */
     boolean hasChargeCost;
 
-    /** 
-     * Constructor for the Charger 
-     */
+    /** Has warning for charger high cost */
+    boolean warningHighCost;
+
+    /** Has warning for charger long wait time */
+    boolean warningLongWait;
+
+    /** Has warning for charger low availabilty */
+    boolean warningLowAvailability;    
+
+    /** Constructor for the Charger */
     public Charger(ArrayList<Connector> connectors, Coordinate location, int availableParks,
             Double timeLimit, String operator, boolean isPublic, boolean hasAttraction) {
         this.connectors = connectors;
@@ -293,5 +300,51 @@ public class Charger {
      */
     public void setChargeCost(boolean chargeCost) {
         hasChargeCost = chargeCost;
+    }
+
+    /**
+     * Set warning high cost
+     * 
+     * @param warningHighCost bool indicating high cost warning
+     */
+    public void setWarningHighCost(boolean warningHighCost) {
+        this.warningHighCost = warningHighCost;
+    }
+
+    /**
+     * Set warning high cost
+     * 
+     * @param warningLongWait bool indicating long wait warning
+     */
+    public void setWarningLongWait(boolean warningLongWait) {
+        this.warningLongWait = warningLongWait;
+    }
+    
+    /**
+     * Set warning high cost
+     * 
+     * @param warningLowAvailability bool indicating low availability warning
+     */
+    public void setWarningLowAvailability(boolean warningLowAvailability) {
+        this.warningLowAvailability = warningLowAvailability;
+    }
+
+    /**
+     * Gets boolean warnings that are set to true
+     * 
+     * @return ArrayList of boolean warnings
+     */
+    public ArrayList<String> getWarnings() {
+        ArrayList<String> warnings = new ArrayList<String>();
+        if (this.warningHighCost) {
+            warnings.add("high cost");
+        }
+        if (this.warningLongWait) {
+            warnings.add("long wait");
+        }
+        if (this.warningLowAvailability) {
+            warnings.add("low availability");
+        }
+        return warnings;
     }
 }
