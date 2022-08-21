@@ -4,6 +4,8 @@ import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.TableColumn;
 import seng202.team3.data.entity.Charger;
@@ -12,11 +14,15 @@ import seng202.team3.data.entity.Coordinate;
 import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import seng202.team3.logic.Calculations;
 import seng202.team3.logic.ChargerManager;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -200,4 +206,35 @@ public class MainController {
         // primaryStage.setScene(scene);
         // primaryStage.show();
     }
+
+    @FXML
+    public void loadVehicleScreen() {
+
+        try {
+            // FXMLLoader fxmlLoader = new FXMLLoader();
+            // fxmlLoader.setLocation(getClass().getResource("/fxml/vehicle.fxml"));
+            FXMLLoader baseLoader = new FXMLLoader(getClass().getResource("/fxml/vehicle.fxml"));
+            Parent root = baseLoader.load();
+            /* 
+             * if "fx:controller" is not set in fxml
+             * fxmlLoader.setController(NewWindowController);
+             */
+            Scene scene = new Scene(root, 1080, 720);
+            Stage stage = new Stage();
+
+            VehicleController baseController = baseLoader.getController();
+            baseController.init(stage);
+
+
+            stage.setTitle("Revolt App");
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            Logger logger = Logger.getLogger(getClass().getName());
+            logger.log(Level.SEVERE, "Failed to create new Window.", e);
+        }
+    }
 }
+
+
