@@ -55,7 +55,8 @@ public class JourneyManager {
      * Starts new journey from selected start and end point
      */
     public void startNewJourney () {
-        selectedJourney = new Journey(start, end);
+        if ((start != null) && (end != null));
+            selectedJourney = new Journey(start, end);
     }
     
     /**
@@ -70,11 +71,21 @@ public class JourneyManager {
     /**
      * Adds charger to journey
      * 
-     * @param charger
+     * @param charger charger to add to journey
      */
     public void addCharger(Charger charger) {
         selectedJourney.addCharger(charger);
     }
+    
+    /**
+     * Removes charger from journey
+     * 
+     * @param charger charger to remove from journey
+     */
+    public void removeCharger(Charger charger) {
+        selectedJourney.removeCharger(charger);
+    }
+
 
     /**
      * Calculates all candidate chargers for the journey

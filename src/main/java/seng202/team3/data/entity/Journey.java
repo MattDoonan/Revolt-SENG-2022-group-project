@@ -35,7 +35,7 @@ public class Journey {
      */
     public Journey(Coordinate startPosition, Coordinate endPosition) {
         ArrayList<String> connectors = new ArrayList<>();
-        connectors.add("allconnectors"); //change default connectors to all for veh?
+        connectors.add("temp"); //change default connectors to all for veh?
         this.vehicle = new Vehicle("temp","temp","temp",100,20000,connectors);
         this.startPosition = startPosition;
         this.endPosition = endPosition;
