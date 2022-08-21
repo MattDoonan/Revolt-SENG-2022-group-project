@@ -10,31 +10,30 @@ import java.util.ArrayList;
  */
 public class Journey {
     /** {@link Charger Chargers} used on journey */
-    ArrayList<Charger> chargers = new ArrayList<Charger>();
+    private ArrayList<Charger> chargers = new ArrayList<Charger>();
 
     /** {@link Vehicle Vehicle} used for journey*/
-    Vehicle vehicle;
+    private Vehicle vehicle;
 
     /** {@link Coordinate Coordinate} of start position */
-    Coordinate startPosition;
+    private Coordinate startPosition;
 
     /** {@link Coordinate Coordinate} of end position */
-    Coordinate endPosition;
+    private Coordinate endPosition;
 
     /** Starting date and time */
-    String startDate;
+    private String startDate;
 
     /** Ending date and time */
-    String endDate;
+    private String endDate;
 
     /** User has favourited */
-    boolean isFavourite;
+    private boolean isFavourite;
 
     /** 
      * Constructor for the Journey 
      */
-    public Journey(ArrayList<Charger> chargers, Vehicle vehicle, Coordinate startPosition, Coordinate endPosition,
-            String startDate, String endDate) {
+    public Journey(ArrayList<Charger> chargers, Vehicle vehicle, Coordinate startPosition, Coordinate endPosition) {
         this.chargers = chargers;
         this.vehicle = vehicle;
         this.startPosition = startPosition;
