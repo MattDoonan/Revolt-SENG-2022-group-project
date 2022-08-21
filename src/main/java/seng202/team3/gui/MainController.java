@@ -90,7 +90,7 @@ public class MainController {
 
     public void viewChargers(Charger c) {
         displayInfo.clear();
-        displayInfo.appendText("Operator: "+ c.getOperator() +"\n"+ "Location: " + c.getLocation().getAddress() +"\n"+ "Number of parks: " +c.getAvailableParks() +"\nTime Limit"+c.getTimeLimit()+"\nHas Attraction = "+c.getHasAttraction()+"\n");
+        displayInfo.appendText("Operator: "+ c.getOperator() +"\n"+ "Location: " + c.getLocation().getAddress() +"\n"+ "Number of parks: " +c.getAvailableParks() +"\nTime Limit "+c.getTimeLimit()+"\nHas Attraction = "+c.getHasAttraction()+"\n");
     }
 
 
