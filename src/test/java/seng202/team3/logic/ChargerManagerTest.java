@@ -17,7 +17,7 @@ import seng202.team3.data.entity.Coordinate;
  * Unit tests for {@link ChargerManager} ChargerManager Class in Logic
  *
  * @author Michelle Hsieh
- * @version 1.0.0, Aug 22
+ * @version 1.0.1, Aug 22
  */
 public class ChargerManagerTest {
 
@@ -36,7 +36,7 @@ public class ChargerManagerTest {
      */
     @BeforeEach
     public void setUp() {
-        Connector dummyConnector = new Connector("ChardaMo", "AC", true, false);
+        Connector dummyConnector = new Connector("ChardaMo", "AC", "Available", "123", 3);
         ArrayList<Connector> connectorList = new ArrayList<>(1);
         connectorList.add(dummyConnector);
 
@@ -49,10 +49,10 @@ public class ChargerManagerTest {
         //Otago Boys School
         Coordinate coord4 = new Coordinate(4.8, 7.7, -45.87135, 170.49551);
 
-        charger1 = new Charger(connectorList, coord1, 2, 1.2, "Hosp", true, true);
-        charger2 = new Charger(connectorList, coord2, 2, 34.2, "Boys", true, false);
-        charger3 = new Charger(connectorList, coord3, 3, 23.3, "Grammar", true, true);
-        charger4 = new Charger(connectorList, coord4, 6, 12.2, "Otago", true, false);
+        charger1 = new Charger(connectorList, "Hosp", coord1, 1, 0.3, "Meridian", true);
+        charger2 = new Charger(connectorList, "Boys", coord2, 2, 3.5, "Someone" , false);
+        charger3 = new Charger(connectorList, "Grammar", coord3, 5, 1.2, "Else" , true);
+        charger4 = new Charger(connectorList, "Otago" , coord4, 2, 35.1, "Us" , false);
 
         manager = new ChargerManager(charger1);
     }
@@ -154,7 +154,7 @@ public class ChargerManagerTest {
         manager.toggleWarning("high cost", true);
         manager.toggleWarning("long wait", false);
         ArrayList<String> test = new ArrayList<>(Arrays.asList("high cost", "low availability"));
-        assertEquals(test, manager.selectedCharger.getWarnings());
+        assertEquals(test, manager.getSelectedCharger().getWarnings());
     }
 
     @Test
@@ -164,6 +164,6 @@ public class ChargerManagerTest {
         manager.toggleWarning("high cost", true);
         manager.toggleWarning("low availability", false);
         ArrayList<String> test = new ArrayList<>(Arrays.asList("high cost"));
-        assertEquals(test, manager.selectedCharger.getWarnings());
+        assertEquals(test, manager.getSelectedCharger().getWarnings());
     }
 }
