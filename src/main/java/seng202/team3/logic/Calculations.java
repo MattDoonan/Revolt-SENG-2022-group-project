@@ -9,7 +9,7 @@ import seng202.team3.data.entity.Coordinate;
  * between two {@link Coordinate}
  *
  * @author Michelle Hsieh
- * @version 1.0.0, Aug 22
+ * @version 1.0.1, Aug 22
  */
 public final class Calculations {
 
@@ -29,5 +29,22 @@ public final class Calculations {
         //The distance between two locations. Is this because the world is round.
         return 6371 * Math.acos(Math.sin(lat1) * Math.sin(lat2) + Math.cos(lat1) * Math.cos(lat2)
                 * cos(lon2 - lon1));
+    }
+
+    /**
+     * Takes a {@link Coordinate} of the charger and a start and end coordinate, with a total
+     * distance (km) which a charger cannot exceed from the start and end point
+     * added together. Returns true if in range.
+     *
+     * @param chargerCd {@link Coordinate} of the charger to query
+     * @param startCd {@link Coordinate} of the start point
+     * @param endCd {@link Coordinate} of the end point
+     * @param distance double; the maximum point reachable
+     * @return boolean; true if the point is in range
+     */
+    public static boolean isWithinRange(Coordinate chargerCd, Coordinate startCd, Coordinate endCd,
+                                        double distance) {
+        return ((Calculations.calculateDistance(chargerCd, startCd) + Calculations
+                .calculateDistance(chargerCd, endCd)) <= distance);
     }
 }
