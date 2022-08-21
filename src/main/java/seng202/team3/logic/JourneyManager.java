@@ -15,16 +15,28 @@ import seng202.team3.data.entity.Vehicle;
  */
 public class JourneyManager {
     /** {@link Journey Journey} which is the currently selected journey */
-    Journey selectedJourney;
+    private Journey selectedJourney;
+
 
     /** Staring {@link Coordinate coordinate} of journey*/
-    Coordinate start; 
+    private Coordinate start; 
 
     /** Ending {@link Coordinate coordinate} of journey */
-    Coordinate end;
+    private Coordinate end;
+
+    /**
+     * Gets selected journey
+     * 
+     * @return selected journey
+     */
+    public Journey getSelectedJourney() {
+        return selectedJourney;
+    }
 
     /**
      * Sets start point of journey
+     * 
+     * @param start start of journey
      */
     public void setStart(Coordinate start) {
         this.start = start;
@@ -32,6 +44,8 @@ public class JourneyManager {
 
     /**
      * Sets end point of journey
+     * 
+     * @param end end of journey
      */
     public void setEnd(Coordinate end) {
         this.end = end;

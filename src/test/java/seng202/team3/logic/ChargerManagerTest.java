@@ -154,7 +154,7 @@ public class ChargerManagerTest {
         manager.toggleWarning("high cost", true);
         manager.toggleWarning("long wait", false);
         ArrayList<String> test = new ArrayList<>(Arrays.asList("high cost", "low availability"));
-        assertEquals(test, manager.selectedCharger.getWarnings());
+        assertEquals(test, manager.getSelectedCharger().getWarnings());
     }
 
     @Test
@@ -164,6 +164,6 @@ public class ChargerManagerTest {
         manager.toggleWarning("high cost", true);
         manager.toggleWarning("low availability", false);
         ArrayList<String> test = new ArrayList<>(Arrays.asList("high cost"));
-        assertEquals(test, manager.selectedCharger.getWarnings());
+        assertEquals(test, manager.getSelectedCharger().getWarnings());
     }
 }

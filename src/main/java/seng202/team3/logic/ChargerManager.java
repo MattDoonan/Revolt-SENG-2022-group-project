@@ -14,7 +14,7 @@ import seng202.team3.data.entity.Coordinate;
  */
 public class ChargerManager {
     /** {@link Charger Charger} Charger which is the currently selected charger */
-    Charger selectedCharger;
+    private Charger selectedCharger;
 
     /** Constructor for ChargerManager */
     public ChargerManager(Charger selectedCharger) {
