@@ -16,7 +16,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="frame" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="1080.0" minWidth="1920.0" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.MainController">
+<AnchorPane fx:id="frame" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="1080.0" minWidth="1920.0" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.MainController">
    <children>
       <Label fx:id="mapLabel" contentDisplay="CENTER" layoutX="383.0" layoutY="53.0" prefHeight="1080.0" prefWidth="1920.0" text="       The Best Map EVER!!!!" textAlignment="CENTER" AnchorPane.leftAnchor="383.0" AnchorPane.topAnchor="53.0">
          <font>
@@ -66,6 +66,17 @@
               </content>
             </CustomMenuItem>
             <SeparatorMenuItem mnemonicParsing="false" />
+            <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+               <content>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Distance (50 km)" />
+               </content>
+            </CustomMenuItem>
+            <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+               <content>
+                  <Slider fx:id="changeDistance" majorTickUnit="10.0" min="10.0" minorTickCount="5" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="50.0" />
+               </content>
+            </CustomMenuItem>
+            <SeparatorMenuItem mnemonicParsing="false" />
             <Menu mnemonicParsing="false" text="Charger Types">
                <items>
                   <CustomMenuItem mnemonicParsing="false" text="AC button">
@@ -89,7 +100,7 @@
             <SeparatorMenuItem mnemonicParsing="false" />
             <CustomMenuItem mnemonicParsing="false" text="No Charging Cost">
               <content>
-                <CheckBox text="Click Me" />
+                <CheckBox text="No Charging Cost" />
               </content>
             </CustomMenuItem>
          </items>

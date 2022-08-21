@@ -17,6 +17,11 @@ public class ChargerManager {
     private Charger selectedCharger;
 
     /** Constructor for ChargerManager */
+    public ChargerManager() {
+        setSelectedCharger(null);
+    }
+
+    /** Constructor for ChargerManager */
     public ChargerManager(Charger selectedCharger) {
         setSelectedCharger(selectedCharger);
     }

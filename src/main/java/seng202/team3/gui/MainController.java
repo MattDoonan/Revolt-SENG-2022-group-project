@@ -1,5 +1,8 @@
 package seng202.team3.gui;
 
+import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.beans.property.ReadOnlyDoubleWrapper;
+import javafx.beans.property.ReadOnlyLongWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -8,6 +11,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.TableColumn;
+import seng202.team3.data.database.ComparisonType;
+import seng202.team3.data.database.CsvInterpreter;
+import seng202.team3.data.database.Query;
+import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
@@ -39,6 +46,8 @@ public class MainController {
 
     // @FXML
     // private ListView listOfChargers;
+    @FXML
+    private Slider changeDistance;
 
     @FXML
     private TextField searchField;
@@ -59,10 +68,10 @@ public class MainController {
     private TableColumn<Integer, String> operatorCol = new TableColumn<>("Operator");
 
     @FXML
-    private TableColumn<Integer, String> DistanceCol = new TableColumn<>("km");
+    private TableColumn<Integer, Double> DistanceCol = new TableColumn<>("km");
 
 
-    private ObservableList<Charger> chargerData = FXCollections.observableArrayList();
+    private ObservableList<Charger> chargerData;
 
     private Coordinate dummyPosition = new Coordinate(1574161.4056 , 5173542.4743, -43.5097, 172.5452);
 
@@ -72,43 +81,30 @@ public class MainController {
      * @param stage Top level container for this window
      */
     public void init(Stage stage) {
-
         makeTestChargers();
-        //chargers.setOnMouseClicked(new EventHandler<MouseEvent>() {
-        //     @Override
-        //    public void handle(MouseEvent event) {
-        //        chargerLabel.setText("Charger '" + chargers.getSelectionModel().getSelectedItem() + "' was selected.");
-        //    }
-    //    });
         addChargersToDisplay();
         viewChargers(chargerData.get(0));
         insetText();
         selectToView();
+        onSliderChanged();
 
     }
 
     public void makeTestChargers() {
-        chargerData.add((new Charger(new ArrayList<Connector>(), new Coordinate(1574161.4056, 5177263.1348, -43.557139, 172.680089, "3 Garlands Road, Woolston"), 4, 240.0, "Meridian", true, true)));
-        chargerData.add((new Charger(new ArrayList<Connector>(), new Coordinate(1570148.5238, 5173542.4743, -43.59049, 172.630201, "Worsleys Rd, Cashmere"), 10, 100.0, "BMW", true, true)));
-        chargerData.add((new Charger(new ArrayList<Connector>(), new Coordinate(1568290.4372, 5179226.0935, -43.539238, 172.607516, "Whiteleigh Avenue, Addington"), 20, 100.0, "Ford", true, true)));
-        chargerData.add((new Charger(new ArrayList<Connector>(), new Coordinate(1568058.0099, 5179103.6026, -43.540331, 172.604632, "Whiteleigh Avenue, Addington"), 55, 100.0, "Mazda", true, true)));
+        Query myq = new QueryBuilderImpl().withSource("charger").withFilter("operator", "MERIDIAN", ComparisonType.CONTAINS).build();
+        try {
+            chargerData = FXCollections.observableList((List<Charger>) (List<?>) new CsvInterpreter().readData(myq, Charger.class));
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
     }
 
     public void viewChargers(Charger c) {
         displayInfo.clear();
-        displayInfo.appendText("Operator: "+ c.getOperator() +"\n"+ "Location: " + c.getLocation().getAddress() +"\n"+ "Number of parks: " +c.getAvailableParks() +"\nTime Limit"+c.getTimeLimit()+"\nHas Attraction = "+c.getHasAttraction()+"\n");
+        displayInfo.appendText("Operator: "+ c.getOperator() +"\n"+ "Location: " + c.getLocation().getAddress() +"\n"+ "Number of parks: " +c.getAvailableParks() +"\nTime Limit "+c.getTimeLimit()+"\nHas Attraction = "+c.getHasAttraction()+"\n");
     }
 
-
-    // public void selectToView(){
-    //     listOfChargers.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
-    //         @Override
-    //         public void changed(ObservableValue observableValue, Object o, Object t1) {
-    //             viewChargers(chargerList.get(listOfChargers.getSelectionModel().getSelectedIndex()));
-
-    //         }
-    //     });
-    // }
 
     public void selectToView(){
         chargerTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
@@ -121,20 +117,12 @@ public class MainController {
 
     }
 
-    // public void addChargersToDisplay() {
-    //     ObservableList<String> chargernames = FXCollections.observableArrayList();
-    //     for(int i = 0; i < chargerList.size(); i++) {
-    //             chargernames.add(chargerList.get(i).getOperator());
-    //     }
-    //     listOfChargers.setItems(chargernames);
-    // }
-
 
     public void addChargersToDisplay() {
   
         chargerTable.setColumnResizePolicy( TableView.CONSTRAINED_RESIZE_POLICY );
-        AddressCol.setMaxWidth( 1f * Integer.MAX_VALUE * 35 );
-        operatorCol.setMaxWidth( 1f * Integer.MAX_VALUE * 10 );
+        AddressCol.setMaxWidth( 1f * Integer.MAX_VALUE * 30 );
+        operatorCol.setMaxWidth( 1f * Integer.MAX_VALUE * 15 );
         DistanceCol.setMaxWidth( 1f * Integer.MAX_VALUE *5 );
 
         for (int i = 0; i < chargerData.size(); i++) {
@@ -153,7 +141,7 @@ public class MainController {
 
         DistanceCol.setCellValueFactory(cellData -> {
             Integer rowIndex = cellData.getValue();
-            return new ReadOnlyStringWrapper(""+(Math.round(Calculations.calculateDistance(dummyPosition, chargerData.get(rowIndex).getLocation())))+"km");
+            return new ReadOnlyDoubleWrapper(Math.round((Calculations.calculateDistance(dummyPosition, chargerData.get(rowIndex).getLocation()))*10.0)/10.0).asObject();
         });
 
         chargerTable.getColumns().add(AddressCol);
@@ -235,6 +223,18 @@ public class MainController {
             logger.log(Level.SEVERE, "Failed to create new Window.", e);
         }
     }
+
+    public void editTable() {
+
+    }
+
+    @FXML
+    public void onSliderChanged() {
+        ChargerManager chargerManager = new ChargerManager();
+        ArrayList l = chargerManager.getNearbyChargers(new ArrayList<>(chargerData), dummyPosition, (double) changeDistance.getValue());
+        // TO DO
+    }
+
 }
 
 
