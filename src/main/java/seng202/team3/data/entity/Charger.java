@@ -48,7 +48,9 @@ public class Charger {
     /** Has cost for charging */
     boolean hasChargeCost;
 
-    /** Constructor for the Charger */
+    /** 
+     * Constructor for the Charger 
+     */
     public Charger(ArrayList<Connector> connectors, Coordinate location, int availableParks,
             Double timeLimit, String operator, boolean isPublic, boolean hasAttraction) {
         this.connectors = connectors;
