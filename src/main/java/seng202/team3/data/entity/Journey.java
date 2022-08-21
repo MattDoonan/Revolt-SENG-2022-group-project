@@ -33,9 +33,10 @@ public class Journey {
     /** 
      * Constructor for the Journey 
      */
-    public Journey(ArrayList<Charger> chargers, Vehicle vehicle, Coordinate startPosition, Coordinate endPosition) {
-        this.chargers = chargers;
-        this.vehicle = vehicle;
+    public Journey(Coordinate startPosition, Coordinate endPosition) {
+        ArrayList<String> connectors = new ArrayList<>();
+        connectors.add("allconnectors"); //change default connectors to all for veh?
+        this.vehicle = new Vehicle("temp","temp","temp",100,20000,connectors);
         this.startPosition = startPosition;
         this.endPosition = endPosition;
     }
