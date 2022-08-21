@@ -48,8 +48,8 @@
          <font>
             <Font size="16.0" />
          </font></TextField>
-      <TextArea fx:id="displayInfo" editable="false" layoutX="14.0" layoutY="177.0" prefHeight="194.0" prefWidth="400.0" />
-      <TableView fx:id="chargerTable" fixedCellSize="50.0" layoutX="14.0" layoutY="385.0" prefHeight="620.0" prefWidth="400.0" />
+      <TextArea fx:id="displayInfo" editable="false" layoutX="14.0" layoutY="177.0" prefHeight="194.0" prefWidth="400.0" style="-fx-font-size: 15;" />
+      <TableView fx:id="chargerTable" fixedCellSize="50.0" layoutX="14.0" layoutY="385.0" prefHeight="620.0" prefWidth="400.0" style="-fx-table-cell-border-color: transparent; -fx-background-color: black; -fx-my-cell-background: white;" />
       <MenuButton layoutX="14.0" layoutY="125.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="400.0" text="Filters">
          <font>
             <Font size="16.0" />

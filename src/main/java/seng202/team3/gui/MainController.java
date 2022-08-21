@@ -16,6 +16,8 @@ import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
+import seng202.team3.logic.Calculations;
+import seng202.team3.logic.ChargerManager;
 
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -51,19 +53,18 @@ public class MainController {
     private TableView chargerTable;
 
     @FXML
+    private TableColumn<Integer, String> AddressCol = new TableColumn<>("Address");
+
+    @FXML
     private TableColumn<Integer, String> operatorCol = new TableColumn<>("Operator");
 
     @FXML
-    private TableColumn<Integer, String> locationCol = new TableColumn<>("Location");
-
-    @FXML
-    private TableColumn<Integer, String> parksCol = new TableColumn<>("Num. Parks");
-
-    @FXML
-    private TableColumn<Integer, String> attractionCol = new TableColumn<>("Attraction");
+    private TableColumn<Integer, String> DistanceCol = new TableColumn<>("km");
 
 
-    private ObservableList<Charger> chargerData = FXCollections.observableArrayList();  
+    private ObservableList<Charger> chargerData = FXCollections.observableArrayList();
+
+    private Coordinate dummyPosition = new Coordinate(1574161.4056 , 5173542.4743, -43.5097, 172.5452);
 
     /**
      * Initialize the window
@@ -87,15 +88,15 @@ public class MainController {
     }
 
     public void makeTestChargers() {
-        chargerData.add((new Charger(new ArrayList<Connector>(), new Coordinate(34.0, 32.0, 22.0, 33.0, "UC"), 14, 100.0, "Tesla", true, true)));
-        chargerData.add((new Charger(new ArrayList<Connector>(), new Coordinate(44.0, 53.0, 34.0, 35.0, "Mc Donalds"), 10, 100.0, "BMW", true, true)));
-        chargerData.add((new Charger(new ArrayList<Connector>(), new Coordinate(42.0, 23.0, 32.0, 54.0, "BK"), 20, 100.0, "Ford", true, true)));
-        chargerData.add((new Charger(new ArrayList<Connector>(), new Coordinate(30.0, 43.0, 55.0, 44.0, "Target"), 55, 100.0, "Mazda", true, true)));
+        chargerData.add((new Charger(new ArrayList<Connector>(), new Coordinate(1574161.4056, 5177263.1348, -43.557139, 172.680089, "3 Garlands Road, Woolston"), 4, 240.0, "Meridian", true, true)));
+        chargerData.add((new Charger(new ArrayList<Connector>(), new Coordinate(1570148.5238, 5173542.4743, -43.59049, 172.630201, "Worsleys Rd, Cashmere"), 10, 100.0, "BMW", true, true)));
+        chargerData.add((new Charger(new ArrayList<Connector>(), new Coordinate(1568290.4372, 5179226.0935, -43.539238, 172.607516, "Whiteleigh Avenue, Addington"), 20, 100.0, "Ford", true, true)));
+        chargerData.add((new Charger(new ArrayList<Connector>(), new Coordinate(1568058.0099, 5179103.6026, -43.540331, 172.604632, "Whiteleigh Avenue, Addington"), 55, 100.0, "Mazda", true, true)));
     }
 
     public void viewChargers(Charger c) {
         displayInfo.clear();
-        displayInfo.appendText("Operator: "+ c.getOperator() +"\n"+ "Location: " + c.getLocation() +"\n"+ "Number of parks: " +c.getAvailableParks() +"\nHas Attraction = "+c.getHasAttraction()+"\n");
+        displayInfo.appendText("Operator: "+ c.getOperator() +"\n"+ "Location: " + c.getLocation().getAddress() +"\n"+ "Number of parks: " +c.getAvailableParks() +"\nTime Limit"+c.getTimeLimit()+"\nHas Attraction = "+c.getHasAttraction()+"\n");
     }
 
 
@@ -132,39 +133,32 @@ public class MainController {
     public void addChargersToDisplay() {
   
         chargerTable.setColumnResizePolicy( TableView.CONSTRAINED_RESIZE_POLICY );
-        operatorCol.setMaxWidth( 1f * Integer.MAX_VALUE * 25 );
-        locationCol.setMaxWidth( 1f * Integer.MAX_VALUE * 25 );
-        parksCol.setMaxWidth( 1f * Integer.MAX_VALUE * 25 );
-        attractionCol.setMaxWidth( 1f * Integer.MAX_VALUE * 25 );
+        AddressCol.setMaxWidth( 1f * Integer.MAX_VALUE * 35 );
+        operatorCol.setMaxWidth( 1f * Integer.MAX_VALUE * 10 );
+        DistanceCol.setMaxWidth( 1f * Integer.MAX_VALUE *5 );
 
         for (int i = 0; i < chargerData.size(); i++) {
             chargerTable.getItems().add(i);
         }
+
+        AddressCol.setCellValueFactory(cellData -> {
+            Integer rowIndex = cellData.getValue();
+            return new ReadOnlyStringWrapper(chargerData.get(rowIndex).getLocation().getAddress());
+        });
         
         operatorCol.setCellValueFactory(cellData -> {
             Integer rowIndex = cellData.getValue();
             return new ReadOnlyStringWrapper(chargerData.get(rowIndex).getOperator());
         });
 
-        locationCol.setCellValueFactory(cellData -> {
+        DistanceCol.setCellValueFactory(cellData -> {
             Integer rowIndex = cellData.getValue();
-            return new ReadOnlyStringWrapper(chargerData.get(rowIndex).getLocation().toString());
+            return new ReadOnlyStringWrapper(""+(Math.round(Calculations.calculateDistance(dummyPosition, chargerData.get(rowIndex).getLocation())))+"km");
         });
 
-        parksCol.setCellValueFactory(cellData -> {
-            Integer rowIndex = cellData.getValue();
-            return new ReadOnlyStringWrapper(Integer.toString(chargerData.get(rowIndex).getAvailableParks()));
-        });
-
-        attractionCol.setCellValueFactory(cellData -> {
-            Integer rowIndex = cellData.getValue();
-            return new ReadOnlyStringWrapper(String.valueOf(chargerData.get(rowIndex).getHasAttraction()));
-        });
-
+        chargerTable.getColumns().add(AddressCol);
         chargerTable.getColumns().add(operatorCol);
-        chargerTable.getColumns().add(locationCol);
-        chargerTable.getColumns().add(parksCol);
-        chargerTable.getColumns().add(attractionCol);
+        chargerTable.getColumns().add(DistanceCol);
 
         chargerTable.requestFocus();
         chargerTable.getSelectionModel().select(0);
