@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * Stores information about vehicles
  * 
  * @author James Billows
- * @version 1.0.0, Aug 21
+ * @version 1.0.0, Aug 2022
  */
 public class Vehicle {
 
