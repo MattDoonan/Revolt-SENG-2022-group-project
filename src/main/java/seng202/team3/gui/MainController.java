@@ -11,6 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.TableColumn;
+import javafx.scene.text.Text;
 import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.database.CsvInterpreter;
 import seng202.team3.data.database.Query;
@@ -59,6 +60,9 @@ public class MainController {
     private TextArea displayInfo;
 
     @FXML
+    private Text distanceDisplay;
+
+    @FXML
     private TableView chargerTable;
 
     @FXML
@@ -84,7 +88,8 @@ public class MainController {
      */
     public void init(Stage stage) {
         makeTestChargers();
-        ArrayList arrayCloserChargers = chargerManager.getNearbyChargers(new ArrayList<>(chargerData), dummyPosition, 50.0);
+        tableMaker();
+        ArrayList arrayCloserChargers = chargerManager.getNearbyChargers(new ArrayList<>(chargerData), dummyPosition, 20.0);
         ObservableList closerChargers = FXCollections.observableList(arrayCloserChargers);
         addChargersToDisplay(closerChargers);
         viewChargers(chargerData.get(0));
@@ -121,13 +126,21 @@ public class MainController {
 
     }
 
-
-    public void addChargersToDisplay(ObservableList<Charger> wantedChargers) {
-  
+    public void tableMaker() {
         chargerTable.setColumnResizePolicy( TableView.CONSTRAINED_RESIZE_POLICY );
         AddressCol.setMaxWidth( 1f * Integer.MAX_VALUE * 30 );
         operatorCol.setMaxWidth( 1f * Integer.MAX_VALUE * 15 );
         DistanceCol.setMaxWidth( 1f * Integer.MAX_VALUE *5 );
+
+        chargerTable.getColumns().add(AddressCol);
+        chargerTable.getColumns().add(operatorCol);
+        chargerTable.getColumns().add(DistanceCol);
+        chargerTable.requestFocus();
+        chargerTable.getSelectionModel().select(0);
+    }
+    public void addChargersToDisplay(ObservableList<Charger> wantedChargers) {
+
+        chargerTable.getItems().clear();
 
         for (int i = 0; i < wantedChargers.size(); i++) {
             chargerTable.getItems().add(i);
@@ -148,12 +161,6 @@ public class MainController {
             return new ReadOnlyDoubleWrapper(Math.round((Calculations.calculateDistance(dummyPosition, wantedChargers.get(rowIndex).getLocation()))*10.0)/10.0).asObject();
         });
 
-        chargerTable.getColumns().add(AddressCol);
-        chargerTable.getColumns().add(operatorCol);
-        chargerTable.getColumns().add(DistanceCol);
-
-        chargerTable.requestFocus();
-        chargerTable.getSelectionModel().select(0);
     }
 
     /**
@@ -234,8 +241,18 @@ public class MainController {
 
     @FXML
     public void onSliderChanged() {
-        ArrayList l = chargerManager.getNearbyChargers(new ArrayList<>(chargerData), dummyPosition, (double) changeDistance.getValue());
-        // TO DO
+
+        changeDistance.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
+                distanceDisplay.textProperty().setValue("Distance ("+Math.round(changeDistance.getValue())+" km)");
+                if(! changeDistance.isValueChanging()) {
+                    ArrayList updatedChargers = chargerManager.getNearbyChargers(new ArrayList<>(chargerData), dummyPosition, (double) changeDistance.getValue());
+                    ObservableList update = FXCollections.observableList(updatedChargers);
+                    addChargersToDisplay(update);
+                }
+            }
+        });
     }
 
 }
