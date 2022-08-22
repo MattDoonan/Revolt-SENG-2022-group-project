@@ -37,7 +37,8 @@ public class JourneyManagerTest {
      */
     @BeforeEach
     public void setUp() {
-        Connector dummyConnector = new Connector("ChardaMo", "AC", true, false);
+        Connector dummyConnector = new Connector("ChardaMo", "58kw", "Functional", "AC", 4);
+
         ArrayList<Connector> connectorList = new ArrayList<>(1);
         connectorList.add(dummyConnector);
 
@@ -50,11 +51,11 @@ public class JourneyManagerTest {
         //Otago Boys School
         Coordinate coord4 = new Coordinate(4.8, 7.7, -45.87135, 170.49551);
 
-        charger1 = new Charger(connectorList, coord1, 2, 1.2, "Hosp", true, true);
-        charger2 = new Charger(connectorList, coord2, 2, 34.2, "Boys", true, false);
-        charger3 = new Charger(connectorList, coord3, 2, 61.3, "Uni", true, false);
-        charger4 = new Charger(connectorList, coord4, 6, 12.2, "Otago", true, false);
-    
+        charger1 = new Charger(connectorList, "Hosp", coord1, 1, 0.3, "Meridian", true);
+        charger2 = new Charger(connectorList, "Boys", coord2, 2, 3.5, "Someone" , false);
+        charger3 = new Charger(connectorList, "Grammar", coord3, 5, 1.2, "Else" , true);
+        charger4 = new Charger(connectorList, "Otago" , coord4, 2, 35.1, "Us" , false);
+
         manager = new JourneyManager();
         manager.setStart(coord1);
         manager.setStart(coord3);

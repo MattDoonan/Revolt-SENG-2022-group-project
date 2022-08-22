@@ -1,8 +1,6 @@
 package seng202.team3.gui;
 
-import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.ReadOnlyDoubleWrapper;
-import javafx.beans.property.ReadOnlyLongWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -11,12 +9,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.TableColumn;
+import javafx.scene.layout.BorderPane;
 import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.database.CsvInterpreter;
 import seng202.team3.data.database.Query;
 import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.entity.Charger;
-import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
 import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
@@ -70,6 +68,10 @@ public class MainController {
     @FXML
     private TableColumn<Integer, Double> DistanceCol = new TableColumn<>("km");
 
+    @FXML
+    private BorderPane mainWindow;
+
+    private Stage stage;
 
     private ObservableList<Charger> chargerData;
 
@@ -81,6 +83,7 @@ public class MainController {
      * @param stage Top level container for this window
      */
     public void init(Stage stage) {
+        this.stage = stage;
         makeTestChargers();
         addChargersToDisplay();
         viewChargers(chargerData.get(0));
@@ -234,6 +237,34 @@ public class MainController {
         ArrayList l = chargerManager.getNearbyChargers(new ArrayList<>(chargerData), dummyPosition, (double) changeDistance.getValue());
         // TO DO
     }
+
+    /**
+     * Loads the map view onto the Map pane automatically
+     */
+    @FXML
+    void autoMapView() {
+        loadMapView(stage);
+    }
+
+    /**
+     * Loads the map view into the main part of the main window
+     *
+     * @param stage stage to load with
+     */
+    private void loadMapView(Stage stage) {
+        try {
+            FXMLLoader webViewLoader = new FXMLLoader(getClass().getResource("/fxml/map.fxml"));
+            Parent mapViewParent = webViewLoader.load();
+
+            MapViewController mapViewController = webViewLoader.getController();
+            mapViewController.init(stage);
+
+            mainWindow.setCenter(mapViewParent);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }
 

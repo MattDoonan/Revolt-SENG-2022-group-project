@@ -102,6 +102,13 @@
       <version>5.2</version>
     </dependency>
 
+    <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-web -->
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-web</artifactId>
+      <version>${javaFXVersion}</version>
+    </dependency>
+
   </dependencies>
 
   <build>
