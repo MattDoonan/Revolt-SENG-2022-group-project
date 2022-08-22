@@ -22,8 +22,9 @@
 <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
 <script>
-    // console.log("Leaflet OSM map")
     let map;
+    let lat = -43.5279;
+    let lon = 172.5765;
     let markers = [];
     var javaScriptBridge; // must be declared as var (will not be correctly assigned in java with let keyword)
     var route;
@@ -42,8 +43,9 @@
      * creates and initialises the Google map, also defines on click event that calls java code
      */
     function initMap() {
+
         var mapOptions = {
-            center: [-43.5279, 172.5765],
+            center: [lat, lon],
             zoom: 12
         }
         map = new L.map('map', mapOptions);
@@ -54,8 +56,8 @@
         map.on("click", (map_event) => {
             var latlng = map.mouseEventToLatLng(map_event.originalEvent)
             console.log(latlng)
-            javaScriptBridge.addSaleFromClick(`{"lat": ${latlng.lat}, "lng": ${latlng.lng}}`)
-            addMarker("New Sale: Flowers", latlng.lat, latlng.lng)
+            javaScriptBridge.addCoordinateFromClick(`{"lat": ${latlng.lat}, "lng": ${latlng.lng}}`)
+            addMarker("Current coordinate", latlng.lat, latlng.lng)
         })
     }
 
@@ -68,7 +70,7 @@
      */
     function addMarker(title, lat, lng) {
         var m = new L.Marker([lat, lng])
-        m.bindPopup(title).openPopup()
+        m.bindPopup("Address: "+title).openPopup()
         m.addTo(map)
         markers.push(m)
     }

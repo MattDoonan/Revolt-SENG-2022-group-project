@@ -1,5 +1,6 @@
 package seng202.team3.gui;
 
+import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.scene.web.WebEngine;
@@ -8,19 +9,19 @@ import javafx.stage.Stage;
 import netscape.javascript.JSObject;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
+import seng202.team3.logic.JavaScriptBridge;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 
 /**
  * A start into a MapViewController which uses the University UC OSM viewer
  *
- * @author Michelle Hsieh
+ * @author Michelle Hsieh, based off code from Morgan English
  * @version 1.0.0, Aug 22
  */
 public class MapViewController {
@@ -33,7 +34,8 @@ public class MapViewController {
     private WebEngine webEngine;
     private Stage stage;
     private Coordinate coordinate;
-    private ArrayList<Charger> chargers;
+    private ObservableList<Charger> chargers;
+    private JavaScriptBridge javaScriptBridge;
     private JSObject javaScriptConnector;
     private boolean routeDisplayed = false;
 
@@ -41,9 +43,11 @@ public class MapViewController {
      * Initialise the map view
      * @param stage current stage
      */
-    void init(Stage stage) {
+    void init(Stage stage, ObservableList<Charger> chargers) {
         this.stage = stage;
         coordinate = new Coordinate();
+        javaScriptBridge = new JavaScriptBridge();
+        this.chargers = chargers;
         initMap();
         stage.sizeToScene();
     }
@@ -74,20 +78,27 @@ public class MapViewController {
                 (ov, oldState, newState) -> {
                     // if javascript loads successfully
                     if (newState == Worker.State.SUCCEEDED) {
+                        JSObject window = (JSObject) webEngine.executeScript("window");
+                        window.setMember("javaScriptBridge", javaScriptBridge);
                         // get a reference to the js object that has a reference to the js methods we need to use in java
                         javaScriptConnector = (JSObject) webEngine.executeScript("jsConnector");
 
                         javaScriptConnector.call("initMap");
 
-                        addCoordinateFromMap();
+                        addChargersOnMap();
                     }
                 });
     }
 
     /**
-     * Adds coordinates on map if lat and lon not 0
+     * Adds all chargers on the map
      */
-    private void addCoordinateFromMap() {
-        return;
+    private void addChargersOnMap() {
+        for (Charger charger : chargers) {
+            javaScriptConnector.call("addMarker", charger.getLocation().getAddress(),
+                    charger.getLocation().getLat(), charger.getLocation().getLon());
+        }
     }
+
+
 }

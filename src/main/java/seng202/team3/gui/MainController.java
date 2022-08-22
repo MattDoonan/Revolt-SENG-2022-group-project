@@ -257,7 +257,7 @@ public class MainController {
             Parent mapViewParent = webViewLoader.load();
 
             MapViewController mapViewController = webViewLoader.getController();
-            mapViewController.init(stage);
+            mapViewController.init(stage, chargerData);
 
             mainWindow.setCenter(mapViewParent);
         } catch (IOException e) {
