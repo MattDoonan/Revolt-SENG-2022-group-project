@@ -87,11 +87,8 @@ public class MainController {
      * @param stage Top level container for this window
      */
     public void init(Stage stage) {
-        makeTestChargers();
+        makeAllChargers();
         tableMaker();
-        ArrayList arrayCloserChargers = chargerManager.getNearbyChargers(new ArrayList<>(chargerData), dummyPosition, 20.0);
-        ObservableList closerChargers = FXCollections.observableList(arrayCloserChargers);
-        addChargersToDisplay(closerChargers);
         viewChargers(chargerData.get(0));
         insetText();
         selectToView();
@@ -99,7 +96,7 @@ public class MainController {
 
     }
 
-    public void makeTestChargers() {
+    public void makeAllChargers() {
         Query myq = new QueryBuilderImpl().withSource("charger").build();
         try {
             chargerData = FXCollections.observableList((List<Charger>) (List<?>) new CsvInterpreter().readData(myq, Charger.class));
@@ -107,6 +104,13 @@ public class MainController {
         catch(IOException e){
             e.printStackTrace();
         }
+        compareDistance();
+    }
+
+    public void compareDistance() {
+        ArrayList arrayCloserChargers = chargerManager.getNearbyChargers(new ArrayList<>(chargerData), dummyPosition, changeDistance.getValue());
+        ObservableList closerChargers = FXCollections.observableList(arrayCloserChargers);
+        addChargersToDisplay(closerChargers);
     }
 
     public void viewChargers(Charger c) {
@@ -168,8 +172,35 @@ public class MainController {
      *
      */
     public void insetText() {
+        searchCharger.setOnMouseClicked(e -> {
+            if(searchCharger.getText().contains("Search Charger")) {
+                searchCharger.clear();
+            }
+        });
         searchCharger.textProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println(searchCharger.getText());
+
+            Query addy = new QueryBuilderImpl().withSource("charger").withFilter("address", searchCharger.getText(), ComparisonType.CONTAINS).build();
+            try {
+                chargerData = FXCollections.observableList((List<Charger>) (List<?>) new CsvInterpreter().readData(addy, Charger.class));
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            compareDistance();
+        });
+    }
+
+    @FXML
+    public void onSliderChanged() {
+
+        changeDistance.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
+                distanceDisplay.textProperty().setValue("Distance ("+Math.round(changeDistance.getValue())+" km)");
+                if(! changeDistance.isValueChanging()) {
+                    compareDistance();
+                }
+            }
         });
     }
 
@@ -237,22 +268,6 @@ public class MainController {
 
     public void editTable() {
 
-    }
-
-    @FXML
-    public void onSliderChanged() {
-
-        changeDistance.valueProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
-                distanceDisplay.textProperty().setValue("Distance ("+Math.round(changeDistance.getValue())+" km)");
-                if(! changeDistance.isValueChanging()) {
-                    ArrayList updatedChargers = chargerManager.getNearbyChargers(new ArrayList<>(chargerData), dummyPosition, (double) changeDistance.getValue());
-                    ObservableList update = FXCollections.observableList(updatedChargers);
-                    addChargersToDisplay(update);
-                }
-            }
-        });
     }
 
 }
