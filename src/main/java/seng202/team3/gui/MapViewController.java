@@ -10,6 +10,7 @@ import netscape.javascript.JSObject;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
 import seng202.team3.logic.JavaScriptBridge;
+import seng202.team3.logic.MapManager;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -33,8 +34,7 @@ public class MapViewController {
     private WebView webView;
     private WebEngine webEngine;
     private Stage stage;
-    private Coordinate coordinate;
-    private ObservableList<Charger> chargers;
+    private MapManager map;
     private JavaScriptBridge javaScriptBridge;
     private JSObject javaScriptConnector;
     private boolean routeDisplayed = false;
@@ -43,20 +43,18 @@ public class MapViewController {
      * Initialise the map view
      * @param stage current stage
      */
-    void init(Stage stage, ObservableList<Charger> chargers) {
+    public void init(Stage stage, MapManager map) {
         this.stage = stage;
-        coordinate = new Coordinate();
         javaScriptBridge = new JavaScriptBridge();
-        this.chargers = chargers;
+        this.map = map;
         initMap();
         stage.sizeToScene();
     }
 
     /**
-     * Function to load map html file into string and insert the api key (as in .env) where needed by matching the
-     * default placeholder 'YOUR_KEY_HERE'
+     * Function to load map html file
      *
-     * @return String of html file, with api key inserted
+     * @return String of html file
      */
     private String getHtml() {
         InputStream is = getClass().getResourceAsStream("/html/map.html");
@@ -94,11 +92,34 @@ public class MapViewController {
      * Adds all chargers on the map
      */
     private void addChargersOnMap() {
-        for (Charger charger : chargers) {
+        for (Charger charger : map.getController().getChargerData()) {
             javaScriptConnector.call("addMarker", charger.getLocation().getAddress(),
                     charger.getLocation().getLat(), charger.getLocation().getLon());
         }
     }
 
+    /**
+     * Adds just one Coordinate {@link Coordinate} onto the map, and associates
+     * this map with this coordinate
+     *
+     * @param coordinate, the coordinate which is clicked
+     */
+    public void makeCoordinate(Coordinate coordinate) {
+        javaScriptConnector.call("addCoordinate", "Current Coordinate: ",
+                coordinate.getLat(), coordinate.getLon());
+        map.getController().setPosition(coordinate);
+    }
+
+    /**
+     * Takes one Coordinate {@link Coordinate} onto the map, and moves
+     * this map to this coordinate
+     *
+     * @param coordinate , the coordinate which is selected
+     */
+    public void changePosition(Coordinate coordinate) {
+        javaScriptConnector.call("movePosition",
+                coordinate.getLat(), coordinate.getLon());
+
+    }
 
 }

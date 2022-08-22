@@ -26,14 +26,18 @@
     let lat = -43.5279;
     let lon = 172.5765;
     let markers = [];
+    var coordinate;
     var javaScriptBridge; // must be declared as var (will not be correctly assigned in java with let keyword)
     var route;
+
 
     /**
      * This object can be returned to our java code, where we can call the functions we define inside of it
      */
     let jsConnector = {
         addMarker: addMarker,
+        addCoordinate: addCoordinate,
+        movePosition: movePosition,
         addRoute: addRoute,
         removeRoute: removeRoute,
         initMap: initMap
@@ -55,9 +59,9 @@
 
         map.on("click", (map_event) => {
             var latlng = map.mouseEventToLatLng(map_event.originalEvent)
-            console.log(latlng)
             javaScriptBridge.addCoordinateFromClick(`{"lat": ${latlng.lat}, "lng": ${latlng.lng}}`)
-            addMarker("Current coordinate", latlng.lat, latlng.lng)
+            removeCoordinate()
+            addCoordinate("Selected Location", latlng.lat, latlng.lng)
         })
     }
 
@@ -71,9 +75,40 @@
     function addMarker(title, lat, lng) {
         var m = new L.Marker([lat, lng])
         m.bindPopup("Address: "+title).openPopup()
-        m.addTo(map)
+        m.addTo(map).on("click", (map_event) => {
+            var latlng = map.mouseEventToLatLng(map_event.originalEvent)
+            javaScriptBridge.zoomToPoint(`{"lat": ${latlng.lat}, "lng": ${latlng.lng}}`)})
         markers.push(m)
     }
+
+    /**
+     * Adds a coordinate to the map and stores it by itself
+     * @param title tooltip to display on hover
+     * @param lat latitude to place coordinate marker at
+     * @param lng longitude to place coordinate marker at
+     */
+    function addCoordinate(title, lat, lng) {
+        coordinate = new L.Marker([lat, lng])
+        coordinate.bindPopup(title+ ": "+lat.toFixed(4)+ " "+ lng.toFixed(4) + " ").openPopup()
+        coordinate.addTo(map).on("click", javaScriptBridge.refreshTable())
+    }
+
+    /**
+     * Remove coordinate
+     */
+    function removeCoordinate() {
+        if (coordinate) {
+            coordinate.remove()
+        }
+    }
+
+    /**
+     * Moves position of centre of map
+     */
+    function movePosition(lat, lon) {
+        map.panTo(new L.LatLng(lat, lon))
+    }
+
 
     function addRoute() {
         if(route){
