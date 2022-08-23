@@ -214,18 +214,18 @@ public class MainController {
 
     public void acChargersOnly(ActionEvent actionEvent) {
         if(acButton.isSelected()) {
-            mainDataQuerry.addFilter("currentType", "AC", ComparisonType.CONTAINS);
+            mainDataQuerry.addFilter("current", "AC", ComparisonType.CONTAINS);
         } else {
-            mainDataQuerry.addFilter("currentType", "", ComparisonType.CONTAINS);
+            mainDataQuerry.addFilter("current", "", ComparisonType.CONTAINS);
         }
         makeAllChargers();
     }
 
     public void dcChargersOnly(ActionEvent actionEvent) {
         if(dcButton.isSelected()) {
-            mainDataQuerry.addFilter("currentType", "DC", ComparisonType.CONTAINS);
+            mainDataQuerry.addFilter("current", "DC", ComparisonType.CONTAINS);
         } else {
-            mainDataQuerry.addFilter("currentType", "", ComparisonType.CONTAINS);
+            mainDataQuerry.addFilter("current", "", ComparisonType.CONTAINS);
         }
         makeAllChargers();
     }
