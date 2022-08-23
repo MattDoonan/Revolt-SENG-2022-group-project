@@ -1,3 +1,4 @@
+
 package seng202.team3.logic;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -14,7 +15,7 @@ import seng202.team3.data.entity.Vehicle;
 
 /**
  * Unit tests for {@link JourneyManager JourneyManager} class in Logic
- * 
+ *
  * @author Angus Kirtlan
  * @version 1.0.0, Aug 22
  */
@@ -37,7 +38,7 @@ public class JourneyManagerTest {
      */
     @BeforeEach
     public void setUp() {
-        Connector dummyConnector = new Connector("ChardaMo", "AC", true, false);
+        Connector dummyConnector = new Connector("ChardaMo", "powerDraw", "Not in use","AC", 2);
         ArrayList<Connector> connectorList = new ArrayList<>(1);
         connectorList.add(dummyConnector);
 
@@ -50,14 +51,14 @@ public class JourneyManagerTest {
         //Otago Boys School
         Coordinate coord4 = new Coordinate(4.8, 7.7, -45.87135, 170.49551);
 
-        charger1 = new Charger(connectorList, coord1, 2, 1.2, "Hosp", true, true);
-        charger2 = new Charger(connectorList, coord2, 2, 34.2, "Boys", true, false);
-        charger3 = new Charger(connectorList, coord3, 2, 61.3, "Uni", true, false);
-        charger4 = new Charger(connectorList, coord4, 6, 12.2, "Otago", true, false);
-    
+        charger1 = new Charger(connectorList, "Hosp", coord1, 2, 1.2, "operator", true);
+        charger2 = new Charger(connectorList, "Boys", coord2, 2, 34.2,  "operator", false);
+        charger3 = new Charger(connectorList, "Uni", coord3, 2, 61.3, "operator", false);
+        charger4 = new Charger(connectorList, "Otago", coord4, 6, 12.2, "operator", false);
+   
         manager = new JourneyManager();
         manager.setStart(coord1);
-        manager.setStart(coord3);
+        manager.setEnd(coord3);
         manager.startNewJourney();
     }
 
@@ -96,5 +97,27 @@ public class JourneyManagerTest {
         ArrayList<Charger> test = new ArrayList<>();
         test.add(charger1);
         assertEquals(test, manager.getSelectedJourney().getChargers());
+    }
+
+    /**
+     * Tests callCalculations returns correct arrayList
+     * Coord 2 is between Coord 1 and Coord 3, the start and end
+     * Coord 1 through 3 should be correct
+     */
+    @Test
+    public void testCallCalculations() {
+        ArrayList<Charger> allTestChargers = new ArrayList<>();
+        allTestChargers.add(charger1);
+        allTestChargers.add(charger2);
+        allTestChargers.add(charger3);
+        allTestChargers.add(charger4);
+
+        ArrayList<Charger> correctTestChargers = new ArrayList<>();
+        correctTestChargers.add(charger1);
+        correctTestChargers.add(charger2);
+        correctTestChargers.add(charger3);
+
+        ArrayList<Charger> result = manager.callCalculations(allTestChargers);
+        assertEquals(result, correctTestChargers);
     }
 }
