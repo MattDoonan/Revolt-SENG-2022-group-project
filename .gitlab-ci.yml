@@ -7,5 +7,5 @@ generate_artifacts:
   script:
   - mvn -B clean package 
   artifacts:
-  paths:
+    paths:
     - target/revolt*.jar
