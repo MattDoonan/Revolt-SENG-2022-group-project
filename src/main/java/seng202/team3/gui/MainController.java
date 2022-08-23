@@ -129,7 +129,15 @@ public class MainController {
 
     public void viewChargers(Charger c) {
         displayInfo.clear();
-        displayInfo.appendText("Operator: "+ c.getOperator() +"\n"+ "Location: " + c.getLocation().getAddress() +"\n"+ "Number of parks: " +c.getAvailableParks() +"\nTime Limit "+c.getTimeLimit()+"\nHas Attraction = "+c.getHasAttraction()+"\nHas cost "+c.getChargeCost()+"");
+        String word = "";
+        ArrayList<String> check = new ArrayList<String>();
+        for(int i = 0; i < c.getConnectors().size(); i++) {
+            if (!check.contains(c.getConnectors().get(i).getCurrent())){
+                word = word + " " + c.getConnectors().get(i).getCurrent();
+                check.add(c.getConnectors().get(i).getCurrent());
+            }
+        }
+        displayInfo.appendText("Operator: "+ c.getOperator() +"\n"+ "Location: " + c.getLocation().getAddress() +"\n"+ "Number of parks: " +c.getAvailableParks() +"\nTime Limit "+c.getTimeLimit()+"\nHas Attraction = "+c.getHasAttraction()+"\nHas cost "+c.getChargeCost()+"\nCharger Type:"+word+"");
     }
 
 
@@ -216,7 +224,7 @@ public class MainController {
         if(acButton.isSelected()) {
             mainDataQuerry.addFilter("current", "AC", ComparisonType.CONTAINS);
         } else {
-            mainDataQuerry.addFilter("current", "", ComparisonType.CONTAINS);
+            mainDataQuerry.removeFilter("current");
         }
         makeAllChargers();
     }
@@ -225,7 +233,7 @@ public class MainController {
         if(dcButton.isSelected()) {
             mainDataQuerry.addFilter("current", "DC", ComparisonType.CONTAINS);
         } else {
-            mainDataQuerry.addFilter("current", "", ComparisonType.CONTAINS);
+            mainDataQuerry.removeFilter("current");
         }
         makeAllChargers();
     }
@@ -234,7 +242,7 @@ public class MainController {
         if(attractionButton.isSelected()) {
             mainDataQuerry.addFilter("hasTouristAttraction", "True", ComparisonType.CONTAINS);
         } else {
-            mainDataQuerry.addFilter("hasTouristAttraction", "", ComparisonType.CONTAINS);
+            mainDataQuerry.removeFilter("hasTouristAttraction");
         }
         makeAllChargers();
     }
@@ -243,7 +251,7 @@ public class MainController {
         if(chargingCost.isSelected()) {
             mainDataQuerry.addFilter("hasChargingCost", "False", ComparisonType.CONTAINS);
         } else {
-            mainDataQuerry.addFilter("hasChargingCost", "", ComparisonType.CONTAINS);
+            mainDataQuerry.removeFilter("hasChargingCost");
         }
         makeAllChargers();
     }
