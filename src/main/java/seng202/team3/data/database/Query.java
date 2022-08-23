@@ -47,4 +47,14 @@ public class Query {
     public ArrayList<Triplet<String, String, ComparisonType>> getFilters() {
         return filters;
     }
+
+    public void addFilter(String field, String criteria, ComparisonType compareMethod) {
+        for(int i = 0; i < filters.size(); i++) {
+            if (filters.get(i).getValue0() == field) {
+                filters.remove(i);
+            }
+        }
+        filters.add(new Triplet<>(field, criteria, compareMethod));
+    }
+
 }

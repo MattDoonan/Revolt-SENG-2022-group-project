@@ -34,4 +34,6 @@ public class QueryBuilderImpl implements QueryBuilder {
     public Query build() {
         return new Query(source, filters);
     }
+
+
 }

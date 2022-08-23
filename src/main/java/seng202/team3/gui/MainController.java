@@ -7,6 +7,7 @@ import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -63,7 +64,19 @@ public class MainController {
     private Text distanceDisplay;
 
     @FXML
+    private CheckBox acButton;
+
+    @FXML
+    private CheckBox dcButton;
+
+    @FXML
     private TableView chargerTable;
+
+    @FXML
+    private CheckBox attractionButton;
+
+    @FXML
+    private CheckBox chargingCost;
 
     @FXML
     private TableColumn<Integer, String> AddressCol = new TableColumn<>("Address");
@@ -74,6 +87,7 @@ public class MainController {
     @FXML
     private TableColumn<Integer, Double> DistanceCol = new TableColumn<>("km");
 
+    public Query mainDataQuerry;
 
     private ObservableList<Charger> chargerData;
 
@@ -87,6 +101,7 @@ public class MainController {
      * @param stage Top level container for this window
      */
     public void init(Stage stage) {
+        mainDataQuerry = new QueryBuilderImpl().withSource("charger").build();
         makeAllChargers();
         tableMaker();
         viewChargers(chargerData.get(0));
@@ -97,9 +112,8 @@ public class MainController {
     }
 
     public void makeAllChargers() {
-        Query myq = new QueryBuilderImpl().withSource("charger").build();
         try {
-            chargerData = FXCollections.observableList((List<Charger>) (List<?>) new CsvInterpreter().readData(myq, Charger.class));
+            chargerData = FXCollections.observableList((List<Charger>) (List<?>) new CsvInterpreter().readData(mainDataQuerry, Charger.class));
         }
         catch(IOException e){
             e.printStackTrace();
@@ -115,7 +129,7 @@ public class MainController {
 
     public void viewChargers(Charger c) {
         displayInfo.clear();
-        displayInfo.appendText("Operator: "+ c.getOperator() +"\n"+ "Location: " + c.getLocation().getAddress() +"\n"+ "Number of parks: " +c.getAvailableParks() +"\nTime Limit "+c.getTimeLimit()+"\nHas Attraction = "+c.getHasAttraction()+"\n");
+        displayInfo.appendText("Operator: "+ c.getOperator() +"\n"+ "Location: " + c.getLocation().getAddress() +"\n"+ "Number of parks: " +c.getAvailableParks() +"\nTime Limit "+c.getTimeLimit()+"\nHas Attraction = "+c.getHasAttraction()+"\nHas cost "+c.getChargeCost()+"");
     }
 
 
@@ -178,15 +192,8 @@ public class MainController {
             }
         });
         searchCharger.textProperty().addListener((observable, oldValue, newValue) -> {
-
-            Query addy = new QueryBuilderImpl().withSource("charger").withFilter("address", searchCharger.getText(), ComparisonType.CONTAINS).build();
-            try {
-                chargerData = FXCollections.observableList((List<Charger>) (List<?>) new CsvInterpreter().readData(addy, Charger.class));
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            compareDistance();
+            mainDataQuerry.addFilter("address", searchCharger.getText(), ComparisonType.CONTAINS);
+            makeAllChargers();
         });
     }
 
@@ -202,6 +209,43 @@ public class MainController {
                 }
             }
         });
+    }
+
+
+    public void acChargersOnly(ActionEvent actionEvent) {
+        if(acButton.isSelected()) {
+            mainDataQuerry.addFilter("currentType", "AC", ComparisonType.CONTAINS);
+        } else {
+            mainDataQuerry.addFilter("currentType", "", ComparisonType.CONTAINS);
+        }
+        makeAllChargers();
+    }
+
+    public void dcChargersOnly(ActionEvent actionEvent) {
+        if(dcButton.isSelected()) {
+            mainDataQuerry.addFilter("currentType", "DC", ComparisonType.CONTAINS);
+        } else {
+            mainDataQuerry.addFilter("currentType", "", ComparisonType.CONTAINS);
+        }
+        makeAllChargers();
+    }
+
+    public void attractionNeeded(ActionEvent actionEvent) {
+        if(attractionButton.isSelected()) {
+            mainDataQuerry.addFilter("hasTouristAttraction", "True", ComparisonType.CONTAINS);
+        } else {
+            mainDataQuerry.addFilter("hasTouristAttraction", "", ComparisonType.CONTAINS);
+        }
+        makeAllChargers();
+    }
+
+    public void noChargingCostNeeded(ActionEvent actionEvent) {
+        if(chargingCost.isSelected()) {
+            mainDataQuerry.addFilter("hasChargingCost", "False", ComparisonType.CONTAINS);
+        } else {
+            mainDataQuerry.addFilter("hasChargingCost", "", ComparisonType.CONTAINS);
+        }
+        makeAllChargers();
     }
 
     /**
