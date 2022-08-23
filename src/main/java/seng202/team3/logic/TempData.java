@@ -1,6 +1,7 @@
 package seng202.team3.logic;
 
-
+import java.io.IOException;
+import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seng202.team3.data.database.ComparisonType;
@@ -11,13 +12,10 @@ import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
 import seng202.team3.gui.MainController;
 
-import java.io.IOException;
-import java.util.List;
-
 /**
  * A temporary DataManager class to store information and show data
  *
- * @Author Michelle Hsieh
+ * @author Michelle Hsieh
  * @version 1.0.0, Aug 22
  */
 public class TempData {
@@ -31,15 +29,13 @@ public class TempData {
 
     /**
      * Initiates all the data
-     *
-     * @throws IOException
      */
     public static void makeTempData() {
         Query myq = new QueryBuilderImpl().withSource("charger").build();
         try {
-            chargers = FXCollections.observableList((List<Charger>) (List<?>) new CsvInterpreter().readData(myq, Charger.class));
-        }
-        catch(IOException e){
+            chargers = FXCollections.observableList((List<Charger>) (List<?>)
+                    new CsvInterpreter().readData(myq, Charger.class));
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

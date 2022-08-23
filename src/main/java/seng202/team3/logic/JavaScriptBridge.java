@@ -1,14 +1,10 @@
 package seng202.team3.logic;
 
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import seng202.team3.data.entity.Coordinate;
 import seng202.team3.gui.MainController;
-import seng202.team3.gui.MapViewController;
 
 /**
  * Converts JavaScript to Objects by hocus pocus
@@ -41,9 +37,9 @@ public class JavaScriptBridge {
         JSONParser parser = new JSONParser();
         Coordinate coord = new Coordinate();
         try {
-            JSONObject latlng_json = (JSONObject) parser.parse(latlng);
-            float lat = ((Double)latlng_json.get("lat")).floatValue();
-            float lng = ((Double) latlng_json.get("lng")).floatValue();
+            JSONObject latlngJson = (JSONObject) parser.parse(latlng);
+            float lat = ((Double) latlngJson.get("lat")).floatValue();
+            float lng = ((Double) latlngJson.get("lng")).floatValue();
             coord.setLat((double) lat);
             coord.setLon((double) lng);
         } catch (ParseException e) {
@@ -63,7 +59,6 @@ public class JavaScriptBridge {
 
     /**
      * Zooms to a point
-     *
      */
     public void zoomToPoint(String latlng) {
         MainController controller = TempData.getController();

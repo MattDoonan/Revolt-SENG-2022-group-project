@@ -1,6 +1,10 @@
 package seng202.team3.gui;
 
-import javafx.collections.ObservableList;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.stream.Collectors;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.scene.web.WebEngine;
@@ -11,12 +15,6 @@ import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
 import seng202.team3.logic.JavaScriptBridge;
 import seng202.team3.logic.MapManager;
-
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.util.stream.Collectors;
 
 
 /**
@@ -74,13 +72,10 @@ public class MapViewController {
 
         webEngine.getLoadWorker().stateProperty().addListener(
                 (ov, oldState, newState) -> {
-                    // if javascript loads successfully
                     if (newState == Worker.State.SUCCEEDED) {
                         JSObject window = (JSObject) webEngine.executeScript("window");
                         window.setMember("javaScriptBridge", javaScriptBridge);
-                        // get a reference to the js object that has a reference to the js methods we need to use in java
                         javaScriptConnector = (JSObject) webEngine.executeScript("jsConnector");
-
                         javaScriptConnector.call("initMap");
 
                         addChargersOnMap();
@@ -102,7 +97,7 @@ public class MapViewController {
      * Adds just one Coordinate {@link Coordinate} onto the map, and associates
      * this map with this coordinate
      *
-     * @param coordinate, the coordinate which is clicked
+     * @param coordinate the coordinate which is clicked
      */
     public void makeCoordinate(Coordinate coordinate) {
         javaScriptConnector.call("addCoordinate", "Current Coordinate: ",

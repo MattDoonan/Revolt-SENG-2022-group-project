@@ -4,94 +4,102 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="frame" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="1080.0" minWidth="1920.0" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.MainController">
-    <BorderPane fx:id="mainWindow" layoutX="420.0" layoutY="53.0" prefHeight="1027.0" prefWidth="1500.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
-    </BorderPane>
-    <children>
-       <Button fx:id="mapLabel" contentDisplay="CENTER" layoutX="504.0" layoutY="125.0" mnemonicParsing="false" onAction="#autoMapView" prefHeight="40.0" prefWidth="100.0" text="Display Map" textAlignment="CENTER" AnchorPane.leftAnchor="504.0" AnchorPane.topAnchor="125.0">
-       </Button>
-      <MenuBar layoutX="-1.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="60.0" prefWidth="1920.0" style="-fx-background-color: #e06666;">
-        <menus>
-            <Menu fx:id="accountMenu" mnemonicParsing="false" text="Account">
-              <items>
-                <MenuItem fx:id="viewAccountMenu" mnemonicParsing="false" text="View Account" />
-                  <MenuItem fx:id="logOutMenu" mnemonicParsing="false" text="Log Out" />
-              </items>
-            </Menu>
-          <Menu fx:id="planJourneyMenu" mnemonicParsing="false" style="-fx-font: 100;" text="Plan Journey">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
-            </items>
-          </Menu>
-          <Menu fx:id="manageVehiclesMenu" mnemonicParsing="false" text="Manage Vehicles">
-            <items>
-              <MenuItem fx:id="openVehicles" mnemonicParsing="false" onAction="#loadVehicleScreen" text="Open Garage" />
-            </items>
-          </Menu>
-          <Menu fx:id="homeMenu" mnemonicParsing="false" text="Home" />
-        </menus>
-      </MenuBar>
-      <TextField fx:id="searchField" layoutX="14.0" layoutY="69.0" prefHeight="26.0" prefWidth="143.0" visible="false" />
-      <TextField fx:id="searchCharger" layoutX="14.0" layoutY="82.0" prefHeight="40.0" prefWidth="400.0" text="Search Charger">
-         <font>
-            <Font size="16.0" />
-         </font></TextField>
-      <TextArea fx:id="displayInfo" editable="false" layoutX="14.0" layoutY="177.0" prefHeight="194.0" prefWidth="400.0" style="-fx-font-size: 15;" />
-      <TableView fx:id="chargerTable" fixedCellSize="50.0" layoutX="14.0" layoutY="385.0" prefHeight="620.0" prefWidth="400.0" style="-fx-table-cell-border-color: transparent; -fx-background-color: black; -fx-my-cell-background: white;" />
-      <MenuButton layoutX="14.0" layoutY="125.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="400.0" text="Filters">
-         <font>
-            <Font size="16.0" />
-         </font>
-         <items>
-            <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
-               <content>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Charger Stars" />
-               </content>
-            </CustomMenuItem>
-            <CustomMenuItem mnemonicParsing="false" text="Stars">
-              <content>
-                  <Slider blockIncrement="1.0" majorTickUnit="1.0" max="5.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
-              </content>
-            </CustomMenuItem>
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
-               <content>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Distance (50 km)" />
-               </content>
-            </CustomMenuItem>
-            <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
-               <content>
-                  <Slider fx:id="changeDistance" majorTickUnit="10.0" min="10.0" minorTickCount="5" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="50.0" />
-               </content>
-            </CustomMenuItem>
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <Menu mnemonicParsing="false" text="Charger Types">
-               <items>
-                  <CustomMenuItem mnemonicParsing="false" text="AC button">
-                    <content>
-                      <CheckBox text="AC charging port" textFill="black" />
-                    </content>
-                  </CustomMenuItem>
-                  <CustomMenuItem mnemonicParsing="false" text="DC button">
-                    <content>
-                      <CheckBox text="DC charging port" textFill="black" />
-                    </content>
-                  </CustomMenuItem>
-               </items>
-            </Menu>
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <CustomMenuItem mnemonicParsing="false" text="Has Attraction button">
-              <content>
-                <CheckBox text="Nearby Attraction" />
-              </content>
-            </CustomMenuItem>
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <CustomMenuItem mnemonicParsing="false" text="No Charging Cost">
-              <content>
-                <CheckBox text="No Charging Cost" />
-              </content>
-            </CustomMenuItem>
-         </items>
-      </MenuButton>
-   </children>
-</AnchorPane>
+<SplitPane dividerPositions="0.10552763819095477" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="461.0" prefWidth="701.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.MainController">
+    <items>
+
+            <MenuBar layoutX="-1.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="60.0" style="-fx-background-color: #e06666;">
+                <menus>
+                    <Menu fx:id="accountMenu" mnemonicParsing="false" style="-fx-font-size: 20;" text="Account">
+                        <items>
+                            <MenuItem fx:id="viewAccountMenu" mnemonicParsing="false" text="View Account" />
+                            <MenuItem fx:id="logOutMenu" mnemonicParsing="false" text="Log Out" />
+                        </items>
+                    </Menu>
+                    <Menu fx:id="planJourneyMenu" mnemonicParsing="false" style="-fx-font-size: 20;" text="Plan Journey">
+                        <items>
+                            <MenuItem mnemonicParsing="false" text="Delete" />
+                        </items>
+                    </Menu>
+                    <Menu fx:id="manageVehiclesMenu" mnemonicParsing="false" style="-fx-font-size: 20;" text="Manage Vehicles">
+                        <items>
+                            <MenuItem fx:id="openVehicles" mnemonicParsing="false" onAction="#loadVehicleScreen" style="-fx-font-size: 20;" text="Open Garage" />
+                        </items>
+                    </Menu>
+                    <Menu fx:id="homeMenu" mnemonicParsing="false" style="-fx-font-size: 20;" text="Home" />
+                </menus>
+            </MenuBar>
+
+                <SplitPane dividerPositions="0.5" prefHeight="420.0" prefWidth="110.0">
+                    <items>
+                        <SplitPane dividerPositions="0.10287081339712918, 0.21291866028708134, 0.44258373205741625" orientation="VERTICAL" prefHeight="366.0" prefWidth="212.0">
+                            <items>
+                                <TextField fx:id="searchCharger" layoutX="14.0" layoutY="82.0" prefHeight="40.0" prefWidth="400.0" style="-fx-font-size: 20;" text="Search Charger" />
+                                <MenuButton layoutX="14.0" layoutY="125.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="400.0" style="-fx-font-size: 20;" text="Filters">
+                                    <font>
+                                        <Font size="16.0" />
+                                    </font>
+                                    <items>
+                                        <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                                            <content>
+                                                <Text strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 20;" text="Charger Stars" />
+                                            </content>
+                                        </CustomMenuItem>
+                                        <CustomMenuItem mnemonicParsing="false" text="Stars">
+                                            <content>
+                                                <Slider blockIncrement="1.0" majorTickUnit="1.0" max="5.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
+                                            </content>
+                                        </CustomMenuItem>
+                                        <SeparatorMenuItem mnemonicParsing="false" />
+                                        <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                                            <content>
+                                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Distance (50 km)" />
+                                            </content>
+                                        </CustomMenuItem>
+                                        <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                                            <content>
+                                                <Slider fx:id="changeDistance" majorTickUnit="10.0" min="10.0" minorTickCount="5" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="50.0" />
+                                            </content>
+                                        </CustomMenuItem>
+                                        <SeparatorMenuItem mnemonicParsing="false" />
+                                        <Menu mnemonicParsing="false" text="Charger Types">
+                                            <items>
+                                                <CustomMenuItem mnemonicParsing="false" text="AC button">
+                                                    <content>
+                                                        <CheckBox text="AC charging port" textFill="black" />
+                                                    </content>
+                                                </CustomMenuItem>
+                                                <CustomMenuItem mnemonicParsing="false" text="DC button">
+                                                    <content>
+                                                        <CheckBox text="DC charging port" textFill="black" />
+                                                    </content>
+                                                </CustomMenuItem>
+                                            </items>
+                                        </Menu>
+                                        <SeparatorMenuItem mnemonicParsing="false" />
+                                        <CustomMenuItem mnemonicParsing="false" text="Has Attraction button">
+                                            <content>
+                                                <CheckBox text="Nearby Attraction" />
+                                            </content>
+                                        </CustomMenuItem>
+                                        <SeparatorMenuItem mnemonicParsing="false" />
+                                        <CustomMenuItem mnemonicParsing="false" text="No Charging Cost">
+                                            <content>
+                                                <CheckBox text="No Charging Cost" />
+                                            </content>
+                                        </CustomMenuItem>
+                                    </items>
+                                </MenuButton>
+                                <TextArea fx:id="displayInfo" editable="false" layoutX="14.0" layoutY="177.0" prefHeight="88.0" prefWidth="347.0" style="-fx-font-size: 15;" />
+                                <TableView fx:id="chargerTable" fixedCellSize="50.0" layoutX="14.0" layoutY="385.0" prefHeight="236.0" prefWidth="220.0" style="-fx-table-cell-border-color: transparent; -fx-background-color: black; -fx-my-cell-background: white;" />
+                            </items>
+                        </SplitPane>
+                  <BorderPane fx:id="mainWindow">
+               <top>
+                        <Button fx:id="mapLabel" contentDisplay="CENTER" mnemonicParsing="false" onAction="#autoMapView" prefHeight="40.0" prefWidth="100.0" text="Display Map" textAlignment="CENTER" BorderPane.alignment="CENTER">
+            </Button>
+               </top>
+            </BorderPane>
+                    </items>
+                </SplitPane>
+    </items>
+</SplitPane>
