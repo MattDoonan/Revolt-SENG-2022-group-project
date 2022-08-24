@@ -24,6 +24,28 @@ public class VehicleController {
     @FXML
     private ListView vehicleList;
 
+    @FXML
+    private TextArea vehicleDisplayOne;
+
+    @FXML
+    private TextArea vehicleDisplayTwo;
+
+    @FXML
+    private TextArea vehicleDisplayThree;
+
+    @FXML
+    private Button nextBtn;
+
+    @FXML
+    private Button prevBtn;
+
+
+    private int indexOne = 0;
+
+    private int indexTwo = 1;
+
+    private int indexThree = 2;
+
 
     private ObservableList<String> vehicleData = FXCollections.observableArrayList();  
 
@@ -37,14 +59,19 @@ public class VehicleController {
      */
     public void init(Stage stage) {
         makeTestVehicles();
-        
-        for (int i = 0; i < vehicleData.size(); i++) {
-            vehicleList.getItems().add("Car: " + vehicleData.get(i) + "\n" + "Here's some more text");
-        }
 
+        setData(vehicleDisplayOne, indexOne);
+
+        if (vehicleData.size() > 1) {
+            setData(vehicleDisplayTwo, indexTwo);
+            setData(vehicleDisplayThree, indexThree);
+        }
 
     }
 
+    public void setData(TextArea display, int index) {
+        display.setText("Car: " + vehicleData.get(index) + "\n" + "Here's some more text");
+    }
 
 
     /**
@@ -60,43 +87,65 @@ public class VehicleController {
         vehicleData.add("????????");
     }
 
-    /**
-     * Displays the user's vehicles in the window
-     *
-     * @param c List of vehicles to display
-     */
-    public void viewChargers(ObservableList<String> c) {
-        
-        for (int i = 0; i < c.size(); i++) {
-            System.out.println("Vehicle: " + c.get(i));
-        }
-
-
-    }
-
-
-
-    public void selectToView(){
-        // chargerTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
-        //     @Override
-        //     public void changed(ObservableValue observableValue, Object o, Object t1) {
-        //         viewChargers(chargerData.get(chargerTable.getSelectionModel().getSelectedIndex()));
-
-        //     }
-        // });
-
-    }
-
-
-
 
     /**
-     * Method to call when our counter button is clicked
+     * Method to call when next button is clicked
      *
      */
     @FXML
-    public void onButtonClicked() {
+    public void nextBtnClicked() {
+
+        if (indexThree == vehicleData.size() - 1) {
+            indexOne++;
+            indexTwo++;
+            indexThree = 0;
+        } else if (indexTwo == vehicleData.size() - 1) {
+            indexOne++;
+            indexThree++;
+            indexTwo = 0;
+        } else if (indexOne == vehicleData.size() - 1) {
+            indexTwo++;
+            indexThree++;
+            indexOne = 0;
+        } else {
+            indexOne++;
+            indexTwo++;
+            indexThree++;
+        }
+
+        setData(vehicleDisplayOne, indexOne);
+        setData(vehicleDisplayTwo, indexTwo);
+        setData(vehicleDisplayThree, indexThree);
+
+    }
 
 
+    /**
+     * Method to call when prev button is clicked
+     *
+     */
+    @FXML
+    public void prevBtnClicked() {
+        if (indexOne == 0) {
+            indexOne = vehicleData.size() - 1; 
+            indexTwo--;   	   
+            indexThree--;   	   
+        } else if (indexTwo == 0) {
+            indexTwo = vehicleData.size() - 1; 
+            indexOne--;
+            indexThree--;
+        } else if (indexThree == 0) {
+            indexThree = vehicleData.size() - 1; 
+            indexOne--;
+            indexTwo--;
+        } else {
+            indexOne--;
+            indexTwo--;
+            indexThree--;
+        }
+
+        setData(vehicleDisplayOne, indexOne);
+        setData(vehicleDisplayTwo, indexTwo);
+        setData(vehicleDisplayThree, indexThree);
     }
 }
