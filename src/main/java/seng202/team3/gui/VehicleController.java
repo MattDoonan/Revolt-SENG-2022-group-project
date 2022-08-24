@@ -4,9 +4,12 @@ package seng202.team3.gui;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 
+import java.util.ArrayList;
+
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.stage.Stage;
+import seng202.team3.data.entity.Vehicle;
 
 
 /**
@@ -47,7 +50,7 @@ public class VehicleController {
     private int indexThree = 2;
 
 
-    private ObservableList<String> vehicleData = FXCollections.observableArrayList();  
+    private ObservableList<Vehicle> vehicleData = FXCollections.observableArrayList();  
 
 
    
@@ -70,7 +73,14 @@ public class VehicleController {
     }
 
     public void setData(TextArea display, int index) {
-        display.setText("Car: " + vehicleData.get(index) + "\n" + "Here's some more text");
+        display.setText("License Plate: " + vehicleData.get(index).getLicensePlate() + "\n" + 
+        "Make: " + vehicleData.get(index).getMake() + "\n" +
+        "Model: " + vehicleData.get(index).getModel() + "\n" +
+        "Current Charge: " + vehicleData.get(index).getBatteryPercent() + "\n" +
+        "Max. Range: " + vehicleData.get(index).getMaxRange() + "\n" +
+        "Connections: " + vehicleData.get(index).getConnectors().toString() + "\n" +
+        "\n\n\n" +
+        "Index: " + vehicleData.indexOf(vehicleData.get(index)));
     }
 
 
@@ -80,11 +90,14 @@ public class VehicleController {
      */
     public void makeTestVehicles() {
 
-        vehicleData.add("BMW");
-        vehicleData.add("Volkswagen");
-        vehicleData.add("Toyota");
-        vehicleData.add("Another car brand");
-        vehicleData.add("????????");
+        vehicleData.add(new Vehicle("ABC123", "Nissan", "Leaf", (float)60.5, 270, new ArrayList<String>()));
+        vehicleData.add(new Vehicle("AAA111", "Nissan", "Leaf E+", (float)87, 385, new ArrayList<String>()));
+        vehicleData.add(new Vehicle("XYZ789", "Tesla", "X", (float)100.5, 536, new ArrayList<String>()));
+        vehicleData.add(new Vehicle("QWE768", "Jaguar", "I-Pace", (float)40, 470, new ArrayList<String>()));
+        vehicleData.add(new Vehicle("FJG788", "Audi", "E-Tron", (float)63, 441, new ArrayList<String>()));
+        vehicleData.add(new Vehicle("WWW333", "Tesla", "5", (float)43, 637, new ArrayList<String>()));
+        vehicleData.add(new Vehicle("HGJ449", "Mercedes Benz", "EQC", (float)77, 430, new ArrayList<String>()));
+        vehicleData.add(new Vehicle("IUH909", "Porsche", "Taycan", (float)98, 480, new ArrayList<String>()));
     }
 
 
