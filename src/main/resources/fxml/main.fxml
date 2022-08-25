@@ -52,7 +52,7 @@
                                         <SeparatorMenuItem mnemonicParsing="false" />
                                         <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
                                             <content>
-                                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Distance (50 km)" />
+                                                <Text fx:id="distanceDisplay" strokeType="OUTSIDE" strokeWidth="0.0" text="Distance (50 km)" />
                                             </content>
                                         </CustomMenuItem>
                                         <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
@@ -95,8 +95,6 @@
                         </SplitPane>
                   <BorderPane fx:id="mainWindow">
                <top>
-                        <Button fx:id="mapLabel" contentDisplay="CENTER" mnemonicParsing="false" onAction="#autoMapView" prefHeight="40.0" prefWidth="100.0" text="Display Map" textAlignment="CENTER" BorderPane.alignment="CENTER">
-            </Button>
                </top>
             </BorderPane>
                     </items>

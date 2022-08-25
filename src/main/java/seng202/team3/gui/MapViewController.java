@@ -86,7 +86,8 @@ public class MapViewController {
     /**
      * Adds all chargers on the map
      */
-    private void addChargersOnMap() {
+    public void addChargersOnMap() {
+        javaScriptConnector.call("clearMarkers");
         for (Charger charger : map.getController().getChargerData()) {
             javaScriptConnector.call("addMarker", charger.getLocation().getAddress(),
                     charger.getLocation().getLat(), charger.getLocation().getLon());
@@ -117,4 +118,12 @@ public class MapViewController {
 
     }
 
+    /**
+     * Check if map has access to javascript
+     * 
+     * @return true if map has access to javascript
+     */
+    public boolean getConnectorStatus() {
+        return javaScriptConnector != null;
+    }
 }
