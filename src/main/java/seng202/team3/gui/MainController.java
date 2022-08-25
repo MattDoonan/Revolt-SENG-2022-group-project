@@ -1,41 +1,41 @@
 package seng202.team3.gui;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.property.ReadOnlyDoubleWrapper;
-import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
-import javafx.util.Callback;
+import javafx.stage.Stage;
 import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.database.CsvInterpreter;
 import seng202.team3.data.database.Query;
 import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
-import javafx.collections.FXCollections;
-import javafx.collections.transformation.FilteredList;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.stage.Stage;
 import seng202.team3.logic.Calculations;
-import seng202.team3.logic.ChargerManager;
 import seng202.team3.logic.MapManager;
 import seng202.team3.logic.TempData;
 
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.io.IOException;
-import java.util.*;
-
 /**
  * Controller for the main.fxml window
+ * 
  * @author seng202 teaching team
  */
 public class MainController {
@@ -44,7 +44,6 @@ public class MainController {
 
     // @FXML
     // private Label defaultLabel;
-
 
     // @FXML
     // private ListView listOfChargers;
@@ -61,17 +60,16 @@ public class MainController {
     private TextArea displayInfo;
 
     @FXML
-    private TableView chargerTable;
+    private TableView<Charger> chargerTable;
 
     @FXML
-    private TableColumn<Charger, String> AddressCol = new TableColumn<>("Address");
+    private TableColumn<Charger, String> addressCol = new TableColumn<>("Address");
 
     @FXML
     private TableColumn<Charger, String> operatorCol = new TableColumn<>("Operator");
 
     @FXML
-    private TableColumn<Charger, Double> DistanceCol = new TableColumn<>("km");
-
+    private TableColumn<Charger, Double> distanceCol = new TableColumn<>("km");
 
     @FXML
     private BorderPane mainWindow;
@@ -84,7 +82,7 @@ public class MainController {
 
     private MapViewController mapController;
 
-    private Coordinate position = new Coordinate(1574161.4056 , 5173542.4743, -43.5097, 172.5452);
+    private Coordinate position = new Coordinate(1574161.4056, 5173542.4743, -43.5097, 172.5452);
 
     /**
      * Initialize the window
@@ -104,64 +102,93 @@ public class MainController {
 
     }
 
+    /**
+     * Sets chargerList to an example list of data
+     * for testing
+     */
     public void makeTestChargers() {
-        Query myq = new QueryBuilderImpl().withSource("charger").withFilter("operator", "MERIDIAN", ComparisonType.CONTAINS).build();
+        Query myq = new QueryBuilderImpl().withSource("charger")
+                .withFilter("operator", "MERIDIAN", ComparisonType.CONTAINS).build();
         try {
-            chargerData = FXCollections.observableList((List<Charger>) (List<?>) new CsvInterpreter().readData(myq, Charger.class));
-        }
-        catch(IOException e){
+            List<Charger> chargerList = new ArrayList<>();
+            for (Object o : new CsvInterpreter().readData(myq, Charger.class)) {
+                chargerList.add((Charger) o);
+            }
+
+            chargerData = FXCollections
+                    .observableList(chargerList);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Display charger info on panel
+     * 
+     * @param c charger to display information about
+     */
     public void viewChargers(Charger c) {
         displayInfo.clear();
-        displayInfo.appendText("Operator: "+ c.getOperator() +"\n"+ "Location: " + c.getLocation().getAddress() +"\n"+ "Number of parks: " +c.getAvailableParks() +"\nTime Limit "+c.getTimeLimit()+"\nHas Attraction = "+c.getHasAttraction()+"\n");
+        displayInfo.appendText("Operator: " + c.getOperator() + "\n"
+                + "Location: " + c.getLocation().getAddress() + "\n"
+                + "Number of parks: " + c.getAvailableParks()
+                + "\nTime Limit " + c.getTimeLimit()
+                + "\nHas Attraction = " + c.getHasAttraction() + "\n");
 
     }
 
+    /**
+     * Changes active charger on selected and moves the map
+     */
+    public void selectToView() {
+        chargerTable.getSelectionModel().selectedItemProperty()
+                .addListener(new ChangeListener<Charger>() {
 
-    public void selectToView(){
-        chargerTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
-            @Override
-            public void changed(ObservableValue observableValue, Object o, Object t1) {
-                selectedCharger = (Charger) chargerTable.getSelectionModel().getSelectedItem();
-                viewChargers(selectedCharger);
+                    @Override
+                    public void changed(ObservableValue<? extends Charger> observable,
+                            Charger oldValue, Charger newValue) {
+                        selectedCharger = (Charger) chargerTable.getSelectionModel()
+                                .getSelectedItem();
+                        viewChargers(selectedCharger);
 
-                //Added functionality to move screen to charger
-                if (mapController != null) {
-                    mapController.changePosition(selectedCharger.getLocation());
-                }
-            }
-        });
+                        // Added functionality to move screen to charger
+                        if (mapController != null) {
+                            mapController.changePosition(selectedCharger.getLocation());
+                        }
+
+                    }
+                });
 
     }
 
-
+    /**
+     * Adds every charger in charger list to the table
+     */
     public void addChargersToDisplay() {
-  
-        chargerTable.setColumnResizePolicy( TableView.CONSTRAINED_RESIZE_POLICY );
-        AddressCol.setMaxWidth( 1f * Integer.MAX_VALUE * 30 );
-        operatorCol.setMaxWidth( 1f * Integer.MAX_VALUE * 15 );
-        DistanceCol.setMaxWidth( 1f * Integer.MAX_VALUE *5 );
+
+        chargerTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        addressCol.setMaxWidth(1f * Integer.MAX_VALUE * 30);
+        operatorCol.setMaxWidth(1f * Integer.MAX_VALUE * 15);
+        distanceCol.setMaxWidth(1f * Integer.MAX_VALUE * 5);
 
         chargerTable.setItems(chargerData);
 
-        AddressCol.setCellValueFactory(charger -> new ReadOnlyStringWrapper(charger.getValue().getLocation().getAddress()));
+        addressCol.setCellValueFactory(
+                charger -> new ReadOnlyStringWrapper(
+                        charger.getValue().getLocation().getAddress()));
 
-        
-        operatorCol.setCellValueFactory(charger -> new ReadOnlyStringWrapper(charger.getValue().getOperator()));
+        operatorCol.setCellValueFactory(
+                charger -> new ReadOnlyStringWrapper(charger.getValue().getOperator()));
 
+        distanceCol.setCellValueFactory(
+                charger -> new ReadOnlyDoubleWrapper(
+                        Math.round((Calculations.calculateDistance(position,
+                                charger.getValue().getLocation())) * 10.0) / 10.0)
+                        .asObject());
 
-        DistanceCol.setCellValueFactory(charger ->
-                new ReadOnlyDoubleWrapper(Math.round((Calculations.calculateDistance(position,
-                charger.getValue().getLocation())) * 10.0) / 10.0).asObject());
-
-
-
-        chargerTable.getColumns().add(AddressCol);
+        chargerTable.getColumns().add(addressCol);
         chargerTable.getColumns().add(operatorCol);
-        chargerTable.getColumns().add(DistanceCol);
+        chargerTable.getColumns().add(distanceCol);
 
         chargerTable.requestFocus();
     }
@@ -186,15 +213,15 @@ public class MainController {
         // ObservableList<String> data = FXCollections.observableArrayList();
         // IntStream.range(0, 1000).mapToObj(Integer::toString).forEach(data::add);
 
-        FilteredList<String> filteredData = new FilteredList<>(FXCollections.observableArrayList(), s -> true);
+        FilteredList<String> filteredData = new FilteredList<>(
+                FXCollections.observableArrayList(), s -> true);
 
         // TextField filterInput = new TextField();
         // filterInput.textProperty().addListener(obs->{
-        String filter = searchField.getText(); 
-        if(filter == null || filter.length() == 0) {
+        String filter = searchField.getText();
+        if (filter == null || filter.length() == 0) {
             filteredData.setPredicate(s -> true);
-        }
-        else {
+        } else {
             filteredData.setPredicate(s -> s.contains(filter));
         }
         // });
@@ -209,6 +236,9 @@ public class MainController {
         // primaryStage.show();
     }
 
+    /**
+     * Loads in vehicle screen
+     */
     @FXML
     public void loadVehicleScreen() {
 
@@ -217,7 +247,7 @@ public class MainController {
             // fxmlLoader.setLocation(getClass().getResource("/fxml/vehicle.fxml"));
             FXMLLoader baseLoader = new FXMLLoader(getClass().getResource("/fxml/vehicle.fxml"));
             Parent root = baseLoader.load();
-            /* 
+            /*
              * if "fx:controller" is not set in fxml
              * fxmlLoader.setController(NewWindowController);
              */
@@ -226,7 +256,6 @@ public class MainController {
 
             VehicleController baseController = baseLoader.getController();
             baseController.init(stage);
-
 
             stage.setTitle("Revolt App");
             stage.setScene(scene);
@@ -238,12 +267,12 @@ public class MainController {
         }
     }
 
-
+    /**
+     * Update chargers when slider moved
+     */
     @FXML
     public void onSliderChanged() {
-        ChargerManager chargerManager = new ChargerManager();
-        ArrayList l = chargerManager.getNearbyChargers(new ArrayList<>(chargerData), position, (double) changeDistance.getValue());
-        // TO DO
+        // TODO
     }
 
     /**
@@ -267,7 +296,7 @@ public class MainController {
     /**
      * Sets the position using a {@link Coordinate}
      *
-     * @param position, a Coordinate of the selected position
+     * @param position a Coordinate of the selected position
      */
     public void setPosition(Coordinate position) {
         this.position = position;
@@ -297,7 +326,6 @@ public class MainController {
         return mapController;
     }
 
-
     /**
      * Loads the map view into the main part of the main window
      *
@@ -318,7 +346,4 @@ public class MainController {
         }
     }
 
-
 }
-
-

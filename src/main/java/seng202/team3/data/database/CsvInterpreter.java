@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.javatuples.Triplet;
-import seng202.team3.data.entity.Charger;
 
 /**
  * Manages data reading and parsing from CSV files
@@ -121,24 +120,5 @@ public class CsvInterpreter implements DataManager {
         checkForProcessingErrors(query.getSource(), builder.getCapturedExceptions());
 
         return data;
-    }
-
-    /**
-     * Example usage for csv-interpreter
-     * TODO: Currently using for testing - eventually remove
-     */
-    public static void main(String[] args) throws IOException {
-        List<Object> test = new CsvInterpreter().readData(
-                new QueryBuilderImpl()
-                        .withSource("charger")
-                        .withFilter("owner", "MERIDIAN ENERGY LIMITED", ComparisonType.CONTAINS)
-                        .withFilter("X", "1600000", ComparisonType.LESS_THAN)
-                        .build(),
-                Charger.class);
-        for (Object c : test) {
-            System.out.println(((Charger) c).getName()
-                    + " "
-                    + ((Charger) c).getLocation().getXpos());
-        }
     }
 }

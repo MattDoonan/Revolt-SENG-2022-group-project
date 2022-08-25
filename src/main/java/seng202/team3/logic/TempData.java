@@ -1,10 +1,10 @@
 package seng202.team3.logic;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.database.CsvInterpreter;
 import seng202.team3.data.database.Query;
 import seng202.team3.data.database.QueryBuilderImpl;
@@ -26,15 +26,18 @@ public class TempData {
     private static Coordinate coord;
     private static MainController controller;
 
-
     /**
      * Initiates all the data
      */
     public static void makeTempData() {
         Query myq = new QueryBuilderImpl().withSource("charger").build();
         try {
-            chargers = FXCollections.observableList((List<Charger>) (List<?>)
-                    new CsvInterpreter().readData(myq, Charger.class));
+            List<Charger> chargerList = new ArrayList<>();
+            for (Object o : new CsvInterpreter().readData(myq, Charger.class)) {
+                chargerList.add((Charger) o);
+            }
+            chargers = FXCollections
+                    .observableList(chargerList);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -84,10 +87,5 @@ public class TempData {
     public static MainController getController() {
         return controller;
     }
-
-
-
-
-
 
 }

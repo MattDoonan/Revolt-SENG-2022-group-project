@@ -1,21 +1,19 @@
 package seng202.team3.data.database;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import io.cucumber.java.After;
-import org.javatuples.Tuple;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
-import seng202.team3.data.entity.Coordinate;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Testing suite for CSV importing and parsing
@@ -36,10 +34,10 @@ public class CsvInterpreterTest {
      */
     @BeforeEach
     public void setUp() throws IOException {
-       query = new QueryBuilderImpl()
+        query = new QueryBuilderImpl()
                 .withSource("src/test/resources/csvtest/validChargers.csv")
                 .build();
-       result = new CsvInterpreter().readData(query, Charger.class);
+        result = new CsvInterpreter().readData(query, Charger.class);
     }
 
     /**
@@ -149,7 +147,7 @@ public class CsvInterpreterTest {
      * Check that csv data is converted into target objects
      */
     @Test
-    public void convertsToValidObjectTest(){
+    public void convertsToValidObjectTest() {
         for (Object o : result) {
             assertEquals(Charger.class, o.getClass());
         }
@@ -176,11 +174,15 @@ public class CsvInterpreterTest {
         boolean isIdentical = true;
 
         for (int i = 0; i < expectedConnectors.size(); i++) {
-            if (!(expectedConnectors.get(i).getType().equals(c.getConnectors().get(i).getType())) ||
-                    !(expectedConnectors.get(i).getPower().equals(c.getConnectors().get(i).getPower())) ||
-                    !(expectedConnectors.get(i).getStatus().equals(c.getConnectors().get(i).getStatus())) ||
-                    !(expectedConnectors.get(i).getCurrent().equals(c.getConnectors().get(i).getCurrent())) ||
-                    (expectedConnectors.get(i).getCount() != c.getConnectors().get(i).getCount())) {
+            if (!(expectedConnectors.get(i).getType().equals(c.getConnectors().get(i).getType()))
+                    || !(expectedConnectors.get(i).getPower()
+                            .equals(c.getConnectors().get(i).getPower()))
+                    || !(expectedConnectors.get(i).getStatus()
+                            .equals(c.getConnectors().get(i).getStatus()))
+                    || !(expectedConnectors.get(i).getCurrent()
+                            .equals(c.getConnectors().get(i).getCurrent()))
+                    || (expectedConnectors.get(i).getCount() != c.getConnectors().get(i)
+                            .getCount())) {
                 isIdentical = false;
                 break;
             }
@@ -193,10 +195,10 @@ public class CsvInterpreterTest {
         boolean isDifferent = false;
 
         Charger c = (Charger) result.get(0);
-        if ((c.getChargerId() != 1) || (c.getAvailableParks() != 1) ||
-                (!c.getDateOpened().equals("2020/05/01 00:00:00+00")) ||
-                (c.getHasAttraction()) || (!c.getChargeCost()) || (c.getParkingCost() ||
-                (c.getLocation().getLon() != 170.100913))) {
+        if ((c.getChargerId() != 1) || (c.getAvailableParks() != 1)
+                || (!c.getDateOpened().equals("2020/05/01 00:00:00+00"))
+                || (c.getHasAttraction()) || (!c.getChargeCost()) || (c.getParkingCost()
+                        || (c.getLocation().getLon() != 170.100913))) {
             isDifferent = true;
         }
 

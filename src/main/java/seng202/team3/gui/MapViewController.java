@@ -16,7 +16,6 @@ import seng202.team3.data.entity.Coordinate;
 import seng202.team3.logic.JavaScriptBridge;
 import seng202.team3.logic.MapManager;
 
-
 /**
  * A start into a MapViewController which uses the University UC OSM viewer
  *
@@ -35,18 +34,19 @@ public class MapViewController {
     private MapManager map;
     private JavaScriptBridge javaScriptBridge;
     private JSObject javaScriptConnector;
-    private boolean routeDisplayed = false;
+    // private boolean routeDisplayed = false;
 
     /**
      * Initialise the map view
-     * @param stage current stage
+     * 
+     * @param map Map view to interact with
      */
     public void init(Stage stage, MapManager map) {
         this.stage = stage;
         javaScriptBridge = new JavaScriptBridge();
         this.map = map;
         initMap();
-        stage.sizeToScene();
+        this.stage.sizeToScene();
     }
 
     /**

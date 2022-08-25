@@ -1,7 +1,5 @@
 package seng202.team3.logic;
 
-
-import org.junit.Test;
 import seng202.team3.gui.MainController;
 
 /**
@@ -34,6 +32,5 @@ public class MapManager {
     public MainController getController() {
         return controller;
     }
-
 
 }
