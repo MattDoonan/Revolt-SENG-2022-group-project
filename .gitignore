@@ -11,7 +11,7 @@
 *.iws
 
 # VsCode
-/.vscode
+.vscode/
 
 # Mac
 .DS_Store
