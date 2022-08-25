@@ -31,9 +31,19 @@ public class QueryBuilderImpl implements QueryBuilder {
     }
 
     @Override
+    public QueryBuilder withoutFilter(String field) {
+        for (Triplet<String, String, ComparisonType> filter : filters) {
+            if (filter.getValue0().toLowerCase() == field.toLowerCase()) {
+                filters.remove(filter);
+                break;
+            }
+        }
+        return this;
+    }
+
+    @Override
     public Query build() {
         return new Query(source, filters);
     }
-
 
 }

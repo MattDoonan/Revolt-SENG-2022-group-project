@@ -27,6 +27,7 @@ import javafx.stage.Stage;
 import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.database.CsvInterpreter;
 import seng202.team3.data.database.Query;
+import seng202.team3.data.database.QueryBuilder;
 import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
@@ -79,7 +80,7 @@ public class MainController {
     @FXML
     private TableColumn<Integer, Double> DistanceCol = new TableColumn<>("km");
 
-    public Query mainDataQuerry;
+    public QueryBuilder mainDataQuery;
 
     private ObservableList<Charger> chargerData;
 
@@ -93,7 +94,7 @@ public class MainController {
      * @param stage Top level container for this window
      */
     public void init(Stage stage) {
-        mainDataQuerry = new QueryBuilderImpl().withSource("charger").build();
+        mainDataQuery = new QueryBuilderImpl().withSource("charger");
         makeAllChargers();
         tableMaker();
         viewChargers(chargerData.get(0));
@@ -106,7 +107,7 @@ public class MainController {
     public void makeAllChargers() {
         try {
             chargerData = FXCollections.observableList(
-                    (List<Charger>) (List<?>) new CsvInterpreter().readData(mainDataQuerry, Charger.class));
+                    (List<Charger>) (List<?>) new CsvInterpreter().readData(mainDataQuery.build(), Charger.class));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -201,7 +202,8 @@ public class MainController {
             }
         });
         searchCharger.textProperty().addListener((observable, oldValue, newValue) -> {
-            mainDataQuerry.addFilter("address", searchCharger.getText(), ComparisonType.CONTAINS);
+            mainDataQuery.withoutFilter("address");
+            mainDataQuery.withFilter("address", searchCharger.getText(), ComparisonType.CONTAINS);
             makeAllChargers();
         });
     }
@@ -227,9 +229,9 @@ public class MainController {
      */
     public void acChargersOnly(ActionEvent actionEvent) {
         if (acButton.isSelected()) {
-            mainDataQuerry.addFilter("current", "AC", ComparisonType.CONTAINS);
+            mainDataQuery.withFilter("current", "AC", ComparisonType.CONTAINS);
         } else {
-            mainDataQuerry.removeFilter("current");
+            mainDataQuery.withoutFilter("current");
         }
         makeAllChargers();
     }
@@ -241,9 +243,9 @@ public class MainController {
      */
     public void dcChargersOnly(ActionEvent actionEvent) {
         if (dcButton.isSelected()) {
-            mainDataQuerry.addFilter("current", "DC", ComparisonType.CONTAINS);
+            mainDataQuery.withFilter("current", "DC", ComparisonType.CONTAINS);
         } else {
-            mainDataQuerry.removeFilter("current");
+            mainDataQuery.withoutFilter("current");
         }
         makeAllChargers();
     }
@@ -255,9 +257,9 @@ public class MainController {
      */
     public void attractionNeeded(ActionEvent actionEvent) {
         if (attractionButton.isSelected()) {
-            mainDataQuerry.addFilter("hasTouristAttraction", "True", ComparisonType.CONTAINS);
+            mainDataQuery.withFilter("hasTouristAttraction", "True", ComparisonType.CONTAINS);
         } else {
-            mainDataQuerry.removeFilter("hasTouristAttraction");
+            mainDataQuery.withoutFilter("hasTouristAttraction");
         }
         makeAllChargers();
     }
@@ -269,9 +271,9 @@ public class MainController {
      */
     public void noChargingCostNeeded(ActionEvent actionEvent) {
         if (chargingCost.isSelected()) {
-            mainDataQuerry.addFilter("hasChargingCost", "False", ComparisonType.CONTAINS);
+            mainDataQuery.withFilter("hasChargingCost", "False", ComparisonType.CONTAINS);
         } else {
-            mainDataQuerry.removeFilter("hasChargingCost");
+            mainDataQuery.withoutFilter("hasChargingCost");
         }
         makeAllChargers();
     }
