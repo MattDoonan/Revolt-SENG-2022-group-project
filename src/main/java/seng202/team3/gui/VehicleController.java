@@ -13,7 +13,8 @@ import seng202.team3.data.entity.Vehicle;
 /**
  * Controller for the vehicle.fxml window
  * 
- * @author seng202 teaching team
+ * @author Team 3
+ * @version 1.0.3, Aug 22
  */
 public class VehicleController {
 
