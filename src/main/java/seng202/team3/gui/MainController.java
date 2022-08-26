@@ -39,7 +39,7 @@ import seng202.team3.logic.TempData;
 /**
  * Controller for the main.fxml window
  * 
- * @author seng202 teaching team
+ * @author Matthew Doonan
  */
 public class MainController {
 
@@ -284,9 +284,9 @@ public class MainController {
      */
     public void acChargersOnly(ActionEvent actionEvent) {
         if (acButton.isSelected()) {
-            mainDataQuery.withFilter("current", "AC", ComparisonType.CONTAINS);
+            mainDataQuery.withFilter("connectorcurrent", "AC", ComparisonType.CONTAINS);
         } else {
-            mainDataQuery.withoutFilter("current");
+            mainDataQuery.withoutFilter("connectorcurrent");
         }
         makeAllChargers();
     }
@@ -298,9 +298,9 @@ public class MainController {
      */
     public void dcChargersOnly(ActionEvent actionEvent) {
         if (dcButton.isSelected()) {
-            mainDataQuery.withFilter("current", "DC", ComparisonType.CONTAINS);
+            mainDataQuery.withFilter("connectorcurrent", "DC", ComparisonType.CONTAINS);
         } else {
-            mainDataQuery.withoutFilter("current");
+            mainDataQuery.withoutFilter("connectorcurrent");
         }
         makeAllChargers();
     }
@@ -312,9 +312,9 @@ public class MainController {
      */
     public void attractionNeeded(ActionEvent actionEvent) {
         if (attractionButton.isSelected()) {
-            mainDataQuery.withFilter("hasTouristAttraction", "True", ComparisonType.CONTAINS);
+            mainDataQuery.withFilter("hastouristattraction", "True", ComparisonType.CONTAINS);
         } else {
-            mainDataQuery.withoutFilter("hasTouristAttraction");
+            mainDataQuery.withoutFilter("hastouristattraction");
         }
         makeAllChargers();
     }
@@ -326,9 +326,9 @@ public class MainController {
      */
     public void noChargingCostNeeded(ActionEvent actionEvent) {
         if (chargingCost.isSelected()) {
-            mainDataQuery.withFilter("hasChargingCost", "False", ComparisonType.CONTAINS);
+            mainDataQuery.withFilter("haschargingcost", "False", ComparisonType.CONTAINS);
         } else {
-            mainDataQuery.withoutFilter("hasChargingCost");
+            mainDataQuery.withoutFilter("haschargingcost");
         }
         makeAllChargers();
     }
