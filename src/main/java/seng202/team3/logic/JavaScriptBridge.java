@@ -4,7 +4,6 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import seng202.team3.data.entity.Coordinate;
-import seng202.team3.gui.MainController;
 
 /**
  * Converts JavaScript to Objects by hocus pocus
@@ -21,7 +20,7 @@ public class JavaScriptBridge {
      */
     public void addCoordinateFromClick(String latlng) {
 
-        //Temporary setting code to make sure setting works
+        // Temporary setting code to make sure setting works
         TempData.setCoordinate(parseCoordinate(latlng));
         MainManager controller = TempData.getController();
         controller.setPosition(TempData.getCoordinate());
@@ -64,7 +63,5 @@ public class JavaScriptBridge {
         MainManager controller = TempData.getController();
         controller.getController().getMapController().changePosition(parseCoordinate(latlng));
     }
-
-
 
 }

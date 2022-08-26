@@ -21,7 +21,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import seng202.team3.data.entity.Charger;
-import seng202.team3.logic.*;
+import seng202.team3.logic.Calculations;
+import seng202.team3.logic.MainManager;
+import seng202.team3.logic.MapManager;
 
 /**
  * Controller for the main.fxml window
@@ -194,8 +196,10 @@ public class MainController {
      */
     public void insetText() {
         searchCharger.setOnMouseClicked(e -> manage.clearSearchCharger());
-        searchCharger.textProperty().addListener((observable, oldValue, newValue) ->
-                manage.addressQuery(searchCharger.getText()));
+        searchCharger.textProperty()
+                .addListener(
+                        (observable, oldValue, newValue) -> manage.addressQuery(
+                                searchCharger.getText()));
     }
 
     /**
@@ -215,24 +219,24 @@ public class MainController {
     }
 
     /**
-     *  Sends the map manager acQuery function a boolean
-     *  result depends on if the acButton button is clicked
+     * Sends the map manager acQuery function a boolean
+     * result depends on if the acButton button is clicked
      */
     public void acChargersOnly() {
         manage.acQuery(acButton.isSelected());
     }
 
     /**
-     *  Sends the map manager dcQuery function a boolean
-     *  result depends on if the dcButton button is clicked
+     * Sends the map manager dcQuery function a boolean
+     * result depends on if the dcButton button is clicked
      */
     public void dcChargersOnly() {
         manage.dcQuery(dcButton.isSelected());
     }
 
     /**
-     *  Sends the map manager attractionQuery function a boolean
-     *  result depends on if the attractionButton button is clicked
+     * Sends the map manager attractionQuery function a boolean
+     * result depends on if the attractionButton button is clicked
      */
     public void attractionNeeded() {
         manage.attractionQuery(attractionButton.isSelected());

@@ -1,16 +1,8 @@
 package seng202.team3.logic;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import seng202.team3.data.database.CsvInterpreter;
-import seng202.team3.data.database.Query;
-import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
-import seng202.team3.gui.MainController;
 
 /**
  * A temporary DataManager class to store information and show data
@@ -26,8 +18,7 @@ public class TempData {
     private static Coordinate coord;
     private static MainManager controller;
 
-
-    public static void setChargerList( ObservableList<Charger> l ) {
+    public static void setChargerList(ObservableList<Charger> l) {
         chargers = l;
     }
 
