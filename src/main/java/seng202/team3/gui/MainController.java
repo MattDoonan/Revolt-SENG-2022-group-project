@@ -215,32 +215,32 @@ public class MainController {
     }
 
     /**
-     * Applies AC connector filter to charger table
-     *
+     *  Sends the map manager acQuery function a boolean
+     *  result depends on if the acButton button is clicked
      */
     public void acChargersOnly() {
         manage.acQuery(acButton.isSelected());
     }
 
     /**
-     * Applies DC connector filter to charger table
-     *
+     *  Sends the map manager dcQuery function a boolean
+     *  result depends on if the dcButton button is clicked
      */
     public void dcChargersOnly() {
         manage.dcQuery(dcButton.isSelected());
     }
 
     /**
-     * Applies nearby attraction filter to charger table
-     *
+     *  Sends the map manager attractionQuery function a boolean
+     *  result depends on if the attractionButton button is clicked
      */
     public void attractionNeeded() {
         manage.attractionQuery(attractionButton.isSelected());
     }
 
     /**
-     * Applies charging cost filter to charger table
-     *
+     * Sends the map manager noChargeQuery function a boolean
+     * result depends on if the chargingCost button is clicked
      */
     public void noChargingCostNeeded() {
         manage.noChargeQuery(chargingCost.isSelected());
