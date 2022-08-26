@@ -10,7 +10,8 @@ import javafx.stage.Stage;
 /**
  * Class starts the javaFX application window
  * 
- * @author seng202 teaching team
+ * @author Team 3
+ * @version 1.0.1, Aug 22
  */
 public class MainWindow extends Application {
 
