@@ -23,7 +23,7 @@ public class JavaScriptBridge {
 
         //Temporary setting code to make sure setting works
         TempData.setCoordinate(parseCoordinate(latlng));
-        MainController controller = TempData.getController();
+        MainManager controller = TempData.getController();
         controller.setPosition(TempData.getCoordinate());
     }
 
@@ -52,8 +52,8 @@ public class JavaScriptBridge {
      * Refreshes the table with new data
      */
     public void refreshTable() {
-        MainController controller = TempData.getController();
-        controller.refreshTable();
+        MainManager controller = TempData.getController();
+        controller.getController().refreshTable();
 
     }
 
@@ -61,8 +61,8 @@ public class JavaScriptBridge {
      * Zooms to a point
      */
     public void zoomToPoint(String latlng) {
-        MainController controller = TempData.getController();
-        controller.getMapController().changePosition(parseCoordinate(latlng));
+        MainManager controller = TempData.getController();
+        controller.getController().getMapController().changePosition(parseCoordinate(latlng));
     }
 
 

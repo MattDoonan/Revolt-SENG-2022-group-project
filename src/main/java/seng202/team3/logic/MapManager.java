@@ -1,5 +1,6 @@
 package seng202.team3.logic;
 
+import netscape.javascript.JSObject;
 import seng202.team3.gui.MainController;
 
 /**
@@ -10,17 +11,20 @@ import seng202.team3.gui.MainController;
  */
 public class MapManager {
 
+    private JavaScriptBridge javaScriptBridge;
+    private JSObject javaScriptConnector;
+
     /**
      * Contains the MainController for reference
      */
-    private final MainController controller;
+    private final MainManager controller;
 
     /**
      * Constructs the MapManager from the {@link MainController}
      *
      * @param controller the MainController currently being used
      */
-    public MapManager(MainController controller) {
+    public MapManager(MainManager controller) {
         this.controller = controller;
     }
 
@@ -29,7 +33,7 @@ public class MapManager {
      *
      * @return {@link MainController}, the MainController
      */
-    public MainController getController() {
+    public MainManager getController() {
         return controller;
     }
 

@@ -24,23 +24,11 @@ public class TempData {
      */
     private static ObservableList<Charger> chargers;
     private static Coordinate coord;
-    private static MainController controller;
+    private static MainManager controller;
 
-    /**
-     * Initiates all the data
-     */
-    public static void makeTempData() {
-        Query myq = new QueryBuilderImpl().withSource("charger").build();
-        try {
-            List<Charger> chargerList = new ArrayList<>();
-            for (Object o : new CsvInterpreter().readData(myq, Charger.class)) {
-                chargerList.add((Charger) o);
-            }
-            chargers = FXCollections
-                    .observableList(chargerList);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+    public static void setChargerList( ObservableList<Charger> l ) {
+        chargers = l;
     }
 
     /**
@@ -75,7 +63,7 @@ public class TempData {
      *
      * @param control the main controller of the app
      */
-    public static void setController(MainController control) {
+    public static void setController(MainManager control) {
         controller = control;
     }
 
@@ -84,7 +72,7 @@ public class TempData {
      *
      * @return MainController, the main controller
      */
-    public static MainController getController() {
+    public static MainManager getController() {
         return controller;
     }
 
