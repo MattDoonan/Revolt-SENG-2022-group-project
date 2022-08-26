@@ -1,8 +1,8 @@
 package seng202.team3;
 
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit test for simple App, default from Maven
@@ -14,9 +14,5 @@ public class AppTest {
     @Test
     public void testApp() {
         assertTrue(true);
-    }
-
-    @Testpublic void ciFail(){
-        assertTrue(false);
     }
 }
