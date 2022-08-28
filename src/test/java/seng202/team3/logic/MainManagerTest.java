@@ -6,7 +6,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.database.CsvInterpreter;
 import seng202.team3.data.database.QueryBuilder;
@@ -24,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 /**
  * Unit tests for {@link MainManager} MainManager class in logic
  *
- * @author Matthre Doonan
+ * @author Matthew Doonan
  * @version 1.0.0, Aug 28
  */
 public class MainManagerTest {
@@ -37,8 +36,8 @@ public class MainManagerTest {
 
     @BeforeEach
     public void setUp() {
-        test = Mockito.mock((new MainController()).getClass());
-        manage = new MainManager(test, 50.0 );
+        test = new MainController();
+        manage = new MainManager();
         charge = new ChargerManager();
 
     }
@@ -58,7 +57,7 @@ public class MainManagerTest {
      */
     @Test
     public void CheckMainControllerClass(){
-        assertEquals(test, manage.getController());
+        assertEquals(test, manage);
     }
 
     /**
@@ -67,6 +66,7 @@ public class MainManagerTest {
     @Test
     public void positionTest1() {
         Coordinate coordinate = new Coordinate(1.1, 2.3,  -43.53418, 172.627572);
+        manage.resetQuery();
         manage.setPosition(coordinate);
         assertEquals(coordinate, manage.getPosition());
     }
@@ -94,7 +94,7 @@ public class MainManagerTest {
         }
         Coordinate coordinate = new Coordinate(1.1, 2.3,  -43.53418, 172.627572);
         manage.setPosition(coordinate);
-        manage.createOriginalQuery();
+        manage.resetQuery();
         assertEquals(chargerList, manage.getData());
     }
 
@@ -116,9 +116,9 @@ public class MainManagerTest {
         ArrayList<Charger> cc = charge.getNearbyChargers(chargerList, coordinate, 50.0);
         ObservableList<Charger> result = FXCollections.observableList(cc);
         manage.setPosition(coordinate);
-        manage.createOriginalQuery();
+        manage.resetQuery();
 
-        assertEquals(result, manage.getChargerData());
+        assertEquals(result, manage);
     }
 
     /**
@@ -140,10 +140,9 @@ public class MainManagerTest {
         ArrayList<Charger> cc = charge.getNearbyChargers(chargerList, coordinate, 90);
         ObservableList<Charger> result = FXCollections.observableList(cc);
         manage.setPosition(coordinate);
-        manage.sliderChange(90);
-        manage.createOriginalQuery();
+        manage.resetQuery();
 
-        assertEquals(result, manage.getChargerData());
+        assertEquals(result, manage);
     }
 
     /**
@@ -166,10 +165,9 @@ public class MainManagerTest {
         ArrayList<Charger> cc = charge.getNearbyChargers(chargerList, coordinate, 50);
         ObservableList<Charger> result = FXCollections.observableList(cc);
         manage.setPosition(coordinate);
-        manage.createOriginalQuery();
-        manage.noChargeQuery(true);
+        manage.resetQuery();
 
-        assertEquals(result, manage.getChargerData());
+        assertEquals(result, manage);
         assertEquals(chargerList, manage.getData());
 
     }
@@ -194,11 +192,9 @@ public class MainManagerTest {
         ArrayList<Charger> cc = charge.getNearbyChargers(chargerList, coordinate, 50);
         ObservableList<Charger> result = FXCollections.observableList(cc);
         manage.setPosition(coordinate);
-        manage.createOriginalQuery();
-        manage.noChargeQuery(true);
-        manage.noChargeQuery(false);
+        manage.resetQuery();
 
-        assertEquals(result, manage.getChargerData());
+        assertEquals(result, manage);
         assertEquals(chargerList, manage.getData());
 
     }
@@ -223,10 +219,9 @@ public class MainManagerTest {
         ArrayList<Charger> cc = charge.getNearbyChargers(chargerList, coordinate, 50);
         ObservableList<Charger> result = FXCollections.observableList(cc);
         manage.setPosition(coordinate);
-        manage.createOriginalQuery();
-        manage.attractionQuery(true);
+        manage.resetQuery();
 
-        assertEquals(result, manage.getChargerData());
+        assertEquals(result, manage);
         assertEquals(chargerList, manage.getData());
 
     }
@@ -251,11 +246,8 @@ public class MainManagerTest {
         ArrayList<Charger> cc = charge.getNearbyChargers(chargerList, coordinate, 50);
         ObservableList<Charger> result = FXCollections.observableList(cc);
         manage.setPosition(coordinate);
-        manage.createOriginalQuery();
-        manage.attractionQuery(true);
-        manage.noChargeQuery(false);
-
-        assertEquals(result, manage.getChargerData());
+        manage.resetQuery();
+        assertEquals(result, manage);
         assertEquals(chargerList, manage.getData());
     }
 
@@ -279,10 +271,9 @@ public class MainManagerTest {
         ArrayList<Charger> cc = charge.getNearbyChargers(chargerList, coordinate, 50);
         ObservableList<Charger> result = FXCollections.observableList(cc);
         manage.setPosition(coordinate);
-        manage.createOriginalQuery();
-        manage.dcQuery(true);
+        manage.resetQuery();
 
-        assertEquals(result, manage.getChargerData());
+        assertEquals(result, manage);
         assertEquals(chargerList, manage.getData());
     }
 
@@ -306,11 +297,9 @@ public class MainManagerTest {
         ArrayList<Charger> cc = charge.getNearbyChargers(chargerList, coordinate, 50);
         ObservableList<Charger> result = FXCollections.observableList(cc);
         manage.setPosition(coordinate);
-        manage.createOriginalQuery();
-        manage.dcQuery(true);
-        manage.dcQuery(false);
+        manage.resetQuery();
 
-        assertEquals(result, manage.getChargerData());
+        assertEquals(result, manage);
         assertEquals(chargerList, manage.getData());
     }
 
@@ -334,10 +323,9 @@ public class MainManagerTest {
         ArrayList<Charger> cc = charge.getNearbyChargers(chargerList, coordinate, 50);
         ObservableList<Charger> result = FXCollections.observableList(cc);
         manage.setPosition(coordinate);
-        manage.createOriginalQuery();
-        manage.acQuery(true);
+        manage.resetQuery();
 
-        assertEquals(result, manage.getChargerData());
+        assertEquals(result, manage);
         assertEquals(chargerList, manage.getData());
     }
 
@@ -361,11 +349,9 @@ public class MainManagerTest {
         ArrayList<Charger> cc = charge.getNearbyChargers(chargerList, coordinate, 50);
         ObservableList<Charger> result = FXCollections.observableList(cc);
         manage.setPosition(coordinate);
-        manage.createOriginalQuery();
-        manage.acQuery(true);
-        manage.acQuery(false);
+        manage.resetQuery();
 
-        assertEquals(result, manage.getChargerData());
+        assertEquals(result, manage);
         assertEquals(chargerList, manage.getData());
     }
 

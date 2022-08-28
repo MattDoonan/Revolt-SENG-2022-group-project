@@ -3,6 +3,7 @@ package seng202.team3.logic;
 import javafx.collections.ObservableList;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
+import seng202.team3.gui.MainController;
 
 /**
  * A temporary DataManager class to store information and show data
@@ -16,7 +17,7 @@ public class TempData {
      */
     private static ObservableList<Charger> chargers;
     private static Coordinate coord;
-    private static MainManager controller;
+    private static MainController controller;
 
     public static void setChargerList(ObservableList<Charger> l) {
         chargers = l;
@@ -54,7 +55,7 @@ public class TempData {
      *
      * @param control the main controller of the app
      */
-    public static void setController(MainManager control) {
+    public static void setController(MainController control) {
         controller = control;
     }
 
@@ -63,7 +64,7 @@ public class TempData {
      *
      * @return MainController, the main controller
      */
-    public static MainManager getController() {
+    public static MainController getController() {
         return controller;
     }
 

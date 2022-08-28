@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.CustomMenuItem?>
 <?import javafx.scene.control.Menu?>
@@ -43,9 +44,14 @@
 
                 <SplitPane dividerPositions="0.3" prefHeight="420.0" prefWidth="110.0">
                     <items>
-                        <SplitPane dividerPositions="0.10287081339712918, 0.21291866028708134, 0.44258373205741625" orientation="VERTICAL" prefHeight="366.0" prefWidth="212.0">
+                        <SplitPane dividerPositions="0.10287081339712918, 0.21291866028708134, 0.44258373205741625" orientation="VERTICAL" prefHeight="0.0" prefWidth="212.0">
                             <items>
-                                <TextField fx:id="searchCharger" layoutX="14.0" layoutY="82.0" prefHeight="40.0" prefWidth="400.0" style="-fx-font-size: 20;" text="Search Charger" />
+                  <SplitPane dividerPositions="0.7922705314009661" prefHeight="40.0" prefWidth="200.0">
+                    <items>
+                                      <TextField fx:id="searchCharger" prefHeight="40" prefWidth="420" promptText="Search Charger" style="-fx-font-size: 20;" />
+                        <Button fx:id="executeSearch" mnemonicParsing="false" onAction="#executeSearch" prefHeight="39.0" prefWidth="40.0" text="Go" />
+                    </items>
+                  </SplitPane>
                                 <MenuButton layoutX="14.0" layoutY="125.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="400.0" style="-fx-font-size: 20;" text="Filters">
                                     <font>
                                         <Font size="16.0" />
@@ -64,7 +70,7 @@
                                         <SeparatorMenuItem mnemonicParsing="false" />
                                         <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
                                             <content>
-                                                <Text fx:id="distanceDisplay" strokeType="OUTSIDE" strokeWidth="0.0" />
+                                                <CheckBox fx:id="distanceDisplay" textFill="black" />
                                             </content>
                                         </CustomMenuItem>
                                         <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
@@ -77,12 +83,12 @@
                                             <items>
                                                 <CustomMenuItem mnemonicParsing="false" text="AC button">
                                                     <content>
-                                                        <CheckBox fx:id="acButton" onAction="#acChargersOnly" text="AC charging port" textFill="black" />
+                                                        <CheckBox fx:id="acButton" text="AC charging port" textFill="black" />
                                                     </content>
                                                 </CustomMenuItem>
                                                 <CustomMenuItem mnemonicParsing="false" text="DC button">
                                                     <content>
-                                                        <CheckBox fx:id="dcButton" onAction="#dcChargersOnly" text="DC charging port" textFill="black" />
+                                                        <CheckBox fx:id="dcButton" text="DC charging port" textFill="black" />
                                                     </content>
                                                 </CustomMenuItem>
                                             </items>
@@ -90,13 +96,13 @@
                                         <SeparatorMenuItem mnemonicParsing="false" />
                                         <CustomMenuItem mnemonicParsing="false" text="Has Attraction button">
                                             <content>
-                                                <CheckBox fx:id="attractionButton" onAction="#attractionNeeded" text="Nearby Attraction" />
+                                                <CheckBox fx:id="attractionButton" text="Nearby Attraction" />
                                             </content>
                                         </CustomMenuItem>
                                         <SeparatorMenuItem mnemonicParsing="false" />
                                         <CustomMenuItem mnemonicParsing="false" text="No Charging Cost">
                                             <content>
-                                                <CheckBox fx:id="chargingCost" onAction="#noChargingCostNeeded" text="No Charging Cost" />
+                                                <CheckBox fx:id="chargingCost" text="No Charging Cost" />
                                             </content>
                                         </CustomMenuItem>
                                     </items>

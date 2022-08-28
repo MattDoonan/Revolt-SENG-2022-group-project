@@ -20,15 +20,18 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.logic.Calculations;
 import seng202.team3.logic.MainManager;
 import seng202.team3.logic.MapManager;
+import seng202.team3.logic.TempData;
 
 /**
  * Controller for the main.fxml window
  * 
- * @author Matthew Doonan
+ * @author Matthew Doonan, Michelle Hsieh
+ * @version 1.0.1, Aug 22
  */
 public class MainController {
 
@@ -48,7 +51,7 @@ public class MainController {
     private TextArea displayInfo;
 
     @FXML
-    private Text distanceDisplay;
+    private CheckBox distanceDisplay;
 
     @FXML
     private TableView<Charger> chargerTable;
@@ -86,11 +89,13 @@ public class MainController {
      */
     public void init(Stage stage) {
         this.stage = stage;
-        manage = new MainManager(this, changeDistance.getValue());
-        autoMapView();
+        manage = new MainManager();
+        TempData.setController(this);
+        loadMapView(stage);
         tableMaker();
-        manage.createOriginalQuery();
-        insetText();
+        manage.resetQuery();
+        manage.makeAllChargers();
+        addChargersToDisplay(manage.getCloseChargerData());
         selectToView();
         change();
 
@@ -181,27 +186,8 @@ public class MainController {
             getMapController().addChargersOnMap();
         }
         if (!chargerTable.getItems().isEmpty()) {
-            viewChargers(manage.getChargerData().get(0));
+            viewChargers(chargerTable.getItems().get(0));
         }
-    }
-
-    /**
-     * Clears the search bar
-     */
-    public void clearSearchBar() {
-        searchCharger.clear();
-    }
-
-    /**
-     * Update for chargers when user searches
-     *
-     */
-    public void insetText() {
-        searchCharger.setOnMouseClicked(e -> manage.clearSearchCharger());
-        searchCharger.textProperty()
-                .addListener(
-                        (observable, oldValue, newValue) -> manage.addressQuery(
-                                searchCharger.getText()));
     }
 
     /**
@@ -210,46 +196,40 @@ public class MainController {
     public void change() {
         distanceDisplay.textProperty()
                 .setValue("Distance (" + Math.round(changeDistance.getValue()) + " km)");
-        changeDistance.valueProperty().addListener((observableValue, number, t1) -> {
-            distanceDisplay.textProperty()
+        changeDistance.valueProperty().addListener((observableValue, number, t1)
+                -> { distanceDisplay.textProperty()
                     .setValue("Distance (" + Math.round(changeDistance.getValue()) + " km)");
-
-            if (!changeDistance.isValueChanging()) {
-                manage.sliderChange(changeDistance.getValue());
-            }
         });
     }
 
     /**
-     * Sends the map manager acQuery function a boolean
-     * result depends on if the acButton button is clicked
+     * Adds queries onto the query builder according to the current buttons selected
      */
-    public void acChargersOnly() {
-        manage.acQuery(acButton.isSelected());
-    }
+    public void executeSearch() {
+        manage.resetQuery();
+        if (acButton.isSelected()) {
+            manage.adjustQuery("connectorcurrent", "AC", ComparisonType.CONTAINS);
+        }
+        if (dcButton.isSelected()) {
+            manage.adjustQuery("connectorcurrent", "DC", ComparisonType.CONTAINS);
+        }
+        if (attractionButton.isSelected()) {
+            manage.adjustQuery("hastouristattraction", "True", ComparisonType.CONTAINS);
+        }
+        if (chargingCost.isSelected()) {
+            manage.adjustQuery("hastouristattraction", "True", ComparisonType.CONTAINS);
+        }
+        if (searchCharger.getText().length() != 0) {
+            manage.adjustQuery("address", searchCharger.getText(), ComparisonType.CONTAINS);
+        }
+        manage.makeAllChargers();
+        if (distanceDisplay.isSelected()) {
+            manage.setDistance(changeDistance.getValue());
+        } else {
+            manage.setDistance(0);
+        }
+        addChargersToDisplay(manage.getCloseChargerData());
 
-    /**
-     * Sends the map manager dcQuery function a boolean
-     * result depends on if the dcButton button is clicked
-     */
-    public void dcChargersOnly() {
-        manage.dcQuery(dcButton.isSelected());
-    }
-
-    /**
-     * Sends the map manager attractionQuery function a boolean
-     * result depends on if the attractionButton button is clicked
-     */
-    public void attractionNeeded() {
-        manage.attractionQuery(attractionButton.isSelected());
-    }
-
-    /**
-     * Sends the map manager noChargeQuery function a boolean
-     * result depends on if the chargingCost button is clicked
-     */
-    public void noChargingCostNeeded() {
-        manage.noChargeQuery(chargingCost.isSelected());
     }
 
     /**
@@ -277,13 +257,6 @@ public class MainController {
         }
     }
 
-    /**
-     * Loads the map view onto the Map pane automatically
-     */
-    @FXML
-    public void autoMapView() {
-        loadMapView(stage);
-    }
 
     /**
      * Focuses the ChargerTable
@@ -319,6 +292,15 @@ public class MainController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Gets the MainManager created by the MainController
+     *
+     * @return {@link MainManager} the manager of this controller
+     */
+    public MainManager getManager() {
+        return manage;
     }
 
 }

@@ -4,6 +4,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import seng202.team3.data.entity.Coordinate;
+import seng202.team3.gui.MainController;
 
 /**
  * Converts JavaScript to Objects by hocus pocus
@@ -22,8 +23,8 @@ public class JavaScriptBridge {
 
         // Temporary setting code to make sure setting works
         TempData.setCoordinate(parseCoordinate(latlng));
-        MainManager controller = TempData.getController();
-        controller.setPosition(TempData.getCoordinate());
+        MainController controller = TempData.getController();
+        controller.getManager().setPosition(TempData.getCoordinate());
     }
 
     /**
@@ -51,8 +52,8 @@ public class JavaScriptBridge {
      * Refreshes the table with new data
      */
     public void refreshTable() {
-        MainManager controller = TempData.getController();
-        controller.getController().refreshTable();
+        MainController controller = TempData.getController();
+        controller.refreshTable();
 
     }
 
@@ -60,8 +61,8 @@ public class JavaScriptBridge {
      * Zooms to a point
      */
     public void zoomToPoint(String latlng) {
-        MainManager controller = TempData.getController();
-        controller.getController().getMapController().changePosition(parseCoordinate(latlng));
+        MainController controller = TempData.getController();
+        controller.getMapController().changePosition(parseCoordinate(latlng));
     }
 
 }

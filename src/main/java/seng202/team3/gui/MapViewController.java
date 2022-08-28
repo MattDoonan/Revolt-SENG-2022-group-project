@@ -46,7 +46,7 @@ public class MapViewController {
         javaScriptBridge = new JavaScriptBridge();
         this.map = map;
         initMap();
-        this.stage.sizeToScene();
+        stage.sizeToScene();
     }
 
     /**
@@ -88,7 +88,7 @@ public class MapViewController {
      */
     public void addChargersOnMap() {
         javaScriptConnector.call("clearMarkers");
-        for (Charger charger : map.getController().getChargerData()) {
+        for (Charger charger : map.getController().getCloseChargerData()) {
             javaScriptConnector.call("addMarker", charger.getLocation().getAddress(),
                     charger.getLocation().getLat(), charger.getLocation().getLon());
         }
