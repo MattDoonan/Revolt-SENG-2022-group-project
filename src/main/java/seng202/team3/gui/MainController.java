@@ -181,6 +181,8 @@ public class MainController {
                                 charger.getValue().getLocation())) * 10.0) / 10.0)
                         .asObject());
         chargerTable.getSelectionModel().select(0);
+        chargerTable.getSortOrder().add(distanceCol);
+        chargerTable.sort();
 
         if (getMapController().getConnectorStatus()) {
             getMapController().addChargersOnMap();
@@ -228,8 +230,11 @@ public class MainController {
         } else {
             manage.setDistance(0);
         }
-        addChargersToDisplay(manage.getCloseChargerData());
-
+        ObservableList<Charger> chargers = manage.getCloseChargerData();
+        addChargersToDisplay(chargers);
+        if (chargers.size() != 0 ){
+            mapController.changePosition(chargers.get(0).getLocation());
+        }
     }
 
     /**

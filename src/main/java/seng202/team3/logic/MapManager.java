@@ -11,9 +11,6 @@ import seng202.team3.gui.MainController;
  */
 public class MapManager {
 
-    // private JavaScriptBridge javaScriptBridge;
-    // private JSObject javaScriptConnector;
-
     /**
      * Contains the MainController for reference
      */
