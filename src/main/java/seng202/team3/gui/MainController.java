@@ -90,7 +90,6 @@ public class MainController {
         autoMapView();
         tableMaker();
         manage.createOriginalQuery();
-        viewChargers(manage.getData().get(0));
         insetText();
         selectToView();
         change();
@@ -180,6 +179,9 @@ public class MainController {
 
         if (getMapController().getConnectorStatus()) {
             getMapController().addChargersOnMap();
+        }
+        if (!chargerTable.getItems().isEmpty()) {
+            viewChargers(manage.getChargerData().get(0));
         }
     }
 

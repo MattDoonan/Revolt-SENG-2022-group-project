@@ -21,11 +21,12 @@ import seng202.team3.gui.MainController;
  *
  */
 
+@SuppressWarnings("checkstyle:RightCurly")
 public class MainManager {
 
     private final MainController main;
     private QueryBuilder mainDataQuery;
-    private Coordinate position = new Coordinate(1574161.4056, 5173542.4743, -43.5097, 172.5452);
+    private Coordinate position;
     private final ChargerManager chargerManager = new ChargerManager();
     private ObservableList<Charger> chargerData;
     private ObservableList<Charger> closerChargers;
@@ -42,16 +43,8 @@ public class MainManager {
         main = home;
         distance = slide;
         click = 0;
+        position = new Coordinate(null, null, -43.522518157958984, 172.5811767578125);
         TempData.setController(this);
-    }
-
-    /**
-     * Returns the list of chargers
-     * 
-     * @return chargerData of the required charger
-     */
-    public ObservableList<Charger> getData() {
-        return chargerData;
     }
 
     /**
@@ -199,12 +192,19 @@ public class MainManager {
     }
 
     /**
+     * Returns the list of chargers
+     *
+     * @return chargerData of the required charger
+     */
+    public ObservableList<Charger> getData() { return chargerData; }
+
+    /**
      * Sets the position using a {@link Coordinate}
      *
-     * @param position a Coordinate of the selected position
+     * @param coordinate a Coordinate of the selected position
      */
-    public void setPosition(Coordinate position) {
-        this.position = position;
+    public void setPosition(Coordinate coordinate) {
+        position = coordinate;
         compareDistance();
     }
 
@@ -217,6 +217,11 @@ public class MainManager {
         return position;
     }
 
+    /**
+     * Returns the position of {@link MainController}
+     *
+     * @return main controller class
+     */
     public MainController getController() {
         return main;
     }
