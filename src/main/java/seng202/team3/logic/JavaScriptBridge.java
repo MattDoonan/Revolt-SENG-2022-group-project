@@ -3,8 +3,12 @@ package seng202.team3.logic;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
 import seng202.team3.gui.MainController;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Converts JavaScript to Objects by hocus pocus
@@ -55,6 +59,36 @@ public class JavaScriptBridge {
         MainController controller = TempData.getController();
         controller.refreshTable();
 
+    }
+
+    /**
+     * Recalls a query with all the components at the new location
+     */
+    public void refreshQuery() {
+        MainController controller = TempData.getController();
+        controller.executeSearch();
+
+    }
+
+    /**
+     * Displays the charger according to id and also zooms to it.
+     * Hands the object over to TempData
+     *
+     * @param id the charger id selected
+     * @return the {@link Charger} object to deal with
+     */
+    public void zoomAndDisplay(int id) {
+        MainController controller = TempData.getController();
+        List<Charger> chargers = null;
+        chargers = controller.getManager().getData().stream()
+                .filter(c -> c.getChargerId() == id)
+                .toList();
+        if (chargers != null) {
+            Charger charger = chargers.get(0);
+            controller.getManager().setSelectedCharger(charger);
+            controller.viewChargers(charger);
+            controller.getMapController().changePosition(charger.getLocation());
+        }
     }
 
     /**

@@ -27,6 +27,7 @@ public class MainManager {
     private double distance = 0;
     private final ChargerManager chargerManager = new ChargerManager();
     private ObservableList<Charger> chargerData;
+    private Charger selectedCharger;
 
     /**
      * Saves the MainController to call later
@@ -35,6 +36,24 @@ public class MainManager {
         position = new Coordinate(null, null, -43.522518157958984, 172.5811767578125);
     }
 
+
+    /**
+     * Sets the selected charger
+     *
+     * @param selectedCharger {@link Charger} which is being currently selected
+     */
+    public void setSelectedCharger(Charger selectedCharger) {
+        this.selectedCharger = selectedCharger;
+    }
+
+    /**
+     * Gets the selected charger
+     *
+     * @return {@link Charger} the charger which is currently selected
+     */
+    public Charger getSelectedCharger() {
+        return selectedCharger;
+    }
 
     /**
      * Sets the distance

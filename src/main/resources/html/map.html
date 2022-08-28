@@ -32,7 +32,7 @@
         let lat = -43.5279;
         let lon = 172.5765;
         let markers = [];
-        var coordinate;
+        let coordinate;
         var javaScriptBridge; // must be declared as var (will not be correctly assigned in java with let keyword)
         var route;
 
@@ -79,16 +79,17 @@
          * @param lat latitude to place marker at
          * @param lng longitude to place marker at
          */
-        function addMarker(title, lat, lng) {
+        function addMarker(title, lat, lng, id) {
             var m = new L.Marker([lat, lng])
             m.bindPopup("Address: " + title).openPopup()
-            m.addTo(map).on("click", (map_event) => {
-                var latlng = map.mouseEventToLatLng(map_event.originalEvent)
-                javaScriptBridge.zoomToPoint(`{"lat": ${latlng.lat}, "lng": ${latlng.lng}}`)
-            })
+            m.addTo(map).on("click", e => javaScriptBridge.zoomAndDisplay(id)
+            )
             markers.push(m)
         }
 
+        /**
+         * Clears the markers
+         */
         function clearMarkers() {
             markers.forEach(function (item, index) {
                 item.remove();
@@ -103,7 +104,7 @@
          * @param lng longitude to place coordinate marker at
          */
         function addCoordinate(title, lat, lng) {
-            coordinate = new L.Marker([lat, lng])
+            coordinate = new L.marker([lat, lng])
             coordinate.bindPopup(title + ": " + lat.toFixed(4) + " " + lng.toFixed(4) + " ").openPopup()
             coordinate.addTo(map).on("click", javaScriptBridge.refreshTable())
         }

@@ -90,9 +90,11 @@ public class MapViewController {
         javaScriptConnector.call("clearMarkers");
         for (Charger charger : map.getController().getCloseChargerData()) {
             javaScriptConnector.call("addMarker", charger.getLocation().getAddress(),
-                    charger.getLocation().getLat(), charger.getLocation().getLon());
+                    charger.getLocation().getLat(), charger.getLocation().getLon(),
+                    charger.getChargerId());
         }
     }
+
 
     /**
      * Adds just one Coordinate {@link Coordinate} onto the map, and associates

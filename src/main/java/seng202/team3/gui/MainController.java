@@ -76,8 +76,6 @@ public class MainController {
 
     private Stage stage;
 
-    private Charger selectedCharger;
-
     private MapViewController mapController;
 
     private MainManager manage;
@@ -131,10 +129,11 @@ public class MainController {
     public void selectToView() {
         chargerTable.getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> {
-                    selectedCharger = chargerTable.getSelectionModel()
+                    Charger selectedCharger = chargerTable.getSelectionModel()
                             .getSelectedItem();
                     if (selectedCharger != null) {
                         viewChargers(selectedCharger);
+                        manage.setSelectedCharger(selectedCharger);
                         // Added functionality to move screen to charger
                         if (mapController != null) {
                             mapController.changePosition(selectedCharger.getLocation());
@@ -142,8 +141,9 @@ public class MainController {
                     }
 
                 });
-
     }
+
+
 
     /**
      * Create charger table
@@ -232,7 +232,7 @@ public class MainController {
         }
         ObservableList<Charger> chargers = manage.getCloseChargerData();
         addChargersToDisplay(chargers);
-        if (chargers.size() != 0 ){
+        if (chargers.size() != 0) {
             mapController.changePosition(chargers.get(0).getLocation());
         }
     }

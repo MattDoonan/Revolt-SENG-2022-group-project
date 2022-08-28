@@ -19,6 +19,11 @@ public class TempData {
     private static Coordinate coord;
     private static MainController controller;
 
+    /**
+     * Sets the chargerList
+     *
+     * @param l the Observablelist of chargers
+     */
     public static void setChargerList(ObservableList<Charger> l) {
         chargers = l;
     }
@@ -31,6 +36,7 @@ public class TempData {
     public static ObservableList<Charger> getChargers() {
         return chargers;
     }
+
 
     /**
      * Sets a coordinate
