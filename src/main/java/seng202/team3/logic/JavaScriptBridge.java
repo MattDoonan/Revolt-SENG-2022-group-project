@@ -1,5 +1,12 @@
 package seng202.team3.logic;
 
+import java.io.IOException;
+import java.util.List;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -7,8 +14,6 @@ import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
 import seng202.team3.gui.MainController;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Converts JavaScript to Objects by hocus pocus
@@ -24,8 +29,6 @@ public class JavaScriptBridge {
      * @param latlng the string created with latitude and longitude
      */
     public void addCoordinateFromClick(String latlng) {
-
-        // Temporary setting code to make sure setting works
         TempData.setCoordinate(parseCoordinate(latlng));
         MainController controller = TempData.getController();
         controller.getManager().setPosition(TempData.getCoordinate());
@@ -53,12 +56,27 @@ public class JavaScriptBridge {
     }
 
     /**
-     * Refreshes the table with new data
+     * Refreshes the table with new data and adds the coordinate
      */
-    public void refreshTable() {
+    public void refreshTableSaveCoord() {
         MainController controller = TempData.getController();
         controller.refreshTable();
-
+        try {
+            FXMLLoader saveCoordLoader = new FXMLLoader(getClass().getResource(
+                    "/fxml/save_coord.fxml"));
+            VBox root = saveCoordLoader.load();
+            Scene modalScene = new Scene(root);
+            Stage modal = new Stage();
+            modal.setScene(modalScene);
+            modal.setWidth(300);
+            modal.setHeight(150);
+            modal.setResizable(false);
+            modal.setTitle("Add a coordinate");
+            modal.initModality(Modality.WINDOW_MODAL);
+            modal.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -67,7 +85,6 @@ public class JavaScriptBridge {
     public void refreshQuery() {
         MainController controller = TempData.getController();
         controller.executeSearch();
-
     }
 
     /**
@@ -75,12 +92,10 @@ public class JavaScriptBridge {
      * Hands the object over to TempData
      *
      * @param id the charger id selected
-     * @return the {@link Charger} object to deal with
      */
-    public void zoomAndDisplay(int id) {
+    public void zoomDisplayAndEdit(int id) {
         MainController controller = TempData.getController();
-        List<Charger> chargers = null;
-        chargers = controller.getManager().getData().stream()
+        List<Charger> chargers = controller.getManager().getData().stream()
                 .filter(c -> c.getChargerId() == id)
                 .toList();
         if (chargers != null) {

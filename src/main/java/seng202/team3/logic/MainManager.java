@@ -28,12 +28,14 @@ public class MainManager {
     private final ChargerManager chargerManager = new ChargerManager();
     private ObservableList<Charger> chargerData;
     private Charger selectedCharger;
+    private ArrayList<Coordinate> savedCoordinates;
 
     /**
      * Saves the MainController to call later
      */
     public MainManager() {
         position = new Coordinate(null, null, -43.522518157958984, 172.5811767578125);
+        savedCoordinates = new ArrayList<>();
     }
 
 
@@ -64,6 +66,39 @@ public class MainManager {
         this.distance = distance;
     }
 
+
+    /**
+     * Adds a coordinate into the coordinate list
+     *
+     * @param coordinate {@link Coordinate} a coordinate to be added into the list of coordinates
+     */
+    public void addCoordinate(Coordinate coordinate) {
+        savedCoordinates.add(coordinate);
+    }
+
+    /**
+     * Deletes a coordinate according to address
+     *
+     * @param address The string address of the coordinate to be deleted
+     */
+    public void deleteCoordinate(String address) {
+        int deletedCoord = 0;
+        for (int i = 0; i < savedCoordinates.size(); i++) {
+            if (address.equals(savedCoordinates.get(i).getAddress())) {
+                deletedCoord = i;
+            }
+        }
+        savedCoordinates.remove(deletedCoord);
+    }
+
+    /**
+     * Returns an arraylist of all the saved coordinates
+     *
+     * @return an ArrayList of {@link Coordinate} coordinates
+     */
+    public ArrayList<Coordinate> getSavedCoordinates() {
+        return savedCoordinates;
+    }
 
     /**
      * Load the initial query

@@ -75,6 +75,7 @@
 
         /**
          * Adds a marker to the map and stores it in the markers array for later use (e.g. removal)
+         *
          * @param title tooltip to display on hover
          * @param lat latitude to place marker at
          * @param lng longitude to place marker at
@@ -82,7 +83,8 @@
         function addMarker(title, lat, lng, id) {
             var m = new L.Marker([lat, lng])
             m.bindPopup("Address: " + title).openPopup()
-            m.addTo(map).on("click", e => javaScriptBridge.zoomAndDisplay(id)
+            m.on("mouseover", function(ev) {m.openPopup();})
+            m.addTo(map).on("click", e => javaScriptBridge.zoomDisplayAndEdit(id),
             )
             markers.push(m)
         }
@@ -104,9 +106,10 @@
          * @param lng longitude to place coordinate marker at
          */
         function addCoordinate(title, lat, lng) {
-            coordinate = new L.marker([lat, lng])
+            coordinate = new L.Marker([lat, lng])
             coordinate.bindPopup(title + ": " + lat.toFixed(4) + " " + lng.toFixed(4) + " ").openPopup()
-            coordinate.addTo(map).on("click", javaScriptBridge.refreshTable())
+            coordinate.on("mouseover", function(ev) {coordinate.openPopup();})
+            coordinate.addTo(map).on("click", e => javaScriptBridge.refreshTableSaveCoord())
         }
 
         /**

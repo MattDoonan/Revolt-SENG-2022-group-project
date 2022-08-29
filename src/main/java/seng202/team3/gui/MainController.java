@@ -80,6 +80,8 @@ public class MainController {
 
     private MainManager manage;
 
+    private SaveCoordController coordController;
+
     /**
      * Initialize the window
      *
@@ -96,6 +98,7 @@ public class MainController {
         manage.setDistance(changeDistance.getValue());
         addChargersToDisplay(manage.getCloseChargerData());
         selectToView();
+        coordController = new SaveCoordController();
         change();
 
     }
@@ -298,6 +301,15 @@ public class MainController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Gets the coordinate controller to allow coordinate saving
+     *
+     * @return {@link SaveCoordController} the controller for the saved coordinates
+     */
+    public SaveCoordController getCoordController() {
+        return coordController;
     }
 
     /**
