@@ -106,6 +106,7 @@ public class MapViewController {
         javaScriptConnector.call("addCoordinate", "Current Coordinate: ",
                 coordinate.getLat(), coordinate.getLon());
         map.getController().setPosition(coordinate);
+        map.getController().getCloseChargerData();
     }
 
     /**

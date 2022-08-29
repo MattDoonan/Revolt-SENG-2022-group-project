@@ -6,11 +6,13 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.internal.matchers.Contains;
 import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.database.CsvInterpreter;
 import seng202.team3.data.database.QueryBuilder;
 import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.entity.Charger;
+import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
 import seng202.team3.gui.MainController;
 
@@ -28,15 +30,11 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  */
 public class MainManagerTest {
 
-    @Mock
-    private MainController test;
     private MainManager manage;
     private ChargerManager charge;
 
-
     @BeforeEach
     public void setUp() {
-        test = new MainController();
         manage = new MainManager();
         charge = new ChargerManager();
 
@@ -45,19 +43,9 @@ public class MainManagerTest {
     @AfterEach
     public void remove() {
         manage = null;
-        test = null;
         charge = null;
         assertNull(manage);
-        assertNull(test);
         assertNull(charge);
-    }
-
-    /**
-     * Checks if it is returning the {@link MainController}
-     */
-    @Test
-    public void CheckMainControllerClass(){
-        assertEquals(test, manage);
     }
 
     /**
@@ -65,17 +53,34 @@ public class MainManagerTest {
      */
     @Test
     public void positionTest1() {
-        Coordinate coordinate = new Coordinate(1.1, 2.3,  -43.53418, 172.627572);
-        manage.resetQuery();
+        Coordinate coordinate = new Coordinate(1.1, 2.3, -43.53418, 172.627572);
         manage.setPosition(coordinate);
         assertEquals(coordinate, manage.getPosition());
+
     }
 
     @Test
     public void positionTest2() {
-        Coordinate coordinate = new Coordinate(4.4, 6.1,  23.2334, 32.3242);
+        Coordinate coordinate = new Coordinate(4.4, 6.1, 23.2334, 32.3242);
         manage.setPosition(coordinate);
         assertEquals(coordinate, manage.getPosition());
+    }
+
+    /**
+     * Checks if the manager saves the selected charger correctly
+     */
+    @Test
+    public void selectedChargerTest(){
+        Connector dummyConnector = new Connector("ChardaMo", "AC", "Available", "123", 3);
+        ArrayList<Connector> connectorList = new ArrayList<>(1);
+        connectorList.add(dummyConnector);
+        Coordinate coord = new Coordinate(4.5, 5.7, -36.85918, 174.76602);
+        Charger c = new Charger(connectorList, "Test1", coord, 1, 0.3, "Meridian", true);
+        manage.setSelectedCharger(c);
+        assertEquals(c.getLocation().getLat(),
+                manage.getSelectedCharger().getLocation().getLat());
+        assertEquals(c.getLocation().getLon(),
+                manage.getSelectedCharger().getLocation().getLon());
     }
 
     /**
@@ -92,14 +97,20 @@ public class MainManagerTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Coordinate coordinate = new Coordinate(1.1, 2.3,  -43.53418, 172.627572);
-        manage.setPosition(coordinate);
         manage.resetQuery();
-        assertEquals(chargerList, manage.getData());
+        manage.makeAllChargers();
+        // Checks the sizes of each list
+        assertEquals(chargerList.size(), manage.getData().size());
+        // checks the address of each of the elements since they should be unique
+        for (int i  = 0; i < chargerList.size(); i++) {
+            assertEquals(chargerList.get(i).getLocation().getAddress(),
+                    manage.getData().get(i).getLocation().getAddress());
+        }
     }
 
     /**
      * tests if the manager is returning the correct list of chargers with Distances
+     * Distance set to 50
      */
     @Test
     public void distanceOriginalListTest() {
@@ -116,16 +127,24 @@ public class MainManagerTest {
         ArrayList<Charger> cc = charge.getNearbyChargers(chargerList, coordinate, 50.0);
         ObservableList<Charger> result = FXCollections.observableList(cc);
         manage.setPosition(coordinate);
+        manage.setDistance(50.0);
         manage.resetQuery();
-
-        assertEquals(result, manage);
+        manage.makeAllChargers();
+        ObservableList<Charger> returnVal = manage.getCloseChargerData();
+        // Checks the sizes of each list
+        assertEquals(result.size(), returnVal.size());
+        // checks the address of each of the elements since they should be unique
+        for (int i  = 0; i < result.size(); i++) {
+            assertEquals(result.get(i).getLocation().getAddress(),
+                    returnVal.get(i).getLocation().getAddress());
+        }
     }
 
     /**
-     * Test the closerChargers list is the same when the position changes
+     * Distance set to 90 instead of 50
      */
     @Test
-    public void sliderChange() {
+    public void changeDistanceTest() {
         QueryBuilder q = new QueryBuilderImpl().withSource("charger");
         ArrayList<Charger> chargerList = new ArrayList<>();
         try {
@@ -135,23 +154,30 @@ public class MainManagerTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         Coordinate coordinate = new Coordinate(1.1, 2.3,  -43.53418, 172.627572);
-        ArrayList<Charger> cc = charge.getNearbyChargers(chargerList, coordinate, 90);
+        ArrayList<Charger> cc = charge.getNearbyChargers(chargerList, coordinate, 90.0);
         ObservableList<Charger> result = FXCollections.observableList(cc);
         manage.setPosition(coordinate);
+        manage.setDistance(90.0);
         manage.resetQuery();
-
-        assertEquals(result, manage);
+        manage.makeAllChargers();
+        ObservableList<Charger> returnVal = manage.getCloseChargerData();
+        // Checks the sizes of each list
+        assertEquals(result.size(), returnVal.size());
+        // checks the address of each of the elements since they should be unique
+        for (int i  = 0; i < result.size(); i++) {
+            assertEquals(result.get(i).getLocation().getAddress(),
+                    returnVal.get(i).getLocation().getAddress());
+        }
     }
 
     /**
-     * Adds a haschargingcost filter and checks if it updates
+     * Checks the lists of chargers when a QUERY filter connectorcurrent AC is added.
      */
     @Test
-    public void addChargerCostQuery() {
-        QueryBuilder q = new QueryBuilderImpl().withSource("charger").withFilter("haschargingcost", "true", ComparisonType.CONTAINS);
-
+    public void addAcTypeQuery() {
+        QueryBuilder q = new QueryBuilderImpl().withSource("charger")
+                .withFilter("connectorcurrent", "AC", ComparisonType.CONTAINS);
         ArrayList<Charger> chargerList = new ArrayList<>();
         try {
             for (Object o : new CsvInterpreter().readData(q.build(), Charger.class)) {
@@ -160,25 +186,161 @@ public class MainManagerTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        Coordinate coordinate = new Coordinate(1.1, 2.3,  -43.53418, 172.627572);
-        ArrayList<Charger> cc = charge.getNearbyChargers(chargerList, coordinate, 50);
-        ObservableList<Charger> result = FXCollections.observableList(cc);
-        manage.setPosition(coordinate);
         manage.resetQuery();
-
-        assertEquals(result, manage);
-        assertEquals(chargerList, manage.getData());
-
+        manage.adjustQuery("connectorcurrent", "AC", ComparisonType.CONTAINS);
+        manage.makeAllChargers();
+        // Checks the sizes of each list
+        assertEquals(chargerList.size(), manage.getData().size());
+        // checks the address of each of the elements since they should be unique
+        for (int i  = 0; i < chargerList.size(); i++) {
+            assertEquals(chargerList.get(i).getLocation().getAddress(),
+                    manage.getData().get(i).getLocation().getAddress());
+        }
     }
 
     /**
-     * Adds a haschargingcost false filter then removes the filter and checks the lists
+     * Checks the lists of chargers when a QUERY filter connectorcurrent DC is added.
      */
     @Test
-    public void removeChargerCostQuery() {
+    public void addDcTypeQuery() {
+        QueryBuilder q = new QueryBuilderImpl().withSource("charger")
+                .withFilter("connectorcurrent", "DC", ComparisonType.CONTAINS);
+        ArrayList<Charger> chargerList = new ArrayList<>();
+        try {
+            for (Object o : new CsvInterpreter().readData(q.build(), Charger.class)) {
+                chargerList.add((Charger) o);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        manage.resetQuery();
+        manage.adjustQuery("connectorcurrent", "DC", ComparisonType.CONTAINS);
+        manage.makeAllChargers();
+        // Checks the sizes of each list
+        assertEquals(chargerList.size(), manage.getData().size());
+        // checks the address of each of the elements since they should be unique
+        for (int i  = 0; i < chargerList.size(); i++) {
+            assertEquals(chargerList.get(i).getLocation().getAddress(),
+                    manage.getData().get(i).getLocation().getAddress());
+        }
+    }
+
+    /**
+     * Checks the lists of chargers when a QUERY filter hastouristattraction true is added.
+     */
+    @Test
+    public void addAttractionQuery() {
+        QueryBuilder q = new QueryBuilderImpl().withSource("charger")
+                .withFilter("hastouristattraction", "True", ComparisonType.CONTAINS);
+        ArrayList<Charger> chargerList = new ArrayList<>();
+        try {
+            for (Object o : new CsvInterpreter().readData(q.build(), Charger.class)) {
+                chargerList.add((Charger) o);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        manage.resetQuery();
+        manage.adjustQuery("hastouristattraction", "True", ComparisonType.CONTAINS);
+        manage.makeAllChargers();
+        // Checks the sizes of each list
+        assertEquals(chargerList.size(), manage.getData().size());
+        // checks the address of each of the elements since they should be unique
+        for (int i  = 0; i < chargerList.size(); i++) {
+            assertEquals(chargerList.get(i).getLocation().getAddress(),
+                    manage.getData().get(i).getLocation().getAddress());
+        }
+    }
+
+    /**
+     * Checks the lists of chargers when a QUERY filter haschargingcost False is added.
+     */
+    @Test
+    public void addChargingCostQuery() {
+        QueryBuilder q = new QueryBuilderImpl().withSource("charger")
+                .withFilter("haschargingcost", "False", ComparisonType.CONTAINS);
+        ArrayList<Charger> chargerList = new ArrayList<>();
+        try {
+            for (Object o : new CsvInterpreter().readData(q.build(), Charger.class)) {
+                chargerList.add((Charger) o);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        manage.resetQuery();
+        manage.adjustQuery("haschargingcost", "False", ComparisonType.CONTAINS);
+        manage.makeAllChargers();
+        // Checks the sizes of each list
+        assertEquals(chargerList.size(), manage.getData().size());
+        // checks the address of each of the elements since they should be unique
+        for (int i  = 0; i < chargerList.size(); i++) {
+            assertEquals(chargerList.get(i).getLocation().getAddress(),
+                    manage.getData().get(i).getLocation().getAddress());
+        }
+    }
+
+    /**
+     * Checks what happens there are multiple QUERY's added
+     */
+    @Test
+    public void aFewQuerys1() {
+        QueryBuilder q = new QueryBuilderImpl().withSource("charger")
+                .withFilter("haschargingcost", "False", ComparisonType.CONTAINS)
+                .withFilter("connectorcurrent", "DC", ComparisonType.CONTAINS);
+        ArrayList<Charger> chargerList = new ArrayList<>();
+        try {
+            for (Object o : new CsvInterpreter().readData(q.build(), Charger.class)) {
+                chargerList.add((Charger) o);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        manage.resetQuery();
+        manage.adjustQuery("haschargingcost", "False", ComparisonType.CONTAINS);
+        manage.adjustQuery("connectorcurrent", "DC", ComparisonType.CONTAINS);
+        manage.makeAllChargers();
+        // Checks the sizes of each list
+        assertEquals(chargerList.size(), manage.getData().size());
+        // checks the address of each of the elements since they should be unique
+        for (int i  = 0; i < chargerList.size(); i++) {
+            assertEquals(chargerList.get(i).getLocation().getAddress(),
+                    manage.getData().get(i).getLocation().getAddress());
+        }
+    }
+
+    @Test
+    public void aFewQuerys2() {
+        QueryBuilder q = new QueryBuilderImpl().withSource("charger")
+                .withFilter("hastouristattraction", "True", ComparisonType.CONTAINS)
+                .withFilter("connectorcurrent", "AC", ComparisonType.CONTAINS);
+        ArrayList<Charger> chargerList = new ArrayList<>();
+        try {
+            for (Object o : new CsvInterpreter().readData(q.build(), Charger.class)) {
+                chargerList.add((Charger) o);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        manage.resetQuery();
+        manage.adjustQuery("hastouristattraction", "True", ComparisonType.CONTAINS);
+        manage.adjustQuery("connectorcurrent", "AC", ComparisonType.CONTAINS);
+        manage.makeAllChargers();
+        // Checks the sizes of each list
+        assertEquals(chargerList.size(), manage.getData().size());
+        // checks the address of each of the elements since they should be unique
+        for (int i  = 0; i < chargerList.size(); i++) {
+            assertEquals(chargerList.get(i).getLocation().getAddress(),
+                    manage.getData().get(i).getLocation().getAddress());
+        }
+    }
+
+
+    /**
+     * Checks what happens when the position is null
+     */
+    @Test
+    public void positionNull() {
         QueryBuilder q = new QueryBuilderImpl().withSource("charger");
-
         ArrayList<Charger> chargerList = new ArrayList<>();
         try {
             for (Object o : new CsvInterpreter().readData(q.build(), Charger.class)) {
@@ -187,172 +349,15 @@ public class MainManagerTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        Coordinate coordinate = new Coordinate(1.1, 2.3,  -43.53418, 172.627572);
-        ArrayList<Charger> cc = charge.getNearbyChargers(chargerList, coordinate, 50);
-        ObservableList<Charger> result = FXCollections.observableList(cc);
-        manage.setPosition(coordinate);
         manage.resetQuery();
-
-        assertEquals(result, manage);
-        assertEquals(chargerList, manage.getData());
-
-    }
-
-    /**
-     * Adds a hastouristattraction true filter and checks the lists
-     */
-    @Test
-    public void addNearbyAttractionQuery() {
-        QueryBuilder q = new QueryBuilderImpl().withSource("charger").withFilter("hastouristattraction", "true", ComparisonType.CONTAINS);
-
-        ArrayList<Charger> chargerList = new ArrayList<>();
-        try {
-            for (Object o : new CsvInterpreter().readData(q.build(), Charger.class)) {
-                chargerList.add((Charger) o);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        manage.makeAllChargers();
+        // Checks the sizes of each list
+        assertEquals(chargerList.size(), manage.getCloseChargerData().size());
+        // checks the address of each of the elements since they should be unique
+        for (int i  = 0; i < chargerList.size(); i++) {
+            assertEquals(chargerList.get(i).getLocation().getAddress(),
+                    manage.getCloseChargerData().get(i).getLocation().getAddress());
         }
-
-        Coordinate coordinate = new Coordinate(1.1, 2.3,  -43.53418, 172.627572);
-        ArrayList<Charger> cc = charge.getNearbyChargers(chargerList, coordinate, 50);
-        ObservableList<Charger> result = FXCollections.observableList(cc);
-        manage.setPosition(coordinate);
-        manage.resetQuery();
-
-        assertEquals(result, manage);
-        assertEquals(chargerList, manage.getData());
-
     }
-
-    /**
-     * Adds a hastouristattraction true filter then removes the filter and checks the lists
-     */
-    @Test
-    public void removeNearbyAttractionQuery() {
-        QueryBuilder q = new QueryBuilderImpl().withSource("charger");
-
-        ArrayList<Charger> chargerList = new ArrayList<>();
-        try {
-            for (Object o : new CsvInterpreter().readData(q.build(), Charger.class)) {
-                chargerList.add((Charger) o);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        Coordinate coordinate = new Coordinate(1.1, 2.3,  -43.53418, 172.627572);
-        ArrayList<Charger> cc = charge.getNearbyChargers(chargerList, coordinate, 50);
-        ObservableList<Charger> result = FXCollections.observableList(cc);
-        manage.setPosition(coordinate);
-        manage.resetQuery();
-        assertEquals(result, manage);
-        assertEquals(chargerList, manage.getData());
-    }
-
-    /**
-     * Adds a connectorcurrent DC filter and checks the lists
-     */
-    @Test
-    public void addDcConnectorQuery() {
-        QueryBuilder q = new QueryBuilderImpl().withSource("charger").withFilter("connectorcurrent", "DC", ComparisonType.CONTAINS);
-
-        ArrayList<Charger> chargerList = new ArrayList<>();
-        try {
-            for (Object o : new CsvInterpreter().readData(q.build(), Charger.class)) {
-                chargerList.add((Charger) o);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        Coordinate coordinate = new Coordinate(1.1, 2.3,  -43.53418, 172.627572);
-        ArrayList<Charger> cc = charge.getNearbyChargers(chargerList, coordinate, 50);
-        ObservableList<Charger> result = FXCollections.observableList(cc);
-        manage.setPosition(coordinate);
-        manage.resetQuery();
-
-        assertEquals(result, manage);
-        assertEquals(chargerList, manage.getData());
-    }
-
-    /**
-     * Adds a connectorcurrent DC filter then removes the filter and checks the lists
-     */
-    @Test
-    public void removeDcConnectorQuery() {
-        QueryBuilder q = new QueryBuilderImpl().withSource("charger");
-
-        ArrayList<Charger> chargerList = new ArrayList<>();
-        try {
-            for (Object o : new CsvInterpreter().readData(q.build(), Charger.class)) {
-                chargerList.add((Charger) o);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        Coordinate coordinate = new Coordinate(1.1, 2.3,  -43.53418, 172.627572);
-        ArrayList<Charger> cc = charge.getNearbyChargers(chargerList, coordinate, 50);
-        ObservableList<Charger> result = FXCollections.observableList(cc);
-        manage.setPosition(coordinate);
-        manage.resetQuery();
-
-        assertEquals(result, manage);
-        assertEquals(chargerList, manage.getData());
-    }
-
-    /**
-     * Adds a connectorcurrent AC filter and checks the lists
-     */
-    @Test
-    public void addAcConnectorQuery() {
-        QueryBuilder q = new QueryBuilderImpl().withSource("charger").withFilter("connectorcurrent", "AC", ComparisonType.CONTAINS);
-
-        ArrayList<Charger> chargerList = new ArrayList<>();
-        try {
-            for (Object o : new CsvInterpreter().readData(q.build(), Charger.class)) {
-                chargerList.add((Charger) o);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        Coordinate coordinate = new Coordinate(1.1, 2.3,  -43.53418, 172.627572);
-        ArrayList<Charger> cc = charge.getNearbyChargers(chargerList, coordinate, 50);
-        ObservableList<Charger> result = FXCollections.observableList(cc);
-        manage.setPosition(coordinate);
-        manage.resetQuery();
-
-        assertEquals(result, manage);
-        assertEquals(chargerList, manage.getData());
-    }
-
-    /**
-     * Adds a connectorcurrent AC filter then removes the filter and checks the lists
-     */
-    @Test
-    public void removeAcConnectorQuery() {
-        QueryBuilder q = new QueryBuilderImpl().withSource("charger");
-
-        ArrayList<Charger> chargerList = new ArrayList<>();
-        try {
-            for (Object o : new CsvInterpreter().readData(q.build(), Charger.class)) {
-                chargerList.add((Charger) o);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        Coordinate coordinate = new Coordinate(null, null, -43.522518157958984, 172.5811767578125);
-        ArrayList<Charger> cc = charge.getNearbyChargers(chargerList, coordinate, 50);
-        ObservableList<Charger> result = FXCollections.observableList(cc);
-        manage.setPosition(coordinate);
-        manage.resetQuery();
-
-        assertEquals(result, manage);
-        assertEquals(chargerList, manage.getData());
-    }
-
 }
+

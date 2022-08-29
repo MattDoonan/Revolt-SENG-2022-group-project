@@ -93,6 +93,7 @@ public class MainController {
         tableMaker();
         manage.resetQuery();
         manage.makeAllChargers();
+        manage.setDistance(changeDistance.getValue());
         addChargersToDisplay(manage.getCloseChargerData());
         selectToView();
         change();

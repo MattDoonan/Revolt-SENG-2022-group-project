@@ -119,8 +119,6 @@ public class MainManager {
         mainDataQuery.withFilter(field, criteria, type);
     }
 
-
-
     /**
      * Returns a list of the closest chargers according to set distance from position
      *
@@ -149,7 +147,6 @@ public class MainManager {
      */
     public void setPosition(Coordinate coordinate) {
         position = coordinate;
-        compareDistance();
     }
 
     /**
