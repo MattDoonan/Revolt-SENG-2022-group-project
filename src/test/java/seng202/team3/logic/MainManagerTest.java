@@ -5,8 +5,6 @@ import javafx.collections.ObservableList;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.internal.matchers.Contains;
 import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.database.CsvInterpreter;
 import seng202.team3.data.database.QueryBuilder;
@@ -14,7 +12,6 @@ import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
-import seng202.team3.gui.MainController;
 
 import java.io.IOException;
 import java.util.ArrayList;
