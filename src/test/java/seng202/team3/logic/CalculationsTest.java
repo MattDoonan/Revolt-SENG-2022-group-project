@@ -1,14 +1,15 @@
 package seng202.team3.logic;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import seng202.team3.data.entity.Coordinate;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests for a {@link Calculations} Calculations Class in Logic
@@ -35,21 +36,21 @@ public class CalculationsTest {
      */
     @BeforeEach
     public void setUp() {
-        //Christchurch Hospital
-        coord1 = new Coordinate(1.1, 2.3,  -43.53418, 172.627572, "CHHosp");
-        //Christchurch Boys High School
+        // Christchurch Hospital
+        coord1 = new Coordinate(1.1, 2.3, -43.53418, 172.627572, "CHHosp");
+        // Christchurch Boys High School
         coord2 = new Coordinate(3.5, 4.4, -43.52425, 172.60019, "CHBoys");
-        //Auckland Grammar School
+        // Auckland Grammar School
         coord3 = new Coordinate(4.5, 5.7, -36.85918, 174.76602, "Auckland");
-        //Otago Boys School
+        // Otago Boys School
         coord4 = new Coordinate(4.8, 7.7, -45.87135, 170.49551, "Otago");
-        //NZMCA Park, Weedons
+        // NZMCA Park, Weedons
         coord5 = new Coordinate(5.7, 54.5, -43.56326, 172.43662, "Weedons");
-        //Ashburton Domain
-        coord6 = new Coordinate(5.9898,53.2, -43.89523, 171.76171, "Ashburt");
-        //Rakaia Domain
+        // Ashburton Domain
+        coord6 = new Coordinate(5.9898, 53.2, -43.89523, 171.76171, "Ashburt");
+        // Rakaia Domain
         coord7 = new Coordinate(5.935, 545.2, -43.74852, 172.02586, "Rakaia");
-        //Ellesmere College
+        // Ellesmere College
         coord8 = new Coordinate(65.514, 54.125, -43.75682, 172.28899, "Elles");
 
     }
@@ -114,7 +115,7 @@ public class CalculationsTest {
         boolean inDistance = true;
 
         double distance = Calculations.calculateDistance(coord1, coord6) * 1.3;
-        ArrayList<Coordinate> coords = new ArrayList();
+        ArrayList<Coordinate> coords = new ArrayList<Coordinate>();
         coords.add(coord1);
         coords.add(coord2);
         coords.add(coord3);
@@ -129,8 +130,8 @@ public class CalculationsTest {
                 .toList();
 
         for (Coordinate coordinate : filtered) {
-            if ((Calculations.calculateDistance(coordinate, coord1) +
-                    Calculations.calculateDistance(coordinate, coord6)) > distance) {
+            if ((Calculations.calculateDistance(coordinate, coord1)
+                    + Calculations.calculateDistance(coordinate, coord6)) > distance) {
                 inDistance = false;
                 break;
             }
@@ -141,7 +142,7 @@ public class CalculationsTest {
     @Test
     public void isReasonableRange() {
         double distance = Calculations.calculateDistance(coord1, coord6) * 1.2;
-        ArrayList<Coordinate> coords = new ArrayList();
+        ArrayList<Coordinate> coords = new ArrayList<>();
         coords.add(coord1);
         coords.add(coord2);
         coords.add(coord3);

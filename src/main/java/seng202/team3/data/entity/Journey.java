@@ -12,7 +12,7 @@ public class Journey {
     /** {@link Charger Chargers} used on journey */
     private ArrayList<Charger> chargers = new ArrayList<Charger>();
 
-    /** {@link Vehicle Vehicle} used for journey*/
+    /** {@link Vehicle Vehicle} used for journey */
     private Vehicle vehicle;
 
     /** {@link Coordinate Coordinate} of start position */
@@ -30,13 +30,13 @@ public class Journey {
     /** User has favourited */
     private boolean isFavourite;
 
-    /** 
-     * Constructor for the Journey 
+    /**
+     * Constructor for the Journey
      */
     public Journey(Coordinate startPosition, Coordinate endPosition) {
         ArrayList<String> connectors = new ArrayList<>();
-        connectors.add("temp"); //change default connectors to all for veh?
-        this.vehicle = new Vehicle("temp","temp","temp",100,20000,connectors);
+        connectors.add("temp"); // change default connectors to all for veh?
+        this.vehicle = new Vehicle("temp", "temp", "temp", 100, 20000, connectors);
         this.startPosition = startPosition;
         this.endPosition = endPosition;
     }
@@ -50,7 +50,7 @@ public class Journey {
         return chargers;
     }
 
-    /** 
+    /**
      * Add new {@link Charger charger} to journey
      */
     public void addCharger(Charger charger) {
@@ -90,7 +90,7 @@ public class Journey {
     public Coordinate getStartPosition() {
         return startPosition;
     }
-    
+
     /**
      * Gets the {@link Coordinate coordinate} of the end of the journey
      * 

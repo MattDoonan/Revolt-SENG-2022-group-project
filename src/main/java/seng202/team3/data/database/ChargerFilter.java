@@ -69,7 +69,7 @@ public class ChargerFilter implements BeanVerifier<Object> {
             case "connectortype":
                 result = c.getConnectors().stream().anyMatch(x -> compare(x.getType()));
                 break;
-            case "connectercurrent":
+            case "connectorcurrent":
                 result = c.getConnectors().stream().anyMatch(x -> compare(x.getCurrent()));
                 break;
             case "connectorpowerdraw":
@@ -93,7 +93,7 @@ public class ChargerFilter implements BeanVerifier<Object> {
             case "longitude":
                 result = compare(c.getLocation().getLon());
                 break;
-            case "maxTimeLimit":
+            case "maxtimelimit":
                 result = compare(c.getTimeLimit());
                 break;
             case "hastouristattraction":

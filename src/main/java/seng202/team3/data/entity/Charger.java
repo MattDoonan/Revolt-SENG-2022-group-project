@@ -26,9 +26,8 @@ public class Charger {
     String name;
 
     /** {@link Connector Connectors} available on charger */
-    @CsvBindAndSplitByName(column = "connectorsList", elementType = Connector.class,
-                           splitOn = ",(?=( )*\\{)", converter = ConnectorConverter.class,
-                           required = true)
+    @CsvBindAndSplitByName(column = "connectorsList", elementType = Connector.class, 
+                splitOn = ",(?=( )*\\{)", converter = ConnectorConverter.class, required = true)
     ArrayList<Connector> connectors;
 
     /** {@link Coordinate Coordinate} information for the charger */
@@ -331,6 +330,52 @@ public class Charger {
     }
 
     /**
+     * Set warning high cost
+     *
+     * @param warningHighCost bool indicating high cost warning
+     */
+    public void setWarningHighCost(boolean warningHighCost) {
+        this.warningHighCost = warningHighCost;
+    }
+
+    /**
+     * Set warning high cost
+     * 
+     * @param warningLongWait bool indicating long wait warning
+     */
+    public void setWarningLongWait(boolean warningLongWait) {
+        this.warningLongWait = warningLongWait;
+    }
+
+    /**
+     * Set warning high cost
+     * 
+     * @param warningLowAvailability bool indicating low availability warning
+     */
+    public void setWarningLowAvailability(boolean warningLowAvailability) {
+        this.warningLowAvailability = warningLowAvailability;
+    }
+
+    /**
+     * Gets boolean warnings that are set to true
+     * 
+     * @return ArrayList of boolean warnings
+     */
+    public ArrayList<String> getWarnings() {
+        ArrayList<String> warnings = new ArrayList<String>();
+        if (this.warningHighCost) {
+            warnings.add("high cost");
+        }
+        if (this.warningLongWait) {
+            warnings.add("long wait");
+        }
+        if (this.warningLowAvailability) {
+            warnings.add("low availability");
+        }
+        return warnings;
+    }
+
+    /**
      * Get the name of the charger
      *
      * @return name of the charger
@@ -346,51 +391,5 @@ public class Charger {
      */
     public void setName(String name) {
         this.name = name;
-    }
-
-    /**
-     * Set warning high cost
-     *
-     * @param warningHighCost bool indicating high cost warning
-     */
-    public void setWarningHighCost(boolean warningHighCost) {
-        this.warningHighCost = warningHighCost;
-    }
-
-    /**
-     * Set warning high cost
-     *
-     * @param warningLongWait bool indicating long wait warning
-     */
-    public void setWarningLongWait(boolean warningLongWait) {
-        this.warningLongWait = warningLongWait;
-    }
-
-    /**
-     * Set warning high cost
-     *
-     * @param warningLowAvailability bool indicating low availability warning
-     */
-    public void setWarningLowAvailability(boolean warningLowAvailability) {
-        this.warningLowAvailability = warningLowAvailability;
-    }
-
-    /**
-     * Gets boolean warnings that are set to true
-     *
-     * @return ArrayList of boolean warnings
-     */
-    public ArrayList<String> getWarnings() {
-        ArrayList<String> warnings = new ArrayList<String>();
-        if (this.warningHighCost) {
-            warnings.add("high cost");
-        }
-        if (this.warningLongWait) {
-            warnings.add("long wait");
-        }
-        if (this.warningLowAvailability) {
-            warnings.add("low availability");
-        }
-        return warnings;
     }
 }

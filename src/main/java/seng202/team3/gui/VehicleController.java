@@ -1,16 +1,14 @@
 package seng202.team3.gui;
 
-
-import javafx.collections.ObservableList;
-import javafx.scene.control.*;
-
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.ListView;
 import javafx.stage.Stage;
-
 
 /**
  * Controller for the vehicle.fxml window
+ * 
  * @author seng202 teaching team
  */
 public class VehicleController {
@@ -20,15 +18,10 @@ public class VehicleController {
     // @FXML
     // private Label defaultLabel;
 
-
     @FXML
-    private ListView vehicleList;
+    private ListView<String> vehicleList;
 
-
-    private ObservableList<String> vehicleData = FXCollections.observableArrayList();  
-
-
-   
+    private ObservableList<String> vehicleData = FXCollections.observableArrayList();
 
     /**
      * Initialize the window
@@ -37,15 +30,13 @@ public class VehicleController {
      */
     public void init(Stage stage) {
         makeTestVehicles();
-        
+
         for (int i = 0; i < vehicleData.size(); i++) {
-            vehicleList.getItems().add("Car: " + vehicleData.get(i) + "\n" + "Here's some more text");
+            vehicleList.getItems().add(
+                    "Car: " + vehicleData.get(i) + "\n" + "Here's some more text");
         }
 
-
     }
-
-
 
     /**
      * Creates test vehicles
@@ -66,29 +57,24 @@ public class VehicleController {
      * @param c List of vehicles to display
      */
     public void viewChargers(ObservableList<String> c) {
-        
+
         for (int i = 0; i < c.size(); i++) {
             System.out.println("Vehicle: " + c.get(i));
         }
 
-
     }
 
+    public void selectToView() {
+        // chargerTable.getSelectionModel().selectedItemProperty().addListener(new
+        // ChangeListener() {
+        // @Override
+        // public void changed(ObservableValue observableValue, Object o, Object t1) {
+        // viewChargers(chargerData.get(chargerTable.getSelectionModel().getSelectedIndex()));
 
-
-    public void selectToView(){
-        // chargerTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
-        //     @Override
-        //     public void changed(ObservableValue observableValue, Object o, Object t1) {
-        //         viewChargers(chargerData.get(chargerTable.getSelectionModel().getSelectedIndex()));
-
-        //     }
+        // }
         // });
 
     }
-
-
-
 
     /**
      * Method to call when our counter button is clicked
@@ -96,7 +82,6 @@ public class VehicleController {
      */
     @FXML
     public void onButtonClicked() {
-
 
     }
 }

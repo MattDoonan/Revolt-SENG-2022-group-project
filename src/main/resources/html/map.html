@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Leaflet & OSM Map Demo</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" />
+    <link rel="stylesheet"
+        href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+    <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
+    <script
+        src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+    <script>
+        let map;
+        let lat = -43.5279;
+        let lon = 172.5765;
+        let markers = [];
+        let coordinate;
+        var javaScriptBridge; // must be declared as var (will not be correctly assigned in java with let keyword)
+        var route;
+
+
+        /**
+         * This object can be returned to our java code, where we can call the functions we define inside of it
+         */
+        let jsConnector = {
+            addMarker: addMarker,
+            addCoordinate: addCoordinate,
+            movePosition: movePosition,
+            addRoute: addRoute,
+            removeRoute: removeRoute,
+            initMap: initMap,
+            clearMarkers: clearMarkers
+        };
+
+        /**
+         * creates and initialises the Google map, also defines on click event that calls java code
+         */
+        function initMap() {
+
+            var mapOptions = {
+                center: [lat, lon],
+                zoom: 12
+            }
+            map = new L.map('map', mapOptions);
+            new L.TileLayer('https://tile.csse.canterbury.ac.nz/hot/{z}/{x}/{y}.png', { // UCs tilemap server
+                attribution: '© OpenStreetMap contributors<br>Served by University of Canterbury'
+            }).addTo(map)
+
+            map.on("click", (map_event) => {
+                var latlng = map.mouseEventToLatLng(map_event.originalEvent)
+                javaScriptBridge.addCoordinateFromClick(`{"lat": ${latlng.lat}, "lng": ${latlng.lng}}`)
+                removeCoordinate()
+                addCoordinate("Selected Location", latlng.lat, latlng.lng)
+            })
+        }
+
+
+        /**
+         * Adds a marker to the map and stores it in the markers array for later use (e.g. removal)
+         *
+         * @param title tooltip to display on hover
+         * @param lat latitude to place marker at
+         * @param lng longitude to place marker at
+         */
+        function addMarker(title, lat, lng, id) {
+            var m = new L.Marker([lat, lng])
+            m.bindPopup("Address: " + title).openPopup()
+            m.on("mouseover", function(ev) {m.openPopup();})
+            m.addTo(map).on("click", e => javaScriptBridge.zoomDisplayAndEdit(id),
+            )
+            markers.push(m)
+        }
+
+        /**
+         * Clears the markers
+         */
+        function clearMarkers() {
+            markers.forEach(function (item, index) {
+                item.remove();
+            });
+            markers = [];
+        }
+
+        /**
+         * Adds a coordinate to the map and stores it by itself
+         * @param title tooltip to display on hover
+         * @param lat latitude to place coordinate marker at
+         * @param lng longitude to place coordinate marker at
+         */
+        function addCoordinate(title, lat, lng) {
+            coordinate = new L.Marker([lat, lng])
+            coordinate.bindPopup(title + ": " + lat.toFixed(4) + " " + lng.toFixed(4) + " ").openPopup()
+            coordinate.on("mouseover", function(ev) {coordinate.openPopup();})
+            coordinate.addTo(map).on("click", e => javaScriptBridge.refreshTableSaveCoord())
+        }
+
+        /**
+         * Remove coordinate
+         */
+        function removeCoordinate() {
+            if (coordinate) {
+                coordinate.remove()
+            }
+        }
+
+        /**
+         * Moves position of centre of map
+         */
+        function movePosition(lat, lon) {
+            map.panTo(new L.LatLng(lat, lon))
+        }
+
+
+        function addRoute() {
+            if (route) {
+                route.addTo(map)
+            } else {
+                console.log("Adding route")
+                route = L.Routing.control({
+                    waypoints: [
+                        new L.latLng(-43.522442, 172.580683),
+                        new L.latLng(-43.530542, 172.626466)
+                    ],
+                    routeWhileDragging: true
+                }).addTo(map);
+            }
+        }
+
+        function removeRoute() {
+            if (route) {
+                route.remove()
+            }
+        }
+
+    </script>
+</body>
+
+</html>

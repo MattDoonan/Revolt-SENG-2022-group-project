@@ -38,24 +38,26 @@ public class JourneyManagerTest {
      */
     @BeforeEach
     public void setUp() {
-        Connector dummyConnector = new Connector("ChardaMo", "powerDraw", "Not in use","AC", 2);
+        Connector dummyConnector = new Connector("ChardaMo", "powerDraw", "Not in use", "AC", 2);
         ArrayList<Connector> connectorList = new ArrayList<>(1);
         connectorList.add(dummyConnector);
 
-        //Christchurch Hospital
-        Coordinate coord1 = new Coordinate(1.1, 2.3,  -43.53418, 172.627572);
-        //Christchurch Boys High School
-        Coordinate coord2 = new Coordinate(3.5, 4.4, -43.52425, 172.60019);
-        //Canterbury Uni
-        Coordinate coord3 = new Coordinate (2.2, 2.2, -43.521764, 172.579985);
-        //Otago Boys School
-        Coordinate coord4 = new Coordinate(4.8, 7.7, -45.87135, 170.49551);
-
+        // Christchurch Hospital
+        Coordinate coord1 = new Coordinate(1.1, 2.3, -43.53418, 172.627572);
         charger1 = new Charger(connectorList, "Hosp", coord1, 2, 1.2, "operator", true);
-        charger2 = new Charger(connectorList, "Boys", coord2, 2, 34.2,  "operator", false);
+
+        // Christchurch Boys High School
+        Coordinate coord2 = new Coordinate(3.5, 4.4, -43.52425, 172.60019);
+        charger2 = new Charger(connectorList, "Boys", coord2, 2, 34.2, "operator", false);
+
+        // Canterbury Uni
+        Coordinate coord3 = new Coordinate(2.2, 2.2, -43.521764, 172.579985);
         charger3 = new Charger(connectorList, "Uni", coord3, 2, 61.3, "operator", false);
+
+        // Otago Boys School
+        Coordinate coord4 = new Coordinate(4.8, 7.7, -45.87135, 170.49551);
         charger4 = new Charger(connectorList, "Otago", coord4, 6, 12.2, "operator", false);
-   
+
         manager = new JourneyManager();
         manager.setStart(coord1);
         manager.setEnd(coord3);
@@ -82,11 +84,11 @@ public class JourneyManagerTest {
     /**
      * Test that vehicles are successfully added to journey
      */
-    @Test 
+    @Test
     public void testSelectVehicle() {
         ArrayList<String> connectors = new ArrayList<>();
         connectors.add("temp");
-        car = new Vehicle("CGN781","temp","temp", 100, 10000,connectors);
+        car = new Vehicle("CGN781", "temp", "temp", 100, 10000, connectors);
         manager.selectVehicle(car);
         assertEquals("CGN781", manager.getSelectedJourney().getVehicle().getLicensePlate());
     }

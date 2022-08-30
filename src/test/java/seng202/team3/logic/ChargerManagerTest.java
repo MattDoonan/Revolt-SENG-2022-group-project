@@ -40,19 +40,20 @@ public class ChargerManagerTest {
         ArrayList<Connector> connectorList = new ArrayList<>(1);
         connectorList.add(dummyConnector);
 
-        //Christchurch Hospital
-        Coordinate coord1 = new Coordinate(1.1, 2.3,  -43.53418, 172.627572);
-        //Christchurch Boys High School
-        Coordinate coord2 = new Coordinate(3.5, 4.4, -43.52425, 172.60019);
-        //Auckland Grammar School
-        Coordinate coord3 = new Coordinate(4.5, 5.7, -36.85918, 174.76602);
-        //Otago Boys School
-        Coordinate coord4 = new Coordinate(4.8, 7.7, -45.87135, 170.49551);
-
+        // Christchurch Hospital
+        Coordinate coord1 = new Coordinate(1.1, 2.3, -43.53418, 172.627572);
         charger1 = new Charger(connectorList, "Hosp", coord1, 1, 0.3, "Meridian", true);
-        charger2 = new Charger(connectorList, "Boys", coord2, 2, 3.5, "Someone" , false);
-        charger3 = new Charger(connectorList, "Grammar", coord3, 5, 1.2, "Else" , true);
-        charger4 = new Charger(connectorList, "Otago" , coord4, 2, 35.1, "Us" , false);
+
+        // Christchurch Boys High School
+        Coordinate coord2 = new Coordinate(3.5, 4.4, -43.52425, 172.60019);
+        charger2 = new Charger(connectorList, "Boys", coord2, 2, 3.5, "Someone", false);
+        // Auckland Grammar School
+        Coordinate coord3 = new Coordinate(4.5, 5.7, -36.85918, 174.76602);
+        charger3 = new Charger(connectorList, "Grammar", coord3, 5, 1.2, "Else", true);
+
+        // Otago Boys School
+        Coordinate coord4 = new Coordinate(4.8, 7.7, -45.87135, 170.49551);
+        charger4 = new Charger(connectorList, "Otago", coord4, 2, 35.1, "Us", false);
 
         manager = new ChargerManager(charger1);
     }
@@ -81,7 +82,7 @@ public class ChargerManagerTest {
     public void testDistanceChargersSameLocation() {
         double distance1 = manager.distanceBetweenChargers(charger1);
 
-        //Checks if the distance from hospital to itself is 0
+        // Checks if the distance from hospital to itself is 0
         assertEquals(0.0, distance1, 0.001);
     }
 
@@ -90,7 +91,7 @@ public class ChargerManagerTest {
         double distance1 = manager.distanceBetweenChargers(charger2);
         double distance2 = manager.distanceBetweenChargers(charger3);
 
-        //Checks if the distance from hospital to boys is less than hospital to grammar
+        // Checks if the distance from hospital to boys is less than hospital to grammar
         assertTrue(distance2 > distance1);
     }
 
@@ -99,7 +100,7 @@ public class ChargerManagerTest {
         manager.setSelectedCharger(charger3);
         double distance = manager.distanceBetweenChargers(charger1);
 
-        //Checks if distance is around 764km (results from online calculator)
+        // Checks if distance is around 764km (results from online calculator)
         assertEquals(764, distance, 0.2);
     }
 
@@ -111,8 +112,8 @@ public class ChargerManagerTest {
         manager.setSelectedCharger(charger1);
         double distance = 400.0;
 
-        //Coordinate same as hospital
-        Coordinate coordinate = new Coordinate(1.1, 2.3,  -43.53418, 172.627572);
+        // Coordinate same as hospital
+        Coordinate coordinate = new Coordinate(1.1, 2.3, -43.53418, 172.627572);
 
         ArrayList<Charger> chargerList = new ArrayList<>();
         chargerList.add(charger1);
@@ -120,7 +121,8 @@ public class ChargerManagerTest {
         chargerList.add(charger3);
         chargerList.add(charger4);
 
-        ArrayList<Charger> filteredChargers = manager.getNearbyChargers(chargerList, coordinate, distance);
+        ArrayList<Charger> filteredChargers = manager.getNearbyChargers(
+                chargerList, coordinate, distance);
         assertEquals(3, filteredChargers.size());
     }
 
@@ -129,8 +131,8 @@ public class ChargerManagerTest {
         manager.setSelectedCharger(charger1);
 
         double distance = 1000.0;
-        //Coordinate same as hospital
-        Coordinate coordinate = new Coordinate(1.1, 2.3,  -43.53418, 172.627572);
+        // Coordinate same as hospital
+        Coordinate coordinate = new Coordinate(1.1, 2.3, -43.53418, 172.627572);
 
         ArrayList<Charger> chargerList = new ArrayList<>();
         chargerList.add(charger4);
@@ -138,10 +140,13 @@ public class ChargerManagerTest {
         chargerList.add(charger2);
         chargerList.add(charger1);
 
-        ArrayList<Charger> filteredChargers = manager.getNearbyChargers(chargerList, coordinate, distance);
+        ArrayList<Charger> filteredChargers = manager
+                .getNearbyChargers(chargerList, coordinate, distance);
 
-        assertTrue(filteredChargers.get(0).equals(charger1) && filteredChargers.get(1).equals(charger2)
-                && filteredChargers.get(2).equals(charger4) && filteredChargers.get(3).equals(charger3));
+        assertTrue(filteredChargers.get(0).equals(charger1)
+                && filteredChargers.get(1).equals(charger2)
+                && filteredChargers.get(2).equals(charger4)
+                && filteredChargers.get(3).equals(charger3));
     }
 
     /**

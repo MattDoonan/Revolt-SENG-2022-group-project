@@ -2,14 +2,13 @@ package seng202.team3.logic;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;
-
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
 import seng202.team3.data.entity.Journey;
 import seng202.team3.data.entity.Vehicle;
 
 /**
- *
+ * Manages creation and storage of journeys
  *
  * @author Angus Kirtlan
  * @version 1.0.0, Aug 22
@@ -18,7 +17,7 @@ public class JourneyManager {
     /** {@link Journey Journey} which is the currently selected journey */
     private Journey selectedJourney;
 
-    /** Staring {@link Coordinate coordinate} of journey*/
+    /** Staring {@link Coordinate coordinate} of journey */
     private Coordinate start;
 
     /** Ending {@link Coordinate coordinate} of journey */
@@ -54,11 +53,12 @@ public class JourneyManager {
     /**
      * Starts new journey from selected start and end point
      */
-    public void startNewJourney () {
-        if ((start != null) && (end != null));
+    public void startNewJourney() {
+        if ((start != null) && (end != null)) {
             selectedJourney = new Journey(start, end);
+        }
     }
-   
+
     /**
      * Selects vehicle to use for selected journey
      *
@@ -76,7 +76,7 @@ public class JourneyManager {
     public void addCharger(Charger charger) {
         selectedJourney.addCharger(charger);
     }
-   
+
     /**
      * Removes charger from journey
      *
@@ -85,7 +85,6 @@ public class JourneyManager {
     public void removeCharger(Charger charger) {
         selectedJourney.removeCharger(charger);
     }
-
 
     /**
      * Calculates all candidate chargers for the journey
@@ -96,9 +95,11 @@ public class JourneyManager {
      * @return Array of candidate chargers
      */
     public ArrayList<Charger> callCalculations(ArrayList<Charger> chargers) {
-        double distance = Calculations.calculateDistance(selectedJourney.getStartPosition(), selectedJourney.getEndPosition()) * 1.1;
+        double distance = Calculations.calculateDistance(selectedJourney.getStartPosition(),
+                selectedJourney.getEndPosition()) * 1.1;
         ArrayList<Charger> validChargers = chargers.stream()
-                .filter(charger -> (Calculations.isWithinRange(charger.getLocation(), selectedJourney.getStartPosition(),
+                .filter(charger -> (Calculations.isWithinRange(charger.getLocation(),
+                        selectedJourney.getStartPosition(),
                         selectedJourney.getEndPosition(), distance)))
                 .collect(Collectors.toCollection(ArrayList::new));
         return validChargers;

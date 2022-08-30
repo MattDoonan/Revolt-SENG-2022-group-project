@@ -47,4 +47,5 @@ public class Query {
     public ArrayList<Triplet<String, String, ComparisonType>> getFilters() {
         return filters;
     }
+
 }

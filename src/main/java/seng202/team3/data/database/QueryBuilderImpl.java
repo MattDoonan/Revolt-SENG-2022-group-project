@@ -26,7 +26,7 @@ public class QueryBuilderImpl implements QueryBuilder {
     @Override
     public QueryBuilder withFilter(String field, String criteria, ComparisonType compareMethod) {
         // Store each filter as a 3-tuple
-        filters.add(new Triplet<>(field, criteria, compareMethod));
+        filters.add(new Triplet<>(field.toLowerCase(), criteria, compareMethod));
         return this;
     }
 
@@ -34,4 +34,5 @@ public class QueryBuilderImpl implements QueryBuilder {
     public Query build() {
         return new Query(source, filters);
     }
+
 }
