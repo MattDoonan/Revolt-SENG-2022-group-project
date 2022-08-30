@@ -1,5 +1,9 @@
 package seng202.team3.data.entity;
 
+import com.opencsv.bean.CsvBindAndSplitByName;
+import com.opencsv.bean.CsvBindByName;
+import com.opencsv.bean.CsvCustomBindByName;
+import com.opencsv.bean.CsvRecurse;
 import java.util.ArrayList;
 
 /**
@@ -10,54 +14,87 @@ import java.util.ArrayList;
  */
 public class Charger {
     /** Unique identifier */
+    @CsvBindByName(column = "OBJECTID", required = true)
     int chargerId;
 
     /** When the charger was first available */
+    @CsvBindByName(column = "dateFirstOperational")
     String dateOpened;
 
+    /** Name of the charger */
+    @CsvBindByName(column = "name", required = true)
+    String name;
+
     /** {@link Connector Connectors} available on charger */
-    ArrayList<Connector> connectors = new ArrayList<Connector>();
+    @CsvBindAndSplitByName(column = "connectorsList", elementType = Connector.class,
+                           splitOn = ",(?=( )*\\{)", converter = ConnectorConverter.class,
+                           required = true)
+    ArrayList<Connector> connectors;
 
     /** {@link Coordinate Coordinate} information for the charger */
+    @CsvRecurse
     Coordinate location;
 
     /** Number of parks available at the charger */
+    @CsvBindByName(column = "carParkCount", required = true)
     int availableParks;
 
     /** Maximum amount of time that can be spent at a charger */
+    @CsvCustomBindByName(column = "maxTimeLimit", converter = TimeLimitConverter.class)
     Double timeLimit;
 
     /** Business that manages the charger */
+    @CsvBindByName(column = "operator", required = true)
     String operator;
 
     /** Business that owns the charger */
+    @CsvBindByName(column = "owner", required = true)
     String owner;
 
     /** Accessible to the public */
     boolean isPublic;
 
     /** Has tourist attraction nearby */
+    @CsvBindByName(column = "hasTouristAttraction", required = true)
     boolean hasAttraction;
 
     /** Can be accessed 24 hours in the day */
+    @CsvBindByName(column = "is24Hours", required = true)
     boolean is24Hrs;
 
     /** Has cost for parking */
+    @CsvBindByName(column = "hasCarparkCost", required = true)
     boolean hasParkingCost;
 
     /** Has cost for charging */
+    @CsvBindByName(column = "hasChargingCost", required = true)
     boolean hasChargeCost;
 
+    /** Empty constructor for CSV object builder */
+    public Charger() {
+    }
+
+    /** Has warning for charger high cost */
+    boolean warningHighCost;
+
+    /** Has warning for charger long wait time */
+    boolean warningLongWait;
+
+    /** Has warning for charger low availabilty */
+    boolean warningLowAvailability;    
+
     /** Constructor for the Charger */
-    public Charger(ArrayList<Connector> connectors, Coordinate location, int availableParks,
-            Double timeLimit, String operator, boolean isPublic, boolean hasAttraction) {
+    public Charger(ArrayList<Connector> connectors, String name, Coordinate location,
+            int availableParks, Double timeLimit, String operator,
+            boolean hasAttraction) {
         this.connectors = connectors;
         setLocation(location);
         setAvailableParks(availableParks);
         setTimeLimit(timeLimit);
         setOperator(operator);
-        setPublic(isPublic);
+        setPublic(false); // TODO: retrieve from data once implemented
         setHasAttraction(hasAttraction);
+        setName(name);
     }
 
     /**
@@ -291,5 +328,69 @@ public class Charger {
      */
     public void setChargeCost(boolean chargeCost) {
         hasChargeCost = chargeCost;
+    }
+
+    /**
+     * Set warning high cost
+     *
+     * @param warningHighCost bool indicating high cost warning
+     */
+    public void setWarningHighCost(boolean warningHighCost) {
+        this.warningHighCost = warningHighCost;
+    }
+
+    /**
+     * Set warning high cost
+     * 
+     * @param warningLongWait bool indicating long wait warning
+     */
+    public void setWarningLongWait(boolean warningLongWait) {
+        this.warningLongWait = warningLongWait;
+    }
+    
+    /**
+     * Set warning high cost
+     * 
+     * @param warningLowAvailability bool indicating low availability warning
+     */
+    public void setWarningLowAvailability(boolean warningLowAvailability) {
+        this.warningLowAvailability = warningLowAvailability;
+    }
+
+    /**
+     * Gets boolean warnings that are set to true
+     * 
+     * @return ArrayList of boolean warnings
+     */
+    public ArrayList<String> getWarnings() {
+        ArrayList<String> warnings = new ArrayList<String>();
+        if (this.warningHighCost) {
+            warnings.add("high cost");
+        }
+        if (this.warningLongWait) {
+            warnings.add("long wait");
+        }
+        if (this.warningLowAvailability) {
+            warnings.add("low availability");
+        }
+        return warnings;
+    }
+
+    /**
+     * Get the name of the charger
+     *
+     * @return name of the charger
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Set the name of the charger
+     *
+     * @param name new name of the charger
+     */
+    public void setName(String name) {
+        this.name = name;
     }
 }
