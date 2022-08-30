@@ -1,5 +1,10 @@
 package seng202.team3.logic;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+import java.io.IOException;
+import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.junit.jupiter.api.AfterEach;
@@ -13,12 +18,6 @@ import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
 
-import java.io.IOException;
-import java.util.ArrayList;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-
 /**
  * Unit tests for {@link MainManager} MainManager class in logic
  *
@@ -30,6 +29,9 @@ public class MainManagerTest {
     private MainManager manage;
     private ChargerManager charge;
 
+    /**
+     * Set up managers for testing purposes
+     */
     @BeforeEach
     public void setUp() {
         manage = new MainManager();
@@ -37,6 +39,7 @@ public class MainManagerTest {
 
     }
 
+    /** Tears down the initialized managers after test */
     @AfterEach
     public void remove() {
         manage = null;
@@ -67,7 +70,7 @@ public class MainManagerTest {
      * Checks if the manager saves the selected charger correctly
      */
     @Test
-    public void selectedChargerTest(){
+    public void selectedChargerTest() {
         Connector dummyConnector = new Connector("ChardaMo", "AC", "Available", "123", 3);
         ArrayList<Connector> connectorList = new ArrayList<>(1);
         connectorList.add(dummyConnector);
@@ -99,7 +102,7 @@ public class MainManagerTest {
         // Checks the sizes of each list
         assertEquals(chargerList.size(), manage.getData().size());
         // checks the address of each of the elements since they should be unique
-        for (int i  = 0; i < chargerList.size(); i++) {
+        for (int i = 0; i < chargerList.size(); i++) {
             assertEquals(chargerList.get(i).getLocation().getAddress(),
                     manage.getData().get(i).getLocation().getAddress());
         }
@@ -120,18 +123,20 @@ public class MainManagerTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Coordinate coordinate = new Coordinate(1.1, 2.3,  -43.53418, 172.627572);
+        Coordinate coordinate = new Coordinate(1.1, 2.3, -43.53418, 172.627572);
         ArrayList<Charger> cc = charge.getNearbyChargers(chargerList, coordinate, 50.0);
-        ObservableList<Charger> result = FXCollections.observableList(cc);
         manage.setPosition(coordinate);
         manage.setDistance(50.0);
         manage.resetQuery();
         manage.makeAllChargers();
+
+        ObservableList<Charger> result = FXCollections.observableList(cc);
         ObservableList<Charger> returnVal = manage.getCloseChargerData();
+
         // Checks the sizes of each list
         assertEquals(result.size(), returnVal.size());
         // checks the address of each of the elements since they should be unique
-        for (int i  = 0; i < result.size(); i++) {
+        for (int i = 0; i < result.size(); i++) {
             assertEquals(result.get(i).getLocation().getAddress(),
                     returnVal.get(i).getLocation().getAddress());
         }
@@ -151,25 +156,27 @@ public class MainManagerTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Coordinate coordinate = new Coordinate(1.1, 2.3,  -43.53418, 172.627572);
+        Coordinate coordinate = new Coordinate(1.1, 2.3, -43.53418, 172.627572);
         ArrayList<Charger> cc = charge.getNearbyChargers(chargerList, coordinate, 90.0);
-        ObservableList<Charger> result = FXCollections.observableList(cc);
         manage.setPosition(coordinate);
         manage.setDistance(90.0);
         manage.resetQuery();
         manage.makeAllChargers();
+
+        ObservableList<Charger> result = FXCollections.observableList(cc);
         ObservableList<Charger> returnVal = manage.getCloseChargerData();
         // Checks the sizes of each list
         assertEquals(result.size(), returnVal.size());
         // checks the address of each of the elements since they should be unique
-        for (int i  = 0; i < result.size(); i++) {
+        for (int i = 0; i < result.size(); i++) {
             assertEquals(result.get(i).getLocation().getAddress(),
                     returnVal.get(i).getLocation().getAddress());
         }
     }
 
     /**
-     * Checks the lists of chargers when a QUERY filter connectorcurrent AC is added.
+     * Checks the lists of chargers when a QUERY filter connectorcurrent AC is
+     * added.
      */
     @Test
     public void addAcTypeQuery() {
@@ -189,14 +196,15 @@ public class MainManagerTest {
         // Checks the sizes of each list
         assertEquals(chargerList.size(), manage.getData().size());
         // checks the address of each of the elements since they should be unique
-        for (int i  = 0; i < chargerList.size(); i++) {
+        for (int i = 0; i < chargerList.size(); i++) {
             assertEquals(chargerList.get(i).getLocation().getAddress(),
                     manage.getData().get(i).getLocation().getAddress());
         }
     }
 
     /**
-     * Checks the lists of chargers when a QUERY filter connectorcurrent DC is added.
+     * Checks the lists of chargers when a QUERY filter connectorcurrent DC is
+     * added.
      */
     @Test
     public void addDcTypeQuery() {
@@ -216,14 +224,15 @@ public class MainManagerTest {
         // Checks the sizes of each list
         assertEquals(chargerList.size(), manage.getData().size());
         // checks the address of each of the elements since they should be unique
-        for (int i  = 0; i < chargerList.size(); i++) {
+        for (int i = 0; i < chargerList.size(); i++) {
             assertEquals(chargerList.get(i).getLocation().getAddress(),
                     manage.getData().get(i).getLocation().getAddress());
         }
     }
 
     /**
-     * Checks the lists of chargers when a QUERY filter hastouristattraction true is added.
+     * Checks the lists of chargers when a QUERY filter hastouristattraction true is
+     * added.
      */
     @Test
     public void addAttractionQuery() {
@@ -243,14 +252,15 @@ public class MainManagerTest {
         // Checks the sizes of each list
         assertEquals(chargerList.size(), manage.getData().size());
         // checks the address of each of the elements since they should be unique
-        for (int i  = 0; i < chargerList.size(); i++) {
+        for (int i = 0; i < chargerList.size(); i++) {
             assertEquals(chargerList.get(i).getLocation().getAddress(),
                     manage.getData().get(i).getLocation().getAddress());
         }
     }
 
     /**
-     * Checks the lists of chargers when a QUERY filter haschargingcost False is added.
+     * Checks the lists of chargers when a QUERY filter haschargingcost False is
+     * added.
      */
     @Test
     public void addChargingCostQuery() {
@@ -270,7 +280,7 @@ public class MainManagerTest {
         // Checks the sizes of each list
         assertEquals(chargerList.size(), manage.getData().size());
         // checks the address of each of the elements since they should be unique
-        for (int i  = 0; i < chargerList.size(); i++) {
+        for (int i = 0; i < chargerList.size(); i++) {
             assertEquals(chargerList.get(i).getLocation().getAddress(),
                     manage.getData().get(i).getLocation().getAddress());
         }
@@ -280,7 +290,7 @@ public class MainManagerTest {
      * Checks what happens there are multiple QUERY's added
      */
     @Test
-    public void aFewQuerys1() {
+    public void queryChargeCostWithCurrentTest() {
         QueryBuilder q = new QueryBuilderImpl().withSource("charger")
                 .withFilter("haschargingcost", "False", ComparisonType.CONTAINS)
                 .withFilter("connectorcurrent", "DC", ComparisonType.CONTAINS);
@@ -299,14 +309,14 @@ public class MainManagerTest {
         // Checks the sizes of each list
         assertEquals(chargerList.size(), manage.getData().size());
         // checks the address of each of the elements since they should be unique
-        for (int i  = 0; i < chargerList.size(); i++) {
+        for (int i = 0; i < chargerList.size(); i++) {
             assertEquals(chargerList.get(i).getLocation().getAddress(),
                     manage.getData().get(i).getLocation().getAddress());
         }
     }
 
     @Test
-    public void aFewQuerys2() {
+    public void queryTouristAttractionWithCurrentTest() {
         QueryBuilder q = new QueryBuilderImpl().withSource("charger")
                 .withFilter("hastouristattraction", "True", ComparisonType.CONTAINS)
                 .withFilter("connectorcurrent", "AC", ComparisonType.CONTAINS);
@@ -325,12 +335,11 @@ public class MainManagerTest {
         // Checks the sizes of each list
         assertEquals(chargerList.size(), manage.getData().size());
         // checks the address of each of the elements since they should be unique
-        for (int i  = 0; i < chargerList.size(); i++) {
+        for (int i = 0; i < chargerList.size(); i++) {
             assertEquals(chargerList.get(i).getLocation().getAddress(),
                     manage.getData().get(i).getLocation().getAddress());
         }
     }
-
 
     /**
      * Checks what happens when the position is null
@@ -351,10 +360,9 @@ public class MainManagerTest {
         // Checks the sizes of each list
         assertEquals(chargerList.size(), manage.getCloseChargerData().size());
         // checks the address of each of the elements since they should be unique
-        for (int i  = 0; i < chargerList.size(); i++) {
+        for (int i = 0; i < chargerList.size(); i++) {
             assertEquals(chargerList.get(i).getLocation().getAddress(),
                     manage.getCloseChargerData().get(i).getLocation().getAddress());
         }
     }
 }
-

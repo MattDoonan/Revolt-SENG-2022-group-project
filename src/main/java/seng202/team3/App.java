@@ -1,7 +1,6 @@
 package seng202.team3;
 
 import seng202.team3.gui.MainWindow;
-import seng202.team3.gui.VehicleWindow;
 
 /*
  * A change to branch tesla so I can try to fix the merging with branch volta
@@ -21,6 +20,6 @@ public class App {
      * @param args program arguments from command line
      */
     public static void main(String[] args) {
-        VehicleWindow.main(args);
+        MainWindow.main(args);
     }
 }

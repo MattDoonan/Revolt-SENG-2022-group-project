@@ -2,15 +2,12 @@ package seng202.team3.gui;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.property.ReadOnlyDoubleWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TableColumn;
@@ -18,7 +15,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.entity.Charger;
@@ -91,7 +87,7 @@ public class MainController {
         this.stage = stage;
         manage = new MainManager();
         TempData.setController(this);
-        loadMapView(stage);
+        loadMapView(this.stage);
         tableMaker();
         manage.resetQuery();
         manage.makeAllChargers();
@@ -147,8 +143,6 @@ public class MainController {
                 });
     }
 
-
-
     /**
      * Create charger table
      */
@@ -202,8 +196,8 @@ public class MainController {
     public void change() {
         distanceDisplay.textProperty()
                 .setValue("Distance (" + Math.round(changeDistance.getValue()) + " km)");
-        changeDistance.valueProperty().addListener((observableValue, number, t1)
-                -> { distanceDisplay.textProperty()
+        changeDistance.valueProperty().addListener((observableValue, number, t1) -> {
+            distanceDisplay.textProperty()
                     .setValue("Distance (" + Math.round(changeDistance.getValue()) + " km)");
         });
     }
@@ -240,32 +234,6 @@ public class MainController {
             mapController.changePosition(chargers.get(0).getLocation());
         }
     }
-
-    /**
-     * Loads in vehicle screen
-     */
-    @FXML
-    public void loadVehicleScreen() {
-
-        try {
-            FXMLLoader baseLoader = new FXMLLoader(getClass().getResource("/fxml/vehicle.fxml"));
-            Parent root = baseLoader.load();
-            Scene scene = new Scene(root, 1080, 720);
-            Stage stage = new Stage();
-
-            VehicleController baseController = baseLoader.getController();
-            baseController.init(stage);
-
-            stage.setTitle("Revolt App");
-            stage.setScene(scene);
-            stage.show();
-
-        } catch (IOException e) {
-            Logger logger = Logger.getLogger(getClass().getName());
-            logger.log(Level.SEVERE, "Failed to create new Window.", e);
-        }
-    }
-
 
     /**
      * Focuses the ChargerTable

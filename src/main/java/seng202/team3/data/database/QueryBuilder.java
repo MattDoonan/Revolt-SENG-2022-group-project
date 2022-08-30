@@ -27,15 +27,6 @@ public interface QueryBuilder {
     QueryBuilder withFilter(String field, String criteria, ComparisonType compareMethod);
 
     /**
-     * Remove filter from the query. If the filter is not present
-     * do nothing
-     * 
-     * @param field name of the field to remove from the query
-     * @return QueryBuilder without the filter
-     */
-    QueryBuilder withoutFilter(String field);
-
-    /**
      * Build into a proper query object
      * 
      * @return new Query object

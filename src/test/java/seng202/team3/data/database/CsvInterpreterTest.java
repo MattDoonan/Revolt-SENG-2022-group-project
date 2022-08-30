@@ -119,7 +119,6 @@ public class CsvInterpreterTest {
         // Check data is missing
         assertTrue(exception.getMessage().contains("is mandatory but no value was provided"));
         // Check only one error is in message
-        System.out.println(exception.getMessage() + "test");
         assertFalse(exception.getMessage().contains("\n"));
     }
 

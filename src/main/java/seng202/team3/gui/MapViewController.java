@@ -46,7 +46,7 @@ public class MapViewController {
         javaScriptBridge = new JavaScriptBridge();
         this.map = map;
         initMap();
-        stage.sizeToScene();
+        this.stage.sizeToScene();
     }
 
     /**
@@ -94,7 +94,6 @@ public class MapViewController {
                     charger.getChargerId());
         }
     }
-
 
     /**
      * Adds just one Coordinate {@link Coordinate} onto the map, and associates

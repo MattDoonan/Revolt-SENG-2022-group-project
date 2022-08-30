@@ -1,15 +1,14 @@
 package seng202.team3.data.database;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
-import seng202.team3.data.entity.Charger;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
+import seng202.team3.data.entity.Charger;
 
 /**
  * Tests for ChargerFilter {@link ChargerFilter} Class
@@ -67,8 +66,7 @@ public class ChargerFilterTest {
         for (Object c : test) {
             if (integers.contains(((Charger) c).getChargerId())) {
                 isUnique = false;
-            }
-            else {
+            } else {
                 integers.add(((Charger) c).getChargerId());
             }
         }
@@ -88,8 +86,8 @@ public class ChargerFilterTest {
         boolean correct = true;
         double minimum = -40.0;
         for (Object c : test) {
-            if ((((Charger) c).getLocation().getLat() < minimum) ||
-                    !(((Charger) c).getOperator().contains("MERIDIAN ENERGY LIMITED"))) {
+            if ((((Charger) c).getLocation().getLat() < minimum)
+                    || !(((Charger) c).getOperator().contains("MERIDIAN ENERGY LIMITED"))) {
                 correct = false;
                 break;
             }
