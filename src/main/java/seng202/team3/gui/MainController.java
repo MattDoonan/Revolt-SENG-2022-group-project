@@ -128,6 +128,7 @@ public class MainController {
                 + "\nHas Attraction = " + c.getHasAttraction()
                 + "\nHas cost " + c.getChargeCost() + "\nCharger Type:"
                 + word + "");
+        getManager().setSelectedCharger(c);
     }
 
     /**
@@ -185,6 +186,7 @@ public class MainController {
                         Math.round((Calculations.calculateDistance(manage.getPosition(),
                                 charger.getValue().getLocation())) * 10.0) / 10.0)
                         .asObject());
+
         chargerTable.getSelectionModel().select(0);
         chargerTable.getSortOrder().add(distanceCol);
         chargerTable.sort();
@@ -195,6 +197,7 @@ public class MainController {
         if (!chargerTable.getItems().isEmpty()) {
             viewChargers(chargerTable.getItems().get(0));
         }
+        refreshTable();
     }
 
     /**
@@ -315,6 +318,13 @@ public class MainController {
             e.printStackTrace();
         }
 
+    }
+
+    /**
+     * Toggles the route view on.
+     */
+    public void toggleRoute() {
+        mapController.toggleRoute();
     }
 
 }

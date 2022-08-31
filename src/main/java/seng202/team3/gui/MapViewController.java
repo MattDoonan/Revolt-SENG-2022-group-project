@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 import netscape.javascript.JSObject;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
+import seng202.team3.data.entity.Journey;
 import seng202.team3.logic.JavaScriptBridge;
 import seng202.team3.logic.MapManager;
 
@@ -20,7 +21,7 @@ import seng202.team3.logic.MapManager;
  * A start into a MapViewController which uses the University UC OSM viewer
  *
  * @author Michelle Hsieh, based off code from Morgan English
- * @version 1.0.0, Aug 22
+ * @version 1.0.2, Aug 22
  */
 public class MapViewController {
 
@@ -106,6 +107,7 @@ public class MapViewController {
                 coordinate.getLat(), coordinate.getLon());
         map.getController().setPosition(coordinate);
         map.getController().getCloseChargerData();
+
     }
 
     /**
@@ -131,10 +133,18 @@ public class MapViewController {
 
 
     /**
-     * Adds route to map, calling the underlying js function
+     * Adds route to map, calling the underlying js function, from the currently
+     * selected coordinate (as a coordinate) to the currently selected charger (as a coordinate).
      */
-    private void addRoute() {
+    public void addRouteToCharger() {
         routeDisplayed = true;
+        Coordinate coord = map.getController().getPosition();
+        Charger charger = map.getController().getSelectedCharger();
+        Coordinate chargerCoord = charger.getLocation();
+        javaScriptConnector.call("addLocationToRoute", coord.getLat(), coord.getLon(),
+                coord.getAddress(), "p", 0);
+        javaScriptConnector.call("addLocationToRoute", chargerCoord.getLat(), chargerCoord.getLon(),
+                charger.getChargerId(), "c", 1);
         javaScriptConnector.call("addRoute");
     }
 
@@ -147,14 +157,25 @@ public class MapViewController {
     }
 
     /**
+     * Adds a stop into a route, and displays it on JS
+     *
+     * @param coordinate the coordinate of the stop to add
+     */
+    public void addStopInRoute(Coordinate coordinate) {
+        javaScriptConnector.call("addLocationToRoute", coordinate.getLat(), coordinate.getLon(),
+                "Stop", "p", 1);
+    }
+
+    /**
      * Simple toggle to hide or display the route on click
      */
     public void toggleRoute() {
         if (routeDisplayed) {
             removeRoute();
         } else {
-            addRoute();
+            addRouteToCharger();
         }
     }
+
 
 }

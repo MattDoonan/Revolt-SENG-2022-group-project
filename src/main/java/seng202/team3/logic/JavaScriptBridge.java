@@ -56,11 +56,17 @@ public class JavaScriptBridge {
     }
 
     /**
-     * Refreshes the table with new data and adds the coordinate
+     * Refreshes the table
      */
-    public void refreshTableSaveCoord() {
+    public void refreshTable() {
         MainController controller = TempData.getController();
         controller.refreshTable();
+    }
+
+    /**
+     * Adds the coordinate
+     */
+    public void saveCoord() {
         try {
             FXMLLoader saveCoordLoader = new FXMLLoader(getClass().getResource(
                     "/fxml/save_coord.fxml"));
@@ -88,12 +94,12 @@ public class JavaScriptBridge {
     }
 
     /**
-     * Displays the charger according to id and also zooms to it.
-     * Hands the object over to TempData
+     * Displays the charger according to id and also zooms to it, if it is not a journey.
+     * Else, it displays it and adds it to the respective journey.
      *
      * @param id the charger id selected
      */
-    public void zoomDisplayAndEdit(int id) {
+    public void chargerHandler(int id) {
         MainController controller = TempData.getController();
         List<Charger> chargers = controller.getManager().getData().stream()
                 .filter(c -> c.getChargerId() == id)
@@ -113,5 +119,16 @@ public class JavaScriptBridge {
         MainController controller = TempData.getController();
         controller.getMapController().changePosition(parseCoordinate(latlng));
     }
+
+    /**
+     * Adds a stop into the route
+     *
+     * @param latlng the String from the route.
+     */
+    public void addStopInRoute(String latlng) {
+        MainController controller = TempData.getController();
+        controller.getMapController().addStopInRoute(parseCoordinate(latlng));
+    }
+
 
 }

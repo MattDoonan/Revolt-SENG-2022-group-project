@@ -1,6 +1,8 @@
 package seng202.team3.logic;
 
 // import netscape.javascript.JSObject;
+import seng202.team3.data.entity.Coordinate;
+import seng202.team3.data.entity.Journey;
 import seng202.team3.gui.MainController;
 
 /**
