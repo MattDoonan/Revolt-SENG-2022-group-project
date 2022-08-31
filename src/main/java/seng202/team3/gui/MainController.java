@@ -8,13 +8,11 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Slider;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.entity.Charger;
@@ -57,6 +55,9 @@ public class MainController {
 
     @FXML
     private CheckBox chargingCost;
+
+    @FXML
+    private MenuItem openVehicles;
 
     @FXML
     private final TableColumn<Charger, String> addressCol = new TableColumn<>("Address");
@@ -287,6 +288,27 @@ public class MainController {
      */
     public MainManager getManager() {
         return manage;
+    }
+
+    /**
+     * Loads the vehicle screen upon click
+     */
+    public void loadVehicleScreen() {
+        try {
+            FXMLLoader vehicleLoader = new FXMLLoader(getClass().getResource(
+                    "/fxml/vehicle.fxml"));
+            AnchorPane root = vehicleLoader.load();
+            Scene modalScene = new Scene(root);
+            Stage modal = new Stage();
+            modal.setScene(modalScene);
+            modal.setResizable(false);
+            modal.setTitle("Vehicle Screen");
+            modal.initModality(Modality.WINDOW_MODAL);
+            modal.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
 }

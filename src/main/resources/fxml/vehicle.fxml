@@ -2,9 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -13,23 +11,6 @@
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1080.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.VehicleController">
    <children>
       <MenuBar layoutY="8.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" prefWidth="1080.0" style="-fx-background-color: #e06666;">
-        <menus>
-          <Menu fx:id="accountMenu" mnemonicParsing="false" text="Account">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Close" />
-            </items>
-          </Menu>
-          <Menu fx:id="journeyMenu" mnemonicParsing="false" text="Plan Journey">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
-            </items>
-          </Menu>
-          <Menu fx:id="homeMenu" mnemonicParsing="false" text="Home">
-            <items>
-              <MenuItem mnemonicParsing="false" text="About" />
-            </items>
-          </Menu>
-        </menus>
       </MenuBar>
       <Label layoutX="427.0" layoutY="127.0" text="My Garage">
          <font>

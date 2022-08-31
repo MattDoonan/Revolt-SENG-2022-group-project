@@ -5,12 +5,8 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -22,6 +18,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import seng202.team3.data.entity.Vehicle;
+
 
 /**
  * Controller for the vehicle.fxml window
@@ -119,8 +117,7 @@ public class VehicleController {
     /**
      * Displays pop-up window to add a new vehicle to the garage
      */
-    public void displayPopup(){
-
+    public void displayPopup() {
         try {
 
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/newVehicle.fxml"));
@@ -146,7 +143,8 @@ public class VehicleController {
     @FXML
     public void addConnection() {
         connections.add(connectionsText.getText());
-        addedConnections.setText("Connection: " + connectionsText.getText() + "\n" + addedConnections.getText());
+        addedConnections.setText("Connection: "
+                + connectionsText.getText() + "\n" + addedConnections.getText());
     }
 
     /**
@@ -154,8 +152,9 @@ public class VehicleController {
      */
     @FXML
     public void addVehicle() {
-        Vehicle vehicle = new Vehicle(licenseText.getText(), makeText.getText(), modelText.getText(),
-        Float.parseFloat(curChargeText.getText()), Integer.parseInt(maxRangeText.getText()), connections);
+        Vehicle vehicle = new Vehicle(licenseText.getText(), makeText.getText(),
+                modelText.getText(), Float.parseFloat(curChargeText.getText()),
+                Integer.parseInt(maxRangeText.getText()), connections);
         vehicleData.add(vehicle);
         Stage popupStage = (Stage) addVehicleBtn.getScene().getWindow();
         popupStage.close();
@@ -187,28 +186,28 @@ public class VehicleController {
 
         vehicleData.add(
                 new Vehicle("ABC123", "Nissan", "Leaf", (float) 60.5, 270,
-                        new ArrayList<String>()));
+                        new ArrayList<>()));
         vehicleData.add(
                 new Vehicle("AAA111", "Nissan", "Leaf E+", (float) 87, 385,
-                        new ArrayList<String>()));
+                        new ArrayList<>()));
         vehicleData.add(
                 new Vehicle("XYZ789", "Tesla", "X", (float) 100.5, 536,
-                        new ArrayList<String>()));
+                        new ArrayList<>()));
         vehicleData.add(
                 new Vehicle("QWE768", "Jaguar", "I-Pace", (float) 40, 470,
-                        new ArrayList<String>()));
+                        new ArrayList<>()));
         vehicleData.add(
                 new Vehicle("FJG788", "Audi", "E-Tron", (float) 63, 441,
-                        new ArrayList<String>()));
+                        new ArrayList<>()));
         vehicleData.add(
                 new Vehicle("WWW333", "Tesla", "5", (float) 43, 637,
-                        new ArrayList<String>()));
+                        new ArrayList<>()));
         vehicleData.add(
                 new Vehicle("HGJ449", "Mercedes Benz", "EQC", (float) 77, 430,
-                        new ArrayList<String>()));
+                        new ArrayList<>()));
         vehicleData.add(
                 new Vehicle("IUH909", "Porsche", "Taycan", (float) 98, 480,
-                        new ArrayList<String>()));
+                        new ArrayList<>()));
     }
 
     /**
@@ -217,28 +216,29 @@ public class VehicleController {
      */
     @FXML
     public void nextBtnClicked() {
+        if (vehicleData.size() > 0) {
+            if (indexThree == vehicleData.size() - 1) {
+                indexOne++;
+                indexTwo++;
+                indexThree = 0;
+            } else if (indexTwo == vehicleData.size() - 1) {
+                indexOne++;
+                indexThree++;
+                indexTwo = 0;
+            } else if (indexOne == vehicleData.size() - 1) {
+                indexTwo++;
+                indexThree++;
+                indexOne = 0;
+            } else {
+                indexOne++;
+                indexTwo++;
+                indexThree++;
+            }
 
-        if (indexThree == vehicleData.size() - 1) {
-            indexOne++;
-            indexTwo++;
-            indexThree = 0;
-        } else if (indexTwo == vehicleData.size() - 1) {
-            indexOne++;
-            indexThree++;
-            indexTwo = 0;
-        } else if (indexOne == vehicleData.size() - 1) {
-            indexTwo++;
-            indexThree++;
-            indexOne = 0;
-        } else {
-            indexOne++;
-            indexTwo++;
-            indexThree++;
+            setData(vehicleDisplayOne, indexOne);
+            setData(vehicleDisplayTwo, indexTwo);
+            setData(vehicleDisplayThree, indexThree);
         }
-
-        setData(vehicleDisplayOne, indexOne);
-        setData(vehicleDisplayTwo, indexTwo);
-        setData(vehicleDisplayThree, indexThree);
 
     }
 
@@ -260,25 +260,28 @@ public class VehicleController {
      */
     @FXML
     public void prevBtnClicked() {
-        if (indexOne == 0) {
-            indexOne = vehicleData.size() - 1;
-            indexTwo--;
-            indexThree--;
-        } else if (indexTwo == 0) {
-            indexTwo = vehicleData.size() - 1;
-            indexOne--;
-            indexThree--;
-        } else if (indexThree == 0) {
-            indexThree = vehicleData.size() - 1;
-            indexOne--;
-            indexTwo--;
-        } else {
-            indexOne--;
-            indexTwo--;
-            indexThree--;
+        if (vehicleData.size() > 0) {
+
+            if (indexOne == 0) {
+                indexOne = vehicleData.size() - 1;
+                indexTwo--;
+                indexThree--;
+            } else if (indexTwo == 0) {
+                indexTwo = vehicleData.size() - 1;
+                indexOne--;
+                indexThree--;
+            } else if (indexThree == 0) {
+                indexThree = vehicleData.size() - 1;
+                indexOne--;
+                indexTwo--;
+            } else {
+                indexOne--;
+                indexTwo--;
+                indexThree--;
+            }
+            setData(vehicleDisplayOne, indexOne);
+            setData(vehicleDisplayTwo, indexTwo);
+            setData(vehicleDisplayThree, indexThree);
         }
-        setData(vehicleDisplayOne, indexOne);
-        setData(vehicleDisplayTwo, indexTwo);
-        setData(vehicleDisplayThree, indexThree);
     }
 }

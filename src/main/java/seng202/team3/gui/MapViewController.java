@@ -34,7 +34,7 @@ public class MapViewController {
     private MapManager map;
     private JavaScriptBridge javaScriptBridge;
     private JSObject javaScriptConnector;
-    // private boolean routeDisplayed = false;
+    private boolean routeDisplayed = false;
 
     /**
      * Initialise the map view
@@ -128,4 +128,33 @@ public class MapViewController {
     public boolean getConnectorStatus() {
         return javaScriptConnector != null;
     }
+
+
+    /**
+     * Adds route to map, calling the underlying js function
+     */
+    private void addRoute() {
+        routeDisplayed = true;
+        javaScriptConnector.call("addRoute");
+    }
+
+    /**
+     * removes route from map, calling the underlying js function
+     */
+    private void removeRoute() {
+        routeDisplayed = false;
+        javaScriptConnector.call("removeRoute");
+    }
+
+    /**
+     * Simple toggle to hide or display the route on click
+     */
+    public void toggleRoute() {
+        if (routeDisplayed) {
+            removeRoute();
+        } else {
+            addRoute();
+        }
+    }
+
 }
