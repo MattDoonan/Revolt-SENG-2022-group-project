@@ -9,3 +9,7 @@ generate_artifacts:
   artifacts:
     paths:
     - target/revolt*.jar
+checkstyle:
+  stage: build
+  script:
+    - mvn -B clean validate

@@ -38,16 +38,19 @@ public class ChargerManager {
     /**
      * Gets the selectedCharger
      *
-     * @return {@link Charger} selectedCharger which is the currently selected charger
+     * @return {@link Charger} selectedCharger which is the currently selected
+     *         charger
      */
     public Charger getSelectedCharger() {
         return selectedCharger;
     }
 
     /**
-     * Calculates the distance between two {@link Charger} (selectedCharger, input charger).
+     * Calculates the distance between two {@link Charger} (selectedCharger, input
+     * charger).
      *
-     * @param toCharger {@link Charger} Charger which selectedCharger is calculating from.
+     * @param toCharger {@link Charger} Charger which selectedCharger is calculating
+     *                  from.
      * @return double; the distance between chargers in kilometres.
      */
     public double distanceBetweenChargers(Charger toCharger) {
@@ -57,15 +60,18 @@ public class ChargerManager {
     }
 
     /**
-     * Returns the list of the closest chargers, in order from closest to furthest away.
+     * Returns the list of the closest chargers, in order from closest to furthest
+     * away.
      *
      * @param chargers {@link Charger} An ArrayList of Chargers
-     * @param location {@link Coordinate} A coordinate of the location to calculate distance from
+     * @param location {@link Coordinate} A coordinate of the location to calculate
+     *                 distance from
      * @param distance double, the maximum distance to filter chargers by
-     * @return ArrayList<> of the {@link Charger} chargers sorted from closest to furthest
+     * @return ArrayList<> of the {@link Charger} chargers sorted from closest to
+     *         furthest
      */
     public ArrayList<Charger> getNearbyChargers(ArrayList<Charger> chargers, Coordinate location,
-                                                double distance) {
+            double distance) {
 
         List<Charger> sortedChargers = chargers.stream()
                 .filter(dist -> Calculations.calculateDistance(dist.getLocation(),
@@ -81,7 +87,7 @@ public class ChargerManager {
      * Changes the warnings of the selected charger
      * 
      * @param warning the warning to change the state of
-     * @param state boolean of state of warning to change to
+     * @param state   boolean of state of warning to change to
      */
     public void toggleWarning(String warning, boolean state) {
         switch (warning) {
