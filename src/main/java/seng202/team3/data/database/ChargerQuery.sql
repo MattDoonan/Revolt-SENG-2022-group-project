@@ -1,5 +1,3 @@
-
-
 CREATE TABLE IF NOT EXISTS Charger
 (
     xPos REAL,
@@ -8,16 +6,17 @@ CREATE TABLE IF NOT EXISTS Charger
     operator VARCHAR(50),
     owner VARCHAR(50) NOT NULL,
     address VARCHAR(255) NOT NULL,
-    alwaysOpen BOOLEAN,
+    alwaysOpen TEXT constraint isBoolean CHECK ( alwaysOpen IN ('TRUE', 'FALSE')),
     numCarParks INTEGER,
-    hasCarParkCost BOOLEAN,
+    hasCarParkCost TEXT constraint isBoolean CHECK ( hasCarParkCost IN ('TRUE', 'FALSE')),
     maxTime INTEGER,
-    attraction BOOLEAN,
+    attraction TEXT constraint isBoolean CHECK ( attraction IN ('TRUE', 'FALSE')),
     latPos INTEGER,
     lonPos INTEGER,
     currenType VARCHAR(50),
     dateOpened TEXT,
-    numConnectors INTEGER
+    numConnectors INTEGER,
+    chargingCost TEXT constraint isBoolean CHECK ( chargingCost IN ('TRUE', 'FALSE'))
 );
 
 CREATE TABLE IF NOT EXISTS Connector
@@ -25,8 +24,8 @@ CREATE TABLE IF NOT EXISTS Connector
     connectorID INTEGER NOT NULL constraint dk_connector PRIMARY KEY,
     currentType VARCHAR(50) NOT NULL,
     power VARCHAR(50) NOT NULL,
-    isOperational BOOLEAN,
-    inUse BOOLEAN,
+    isOperational TEXT constraint isBoolean CHECK ( isOperational IN ('TRUE', 'FALSE')),
+    inUse TEXT constraint isBoolean CHECK ( inUse IN ('TRUE', 'FALSE')),
     chargerID INTEGER NOT NULL references Charger(chargerID)
 
 );
