@@ -17,6 +17,11 @@ public class SqlInterpreter {
 
     private static SqlInterpreter instance = null;
 
+    /**
+     * Initializes the SqlInterpreter and checks if the url is null
+     * calls createAFile and defaultDatabase if the database doesn't exist
+     * @param db the url sent through
+     */
     private SqlInterpreter(String db) {
         if (db==null || db.isEmpty()) {
             url = getDatabasePath();
