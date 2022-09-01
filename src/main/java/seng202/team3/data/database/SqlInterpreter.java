@@ -75,7 +75,7 @@ public class SqlInterpreter {
 
     public void defaultDatabase() {
         try{
-            InputStream source = getClass().getResourceAsStream("src/main/resources/revoltDatabaseInitializer.sql");
+            InputStream source = getClass().getResourceAsStream("/revoltDatabaseInitializer.sql");
             executeSql(source);
         }catch (NullPointerException e) {
             logManager.error("Error loading database from file source");

@@ -1,8 +1,10 @@
-CREATE TABLE IF NOT EXISTS Charger
+DROP TABLE IF EXISTS charger;
+--SPLIT
+CREATE TABLE IF NOT EXISTS charger
 (
+    chargerID INTEGER NOT NULL constraint dk_charger PRIMARY KEY,
     xPos REAL,
     yPos REAL,
-    chargerID INTEGER NOT NULL constraint dk_charger PRIMARY KEY,
     operator VARCHAR(50),
     owner VARCHAR(50) NOT NULL,
     address VARCHAR(255) NOT NULL,
@@ -17,9 +19,11 @@ CREATE TABLE IF NOT EXISTS Charger
     dateOpened TEXT,
     numConnectors INTEGER,
     chargingCost TEXT constraint isBoolean CHECK ( chargingCost IN ('TRUE', 'FALSE'))
-);
-
-CREATE TABLE IF NOT EXISTS Connector
+    );
+--SPLIT
+DROP TABLE IF EXISTS connector;
+--SPLIT
+CREATE TABLE IF NOT EXISTS connector
 (
     connectorID INTEGER NOT NULL constraint dk_connector PRIMARY KEY,
     currentType VARCHAR(50) NOT NULL,
@@ -28,18 +32,22 @@ CREATE TABLE IF NOT EXISTS Connector
     inUse TEXT constraint isBoolean CHECK ( inUse IN ('TRUE', 'FALSE')),
     chargerID INTEGER NOT NULL references Charger(chargerID)
 
-);
-
-CREATE TABLE if not exists User
+    );
+--SPLIT
+DROP TABLE IF EXISTS user;
+--SPLIT
+CREATE TABLE if not exists user
 (
     email VARCHAR(100) NOT NULL constraint dk_user PRIMARY KEY,
     accountName VARCHAR(50),
     homeAddress VARCHAR(255),
     carbon_used REAL,
     permissions INTEGER NOT NULL constraint dk_per check ( permissions IN (1,2,3))
-);
-
-CREATE TABLE if not exists Note
+    );
+--SPLIT
+DROP TABLE IF EXISTS note;
+--SPLIT
+CREATE TABLE if not exists note
 (
     reviewId INTEGER NOT NULL constraint dk_note PRIMARY KEY,
     chargerID INTEGER NOT NULL references Charger(chargerID),
@@ -47,25 +55,31 @@ CREATE TABLE if not exists Note
     rating REAL,
     publicText VARCHAR(255),
     privateText VARCHAR(255)
-);
-
-CREATE TABLE if not exists Favourite
+    );
+--SPLIT
+DROP TABLE IF EXISTS favourite;
+--SPLIT
+CREATE TABLE if not exists favourite
 (
     favouriteID INTEGER NOT NULL constraint dk_fav PRIMARY KEY,
     user VARCHAR(100) NOT NULL references User(email),
     chargerID INTEGER NOT NULL references Charger(chargerID)
 
-);
-
-CREATE TABLE if not exists Vehicle
+    );
+--SPLIT
+DROP TABLE IF EXISTS vehicle;
+--SPLIT
+CREATE TABLE if not exists vehicle
 (
     vehicleID INTEGER NOT NULL constraint dk_Veh PRIMARY KEY,
     user VARCHAR(100) NOT NULL references User(email),
     carName VARCHAR(10),
     range_km INTEGER not null
-);
-
-CREATE TABLE if not exists Journey
+    );
+--SPLIT
+DROP TABLE IF EXISTS journey;
+--SPLIT
+CREATE TABLE if not exists journey
 (
     journeyId INTEGER NOT NULL constraint dk_journey PRIMARY KEY ,
     user VARCHAR(100) NOT NULL references User(email),
@@ -76,13 +90,15 @@ CREATE TABLE if not exists Journey
     endLon REAL NOT NULL,
     startDate TEXT,
     finishDate TEXT
-);
-
-CREATE TABLE if not exists Stop
+    );
+--SPLIT
+DROP TABLE IF EXISTS stop;
+--SPLIT
+CREATE TABLE if not exists stop
 (
     stopID INTEGER NOT NULL constraint dk_stop PRIMARY KEY,
     JourneyID INTEGER NOT NULL references Journey(journeyId),
     chargerID INTEGER NOT NULL references Charger(chargerID),
     stopOrder INTEGER NOT NULL
-)
+    )
 
