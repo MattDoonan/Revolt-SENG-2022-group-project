@@ -44,6 +44,10 @@ public class SqlInterpreter {
         return instance;
     }
 
+    /**
+     * Gets and then returns the path of the file name as a String
+     * @return String of the file path
+     */
     private String getDatabasePath() {
         String path = SqlInterpreter.class.getProtectionDomain().getCodeSource().getLocation().getPath();
         path = URLDecoder.decode(path, StandardCharsets.UTF_8);
