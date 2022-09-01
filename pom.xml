@@ -117,11 +117,12 @@
       <version>1.1.1</version>
     </dependency>
 
+    <!-- SQLite dependency used for creating and interacting with SQLite databases -->
     <!-- https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc -->
     <dependency>
       <groupId>org.xerial</groupId>
       <artifactId>sqlite-jdbc</artifactId>
-      <version>3.32.3.2</version>
+      <version>3.39.2.1</version>
     </dependency>
 
 
