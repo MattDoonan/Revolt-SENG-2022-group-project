@@ -33,6 +33,10 @@ public class SqlInterpreter {
         }
     }
 
+    /**
+     * Returns the instance of the class
+     * @return the instance
+     */
     public static SqlInterpreter getInstance() {
         if (instance == null) {
             instance = new SqlInterpreter(null);
