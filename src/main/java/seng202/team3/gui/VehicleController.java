@@ -10,17 +10,19 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import seng202.team3.data.entity.Vehicle;
@@ -94,9 +96,16 @@ public class VehicleController {
     @FXML
     private TextField connectionsText;
 
+    @FXML
+    private ScrollPane imgsDisplay;
+
     private ObservableList<Vehicle> vehicleData = FXCollections.observableArrayList();
 
+    private ObservableList<Button> imgBtns = FXCollections.observableArrayList();
+
     private ArrayList<String> connections = new ArrayList<String>();
+
+    private String[] imgNames = {"car_one.png", "car_two.png", "car_three.png"};
 
     private Stage popup = new Stage();
 
@@ -128,7 +137,7 @@ public class VehicleController {
             popup.initModality(Modality.APPLICATION_MODAL);
             popup.setResizable(false);
             popup.setTitle("Add Vehicle");
-            popup.setScene(new Scene(root, 600, 400));
+            popup.setScene(new Scene(root, 600, 500));
             popup.showAndWait();
 
 
@@ -148,6 +157,7 @@ public class VehicleController {
         connections.add(connectionsText.getText());
         addedConnections.setText("Connection: "
                 + connectionsText.getText() + "\n" + addedConnections.getText());
+        connectionsText.setText(null);
     }
 
     /**
@@ -159,21 +169,64 @@ public class VehicleController {
                 modelText.getText(), Float.parseFloat(curChargeText.getText()),
                 Integer.parseInt(maxRangeText.getText()), connections);
         vehicleData.add(vehicle);
-        System.out.println(vehicleData.toString());
-        System.out.println(vehicle);
+
         Stage popupStage = (Stage) addVehicleBtn.getScene().getWindow();
         popupStage.close();
+    }
+
+
+    /**
+     * Lets the user select an image (from a list) to represent their vehicle
+     */
+    @FXML
+    public void selectImg() {
+        try {
+
+            AnchorPane root = new AnchorPane();
+
+            // Parent root = FXMLLoader.load(getClass().getResource("/fxml/select_img.fxml"));
+            VBox anchor = new VBox();
+
+            Button saveImg = new Button("Select");
+
+
+            for (int i = 0; i < imgNames.length; i++) {
+
+                Image img = new Image(new FileInputStream("src/main/resources/images/"+imgNames[i]));
+                ImageView view = new ImageView(img);
+                Button button = new Button();
+                button.setGraphic(view);
+                imgBtns.add(button);
+            }
+            anchor.getChildren().addAll(imgBtns);
+
+            ScrollPane imgsDisplay = new ScrollPane();
+            imgsDisplay.setContent(anchor);
+            imgsDisplay.setPannable(true); 
+
+            root.getChildren().addAll(imgsDisplay, saveImg);
+
+            popup.initModality(Modality.APPLICATION_MODAL);
+            popup.setResizable(false);
+            popup.setTitle("Select Image");
+            popup.setScene(new Scene(root, 600, 400));
+            popup.showAndWait();
+
+
+        } catch (IOException e) {
+            Logger logger = Logger.getLogger(getClass().getName());
+            logger.log(Level.SEVERE, "Failed to create new Window.", e);
+        }
     }
 
     /**
      * Populate display with index-th vehicle
      *
-     * @param display location to put the text
-     * @param index   index of the vehicle to display
+     * @param display   location to put the text
+     * @param imageview path to vehicle image
+     * @param index     index of the vehicle to display
      */
     public void setData(TextArea display, ImageView imageview, int index) {
-        // System.out.println(vehicleData.toString());
-
         display.setText(vehicleData.get(index).getMake() + " " 
                 + vehicleData.get(index).getModel() + "\n\n"
                 + "License Plate: " + vehicleData.get(index).getLicensePlate() + "\n"
@@ -182,23 +235,13 @@ public class VehicleController {
                 + "Connections: " + vehicleData.get(index).getConnectors().toString());
 
         
-        Image image;
         try {
             if (vehicleData.get(index).getImgPath() != null) {
-                image = new Image(new FileInputStream(vehicleData.get(index).getImgPath()));
+                Image image = new Image(new FileInputStream(vehicleData.get(index).getImgPath()));
                 imageview.setImage(image);
             } else {
                 imageview.setImage(null);
             }
-             
-            // display.add(vehicleImageThree);
-
-            // Text title = new Text(vehicleData.get(index).getMake() + "\u00A0" + vehicleData.get(index).getModel());
-            
-            // Text text = new Text("License Plate: " + vehicleData.get(index).getLicensePlate() + "\n"
-            // + "Current Charge: " + vehicleData.get(index).getBatteryPercent() + "\n"
-            // + "Max. Range: " + vehicleData.get(index).getMaxRange() + "\n"
-            // + "Connections: " + vehicleData.get(index).getConnectors().toString());
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -236,11 +279,12 @@ public class VehicleController {
         vehicleData.add(
                 new Vehicle("IUH909", "Porsche", "Taycan", (float) 98, 480,
                         new ArrayList<>()));
-        vehicleData.get(0).setImgPath("src\\main\\resources\\images\\car_one.png");
-        vehicleData.get(2).setImgPath("src\\main\\resources\\images\\car_two.png");
-        vehicleData.get(3).setImgPath("src\\main\\resources\\images\\car_one.png");
-        vehicleData.get(5).setImgPath("src\\main\\resources\\images\\car_three.png");
-        vehicleData.get(6).setImgPath("src\\main\\resources\\images\\car_two.png");
+        vehicleData.get(0).setImgPath("src/main/resources/images/car_one.png");
+        vehicleData.get(1).setImgPath("src/main/resources/images/car_three.png");
+        vehicleData.get(2).setImgPath("src/main/resources/images/car_two.png");
+        vehicleData.get(3).setImgPath("src/main/resources/images/car_one.png");
+        vehicleData.get(5).setImgPath("src/main/resources/images/car_three.png");
+        vehicleData.get(6).setImgPath("src/main/resources/images/car_two.png");
     }
 
     /**
@@ -257,31 +301,6 @@ public class VehicleController {
             setData(vehicleDisplayTwo, vehicleImageTwo, 1);
             setData(vehicleDisplayThree, vehicleImageThree, 2);
         }
-
-        // if (vehicleData.size() > 0) {
-        //     if (indexThree == vehicleData.size() - 1) {
-        //         indexOne++;
-        //         indexTwo++;
-        //         indexThree = 0;
-        //     } else if (indexTwo == vehicleData.size() - 1) {
-        //         indexOne++;
-        //         indexThree++;
-        //         indexTwo = 0;
-        //     } else if (indexOne == vehicleData.size() - 1) {
-        //         indexTwo++;
-        //         indexThree++;
-        //         indexOne = 0;
-        //     } else {
-        //         indexOne++;
-        //         indexTwo++;
-        //         indexThree++;
-        //     }
-
-        //     setData(vehicleDisplayOne, indexOne);
-        //     setData(vehicleDisplayTwo, indexTwo);
-        //     setData(vehicleDisplayThree, indexThree);
-        // }
-
     }
 
 
@@ -300,29 +319,5 @@ public class VehicleController {
             setData(vehicleDisplayTwo, vehicleImageTwo, 1);
             setData(vehicleDisplayThree, vehicleImageThree, 2);
         }
-
-        // if (vehicleData.size() > 0) {
-
-        //     if (indexOne == 0) {
-        //         indexOne = vehicleData.size() - 1;
-        //         indexTwo--;
-        //         indexThree--;
-        //     } else if (indexTwo == 0) {
-        //         indexTwo = vehicleData.size() - 1;
-        //         indexOne--;
-        //         indexThree--;
-        //     } else if (indexThree == 0) {
-        //         indexThree = vehicleData.size() - 1;
-        //         indexOne--;
-        //         indexTwo--;
-        //     } else {
-        //         indexOne--;
-        //         indexTwo--;
-        //         indexThree--;
-        //     }
-        //     setData(vehicleDisplayOne, indexOne);
-        //     setData(vehicleDisplayTwo, indexTwo);
-        //     setData(vehicleDisplayThree, indexThree);
-        // }
     }
 }
