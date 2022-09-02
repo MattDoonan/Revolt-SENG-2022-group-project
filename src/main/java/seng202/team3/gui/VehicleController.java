@@ -1,5 +1,7 @@
 package seng202.team3.gui;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -15,6 +17,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import seng202.team3.data.entity.Vehicle;
@@ -42,6 +48,15 @@ public class VehicleController {
 
     @FXML
     private TextArea vehicleDisplayThree;
+
+    @FXML
+    private ImageView vehicleImageOne;
+
+    @FXML
+    private ImageView vehicleImageTwo;
+
+    @FXML
+    private ImageView vehicleImageThree;
 
     @FXML
     private Button addVehicle;
@@ -159,13 +174,31 @@ public class VehicleController {
     public void setData(TextArea display, int index) {
         // System.out.println(vehicleData.toString());
 
-        display.setText("License Plate: " + vehicleData.get(index).getLicensePlate() + "\n"
-                + "Make: " + vehicleData.get(index).getMake() + "\n"
-                + "Model: " + vehicleData.get(index).getModel() + "\n"
+        display.setText(vehicleData.get(index).getMake() + " " 
+                + vehicleData.get(index).getModel() + "\n\n"
+                + "License Plate: " + vehicleData.get(index).getLicensePlate() + "\n"
                 + "Current Charge: " + vehicleData.get(index).getBatteryPercent() + "\n"
                 + "Max. Range: " + vehicleData.get(index).getMaxRange() + "\n"
-                + "Connections: " + vehicleData.get(index).getConnectors().toString() + "\n"
-                + "\n\n\n" + "Index: " + vehicleData.indexOf(vehicleData.get(index)));
+                + "Connections: " + vehicleData.get(index).getConnectors().toString());
+
+        
+        Image image;
+        try {
+            image = new Image(new FileInputStream("src\\main\\resources\\images\\car_one.png"));
+            vehicleImageOne.setImage(image); 
+            // display.add(vehicleImageThree);
+
+            Text title = new Text(vehicleData.get(index).getMake() + "\u00A0" + vehicleData.get(index).getModel());
+            
+            Text text = new Text("License Plate: " + vehicleData.get(index).getLicensePlate() + "\n"
+            + "Current Charge: " + vehicleData.get(index).getBatteryPercent() + "\n"
+            + "Max. Range: " + vehicleData.get(index).getMaxRange() + "\n"
+            + "Connections: " + vehicleData.get(index).getConnectors().toString());
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }  
+
     }
 
     /**

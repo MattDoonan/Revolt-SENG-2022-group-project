@@ -4,7 +4,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.TextArea?>
-<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
@@ -20,17 +20,11 @@
       <Button fx:id="addVehicle" layoutX="452.0" layoutY="607.0" mnemonicParsing="false" text="Add New" />
       <Button fx:id="nextBtn" layoutX="856.0" layoutY="340.0" mnemonicParsing="false" onAction="#nextBtnClicked" prefHeight="40.0" prefWidth="42.0" text="&gt;&gt;" />
       <Button fx:id="prevBtn" layoutX="79.0" layoutY="340.0" mnemonicParsing="false" onAction="#prevBtnClicked" prefHeight="40.0" prefWidth="42.0" text="&lt;&lt;" />
-      <TextArea fx:id="vehicleDisplayOne" editable="false" layoutX="155.0" layoutY="236.0" prefHeight="328.0" prefWidth="200.0">
-         <effect>
-            <DropShadow blurType="ONE_PASS_BOX" height="11.0" radius="5.0" spread="1.0" width="11.0" />
-         </effect></TextArea>
-      <TextArea fx:id="vehicleDisplayTwo" editable="false" layoutX="385.0" layoutY="236.0" prefHeight="328.0" prefWidth="200.0">
-         <effect>
-            <DropShadow blurType="ONE_PASS_BOX" height="11.0" radius="5.0" spread="1.0" width="11.0" />
-         </effect></TextArea>
-      <TextArea fx:id="vehicleDisplayThree" editable="false" layoutX="616.0" layoutY="236.0" prefHeight="328.0" prefWidth="200.0">
-         <effect>
-            <DropShadow blurType="ONE_PASS_BOX" height="11.0" radius="5.0" spread="1.0" width="11.0" />
-         </effect></TextArea>
+      <TextArea fx:id="vehicleDisplayOne" editable="false" layoutX="150.0" layoutY="238.0" prefHeight="318.0" prefWidth="200.0" style="-fx-border-color: black;" />
+      <ImageView fx:id="vehicleImageOne" fitHeight="130.0" fitWidth="200.0" layoutX="150.0" layoutY="397.0" pickOnBounds="true" preserveRatio="true" />
+      <TextArea fx:id="vehicleDisplayTwo" editable="false" layoutX="385.0" layoutY="238.0" prefHeight="318.0" prefWidth="200.0" style="-fx-border-color: black;" />
+      <TextArea fx:id="vehicleDisplayThree" editable="false" layoutX="614.0" layoutY="238.0" prefHeight="318.0" prefWidth="200.0" style="-fx-border-color: black;" />
+      <ImageView fx:id="vehicleImageTwo" fitHeight="130.0" fitWidth="200.0" layoutX="385.0" layoutY="397.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="vehicleImageThree" fitHeight="130.0" fitWidth="200.0" layoutX="614.0" layoutY="397.0" pickOnBounds="true" preserveRatio="true" />
    </children>
 </AnchorPane>
