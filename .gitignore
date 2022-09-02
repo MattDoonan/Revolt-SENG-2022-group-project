@@ -11,7 +11,7 @@
 *.iws
 
 # VsCode
-/.vscode
+.vscode/
 
 # Mac
 .DS_Store
@@ -24,3 +24,6 @@ dependency-reduced-pom.xml
 # Logs
 logs/
 *.log
+
+# Dotenv
+*.env

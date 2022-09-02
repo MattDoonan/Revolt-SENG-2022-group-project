@@ -10,7 +10,8 @@ import javafx.stage.Stage;
 /**
  * Class starts the javaFX application window
  * 
- * @author seng202 teaching team
+ * @author Team 3
+ * @version 1.0.1, Aug 22
  */
 public class MainWindow extends Application {
 
@@ -30,14 +31,14 @@ public class MainWindow extends Application {
         baseController.init(primaryStage);
 
         primaryStage.setTitle("Revolt App");
-        Scene scene = new Scene(root, 600, 400);
+        Scene scene = new Scene(root, 1920, 1080);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
     /**
-     * Launches the FXML application, this must be called from another class (in
-     * this cass App.java) otherwise JavaFX
+     * Launches the FXML application, this must be called from another class
+     * (in this cass App.java) otherwise JavaFX
      * errors out and does not run
      * 
      * @param args command line arguments

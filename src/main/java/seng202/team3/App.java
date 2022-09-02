@@ -1,9 +1,10 @@
 package seng202.team3;
 
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import seng202.team3.gui.MainWindow;
+
+/*
+ * A change to branch tesla so I can try to fix the merging with branch volta
+ */
 
 /**
  * Default entry point class
@@ -11,7 +12,6 @@ import seng202.team3.gui.MainWindow;
  * @author seng202 teaching team
  */
 public class App {
-    private static final Logger log = LogManager.getLogger();
 
     /**
      * Entry point which runs the javaFX application
@@ -20,15 +20,6 @@ public class App {
      * @param args program arguments from command line
      */
     public static void main(String[] args) {
-        log.info("Hello World!");
-        log.warn(
-                "This is a warning message! Use this log type to 'warn'"
-                        + "if something is not quite right");
-        log.error(
-                "An error has occurred, thanks logging for helping find it!"
-                        + "(This is a terrible error log message, but is only an example!')");
-        log.log(Level.INFO, "There are many ways to log!");
-
         MainWindow.main(args);
     }
 }
