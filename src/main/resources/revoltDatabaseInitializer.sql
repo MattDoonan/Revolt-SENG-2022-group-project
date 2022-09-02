@@ -8,17 +8,16 @@ CREATE TABLE IF NOT EXISTS charger
     operator VARCHAR(50),
     owner VARCHAR(50) NOT NULL,
     address VARCHAR(255) NOT NULL,
-    alwaysOpen TEXT constraint isBoolean CHECK ( alwaysOpen IN ('TRUE', 'FALSE')),
+    name VARCHAR(50) NOT NULL,
+    is24Hrs BIT,
     numCarParks INTEGER,
-    hasCarParkCost TEXT constraint isBoolean CHECK ( hasCarParkCost IN ('TRUE', 'FALSE')),
-    maxTime INTEGER,
-    attraction TEXT constraint isBoolean CHECK ( attraction IN ('TRUE', 'FALSE')),
+    hasCarParkCost BIT,
+    timeLimit INTEGER,
+    attraction BIT,
     latPos INTEGER,
     lonPos INTEGER,
-    currenType VARCHAR(50),
     dateOpened TEXT,
-    numConnectors INTEGER,
-    chargingCost TEXT constraint isBoolean CHECK ( chargingCost IN ('TRUE', 'FALSE'))
+    chargingCost BIT
     );
 --SPLIT
 DROP TABLE IF EXISTS connector;
@@ -28,10 +27,10 @@ CREATE TABLE IF NOT EXISTS connector
     connectorID INTEGER NOT NULL constraint dk_connector PRIMARY KEY,
     currentType VARCHAR(50) NOT NULL,
     power VARCHAR(50) NOT NULL,
-    isOperational TEXT constraint isBoolean CHECK ( isOperational IN ('TRUE', 'FALSE')),
-    inUse TEXT constraint isBoolean CHECK ( inUse IN ('TRUE', 'FALSE')),
-    chargerID INTEGER NOT NULL references Charger(chargerID)
-
+    count INTEGER,
+    isOperational VARCHAR(30),
+    chargerID INTEGER NOT NULL references Charger(chargerID),
+    type VARCHAR(50) NOT NULL
     );
 --SPLIT
 DROP TABLE IF EXISTS user;
@@ -98,10 +97,23 @@ DROP TABLE IF EXISTS stop;
 CREATE TABLE if not exists stop
 (
     stopID INTEGER NOT NULL constraint dk_stop PRIMARY KEY,
-    LatPos INTEGER,
-    LonPos INTEGER,
-    JourneyID INTEGER NOT NULL references Journey(journeyId),
+    latPos INTEGER,
+    lonPos INTEGER,
+    journeyID INTEGER NOT NULL references Journey(journeyId),
     chargerID INTEGER references Charger(chargerID),
     stopOrder INTEGER NOT NULL
-    )
-
+    );
+--SPLIT
+--Sample data
+INSERT INTO charger (xPos, yPos, chargerID, name, operator, owner, address, is24Hrs, numCarParks, hasCarParkCost, timeLimit, attraction, latPos, lonPos, dateOpened, chargingCost) 
+VALUES 
+    (1366541.2354,5153202.1642,1,"YHA MT COOK","MERIDIAN ENERGY LIMITED","MERIDIAN ENERGY LIMITED","4 Kitchener Dr, Mount Cook National Park 7999, New Zealand",1,1,0,0,0,-43.73745,170.100913,"2020/05/01 00:00:00+00",1),
+    (1570148.5238,5173542.4743,2,"CHRISTCHURCH ADVENTURE PARK","MERIDIAN ENERGY LIMITED","MERIDIAN ENERGY LIMITED","Worsleys Rd, Cashmere, Christchurch 8022, New Zealand",0,4,0,0,1,-43.59049,172.630201,"2020/05/01 00:00:00+00",0),
+    (1822955.3955,5488854.3202,3,"PUKAHA NATIONAL WILDLIFE CENTRE","MERIDIAN ENERGY LIMITED","MERIDIAN ENERGY LIMITED","85379 State Highway 2, Mount Bruce 5881",1,2,0,0,1,-40.721068,175.639788,"2020/08/12 00:00:00+00",0);
+--SPLIT
+INSERT INTO connector (connectorID, currentType, power, count, isOperational, chargerID, type)
+VALUES
+    (1,"AC","22 kW", 1, "Operative", 1, "Type 2 Socketed"),
+    (2,"AC","44 kW", 4, "Operative", 2, "Type 2 Socketed"),
+    (3,"AC","7 kW", 2, "Operative", 3, "Type 2 Socketed"),
+    (4,"AC","7 kW", 2, "Operative", 3, "Type 2 CCS");

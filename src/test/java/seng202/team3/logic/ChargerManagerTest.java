@@ -42,18 +42,18 @@ public class ChargerManagerTest {
 
         // Christchurch Hospital
         Coordinate coord1 = new Coordinate(1.1, 2.3, -43.53418, 172.627572);
-        charger1 = new Charger(connectorList, "Hosp", coord1, 1, 0.3, "Meridian", true);
+        charger1 = new Charger(connectorList, "Hosp", coord1, 1, 0.3, "Meridian", "Meridian", true);
 
         // Christchurch Boys High School
         Coordinate coord2 = new Coordinate(3.5, 4.4, -43.52425, 172.60019);
-        charger2 = new Charger(connectorList, "Boys", coord2, 2, 3.5, "Someone", false);
+        charger2 = new Charger(connectorList, "Boys", coord2, 2, 3.5, "Someone", "Someone", false);
         // Auckland Grammar School
         Coordinate coord3 = new Coordinate(4.5, 5.7, -36.85918, 174.76602);
-        charger3 = new Charger(connectorList, "Grammar", coord3, 5, 1.2, "Else", true);
+        charger3 = new Charger(connectorList, "Grammar", coord3, 5, 1.2, "Else", "Else", true);
 
         // Otago Boys School
         Coordinate coord4 = new Coordinate(4.8, 7.7, -45.87135, 170.49551);
-        charger4 = new Charger(connectorList, "Otago", coord4, 2, 35.1, "Us", false);
+        charger4 = new Charger(connectorList, "Otago", coord4, 2, 35.1, "Us", "Us", false);
 
         manager = new ChargerManager(charger1);
     }

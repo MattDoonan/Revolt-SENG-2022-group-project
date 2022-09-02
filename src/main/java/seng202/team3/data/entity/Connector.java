@@ -7,6 +7,9 @@ package seng202.team3.data.entity;
  * @version 1.0.0, Aug 22
  */
 public class Connector {
+    /** Unique identifier */
+    int connectorId;
+
     /** Plug style */
     String type;
 
@@ -28,6 +31,18 @@ public class Connector {
      * Constructor for the connector
      */
     public Connector(String type, String power, String status, String current, int count) {
+        setType(type);
+        setPower(power);
+        setOperational(status);
+        setCurrent(current);
+        setCount(count);
+    }
+
+    /**
+     * Constructor for the connector with id
+     */
+    public Connector(String type, String power, String status, String current, int count, int id) {
+        setId(id);
         setType(type);
         setPower(power);
         setOperational(status);
@@ -124,6 +139,24 @@ public class Connector {
      */
     public void setCount(int newCount) {
         count = newCount;
+    }
+
+    /**
+     * Gets the id of the connector
+     * 
+     * @return id of the connector
+     */
+    public int getId() {
+        return connectorId;
+    }
+
+    /**
+     * Sets the id of the connector
+     * 
+     * @param connectorId id of the connector
+     */
+    public void setId(int connectorId) {
+        this.connectorId = connectorId;
     }
 
 }

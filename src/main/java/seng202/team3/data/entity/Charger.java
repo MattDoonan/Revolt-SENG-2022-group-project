@@ -13,6 +13,7 @@ import java.util.ArrayList;
  * @version 1.0.1, Aug 22
  */
 public class Charger {
+
     /** Unique identifier */
     @CsvBindByName(column = "OBJECTID", required = true)
     int chargerId;
@@ -26,9 +27,7 @@ public class Charger {
     String name;
 
     /** {@link Connector Connectors} available on charger */
-    @CsvBindAndSplitByName(column = "connectorsList", elementType = Connector.class,
-                           splitOn = ",(?=( )*\\{)", converter = ConnectorConverter.class,
-                           required = true)
+    @CsvBindAndSplitByName(column = "connectorsList", elementType = Connector.class, splitOn = ",(?=( )*\\{)", converter = ConnectorConverter.class, required = true)
     ArrayList<Connector> connectors;
 
     /** {@link Coordinate Coordinate} information for the charger */
@@ -72,6 +71,7 @@ public class Charger {
 
     /** Empty constructor for CSV object builder */
     public Charger() {
+        connectors = new ArrayList<>();
     }
 
     /** Has warning for charger high cost */
@@ -81,11 +81,11 @@ public class Charger {
     boolean warningLongWait;
 
     /** Has warning for charger low availabilty */
-    boolean warningLowAvailability;    
+    boolean warningLowAvailability;
 
     /** Constructor for the Charger */
     public Charger(ArrayList<Connector> connectors, String name, Coordinate location,
-            int availableParks, Double timeLimit, String operator,
+            int availableParks, Double timeLimit, String operator, String owner,
             boolean hasAttraction) {
         this.connectors = connectors;
         setLocation(location);
@@ -95,6 +95,7 @@ public class Charger {
         setPublic(false); // TODO: retrieve from data once implemented
         setHasAttraction(hasAttraction);
         setName(name);
+        setOwner(owner);
     }
 
     /**
@@ -347,7 +348,7 @@ public class Charger {
     public void setWarningLongWait(boolean warningLongWait) {
         this.warningLongWait = warningLongWait;
     }
-    
+
     /**
      * Set warning high cost
      * 

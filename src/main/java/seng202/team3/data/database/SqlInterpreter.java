@@ -1,19 +1,34 @@
 package seng202.team3.data.database;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import seng202.team3.data.entity.Charger;
+import seng202.team3.data.entity.Connector;
+import seng202.team3.data.entity.Coordinate;
 
 /**
  * Class that interacts with the SQLite database
+ * 
  * @author Matthew Doonan
  * @version 1.0.0
  */
-public class SqlInterpreter {
+public class SqlInterpreter implements DataManager {
 
     private final String url;
 
@@ -24,14 +39,16 @@ public class SqlInterpreter {
     /**
      * Initializes the SqlInterpreter and checks if the url is null
      * calls createAFile and defaultDatabase if the database doesn't exist
+     * 
      * @param db the url sent through
      */
     private SqlInterpreter(String db) {
-        if (db==null || db.isEmpty()) {
+        if (db == null || db.isEmpty()) {
             url = getDatabasePath();
         } else {
             url = db;
-        } if (!checkExist(url)){
+        }
+        if (!checkExist(url)) {
             createFile(url);
             defaultDatabase();
         }
@@ -39,6 +56,7 @@ public class SqlInterpreter {
 
     /**
      * Returns the instance of the class
+     * 
      * @return the instance
      */
     public static SqlInterpreter getInstance() {
@@ -50,17 +68,22 @@ public class SqlInterpreter {
 
     /**
      * Gets and then returns the path of the file name as a String
+     * 
      * @return String of the file path
      */
     private String getDatabasePath() {
-        String path = SqlInterpreter.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+        String path = SqlInterpreter.class.getProtectionDomain()
+                .getCodeSource()
+                .getLocation()
+                .getPath();
         path = URLDecoder.decode(path, StandardCharsets.UTF_8);
         File directory = new File((path));
-        return "jdbc:sqlite:"+directory.getParentFile()+"/database.db";
+        return "jdbc:sqlite:" + directory.getParentFile() + "/database.db";
     }
 
     /**
      * Checks if the file already exists in the specified path
+     * 
      * @param path the url
      * @return Boolean yes or no if it exists
      */
@@ -71,13 +94,16 @@ public class SqlInterpreter {
 
     /**
      * creates a new database file at a location specified
+     * 
      * @param path the location specified
      */
     private void createFile(String path) {
         try (Connection connection = DriverManager.getConnection(path)) {
             if (connection != null) {
                 DatabaseMetaData meta = connection.getMetaData();
-                String driverLog = String.format("A new database has been created. The driver name is %s", meta.getDriverName());
+                String driverLog = String
+                        .format("A new database has been created. The driver name is %s",
+                                meta.getDriverName());
                 logManager.info(driverLog);
             }
         } catch (SQLException e) {
@@ -91,21 +117,22 @@ public class SqlInterpreter {
      * does this by calling the SQL file in resources
      */
     public void defaultDatabase() {
-        try{
+        try {
             InputStream source = getClass().getResourceAsStream("/revoltDatabaseInitializer.sql");
             executeSql(source);
-        }catch (NullPointerException e) {
+        } catch (NullPointerException e) {
             logManager.error("Error loading database from file source");
         }
     }
 
     /**
      * Creates connection to the database
+     * 
      * @return the connection
      */
     public Connection createConnection() {
         Connection connection = null;
-        try{
+        try {
             connection = DriverManager.getConnection(url);
         } catch (SQLException e) {
             logManager.error(e);
@@ -116,29 +143,134 @@ public class SqlInterpreter {
     /**
      * Executes all the lines in the SQL file
      * It knows a line ends if it has --SPLIT
+     * 
      * @param source the SQL file
      */
     private void executeSql(InputStream source) {
         String line;
         StringBuffer buff = new StringBuffer();
-        try(BufferedReader read = new BufferedReader(new InputStreamReader(source))) {
+        try (BufferedReader read = new BufferedReader(new InputStreamReader(source))) {
             while ((line = read.readLine()) != null) {
                 buff.append(line);
             }
-            String[] state  =buff.toString().split("--SPLIT");
-            try(Connection connection = createConnection();
-            Statement statement = connection.createStatement()) {
+            String[] state = buff.toString().split("--SPLIT");
+            try (Connection connection = createConnection();
+                    Statement statement = connection.createStatement()) {
                 for (String single : state) {
                     statement.executeUpdate(single);
                 }
             }
-        }catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             logManager.error("File not found");
-        }catch (IOException e) {
+        } catch (IOException e) {
             logManager.error("Error working with file");
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             logManager.error("Error executing sql statements");
         }
+    }
+
+    @Override
+    public List<Object> readData(Query query, Class<?> objectToInterpretAs) throws IOException {
+        List<Object> objects = new ArrayList<>();
+        String sql = "SELECT * FROM " + query.getSource();
+
+        // TODO: add filters
+
+        sql += ";";
+        try (Connection conn = createConnection();
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)) {
+
+            switch (objectToInterpretAs.getSimpleName()) {
+                case "Charger":
+                    objects = asCharger(rs);
+                    break;
+                case "Connector":
+                    objects = asConnector(rs);
+                    break;
+                default: // Gets fields as list of strings
+                    while (rs.next()) {
+                        ArrayList<String> list = new ArrayList<>();
+                        for (int i = 0; i < rs.getMetaData().getColumnCount(); i++) {
+                            list.add(rs.getString(i));
+                        }
+                        objects.add(list);
+                    }
+            }
+
+        } catch (SQLException e) {
+            throw new IOException(e.getMessage());
+        }
+
+        return objects;
+    }
+
+    /**
+     * Reads ResultSet as chargers
+     * 
+     * @param rs ResultSet to read from
+     * 
+     * @return list of chargers
+     */
+    private List<Object> asCharger(ResultSet rs) throws SQLException {
+        List<Object> chargers = new ArrayList<>();
+        List<Object> connectors = new ArrayList<>();
+        while (rs.next()) {
+            // Get connectors
+            ResultSet connectorRs = createConnection().createStatement()
+                    .executeQuery("SELECT * FROM connector WHERE chargerID = "
+                            + rs.getInt("chargerID") + ";");
+
+            connectors = asConnector(connectorRs);
+
+            // Make charger
+            Charger charger = new Charger();
+            charger.setChargerId(rs.getInt("chargerID"));
+            charger.setDateOpened(rs.getString("dateOpened"));
+            charger.setName(rs.getString("name"));
+            charger.setLocation(new Coordinate(
+                    rs.getDouble("xPos"),
+                    rs.getDouble("yPos"),
+                    rs.getDouble("latPos"),
+                    rs.getDouble("lonPos"),
+                    rs.getString("address")));
+            charger.setAvailableParks(rs.getInt("numCarParks"));
+            charger.setTimeLimit(rs.getDouble("timeLimit"));
+            charger.setOperator(rs.getString("operator"));
+            charger.setOwner(rs.getString("owner"));
+            charger.setHasAttraction(rs.getBoolean("attraction"));
+            charger.setAvailable24Hrs(rs.getBoolean("is24Hrs"));
+            charger.setParkingCost(rs.getBoolean("hasCarParkCost"));
+            charger.setChargeCost(rs.getBoolean("chargingCost"));
+            for (Object c : connectors) {
+                charger.addConnector((Connector) c);
+            }
+
+            chargers.add(charger);
+        }
+
+        return chargers;
+    }
+
+    /**
+     * Reads ResultSet as connectors
+     * 
+     * @param rs ResultSet to read from
+     * 
+     * @return list of connectors
+     */
+    private List<Object> asConnector(ResultSet rs) throws SQLException {
+        List<Object> connectors = new ArrayList<>();
+        while (rs.next()) {
+            connectors.add(new Connector(
+                    rs.getString("type"),
+                    rs.getString("power"),
+                    rs.getString("isOperational"),
+                    rs.getString("currentType"),
+                    rs.getInt("count"),
+                    rs.getInt("connectorID")));
+        }
+        return connectors;
     }
 
 }
