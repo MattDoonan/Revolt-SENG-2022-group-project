@@ -109,7 +109,7 @@ public class VehicleController {
     public void displayPopup() {
         try {
 
-            Parent root = FXMLLoader.load(getClass().getResource("/fxml/newVehicle.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/fxml/new_vehicle.fxml"));
             popup.initModality(Modality.APPLICATION_MODAL);
             popup.setResizable(false);
             popup.setTitle("Add Vehicle");
@@ -144,6 +144,8 @@ public class VehicleController {
                 modelText.getText(), Float.parseFloat(curChargeText.getText()),
                 Integer.parseInt(maxRangeText.getText()), connections);
         vehicleData.add(vehicle);
+        System.out.println(vehicleData.toString());
+        System.out.println(vehicle);
         Stage popupStage = (Stage) addVehicleBtn.getScene().getWindow();
         popupStage.close();
     }
@@ -248,7 +250,7 @@ public class VehicleController {
     public void prevBtnClicked() {
 
         if (vehicleData.size() > 0) {
-            Vehicle vehicle = vehicleData.get(-1);
+            Vehicle vehicle = vehicleData.get(vehicleData.size()-1);
             vehicleData.remove(vehicle);
             vehicleData.add(0, vehicle);
             setData(vehicleDisplayOne, 0);

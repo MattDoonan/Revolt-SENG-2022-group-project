@@ -34,13 +34,13 @@
             <Font size="14.0" />
          </font>
       </Label>
-      <Button fx:id="addVehicleBtn" layoutX="260.0" layoutY="348.0" mnemonicParsing="false" onAction="#addVehicle" text="Add Vehicle" />
+      <Button fx:id="addVehicleBtn" layoutX="261.0" layoutY="354.0" mnemonicParsing="false" onAction="#addVehicle" text="Add Vehicle" />
       <Label layoutX="251.0" layoutY="31.0" text="New Vehicle">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
       <Button fx:id="addConnectionBtn" layoutX="384.0" layoutY="248.0" mnemonicParsing="false" onAction="#addConnection" text="Add Connection" />
-      <Label fx:id="addedConnections" layoutX="208.0" layoutY="293.0" prefHeight="35.0" prefWidth="150.0" />
+      <Label fx:id="addedConnections" layoutX="208.0" layoutY="281.0" prefHeight="67.0" prefWidth="150.0" />
    </children>
 </AnchorPane>
