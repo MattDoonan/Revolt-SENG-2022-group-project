@@ -1,4 +1,4 @@
-package seng202.team3.logic;
+package seng202.team3.unitTest.logic;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
+import seng202.team3.logic.ChargerManager;
 
 /**
  * Unit tests for {@link ChargerManager} ChargerManager Class in Logic
