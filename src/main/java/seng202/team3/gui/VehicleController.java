@@ -6,15 +6,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import org.apache.logging.log4j.core.appender.rolling.action.Action;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -122,9 +118,8 @@ public class VehicleController {
     /**
      * Initialize the window
      *
-     * @param stage Top level container for this window
      */
-    public void init( ) {
+    public void init() {
         makeTestVehicles();
         setData(vehicleDisplayOne, vehicleImageOne, 0);
 
@@ -191,8 +186,6 @@ public class VehicleController {
     public void selectImg() {
         try {
 
-            AnchorPane root = new AnchorPane();
-            VBox anchor = new VBox();
             saveImg.setOnAction(e -> save());
 
             saveImg.setLayoutX(538);
@@ -201,7 +194,8 @@ public class VehicleController {
 
             for (int i = 0; i < imgNames.length; i++) {
 
-                Image img = new Image(new FileInputStream("src/main/resources/images/"+imgNames[i]));
+                Image img = new Image(new FileInputStream("src/main/resources/images/" 
+                    + imgNames[i]));
                 ImageView view = new ImageView(img);
                 Button button = new Button();
                 button.setGraphic(view);
@@ -210,6 +204,7 @@ public class VehicleController {
 
                 button.setOnAction(e -> btnSelected(e));
             }
+            VBox anchor = new VBox();
             anchor.getChildren().addAll(imgBtns);
 
             ScrollPane imgsDisplay = new ScrollPane();
@@ -219,6 +214,7 @@ public class VehicleController {
             imgsDisplay.setContent(anchor);
             imgsDisplay.setPannable(true); 
 
+            AnchorPane root = new AnchorPane();
             root.getChildren().addAll(imgsDisplay, saveImg);
 
             popup.initModality(Modality.APPLICATION_MODAL);
@@ -344,7 +340,7 @@ public class VehicleController {
     public void prevBtnClicked() {
 
         if (vehicleData.size() > 0) {
-            Vehicle vehicle = vehicleData.get(vehicleData.size()-1);
+            Vehicle vehicle = vehicleData.get(vehicleData.size() - 1);
             vehicleData.remove(vehicle);
             vehicleData.add(0, vehicle);
             setData(vehicleDisplayOne, vehicleImageOne, 0);
