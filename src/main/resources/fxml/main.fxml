@@ -22,7 +22,7 @@
                     </Menu>
                     <Menu fx:id="manageVehiclesMenu" mnemonicParsing="false" style="-fx-font-size: 20;" text="Manage Vehicles">
                         <items>
-                            <MenuItem fx:id="openVehicles" mnemonicParsing="false" onAction="#loadVehicleScreen" style="-fx-font-size: 20;" text="Open Garage" />
+                            <MenuItem fx:id="openVehicles" mnemonicParsing="false" style="-fx-font-size: 20;" text="Open Garage" />
                         </items>
                     </Menu>
                     <Menu fx:id="homeMenu" mnemonicParsing="false" style="-fx-font-size: 20;" text="Home" />

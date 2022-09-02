@@ -130,21 +130,19 @@
 
 
         function addRoute() {
-            if(route){
+            if (route) {
                 route.addTo(map)
             } else {
+                console.log("Adding route")
                 route = L.Routing.control({
                     waypoints: [
                         new L.latLng(-43.522442, 172.580683),
                         new L.latLng(-43.530542, 172.626466)
                     ],
-                    // Specify UCs server for routing instead of the demonstration server used by default
-                    serviceUrl: 'https://tile.csse.canterbury.ac.nz/route/v1',
                     routeWhileDragging: true
                 }).addTo(map);
             }
         }
-
 
         function removeRoute() {
             if (route) {
