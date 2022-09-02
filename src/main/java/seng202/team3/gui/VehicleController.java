@@ -6,11 +6,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.apache.logging.log4j.core.appender.rolling.action.Action;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -107,6 +112,10 @@ public class VehicleController {
 
     private String[] imgNames = {"car_one.png", "car_two.png", "car_three.png"};
 
+    private String selectedImg;
+    
+    private Button saveImg = new Button("Select");
+
     private Stage popup = new Stage();
 
 
@@ -183,11 +192,11 @@ public class VehicleController {
         try {
 
             AnchorPane root = new AnchorPane();
-
-            // Parent root = FXMLLoader.load(getClass().getResource("/fxml/select_img.fxml"));
             VBox anchor = new VBox();
+            saveImg.setOnAction(e -> save());
 
-            Button saveImg = new Button("Select");
+            saveImg.setLayoutX(538);
+            saveImg.setLayoutY(360);
 
 
             for (int i = 0; i < imgNames.length; i++) {
@@ -196,11 +205,17 @@ public class VehicleController {
                 ImageView view = new ImageView(img);
                 Button button = new Button();
                 button.setGraphic(view);
+                button.setId(imgNames[i]);
                 imgBtns.add(button);
+
+                button.setOnAction(e -> btnSelected(e));
             }
             anchor.getChildren().addAll(imgBtns);
 
             ScrollPane imgsDisplay = new ScrollPane();
+            imgsDisplay.setPrefViewportWidth(570);
+            imgsDisplay.setPrefViewportHeight(330);
+
             imgsDisplay.setContent(anchor);
             imgsDisplay.setPannable(true); 
 
@@ -217,6 +232,23 @@ public class VehicleController {
             Logger logger = Logger.getLogger(getClass().getName());
             logger.log(Level.SEVERE, "Failed to create new Window.", e);
         }
+    }
+
+    /**
+     * Updates selectedImg to the ID of the currently-selected image
+     * @param e ActionEvent
+     */
+    public void btnSelected(ActionEvent e) {
+        selectedImg = ((Node) e.getSource()).getId();
+    }
+
+    /**
+     * Saves the currently selected image for the user's vehicle
+     */
+    public void save() {
+        System.out.println(selectedImg);
+        Stage popupStage = (Stage) saveImg.getScene().getWindow();
+        popupStage.close();
     }
 
     /**
