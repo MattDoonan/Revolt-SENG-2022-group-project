@@ -28,6 +28,9 @@ public class Vehicle {
     /** List of connector types */
     private ArrayList<String> connectors;
 
+    /** Path to vehicle image */
+    private String imgPath;
+
     /** Constructor for Vehicle */
     public Vehicle(String license, String make, String model, float batteryPercent, int maxRange,
             ArrayList<String> connectors) {
@@ -154,5 +157,23 @@ public class Vehicle {
      */
     public double getCurrentRange() {
         return maxRange * (batteryPercent / 100);
+    }
+
+    /**
+     * Get a vehicle's image path
+     * 
+     * @return string of image path
+     */
+    public String getImgPath() {
+        return imgPath;
+    }
+
+    /**
+     * Set vehicle image path
+     * 
+     * @param path string of image path
+     */
+    public void setImgPath(String path) {
+        this.imgPath = path;
     }
 }

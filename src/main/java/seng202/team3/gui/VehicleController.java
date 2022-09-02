@@ -108,11 +108,11 @@ public class VehicleController {
      */
     public void init( ) {
         makeTestVehicles();
-        setData(vehicleDisplayOne, 0);
+        setData(vehicleDisplayOne, vehicleImageOne, 0);
 
         if (vehicleData.size() > 1) {
-            setData(vehicleDisplayTwo, 1);
-            setData(vehicleDisplayThree, 2);
+            setData(vehicleDisplayTwo, vehicleImageTwo, 1);
+            setData(vehicleDisplayThree, vehicleImageThree, 2);
         }
 
         addVehicle.setOnAction(e -> displayPopup());
@@ -171,7 +171,7 @@ public class VehicleController {
      * @param display location to put the text
      * @param index   index of the vehicle to display
      */
-    public void setData(TextArea display, int index) {
+    public void setData(TextArea display, ImageView imageview, int index) {
         // System.out.println(vehicleData.toString());
 
         display.setText(vehicleData.get(index).getMake() + " " 
@@ -184,16 +184,21 @@ public class VehicleController {
         
         Image image;
         try {
-            image = new Image(new FileInputStream("src\\main\\resources\\images\\car_one.png"));
-            vehicleImageOne.setImage(image); 
+            if (vehicleData.get(index).getImgPath() != null) {
+                image = new Image(new FileInputStream(vehicleData.get(index).getImgPath()));
+                imageview.setImage(image);
+            } else {
+                imageview.setImage(null);
+            }
+             
             // display.add(vehicleImageThree);
 
-            Text title = new Text(vehicleData.get(index).getMake() + "\u00A0" + vehicleData.get(index).getModel());
+            // Text title = new Text(vehicleData.get(index).getMake() + "\u00A0" + vehicleData.get(index).getModel());
             
-            Text text = new Text("License Plate: " + vehicleData.get(index).getLicensePlate() + "\n"
-            + "Current Charge: " + vehicleData.get(index).getBatteryPercent() + "\n"
-            + "Max. Range: " + vehicleData.get(index).getMaxRange() + "\n"
-            + "Connections: " + vehicleData.get(index).getConnectors().toString());
+            // Text text = new Text("License Plate: " + vehicleData.get(index).getLicensePlate() + "\n"
+            // + "Current Charge: " + vehicleData.get(index).getBatteryPercent() + "\n"
+            // + "Max. Range: " + vehicleData.get(index).getMaxRange() + "\n"
+            // + "Connections: " + vehicleData.get(index).getConnectors().toString());
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -231,6 +236,11 @@ public class VehicleController {
         vehicleData.add(
                 new Vehicle("IUH909", "Porsche", "Taycan", (float) 98, 480,
                         new ArrayList<>()));
+        vehicleData.get(0).setImgPath("src\\main\\resources\\images\\car_one.png");
+        vehicleData.get(2).setImgPath("src\\main\\resources\\images\\car_two.png");
+        vehicleData.get(3).setImgPath("src\\main\\resources\\images\\car_one.png");
+        vehicleData.get(5).setImgPath("src\\main\\resources\\images\\car_three.png");
+        vehicleData.get(6).setImgPath("src\\main\\resources\\images\\car_two.png");
     }
 
     /**
@@ -243,9 +253,9 @@ public class VehicleController {
             Vehicle vehicle = vehicleData.get(0);
             vehicleData.remove(vehicle);
             vehicleData.add(vehicle);
-            setData(vehicleDisplayOne, 0);
-            setData(vehicleDisplayTwo, 1);
-            setData(vehicleDisplayThree, 2);
+            setData(vehicleDisplayOne, vehicleImageOne, 0);
+            setData(vehicleDisplayTwo, vehicleImageTwo, 1);
+            setData(vehicleDisplayThree, vehicleImageThree, 2);
         }
 
         // if (vehicleData.size() > 0) {
@@ -286,9 +296,9 @@ public class VehicleController {
             Vehicle vehicle = vehicleData.get(vehicleData.size()-1);
             vehicleData.remove(vehicle);
             vehicleData.add(0, vehicle);
-            setData(vehicleDisplayOne, 0);
-            setData(vehicleDisplayTwo, 1);
-            setData(vehicleDisplayThree, 2);
+            setData(vehicleDisplayOne, vehicleImageOne, 0);
+            setData(vehicleDisplayTwo, vehicleImageTwo, 1);
+            setData(vehicleDisplayThree, vehicleImageThree, 2);
         }
 
         // if (vehicleData.size() > 0) {
