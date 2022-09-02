@@ -8,7 +8,11 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.sql.*;
 
-
+/**
+ * Class that interacts with the SQLite database
+ * @author Matthew Doonan
+ * @version 1.0.0
+ */
 public class SqlInterpreter {
 
     private final String url;
@@ -55,11 +59,20 @@ public class SqlInterpreter {
         return "jdbc:sqlite:"+directory.getParentFile()+"/database.db";
     }
 
+    /**
+     * Checks if the file already exists in the specified path
+     * @param path the url
+     * @return Boolean yes or no if it exists
+     */
     private Boolean checkExist(String path) {
         File file = new File(path.substring(12));
         return file.exists();
     }
 
+    /**
+     * creates a new database file at a location specified
+     * @param path the location specified
+     */
     private void createFile(String path) {
         try (Connection connection = DriverManager.getConnection(path)) {
             if (connection != null) {
@@ -73,6 +86,10 @@ public class SqlInterpreter {
         }
     }
 
+    /**
+     * Creates the database if it doesn't exist yet
+     * does this by calling the SQL file in resources
+     */
     public void defaultDatabase() {
         try{
             InputStream source = getClass().getResourceAsStream("/revoltDatabaseInitializer.sql");
@@ -82,6 +99,10 @@ public class SqlInterpreter {
         }
     }
 
+    /**
+     * Creates connection to the database
+     * @return the connection
+     */
     public Connection createConnection() {
         Connection connection = null;
         try{
@@ -92,6 +113,11 @@ public class SqlInterpreter {
         return connection;
     }
 
+    /**
+     * Executes all the lines in the SQL file
+     * It knows a line ends if it has --SPLIT
+     * @param source the SQL file
+     */
     private void executeSql(InputStream source) {
         String line;
         StringBuffer buff = new StringBuffer();

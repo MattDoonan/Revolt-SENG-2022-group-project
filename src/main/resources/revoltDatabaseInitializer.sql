@@ -38,7 +38,8 @@ DROP TABLE IF EXISTS user;
 --SPLIT
 CREATE TABLE if not exists user
 (
-    email VARCHAR(100) NOT NULL constraint dk_user PRIMARY KEY,
+    userID INTEGER NOT NULL constraint dk_user PRIMARY KEY,
+    email VARCHAR(100) NOT NULL,
     accountName VARCHAR(50),
     homeAddress VARCHAR(255),
     carbon_used REAL,
@@ -51,7 +52,7 @@ CREATE TABLE if not exists note
 (
     reviewId INTEGER NOT NULL constraint dk_note PRIMARY KEY,
     chargerID INTEGER NOT NULL references Charger(chargerID),
-    user VARCHAR(100) NOT NULL references User(email),
+    user VARCHAR(100) NOT NULL references User(userID),
     rating REAL,
     publicText VARCHAR(255),
     privateText VARCHAR(255)
@@ -62,7 +63,7 @@ DROP TABLE IF EXISTS favourite;
 CREATE TABLE if not exists favourite
 (
     favouriteID INTEGER NOT NULL constraint dk_fav PRIMARY KEY,
-    user VARCHAR(100) NOT NULL references User(email),
+    user VARCHAR(100) NOT NULL references User(userID),
     chargerID INTEGER NOT NULL references Charger(chargerID)
 
     );
@@ -72,7 +73,7 @@ DROP TABLE IF EXISTS vehicle;
 CREATE TABLE if not exists vehicle
 (
     vehicleID INTEGER NOT NULL constraint dk_Veh PRIMARY KEY,
-    user VARCHAR(100) NOT NULL references User(email),
+    user VARCHAR(100) NOT NULL references User(userID),
     carName VARCHAR(10),
     range_km INTEGER not null
     );
@@ -82,7 +83,7 @@ DROP TABLE IF EXISTS journey;
 CREATE TABLE if not exists journey
 (
     journeyId INTEGER NOT NULL constraint dk_journey PRIMARY KEY ,
-    user VARCHAR(100) NOT NULL references User(email),
+    user VARCHAR(100) NOT NULL references User(userID),
     vehicleID INTEGER NOT NULL references Vehicle(vehicleID),
     startLat REAL NOT NULL,
     startLon REAL NOT NULL,
