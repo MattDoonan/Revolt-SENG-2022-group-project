@@ -304,6 +304,8 @@ public class MainController {
             FXMLLoader vehicleLoader = new FXMLLoader(getClass().getResource(
                     "/fxml/vehicle.fxml"));
             AnchorPane root = vehicleLoader.load();
+            VehicleController baseController = vehicleLoader.getController();
+            baseController.init();
             Scene modalScene = new Scene(root);
             Stage modal = new Stage();
             modal.setScene(modalScene);

@@ -1,7 +1,6 @@
 package seng202.team3.gui;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,8 +30,6 @@ public class VehicleController {
 
     // private static final Logger log = LogManager.getLogger();
 
-    // @FXML
-    // private Label defaultLabel;
 
     @FXML
     private ListView<String> vehicleList;
@@ -82,12 +79,6 @@ public class VehicleController {
     @FXML
     private TextField connectionsText;
 
-    private int indexOne = 0;
-
-    private int indexTwo = 1;
-
-    private int indexThree = 2;
-
     private ObservableList<Vehicle> vehicleData = FXCollections.observableArrayList();
 
     private ArrayList<String> connections = new ArrayList<String>();
@@ -100,15 +91,13 @@ public class VehicleController {
      *
      * @param stage Top level container for this window
      */
-    public void init(Stage stage) {
+    public void init( ) {
         makeTestVehicles();
-        System.out.println(vehicleData.toString());
-
-        setData(vehicleDisplayOne, indexOne);
+        setData(vehicleDisplayOne, 0);
 
         if (vehicleData.size() > 1) {
-            setData(vehicleDisplayTwo, indexTwo);
-            setData(vehicleDisplayThree, indexThree);
+            setData(vehicleDisplayTwo, 1);
+            setData(vehicleDisplayThree, 2);
         }
 
         addVehicle.setOnAction(e -> displayPopup());
@@ -121,7 +110,6 @@ public class VehicleController {
         try {
 
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/newVehicle.fxml"));
-            // This will cause the login window to always be infront of the main window
             popup.initModality(Modality.APPLICATION_MODAL);
             popup.setResizable(false);
             popup.setTitle("Add Vehicle");
@@ -167,7 +155,7 @@ public class VehicleController {
      * @param index   index of the vehicle to display
      */
     public void setData(TextArea display, int index) {
-        System.out.println(vehicleData.toString());
+        // System.out.println(vehicleData.toString());
 
         display.setText("License Plate: " + vehicleData.get(index).getLicensePlate() + "\n"
                 + "Make: " + vehicleData.get(index).getMake() + "\n"
@@ -217,42 +205,40 @@ public class VehicleController {
     @FXML
     public void nextBtnClicked() {
         if (vehicleData.size() > 0) {
-            if (indexThree == vehicleData.size() - 1) {
-                indexOne++;
-                indexTwo++;
-                indexThree = 0;
-            } else if (indexTwo == vehicleData.size() - 1) {
-                indexOne++;
-                indexThree++;
-                indexTwo = 0;
-            } else if (indexOne == vehicleData.size() - 1) {
-                indexTwo++;
-                indexThree++;
-                indexOne = 0;
-            } else {
-                indexOne++;
-                indexTwo++;
-                indexThree++;
-            }
-
-            setData(vehicleDisplayOne, indexOne);
-            setData(vehicleDisplayTwo, indexTwo);
-            setData(vehicleDisplayThree, indexThree);
+            Vehicle vehicle = vehicleData.get(0);
+            vehicleData.remove(vehicle);
+            vehicleData.add(vehicle);
+            setData(vehicleDisplayOne, 0);
+            setData(vehicleDisplayTwo, 1);
+            setData(vehicleDisplayThree, 2);
         }
 
-    }
+        // if (vehicleData.size() > 0) {
+        //     if (indexThree == vehicleData.size() - 1) {
+        //         indexOne++;
+        //         indexTwo++;
+        //         indexThree = 0;
+        //     } else if (indexTwo == vehicleData.size() - 1) {
+        //         indexOne++;
+        //         indexThree++;
+        //         indexTwo = 0;
+        //     } else if (indexOne == vehicleData.size() - 1) {
+        //         indexTwo++;
+        //         indexThree++;
+        //         indexOne = 0;
+        //     } else {
+        //         indexOne++;
+        //         indexTwo++;
+        //         indexThree++;
+        //     }
 
-    public void selectToView() {
-        // chargerTable.getSelectionModel().selectedItemProperty().addListener(new
-        // ChangeListener() {
-        // @Override
-        // public void changed(ObservableValue observableValue, Object o, Object t1) {
-        // viewChargers(chargerData.get(chargerTable.getSelectionModel().getSelectedIndex()));
-
+        //     setData(vehicleDisplayOne, indexOne);
+        //     setData(vehicleDisplayTwo, indexTwo);
+        //     setData(vehicleDisplayThree, indexThree);
         // }
-        // });
 
     }
+
 
     /**
      * Method to call when prev button is clicked
@@ -260,28 +246,38 @@ public class VehicleController {
      */
     @FXML
     public void prevBtnClicked() {
-        if (vehicleData.size() > 0) {
 
-            if (indexOne == 0) {
-                indexOne = vehicleData.size() - 1;
-                indexTwo--;
-                indexThree--;
-            } else if (indexTwo == 0) {
-                indexTwo = vehicleData.size() - 1;
-                indexOne--;
-                indexThree--;
-            } else if (indexThree == 0) {
-                indexThree = vehicleData.size() - 1;
-                indexOne--;
-                indexTwo--;
-            } else {
-                indexOne--;
-                indexTwo--;
-                indexThree--;
-            }
-            setData(vehicleDisplayOne, indexOne);
-            setData(vehicleDisplayTwo, indexTwo);
-            setData(vehicleDisplayThree, indexThree);
+        if (vehicleData.size() > 0) {
+            Vehicle vehicle = vehicleData.get(-1);
+            vehicleData.remove(vehicle);
+            vehicleData.add(0, vehicle);
+            setData(vehicleDisplayOne, 0);
+            setData(vehicleDisplayTwo, 1);
+            setData(vehicleDisplayThree, 2);
         }
+
+        // if (vehicleData.size() > 0) {
+
+        //     if (indexOne == 0) {
+        //         indexOne = vehicleData.size() - 1;
+        //         indexTwo--;
+        //         indexThree--;
+        //     } else if (indexTwo == 0) {
+        //         indexTwo = vehicleData.size() - 1;
+        //         indexOne--;
+        //         indexThree--;
+        //     } else if (indexThree == 0) {
+        //         indexThree = vehicleData.size() - 1;
+        //         indexOne--;
+        //         indexTwo--;
+        //     } else {
+        //         indexOne--;
+        //         indexTwo--;
+        //         indexThree--;
+        //     }
+        //     setData(vehicleDisplayOne, indexOne);
+        //     setData(vehicleDisplayTwo, indexTwo);
+        //     setData(vehicleDisplayThree, indexThree);
+        // }
     }
 }
