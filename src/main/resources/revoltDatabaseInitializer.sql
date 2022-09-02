@@ -98,8 +98,10 @@ DROP TABLE IF EXISTS stop;
 CREATE TABLE if not exists stop
 (
     stopID INTEGER NOT NULL constraint dk_stop PRIMARY KEY,
+    LatPos INTEGER,
+    LonPos INTEGER,
     JourneyID INTEGER NOT NULL references Journey(journeyId),
-    chargerID INTEGER NOT NULL references Charger(chargerID),
+    chargerID INTEGER references Charger(chargerID),
     stopOrder INTEGER NOT NULL
     )
 
