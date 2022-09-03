@@ -345,6 +345,7 @@ public class SqlInterpreter implements DataManager {
             statement.setString(14, c.getDateOpened());
             statement.setBoolean(15, c.getChargeCost());
             statement.executeUpdate();
+            writeConnector(c.getConnectors(), statement.getGeneratedKeys().getInt(1));
         } catch (SQLException e) {
             logManager.error(e);
         }
@@ -354,9 +355,32 @@ public class SqlInterpreter implements DataManager {
      * Receives a list of chargers and sends them to writeCharger
      * @param chargers array list of charger objects
      */
-    public void arrayCharger(ArrayList<Charger> chargers) {
+    public void writeCharger(ArrayList<Charger> chargers) {
         for(int i = 0; i < chargers.size(); i++) {
             writeCharger(chargers.get(i));
+        }
+    }
+
+    public void writeConnector(Connector c, int chargerID) {
+        String toAdd = "INSERT INTO connector (currentType, power, count, isOperational, chargerID, type) values(?,?,?,?,?,?)";
+        try (Connection connection = createConnection();
+            PreparedStatement statement = connection.prepareStatement(toAdd)) {
+            statement.setString(1, c.getType());
+            statement.setString(2, c.getPower());
+            statement.setInt(3, c.getCount());
+            statement.setString(4, c.getStatus());
+            statement.setInt(5, chargerID);
+            statement.setString(6, c.getType());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            logManager.error(e);
+        }
+
+    }
+
+    public void writeConnector(ArrayList<Connector> connectors, int chargerID) {
+        for(int i = 0; i < connectors.size(); i++) {
+            writeConnector(connectors.get(i), chargerID);
         }
     }
 
