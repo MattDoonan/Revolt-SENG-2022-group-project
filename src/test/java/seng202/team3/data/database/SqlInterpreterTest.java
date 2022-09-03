@@ -43,6 +43,27 @@ public class SqlInterpreterTest {
     @BeforeEach
     void reset() {
         db.defaultDatabase();
+        Connector dummyConnector1 = new Connector("ChardaMo", "AC", "Available", "123", 3);
+        ArrayList<Connector> connectorList = new ArrayList<>(1);
+        connectorList.add(dummyConnector1);
+        Coordinate coord = new Coordinate(4.8, 6.2, -32.85658, 177.77702, "testAddy1");
+        Charger c = new Charger(connectorList, "Test1", coord, 1, 0.3,
+                "Meridian", "Meridian", true);
+        Connector dummyConnector2 = new Connector("ChardaMo", "AC", "Available", "22", 3);
+
+        connectorList = new ArrayList<>(1);
+        connectorList.add(dummyConnector2);
+        coord = new Coordinate(4.9, 5.7, -40.86718, 175.66602, "testAddy2");
+        Charger h = new Charger(connectorList, "Test2", coord, 1, 0.3,
+                "Meridian", "Meridian", true);
+
+        Connector dummyConnector3 = new Connector("ChardaMo", "DC", "Available", "44", 3);
+        connectorList = new ArrayList<>(1);
+        connectorList.add(dummyConnector3);
+        coord = new Coordinate(3.5, 5.5, -36.85918, 174.76602, "testAddy3");
+        Charger a = new Charger(connectorList, "Test3", coord, 1, 0.3,
+                "Meridian", "Meridian", true);
+        db.writeCharger(new ArrayList<>(Arrays.asList(c,h,a)));
     }
 
     @Test
@@ -198,7 +219,7 @@ public class SqlInterpreterTest {
     public void deleteConnector() throws IOException {
         Query q = new QueryBuilderImpl().withSource("connector").build();
         List<Object> object = db.readData(q,Connector.class);
-        db.deleteData("connector", 2);
+        db.deleteData("connector", 1);
         assertEquals(object.size()-1, db.readData(q,Connector.class).size());
     }
 
@@ -209,7 +230,7 @@ public class SqlInterpreterTest {
     public void deleteConnectorNotReal() throws IOException {
         Query q = new QueryBuilderImpl().withSource("connector").build();
         List<Object> object = db.readData(q,Connector.class);
-        db.deleteData("connector", 10);
+        db.deleteData("connector", 10000);
         assertEquals(object.size(), db.readData(q,Connector.class).size());
     }
 }
