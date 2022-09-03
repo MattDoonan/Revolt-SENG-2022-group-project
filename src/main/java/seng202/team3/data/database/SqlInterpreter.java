@@ -51,6 +51,9 @@ public class SqlInterpreter implements DataManager {
         }
     }
 
+    /**
+     * Adds all the charger data stored in the CSV file to the database
+     */
     public void addCSVToData(){
         Query q = new QueryBuilderImpl().withSource("charger").build();
         ArrayList<Charger> chargerList = new ArrayList<>();
@@ -375,6 +378,11 @@ public class SqlInterpreter implements DataManager {
         }
     }
 
+    /**
+     * Adds connectors to the database
+     * @param c a connector object
+     * @param chargerID an Integer with the specified charger id
+     */
     public void writeConnector(Connector c, int chargerID) {
         String toAdd = "INSERT INTO connector (currentType, power, count, isOperational, chargerID, type) values(?,?,?,?,?,?)";
         try (Connection connection = createConnection();
@@ -392,6 +400,11 @@ public class SqlInterpreter implements DataManager {
 
     }
 
+    /**
+     * Recievies a list of connectors and calls writeConnector to add it to the database
+     * @param connectors an Array list of Connector objects
+     * @param chargerID Integer representing the associated charger
+     */
     public void writeConnector(ArrayList<Connector> connectors, int chargerID) {
         for (Connector connector : connectors) {
             writeConnector(connector, chargerID);
