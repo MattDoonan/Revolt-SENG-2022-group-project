@@ -103,17 +103,3 @@ CREATE TABLE if not exists stop
     chargerID INTEGER references Charger(chargerID),
     stopOrder INTEGER NOT NULL
     );
-
---SPLIT
-INSERT INTO charger (xPos, yPos, chargerID, name, operator, owner, address, is24Hrs, numCarParks, hasCarParkCost, timeLimit, attraction, latPos, lonPos, dateOpened, chargingCost)
-VALUES
-    (1366541.2354,5153202.1642,1,'YHA MT COOK','MERIDIAN ENERGY LIMITED','MERIDIAN ENERGY LIMITED','4 Kitchener Dr, Mount Cook National Park 7999, New Zealand',1,1,0,0,0,-43.73745,170.100913,'2020/05/01 00:00:00+00',1),
-    (1570148.5238,5173542.4743,2,'CHRISTCHURCH ADVENTURE PARK','MERIDIAN ENERGY LIMITED','MERIDIAN ENERGY LIMITED','Worsleys Rd, Cashmere, Christchurch 8022, New Zealand',0,4,0,0,1,-43.59049,172.630201,'2020/05/01 00:00:00+00',0),
-    (1822955.3955,5488854.3202,3,'PUKAHA NATIONAL WILDLIFE CENTRE','MERIDIAN ENERGY LIMITED','MERIDIAN ENERGY LIMITED','85379 State Highway 2, Mount Bruce 5881',1,2,0,0,1,-40.721068,175.639788,'2020/08/12 00:00:00+00',0);
---SPLIT
-INSERT INTO connector (currentType, power, count, isOperational, chargerID, type)
-VALUES
-    ('AC','22 kW', 1, 'Operative', 1, 'Type 2 Socketed'),
-    ('AC','44 kW', 4, 'Operative', 2, 'Type 2 Socketed'),
-    ('AC','7 kW', 2, 'Operative', 3, 'Type 2 Socketed'),
-    ('AC','7 kW', 2, 'Operative', 3, 'Type 2 CCS');

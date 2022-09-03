@@ -47,7 +47,21 @@ public class SqlInterpreter implements DataManager {
         if (!checkExist(url)) {
             createFile(url);
             defaultDatabase();
+            addCSVToData();
         }
+    }
+
+    public void addCSVToData(){
+        Query q = new QueryBuilderImpl().withSource("charger").build();
+        ArrayList<Charger> chargerList = new ArrayList<>();
+        try {
+            for (Object o : new CsvInterpreter().readData(q, Charger.class)) {
+                chargerList.add((Charger) o);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        writeCharger(chargerList);
     }
 
     /**
