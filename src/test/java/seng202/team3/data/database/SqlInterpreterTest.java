@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 import javax.management.InstanceAlreadyExistsException;
 import org.junit.jupiter.api.Assertions;
@@ -100,5 +101,16 @@ public class SqlInterpreterTest {
         assertThrows(IOException.class, () -> {
             db.readData(query, Charger.class);
         });
+    }
+
+    /**
+     * Tests if the delete function works for chargers
+     */
+    @Test
+    public void deleteCharger() throws IOException {
+        Query q = new QueryBuilderImpl().withSource("charger").build();
+        List<Object> object = db.readData(q,Charger.class);
+        db.deleteData("charger", 1);
+        assertEquals(object.size()-1, db.readData(q,Charger.class).size());
     }
 }

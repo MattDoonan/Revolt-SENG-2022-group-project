@@ -8,12 +8,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import javax.management.InstanceAlreadyExistsException;
@@ -204,6 +199,22 @@ public class SqlInterpreter implements DataManager {
         }
     }
 
+    /**
+     * Deletes data from the database
+     * @param type String of the name of the table
+     * @param id Integer of the id number of the entity
+     */
+    public void deleteData(String type, int id) {
+        String idName = ""+type.toLowerCase()+"ID";
+        String delete = "DELETE FROM "+type.toLowerCase()+" WHERE "+idName+" = ?";
+        try (Connection connection = createConnection();
+        PreparedStatement statement = connection.prepareStatement(delete)) {
+            statement.setInt(1, id);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            logManager.error(e);
+        }
+    }
     @Override
     public List<Object> readData(Query query, Class<?> objectToInterpretAs) throws IOException {
         List<Object> objects = new ArrayList<>();
@@ -306,6 +317,46 @@ public class SqlInterpreter implements DataManager {
                     rs.getInt("connectorID")));
         }
         return connectors;
+    }
+
+    /**
+     * Adds a new charger to the database from a charger object
+     * @param c charger object
+     */
+    public void writeCharger(Charger c) {
+        String toAdd = "INSERT INTO charger (chargerID, xPos, yPos, chargerID, name, operator, owner, address, is24Hrs, numCarParks," +
+                " hasCarParkCost, timeLimit, attraction, latPos, lonPos, dateOpened, chargingCost) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+        try (Connection connection = createConnection();
+             PreparedStatement statement = connection.prepareStatement(toAdd)) {
+            statement.setDouble(1, c.getLocation().getXpos());
+            statement.setDouble(2, c.getLocation().getYpos());
+            statement.setDouble(3, c.getChargerId());
+            statement.setString(4, c.getName());
+            statement.setString(5, c.getOwner());
+            statement.setString(6, c.getLocation().getAddress());
+            statement.setBoolean(7, c.getAvailable24Hrs());
+            statement.setInt(8, c.getAvailableParks());
+            statement.setBoolean(9, c.getParkingCost());
+            statement.setDouble(10, c.getTimeLimit());
+            statement.setBoolean(11, c.getHasAttraction());
+            statement.setDouble(12, c.getLocation().getLat());
+            statement.setDouble(13, c.getLocation().getLon());
+            statement.setString(14, c.getDateOpened());
+            statement.setBoolean(15, c.getChargeCost());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            logManager.error(e);
+        }
+    }
+
+    /**
+     * Receives a list of chargers and sends them to writeCharger
+     * @param chargers array list of charger objects
+     */
+    public void arrayCharger(ArrayList<Charger> chargers) {
+        for(int i = 0; i < chargers.size(); i++) {
+            writeCharger(chargers.get(i));
+        }
     }
 
 }

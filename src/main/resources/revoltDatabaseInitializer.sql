@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS charger;
 --SPLIT
 CREATE TABLE IF NOT EXISTS charger
 (
-    chargerID INTEGER NOT NULL constraint dk_charger PRIMARY KEY,
+    chargerID INTEGER constraint dk_charger PRIMARY KEY AUTOINCREMENT,
     xPos REAL,
     yPos REAL,
     operator VARCHAR(50),
@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS charger
     is24Hrs BIT,
     numCarParks INTEGER,
     hasCarParkCost BIT,
-    timeLimit INTEGER,
+    timeLimit REAL,
     attraction BIT,
     latPos INTEGER,
     lonPos INTEGER,
@@ -24,7 +24,7 @@ DROP TABLE IF EXISTS connector;
 --SPLIT
 CREATE TABLE IF NOT EXISTS connector
 (
-    connectorID INTEGER NOT NULL constraint dk_connector PRIMARY KEY,
+    connectorID INTEGER constraint dk_connector PRIMARY KEY AUTOINCREMENT,
     currentType VARCHAR(50) NOT NULL,
     power VARCHAR(50) NOT NULL,
     count INTEGER,
@@ -37,7 +37,7 @@ DROP TABLE IF EXISTS user;
 --SPLIT
 CREATE TABLE if not exists user
 (
-    userID INTEGER NOT NULL constraint dk_user PRIMARY KEY,
+    userID INTEGER constraint dk_user PRIMARY KEY AUTOINCREMENT,
     email VARCHAR(100) NOT NULL,
     accountName VARCHAR(50),
     homeAddress VARCHAR(255),
@@ -49,7 +49,7 @@ DROP TABLE IF EXISTS note;
 --SPLIT
 CREATE TABLE if not exists note
 (
-    reviewId INTEGER NOT NULL constraint dk_note PRIMARY KEY,
+    reviewId INTEGER constraint dk_note PRIMARY KEY AUTOINCREMENT,
     chargerID INTEGER NOT NULL references Charger(chargerID),
     user VARCHAR(100) NOT NULL references User(userID),
     rating REAL,
@@ -61,7 +61,7 @@ DROP TABLE IF EXISTS favourite;
 --SPLIT
 CREATE TABLE if not exists favourite
 (
-    favouriteID INTEGER NOT NULL constraint dk_fav PRIMARY KEY,
+    favouriteID INTEGER constraint dk_fav PRIMARY KEY AUTOINCREMENT,
     user VARCHAR(100) NOT NULL references User(userID),
     chargerID INTEGER NOT NULL references Charger(chargerID)
 
@@ -71,7 +71,7 @@ DROP TABLE IF EXISTS vehicle;
 --SPLIT
 CREATE TABLE if not exists vehicle
 (
-    vehicleID INTEGER NOT NULL constraint dk_Veh PRIMARY KEY,
+    vehicleID INTEGER constraint dk_Veh PRIMARY KEY AUTOINCREMENT,
     user VARCHAR(100) NOT NULL references User(userID),
     carName VARCHAR(10),
     range_km INTEGER not null
@@ -81,7 +81,7 @@ DROP TABLE IF EXISTS journey;
 --SPLIT
 CREATE TABLE if not exists journey
 (
-    journeyId INTEGER NOT NULL constraint dk_journey PRIMARY KEY ,
+    journeyId INTEGER constraint dk_journey PRIMARY KEY AUTOINCREMENT,
     user VARCHAR(100) NOT NULL references User(userID),
     vehicleID INTEGER NOT NULL references Vehicle(vehicleID),
     startLat REAL NOT NULL,
@@ -96,7 +96,7 @@ DROP TABLE IF EXISTS stop;
 --SPLIT
 CREATE TABLE if not exists stop
 (
-    stopID INTEGER NOT NULL constraint dk_stop PRIMARY KEY,
+    stopID INTEGER constraint dk_stop PRIMARY KEY AUTOINCREMENT,
     latPos INTEGER,
     lonPos INTEGER,
     journeyID INTEGER NOT NULL references Journey(journeyId),
@@ -106,13 +106,13 @@ CREATE TABLE if not exists stop
 --SPLIT
 INSERT INTO charger (xPos, yPos, chargerID, name, operator, owner, address, is24Hrs, numCarParks, hasCarParkCost, timeLimit, attraction, latPos, lonPos, dateOpened, chargingCost) 
 VALUES 
-    (1366541.2354,5153202.1642,1,"YHA MT COOK","MERIDIAN ENERGY LIMITED","MERIDIAN ENERGY LIMITED","4 Kitchener Dr, Mount Cook National Park 7999, New Zealand",1,1,0,0,0,-43.73745,170.100913,"2020/05/01 00:00:00+00",1),
-    (1570148.5238,5173542.4743,2,"CHRISTCHURCH ADVENTURE PARK","MERIDIAN ENERGY LIMITED","MERIDIAN ENERGY LIMITED","Worsleys Rd, Cashmere, Christchurch 8022, New Zealand",0,4,0,0,1,-43.59049,172.630201,"2020/05/01 00:00:00+00",0),
-    (1822955.3955,5488854.3202,3,"PUKAHA NATIONAL WILDLIFE CENTRE","MERIDIAN ENERGY LIMITED","MERIDIAN ENERGY LIMITED","85379 State Highway 2, Mount Bruce 5881",1,2,0,0,1,-40.721068,175.639788,"2020/08/12 00:00:00+00",0);
+    (1366541.2354,5153202.1642,1,'YHA MT COOK','MERIDIAN ENERGY LIMITED','MERIDIAN ENERGY LIMITED','4 Kitchener Dr, Mount Cook National Park 7999, New Zealand',1,1,0,0,0,-43.73745,170.100913,'2020/05/01 00:00:00+00',1),
+    (1570148.5238,5173542.4743,2,'CHRISTCHURCH ADVENTURE PARK','MERIDIAN ENERGY LIMITED','MERIDIAN ENERGY LIMITED','Worsleys Rd, Cashmere, Christchurch 8022, New Zealand',0,4,0,0,1,-43.59049,172.630201,'2020/05/01 00:00:00+00',0),
+    (1822955.3955,5488854.3202,3,'PUKAHA NATIONAL WILDLIFE CENTRE','MERIDIAN ENERGY LIMITED','MERIDIAN ENERGY LIMITED','85379 State Highway 2, Mount Bruce 5881',1,2,0,0,1,-40.721068,175.639788,'2020/08/12 00:00:00+00',0);
 --SPLIT
 INSERT INTO connector (connectorID, currentType, power, count, isOperational, chargerID, type)
 VALUES
-    (1,"AC","22 kW", 1, "Operative", 1, "Type 2 Socketed"),
-    (2,"AC","44 kW", 4, "Operative", 2, "Type 2 Socketed"),
-    (3,"AC","7 kW", 2, "Operative", 3, "Type 2 Socketed"),
-    (4,"AC","7 kW", 2, "Operative", 3, "Type 2 CCS");
+    (1,'AC','22 kW', 1, 'Operative', 1, 'Type 2 Socketed'),
+    (2,'AC','44 kW', 4, 'Operative', 2, 'Type 2 Socketed'),
+    (3,'AC','7 kW', 2, 'Operative', 3, 'Type 2 Socketed'),
+    (4,'AC','7 kW', 2, 'Operative', 3, 'Type 2 CCS');
