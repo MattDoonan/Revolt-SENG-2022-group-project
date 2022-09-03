@@ -324,25 +324,27 @@ public class SqlInterpreter implements DataManager {
      * @param c charger object
      */
     public void writeCharger(Charger c) {
-        String toAdd = "INSERT INTO charger (chargerID, xPos, yPos, chargerID, name, operator, owner, address, is24Hrs, numCarParks," +
-                " hasCarParkCost, timeLimit, attraction, latPos, lonPos, dateOpened, chargingCost) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+        String toAdd = "INSERT INTO charger (xPos, yPos, chargerID, name, operator, owner, address, is24Hrs, " +
+                "numCarParks, hasCarParkCost, timeLimit, attraction, latPos, lonPos, dateOpened, chargingCost)" +
+                " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
         try (Connection connection = createConnection();
              PreparedStatement statement = connection.prepareStatement(toAdd)) {
             statement.setDouble(1, c.getLocation().getXpos());
             statement.setDouble(2, c.getLocation().getYpos());
             statement.setDouble(3, c.getChargerId());
             statement.setString(4, c.getName());
-            statement.setString(5, c.getOwner());
-            statement.setString(6, c.getLocation().getAddress());
-            statement.setBoolean(7, c.getAvailable24Hrs());
-            statement.setInt(8, c.getAvailableParks());
-            statement.setBoolean(9, c.getParkingCost());
-            statement.setDouble(10, c.getTimeLimit());
-            statement.setBoolean(11, c.getHasAttraction());
-            statement.setDouble(12, c.getLocation().getLat());
-            statement.setDouble(13, c.getLocation().getLon());
-            statement.setString(14, c.getDateOpened());
-            statement.setBoolean(15, c.getChargeCost());
+            statement.setString(5, c.getOperator());
+            statement.setString(6, c.getOwner());
+            statement.setString(7, c.getLocation().getAddress());
+            statement.setBoolean(8, c.getAvailable24Hrs());
+            statement.setInt(9, c.getAvailableParks());
+            statement.setBoolean(10, c.getParkingCost());
+            statement.setDouble(11, c.getTimeLimit());
+            statement.setBoolean(12, c.getHasAttraction());
+            statement.setDouble(13, c.getLocation().getLat());
+            statement.setDouble(14, c.getLocation().getLon());
+            statement.setString(15, c.getDateOpened());
+            statement.setBoolean(16, c.getChargeCost());
             statement.executeUpdate();
         } catch (SQLException e) {
             logManager.error(e);
