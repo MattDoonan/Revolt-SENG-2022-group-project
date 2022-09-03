@@ -16,6 +16,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import javax.management.InstanceAlreadyExistsException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team3.data.entity.Charger;
@@ -67,6 +68,31 @@ public class SqlInterpreter implements DataManager {
     }
 
     /**
+     * WARNING Allows for setting specific database url (currently only needed for
+     * test databases, but may be useful
+     * in future) USE WITH CAUTION. This does not override the current singleton
+     * instance so must be the first call.
+     * 
+     * @param url string url of database to load (this needs to be full url e.g.
+     *            "jdbc:sqlite:./src/...")
+     * @return current singleton instance
+     * @throws InstanceAlreadyExistsException if there is already a
+     *                                        singleton
+     *                                        instance
+     * @author Morgan English, Dec 21
+     */
+    public static SqlInterpreter initialiseInstanceWithUrl(String url)
+            throws InstanceAlreadyExistsException {
+        if (instance == null) {
+            instance = new SqlInterpreter(url);
+        } else {
+            throw new InstanceAlreadyExistsException(
+                    "Database Manager instance already exists, cannot create with url: " + url);
+        }
+        return instance;
+    }
+
+    /**
      * Gets and then returns the path of the file name as a String
      * 
      * @return String of the file path
@@ -79,6 +105,15 @@ public class SqlInterpreter implements DataManager {
         path = URLDecoder.decode(path, StandardCharsets.UTF_8);
         File directory = new File((path));
         return "jdbc:sqlite:" + directory.getParentFile() + "/database.db";
+    }
+
+    /**
+     * WARNING Sets the current singleton instance to null
+     * 
+     * @author Morgan English, Dec 21
+     */
+    public static void removeInstance() {
+        instance = null;
     }
 
     /**

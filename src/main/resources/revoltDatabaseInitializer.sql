@@ -104,7 +104,6 @@ CREATE TABLE if not exists stop
     stopOrder INTEGER NOT NULL
     );
 --SPLIT
---Sample data
 INSERT INTO charger (xPos, yPos, chargerID, name, operator, owner, address, is24Hrs, numCarParks, hasCarParkCost, timeLimit, attraction, latPos, lonPos, dateOpened, chargingCost) 
 VALUES 
     (1366541.2354,5153202.1642,1,"YHA MT COOK","MERIDIAN ENERGY LIMITED","MERIDIAN ENERGY LIMITED","4 Kitchener Dr, Mount Cook National Park 7999, New Zealand",1,1,0,0,0,-43.73745,170.100913,"2020/05/01 00:00:00+00",1),
