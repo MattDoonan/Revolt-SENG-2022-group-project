@@ -356,8 +356,8 @@ public class SqlInterpreter implements DataManager {
      * @param chargers array list of charger objects
      */
     public void writeCharger(ArrayList<Charger> chargers) {
-        for(int i = 0; i < chargers.size(); i++) {
-            writeCharger(chargers.get(i));
+        for (Charger charger : chargers) {
+            writeCharger(charger);
         }
     }
 
@@ -379,8 +379,8 @@ public class SqlInterpreter implements DataManager {
     }
 
     public void writeConnector(ArrayList<Connector> connectors, int chargerID) {
-        for(int i = 0; i < connectors.size(); i++) {
-            writeConnector(connectors.get(i), chargerID);
+        for (Connector connector : connectors) {
+            writeConnector(connector, chargerID);
         }
     }
 

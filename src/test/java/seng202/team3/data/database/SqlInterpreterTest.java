@@ -78,7 +78,6 @@ public class SqlInterpreterTest {
 
     /**
      * Adds many chargers to the database
-     * @throws IOException
      */
     @Test
     public void addManyChargers() throws IOException {
@@ -98,7 +97,6 @@ public class SqlInterpreterTest {
 
     /**
      * Tests if the Charger is also adding the connectors associated to the database
-     * @throws IOException
      */
     @Test
     public void addConnectorsWithCharger() throws IOException {
@@ -118,7 +116,6 @@ public class SqlInterpreterTest {
 
     /**
      * Creates a charger then adds a connector to the charger later
-     * @throws IOException
      */
     @Test
     public void addLaterConnector() throws IOException {
@@ -185,7 +182,6 @@ public class SqlInterpreterTest {
 
     /**
      * Tests if the delete function works for chargers
-     * @throws IOException
      */
     @Test
     public void deleteCharger() throws IOException {
@@ -197,7 +193,6 @@ public class SqlInterpreterTest {
 
     /**
      * Tests if the delete function works for connectors
-     * @throws IOException
      */
     @Test
     public void deleteConnector() throws IOException {
@@ -209,7 +204,6 @@ public class SqlInterpreterTest {
 
     /**
      * Tests what happens if the id doesn't exist and tries to delete
-     * @throws IOException
      */
     @Test
     public void deleteConnectorNotReal() throws IOException {
