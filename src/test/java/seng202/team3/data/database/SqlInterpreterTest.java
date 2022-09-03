@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,9 +15,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import seng202.team3.data.entity.Charger;
-import seng202.team3.data.entity.Connector;
-import seng202.team3.data.entity.Coordinate;
+import seng202.team3.data.entity.*;
 
 /**
  * Tests for SqlInterpreter {@link SqlInterpreter} Class
@@ -78,80 +75,6 @@ public class SqlInterpreterTest {
         Assertions.assertNotNull(connection);
         Assertions.assertNotNull(connection.getMetaData());
         connection.close();
-    }
-
-    /**
-     * Tests adding a new charger to the database
-     */
-    @Test
-    public void addNewCharger() throws IOException {
-        Connector dummyConnector = new Connector("ChardaMo", "AC", "Available", "123", 3);
-        ArrayList<Connector> connectorList = new ArrayList<>(1);
-        connectorList.add(dummyConnector);
-        Coordinate coord = new Coordinate(4.5, 5.7, -36.85918, 174.76602, "testAddy");
-        Charger c = new Charger(connectorList, "Test1", coord, 1, 0.3,
-                "Meridian", "Meridian", true);
-        Query q = new QueryBuilderImpl().withSource("charger").build();
-        List<Object> object = db.readData(q,Charger.class);
-        db.writeCharger(c);
-        assertEquals(object.size()+1, db.readData(q,Charger.class).size());
-    }
-
-    /**
-     * Adds many chargers to the database
-     */
-    @Test
-    public void addManyChargers() throws IOException {
-        Connector dummyConnector = new Connector("ChardaMo", "AC", "Available", "123", 3);
-        ArrayList<Connector> connectorList = new ArrayList<>(1);
-        connectorList.add(dummyConnector);
-        Coordinate coord = new Coordinate(4.5, 5.7, -36.85918, 174.76602, "testAddy");
-        Charger c = new Charger(connectorList, "Test1", coord, 1, 0.3,
-                "Meridian", "Meridian", true);
-        Charger x = new Charger(connectorList, "Test2", coord, 5, 1.0,
-                "Meridian", "Meridian", true);
-        Query q = new QueryBuilderImpl().withSource("charger").build();
-        int res = db.readData(q,Charger.class).size();
-        db.writeCharger(new ArrayList<>(Arrays.asList(c,x)));
-        Assertions.assertEquals(res+2, db.readData(q,Charger.class).size());
-    }
-
-    /**
-     * Tests if the Charger is also adding the connectors associated to the database
-     */
-    @Test
-    public void addConnectorsWithCharger() throws IOException {
-        Connector dummyConnector1 = new Connector("ChardaMo", "DC", "Available", "69", 4);
-        Connector dummyConnector2 = new Connector("ChardaMo", "AC", "Available", "420", 1);
-        ArrayList<Connector> connectorList = new ArrayList<>(2);
-        connectorList.add(dummyConnector1);
-        connectorList.add(dummyConnector2);
-        Coordinate coord = new Coordinate(4.5, 5.7, -36.85918, 174.76602, "testAddy");
-        Charger c = new Charger(connectorList, "Test1", coord, 1, 0.3,
-                "Meridian", "Meridian", true);
-        Query q = new QueryBuilderImpl().withSource("connector").build();
-        int result = db.readData(q,Connector.class).size();
-        db.writeCharger(c);
-        Assertions.assertEquals(result+2, db.readData(q,Connector.class).size());
-    }
-
-    /**
-     * Creates a charger then adds a connector to the charger later
-     */
-    @Test
-    public void addLaterConnector() throws IOException {
-        Connector dummyConnector = new Connector("ChardaMo", "AC", "Available", "123", 3);
-        ArrayList<Connector> connectorList = new ArrayList<>(1);
-        connectorList.add(dummyConnector);
-        Coordinate coord = new Coordinate(4.5, 5.7, -36.85918, 174.76602, "testAddy");
-        Charger c = new Charger(connectorList, "Test1", coord, 1, 0.3,
-                "Meridian", "Meridian", true);
-        db.writeCharger(c);
-        Query q = new QueryBuilderImpl().withSource("connector").build();
-        int result = db.readData(q,Connector.class).size();
-        Connector newConnector = new Connector("ChardaMo", "AC", "Available", "33", 5);
-        db.writeConnector(newConnector, 1);
-        Assertions.assertEquals(result+1, db.readData(q,Connector.class).size());
     }
 
     @Test
@@ -232,5 +155,105 @@ public class SqlInterpreterTest {
         List<Object> object = db.readData(q,Connector.class);
         db.deleteData("connector", 10000);
         assertEquals(object.size(), db.readData(q,Connector.class).size());
+    }
+
+    /**
+     * Tests adding a new charger to the database
+     */
+    @Test
+    public void addNewCharger() throws IOException {
+        Connector dummyConnector = new Connector("ChardaMo", "AC", "Available", "123", 3);
+        ArrayList<Connector> connectorList = new ArrayList<>(1);
+        connectorList.add(dummyConnector);
+        Coordinate coord = new Coordinate(4.5, 5.7, -36.85918, 174.76602, "testAddy");
+        Charger c = new Charger(connectorList, "Test1", coord, 1, 0.3,
+                "Meridian", "Meridian", true);
+        Query q = new QueryBuilderImpl().withSource("charger").build();
+        List<Object> object = db.readData(q,Charger.class);
+        db.writeCharger(c);
+        assertEquals(object.size()+1, db.readData(q,Charger.class).size());
+    }
+
+    /**
+     * Adds many chargers to the database
+     */
+    @Test
+    public void addManyChargers() throws IOException {
+        Connector dummyConnector = new Connector("ChardaMo", "AC", "Available", "123", 3);
+        ArrayList<Connector> connectorList = new ArrayList<>(1);
+        connectorList.add(dummyConnector);
+        Coordinate coord = new Coordinate(4.5, 5.7, -36.85918, 174.76602, "testAddy");
+        Charger c = new Charger(connectorList, "Test1", coord, 1, 0.3,
+                "Meridian", "Meridian", true);
+        Charger x = new Charger(connectorList, "Test2", coord, 5, 1.0,
+                "Meridian", "Meridian", true);
+        Query q = new QueryBuilderImpl().withSource("charger").build();
+        int res = db.readData(q,Charger.class).size();
+        db.writeCharger(new ArrayList<>(Arrays.asList(c,x)));
+        Assertions.assertEquals(res+2, db.readData(q,Charger.class).size());
+    }
+
+    /**
+     * Tests if the Charger is also adding the connectors associated to the database
+     */
+    @Test
+    public void addConnectorsWithCharger() throws IOException {
+        Connector dummyConnector1 = new Connector("ChardaMo", "DC", "Available", "69", 4);
+        Connector dummyConnector2 = new Connector("ChardaMo", "AC", "Available", "420", 1);
+        ArrayList<Connector> connectorList = new ArrayList<>(2);
+        connectorList.add(dummyConnector1);
+        connectorList.add(dummyConnector2);
+        Coordinate coord = new Coordinate(4.5, 5.7, -36.85918, 174.76602, "testAddy");
+        Charger c = new Charger(connectorList, "Test1", coord, 1, 0.3,
+                "Meridian", "Meridian", true);
+        Query q = new QueryBuilderImpl().withSource("connector").build();
+        int result = db.readData(q,Connector.class).size();
+        db.writeCharger(c);
+        Assertions.assertEquals(result+2, db.readData(q,Connector.class).size());
+    }
+
+    /**
+     * Creates a charger then adds a connector to the charger later
+     */
+    @Test
+    public void addLaterConnector() throws IOException {
+        Connector dummyConnector = new Connector("ChardaMo", "AC", "Available", "123", 3);
+        ArrayList<Connector> connectorList = new ArrayList<>(1);
+        connectorList.add(dummyConnector);
+        Coordinate coord = new Coordinate(4.5, 5.7, -36.85918, 174.76602, "testAddy");
+        Charger c = new Charger(connectorList, "Test1", coord, 1, 0.3,
+                "Meridian", "Meridian", true);
+        db.writeCharger(c);
+        Query q = new QueryBuilderImpl().withSource("connector").build();
+        int result = db.readData(q,Connector.class).size();
+        Connector newConnector = new Connector("ChardaMo", "AC", "Available", "33", 5);
+        db.writeConnector(newConnector, 1);
+        Assertions.assertEquals(result+1, db.readData(q,Connector.class).size());
+    }
+
+    /**
+     * Cannot test until read function is implemented
+     */
+    @Test
+    public void addVehicle() throws IOException {
+        // Query q = new QueryBuilderImpl().withSource("vehicle").build();
+        // int result = db.readData(q,Vehicle.class).size();
+        ArrayList<String> con = new ArrayList<String>();
+        con.add("Con1");
+        con.add("Con2");
+        Vehicle v = new Vehicle("Telsa", "Y", 300, con);
+        db.writeVehicle(v);
+        // Assertions.assertEquals(result+1,db.readData(q,Vehicle.class).size());
+    }
+
+    /**
+     * Cannot test until read is implemented
+     */
+    @Test
+    public void addJourney() throws IOException {
+        Coordinate start = new Coordinate(5.6, 7.7, -36.6543, 174.74532, "Start");
+        Coordinate end = new Coordinate(5.8, 7.2, -37.45543, 176.45652, "Start");
+        Journey j = new Journey(start,end);
+        db.writeJourney(j);
     }
 }

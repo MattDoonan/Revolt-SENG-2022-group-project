@@ -14,9 +14,7 @@ import java.util.List;
 import javax.management.InstanceAlreadyExistsException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import seng202.team3.data.entity.Charger;
-import seng202.team3.data.entity.Connector;
-import seng202.team3.data.entity.Coordinate;
+import seng202.team3.data.entity.*;
 
 /**
  * Class that interacts with the SQLite database
@@ -408,6 +406,49 @@ public class SqlInterpreter implements DataManager {
     public void writeConnector(ArrayList<Connector> connectors, int chargerID) {
         for (Connector connector : connectors) {
             writeConnector(connector, chargerID);
+        }
+    }
+
+    /**
+     * Adds an object Vehicle to the database
+     * @param v the object Vehicle
+     */
+    public void writeVehicle(Vehicle v) {
+        String toAdd = "INSERT INTO vehicle (make, model, rangeKM, connectorType) values(?,?,?,?)";
+        try (Connection connection = createConnection();
+             PreparedStatement statement = connection.prepareStatement(toAdd)){
+            statement.setString(1, v.getMake());
+            statement.setString(2, v.getModel());
+            statement.setInt(3, v.getMaxRange());
+            String connectors = "";
+            for (int i = 0; i < v.getConnectors().size(); i++) {
+                connectors += ""+v.getConnectors().get(i)+" ";
+            }
+            statement.setString(4, connectors);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            logManager.error(e);
+        }
+    }
+
+    /**
+     * Adds an object Journey to the database
+     * @param j the object journey
+     */
+    public void writeJourney(Journey j) {
+        String toAdd = "INSERT INTO journey (vehicleID, startLat, startLon, endLat, endLon, startDate, finishDate) values(?,?,?,?,?,?,?)";
+        try (Connection connection = createConnection();
+             PreparedStatement statement = connection.prepareStatement(toAdd)){
+            statement.setInt(1, j.getVehicle().getVehicleID());
+            statement.setDouble(2, j.getStartPosition().getLat());
+            statement.setDouble(3, j.getStartPosition().getLon());
+            statement.setDouble(4, j.getEndPosition().getLat());
+            statement.setDouble(5, j.getEndPosition().getLon());
+            statement.setString(6, j.getStartDate());
+            statement.setString(7, j.getEndDate());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            logManager.error(e);
         }
     }
 
