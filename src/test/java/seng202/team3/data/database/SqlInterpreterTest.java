@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.management.InstanceAlreadyExistsException;
 import org.junit.jupiter.api.Assertions;
@@ -56,6 +57,43 @@ public class SqlInterpreterTest {
         Assertions.assertNotNull(connection);
         Assertions.assertNotNull(connection.getMetaData());
         connection.close();
+    }
+
+    /**
+     * Tests adding a new charger to the database
+     */
+    @Test
+    public void addNewCharger() throws IOException {
+        Connector dummyConnector = new Connector("ChardaMo", "AC", "Available", "123", 3);
+        ArrayList<Connector> connectorList = new ArrayList<>(1);
+        connectorList.add(dummyConnector);
+        Coordinate coord = new Coordinate(4.5, 5.7, -36.85918, 174.76602, "testAddy");
+        Charger c = new Charger(connectorList, "Test1", coord, 1, 0.3,
+                "Meridian", "Meridian", true);
+        Query q = new QueryBuilderImpl().withSource("charger").build();
+        List<Object> object = db.readData(q,Charger.class);
+        db.writeCharger(c);
+        assertEquals(object.size()+1, db.readData(q,Charger.class).size());
+    }
+
+    /**
+     * Adds many chargers to the database
+     * @throws IOException
+     */
+    @Test
+    public void addManyChargers() throws IOException {
+        Connector dummyConnector = new Connector("ChardaMo", "AC", "Available", "123", 3);
+        ArrayList<Connector> connectorList = new ArrayList<>(1);
+        connectorList.add(dummyConnector);
+        Coordinate coord = new Coordinate(4.5, 5.7, -36.85918, 174.76602, "testAddy");
+        Charger c = new Charger(connectorList, "Test1", coord, 1, 0.3,
+                "Meridian", "Meridian", true);
+        Charger x = new Charger(connectorList, "Test2", coord, 5, 1.0,
+                "Meridian", "Meridian", true);
+        Query q = new QueryBuilderImpl().withSource("charger").build();
+        int res = db.readData(q,Charger.class).size();
+        db.arrayCharger(new ArrayList<>(Arrays.asList(c,x)));
+        Assertions.assertEquals(res+2, db.readData(q,Charger.class).size());
     }
 
     @Test
@@ -139,22 +177,5 @@ public class SqlInterpreterTest {
         List<Object> object = db.readData(q,Connector.class);
         db.deleteData("connector", 10);
         assertEquals(object.size(), db.readData(q,Connector.class).size());
-    }
-
-    /**
-     * Tests adding a new charger to the database
-     */
-    @Test
-    public void addNewCharger() throws IOException {
-        Connector dummyConnector = new Connector("ChardaMo", "AC", "Available", "123", 3);
-        ArrayList<Connector> connectorList = new ArrayList<>(1);
-        connectorList.add(dummyConnector);
-        Coordinate coord = new Coordinate(4.5, 5.7, -36.85918, 174.76602, "testAddy");
-        Charger c = new Charger(connectorList, "Test1", coord, 1, 0.3,
-                "Meridian", "Meridian", true);
-        Query q = new QueryBuilderImpl().withSource("charger").build();
-        List<Object> object = db.readData(q,Charger.class);
-        db.writeCharger(c);
-        assertEquals(object.size()+1, db.readData(q,Charger.class).size());
     }
 }
