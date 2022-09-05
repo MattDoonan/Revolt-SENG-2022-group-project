@@ -64,9 +64,14 @@ public class SearchFilterTextFX extends TestFXBase {
      */
     @Test
     public void lessWhenSearchAddress() {
+        clickOn("#filters");
+        clickOn("#distanceDisplay");
+        clickOn("#filters");
+        clickOn("#distanceDisplay");
+        clickOn("#executeSearch");
         int total = controller.getManager().getCloseChargerData().size();
         clickOn("#searchCharger");
-        write("christ");
+        write("auck");
         clickOn("#executeSearch");
         int newTotal = controller.getManager().getCloseChargerData().size();
         assertTrue(total > newTotal);
