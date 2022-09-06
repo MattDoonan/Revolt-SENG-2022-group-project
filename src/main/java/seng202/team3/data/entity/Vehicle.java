@@ -186,7 +186,12 @@ public class Vehicle {
 
     @Override
     public boolean equals(Object o) {
-        Vehicle v = (Vehicle) o;
+        Vehicle v;
+        if (o instanceof Vehicle) {
+            v = (Vehicle) o;
+        } else {
+            return false;
+        }
 
         return v.getMake().equals(this.getMake())
                 && v.getModel().equals(this.getModel())

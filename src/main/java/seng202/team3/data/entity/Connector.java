@@ -161,7 +161,12 @@ public class Connector {
 
     @Override
     public boolean equals(Object o) {
-        Connector c = (Connector) o;
+        Connector c;
+        if (o instanceof Connector) {
+            c = (Connector) o;
+        } else {
+            return false;
+        }
 
         return c.getType().equals(this.getType())
                 && c.getPower().equals(this.getPower())

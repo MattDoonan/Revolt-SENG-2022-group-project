@@ -3,6 +3,7 @@ package seng202.team3.data.database;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.IOException;
@@ -12,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.management.InstanceAlreadyExistsException;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,11 +34,6 @@ public class SqlInterpreterTest {
     static Connector testConnector2;
     static Charger testCharger;
     static Vehicle testVehicle;
-
-    /*
-     * TODO: database currently has sample data.
-     * Test database should be empty and add sample data to it before each READ test
-     */
 
     @BeforeAll
     static void setup() throws InstanceAlreadyExistsException {
@@ -77,43 +72,19 @@ public class SqlInterpreterTest {
     @BeforeEach
     void reset() {
         db.defaultDatabase();
-        // Connector dummyConnector1 =
-        // ArrayList<Connector> connectorList = new ArrayList<>(1);
-        // connectorList.add(dummyConnector1);
-        // Coordinate coord = new Coordinate(4.8, 6.2, -32.85658, 177.77702,
-        // "testAddy1");
-        // Charger c = new Charger(connectorList, "Test1", coord, 1, 0.3,
-        // "Meridian", "Meridian", true);
-        // Connector dummyConnector2 = new Connector("ChardaMo", "AC", "Available",
-        // "22", 3);
-
-        // connectorList = new ArrayList<>(1);
-        // connectorList.add(dummyConnector2);
-        // coord = new Coordinate(4.9, 5.7, -40.86718, 175.66602, "testAddy2");
-        // Charger h = new Charger(connectorList, "Test2", coord, 1, 0.3,
-        // "Meridian", "Meridian", true);
-
-        // Connector dummyConnector3 = new Connector("ChardaMo", "DC", "Available",
-        // "44", 3);
-        // connectorList = new ArrayList<>(1);
-        // connectorList.add(dummyConnector3);
-        // coord = new Coordinate(3.5, 5.5, -36.85918, 174.76602, "testAddy3");
-        // Charger a = new Charger(connectorList, "Test3", coord, 1, 0.3,
-        // "Meridian", "Meridian", true);
-        // db.writeCharger(new ArrayList<>(Arrays.asList(c, h, a)));
     }
 
     @Test
     public void testNullUrl() {
-        Assertions.assertNotNull(db);
-        Assertions.assertEquals(db, SqlInterpreter.getInstance());
+        assertNotNull(db);
+        assertEquals(db, SqlInterpreter.getInstance());
     }
 
     @Test
     void testDatabaseConnection() throws SQLException {
         Connection connection = db.createConnection();
-        Assertions.assertNotNull(connection);
-        Assertions.assertNotNull(connection.getMetaData());
+        assertNotNull(connection);
+        assertNotNull(connection.getMetaData());
         connection.close();
     }
 
@@ -123,8 +94,7 @@ public class SqlInterpreterTest {
         Query q = new QueryBuilderImpl().withSource("charger").build();
         List<Object> result = db.readData(q, Charger.class);
 
-        assertEquals(1, result.size());
-        assertEquals(testCharger, (Charger) result.get(0));
+        assertArrayEquals(new Object[] { testCharger }, result.toArray());
     }
 
     @Test
@@ -133,8 +103,7 @@ public class SqlInterpreterTest {
         Query q = new QueryBuilderImpl().withSource("connector").build();
         List<Object> result = db.readData(q, Connector.class);
 
-        assertEquals(1, result.size());
-        assertEquals(testConnector1, result.get(0));
+        assertArrayEquals(new Object[] { testConnector1 }, result.toArray());
     }
 
     @Test

@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class Charger {
 
     /** Unique identifier */
-    @CsvBindByName(column = "OBJECTID", required = true)
+    @CsvBindByName(column = "CHARGERID", required = true)
     int chargerId;
 
     /** When the charger was first available */
@@ -71,6 +71,13 @@ public class Charger {
     @CsvBindByName(column = "hasChargingCost", required = true)
     boolean hasChargeCost;
 
+    /**
+     * Current used by connectors
+     */
+    @CsvBindByName(column = "currentType")
+    String currentUsed;
+    private String currentType;
+
     /** Empty constructor for CSV object builder */
     public Charger() {
         connectors = new ArrayList<>();
@@ -102,6 +109,7 @@ public class Charger {
         setChargeCost(hasChargeCost);
         setParkingCost(hasParkingCost);
         setAvailable24Hrs(is24Hrs);
+        setCurrentType();
     }
 
     /**
@@ -147,6 +155,7 @@ public class Charger {
      */
     public void addConnector(Connector c) {
         connectors.add(c);
+        setCurrentType();
     }
 
     /**
@@ -156,6 +165,7 @@ public class Charger {
      */
     public void removeConnector(Connector connector) {
         connectors.remove(connector);
+        setCurrentType();
     }
 
     /**
@@ -401,11 +411,52 @@ public class Charger {
         this.name = name;
     }
 
+    /**
+     * Set the current type of the charger
+     */
+    public void setCurrentType() {
+        ArrayList<String> types = new ArrayList<>();
+        for (Connector c : this.connectors) {
+            if (!types.contains(c.getCurrent())) {
+                types.add(c.getCurrent());
+            }
+        }
+        currentType = "";
+        if (types.size() > 1) {
+            for (String type : types) {
+                if (types.indexOf(type) == 0) {
+                    currentType += type;
+                } else {
+                    currentType += " " + type;
+                }
+            }
+        } else {
+            currentType = types.get(0);
+        }
+
+    }
+
+    /**
+     * Get the current type of the charger
+     * 
+     * @return the current type of the charger
+     */
+    public String getCurrentType() {
+        if (currentType == null) {
+            setCurrentType();
+        }
+        return currentType;
+    }
+
     @Override
     public boolean equals(Object o) {
-        Charger c = (Charger) o;
-        // System.out.println("test");
-        boolean test = c.getChargerId() == this.getChargerId()
+        Charger c;
+        if (o instanceof Charger) {
+            c = (Charger) o;
+        } else {
+            return false;
+        }
+        return c.getChargerId() == this.getChargerId()
                 && c.getDateOpened().equals(this.getDateOpened())
                 && c.getName().equals(this.getName())
                 && c.getConnectors().equals(this.getConnectors())
@@ -419,8 +470,7 @@ public class Charger {
                 && c.getAvailableParks() == this.getAvailableParks()
                 && c.getParkingCost() == this.getParkingCost()
                 && c.getChargeCost() == this.getChargeCost()
-                && c.getWarnings().equals(this.getWarnings());
-
-        return test;
+                && c.getWarnings().equals(this.getWarnings())
+                && c.getCurrentType().equals(this.getCurrentType());
     }
 }

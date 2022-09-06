@@ -1,5 +1,6 @@
 package seng202.team3.logic;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -86,27 +87,21 @@ public class MainManagerTest {
 
     /**
      * Tests for the list of chargers
+     * 
+     * @throws IOException if data cannot be read
      */
     @Test
-    public void originalListTest() {
+    public void originalListTest() throws IOException {
         QueryBuilder q = new QueryBuilderImpl().withSource("charger");
         ArrayList<Charger> chargerList = new ArrayList<>();
-        try {
-            for (Object o : new CsvInterpreter().readData(q.build(), Charger.class)) {
-                chargerList.add((Charger) o);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        for (Object o : new CsvInterpreter().readData(q.build(), Charger.class)) {
+            chargerList.add((Charger) o);
         }
+
         manage.resetQuery();
         manage.makeAllChargers();
         // Checks the sizes of each list
-        assertEquals(chargerList.size(), manage.getData().size());
-        // checks the address of each of the elements since they should be unique
-        for (int i = 0; i < chargerList.size(); i++) {
-            assertEquals(chargerList.get(i),
-                    manage.getData().get(i));
-        }
+        assertArrayEquals(chargerList.toArray(), manage.getData().toArray());
     }
 
     /**
@@ -134,13 +129,8 @@ public class MainManagerTest {
         ObservableList<Charger> result = FXCollections.observableList(cc);
         ObservableList<Charger> returnVal = manage.getCloseChargerData();
 
-        // Checks the sizes of each list
-        assertEquals(result.size(), returnVal.size());
-        // checks the address of each of the elements since they should be unique
-        for (int i = 0; i < result.size(); i++) {
-            assertEquals(result.get(i).getLocation().getAddress(),
-                    returnVal.get(i).getLocation().getAddress());
-        }
+        assertArrayEquals(result.toArray(), returnVal.toArray());
+
     }
 
     /**
@@ -167,12 +157,8 @@ public class MainManagerTest {
         ObservableList<Charger> result = FXCollections.observableList(cc);
         ObservableList<Charger> returnVal = manage.getCloseChargerData();
         // Checks the sizes of each list
-        assertEquals(result.size(), returnVal.size());
-        // checks the address of each of the elements since they should be unique
-        for (int i = 0; i < result.size(); i++) {
-            assertEquals(result.get(i).getLocation().getAddress(),
-                    returnVal.get(i).getLocation().getAddress());
-        }
+        assertArrayEquals(result.toArray(), returnVal.toArray());
+
     }
 
     /**
@@ -195,12 +181,8 @@ public class MainManagerTest {
         manage.adjustQuery("connectorcurrent", "AC", ComparisonType.CONTAINS);
         manage.makeAllChargers();
         // Checks the sizes of each list
-        assertEquals(chargerList.size(), manage.getData().size());
-        // checks the address of each of the elements since they should be unique
-        for (int i = 0; i < chargerList.size(); i++) {
-            assertEquals(chargerList.get(i).getLocation().getAddress(),
-                    manage.getData().get(i).getLocation().getAddress());
-        }
+        assertArrayEquals(chargerList.toArray(), manage.getData().toArray());
+
     }
 
     /**
@@ -223,12 +205,7 @@ public class MainManagerTest {
         manage.adjustQuery("connectorcurrent", "DC", ComparisonType.CONTAINS);
         manage.makeAllChargers();
         // Checks the sizes of each list
-        assertEquals(chargerList.size(), manage.getData().size());
-        // checks the address of each of the elements since they should be unique
-        for (int i = 0; i < chargerList.size(); i++) {
-            assertEquals(chargerList.get(i).getLocation().getAddress(),
-                    manage.getData().get(i).getLocation().getAddress());
-        }
+        assertArrayEquals(chargerList.toArray(), manage.getData().toArray());
     }
 
     /**
@@ -251,12 +228,8 @@ public class MainManagerTest {
         manage.adjustQuery("hastouristattraction", "True", ComparisonType.CONTAINS);
         manage.makeAllChargers();
         // Checks the sizes of each list
-        assertEquals(chargerList.size(), manage.getData().size());
-        // checks the address of each of the elements since they should be unique
-        for (int i = 0; i < chargerList.size(); i++) {
-            assertEquals(chargerList.get(i).getLocation().getAddress(),
-                    manage.getData().get(i).getLocation().getAddress());
-        }
+        assertArrayEquals(chargerList.toArray(), manage.getData().toArray());
+
     }
 
     /**
@@ -279,12 +252,8 @@ public class MainManagerTest {
         manage.adjustQuery("haschargingcost", "False", ComparisonType.CONTAINS);
         manage.makeAllChargers();
         // Checks the sizes of each list
-        assertEquals(chargerList.size(), manage.getData().size());
-        // checks the address of each of the elements since they should be unique
-        for (int i = 0; i < chargerList.size(); i++) {
-            assertEquals(chargerList.get(i).getLocation().getAddress(),
-                    manage.getData().get(i).getLocation().getAddress());
-        }
+        assertArrayEquals(chargerList.toArray(), manage.getData().toArray());
+
     }
 
     /**
@@ -308,12 +277,8 @@ public class MainManagerTest {
         manage.adjustQuery("connectorcurrent", "DC", ComparisonType.CONTAINS);
         manage.makeAllChargers();
         // Checks the sizes of each list
-        assertEquals(chargerList.size(), manage.getData().size());
-        // checks the address of each of the elements since they should be unique
-        for (int i = 0; i < chargerList.size(); i++) {
-            assertEquals(chargerList.get(i).getLocation().getAddress(),
-                    manage.getData().get(i).getLocation().getAddress());
-        }
+        assertArrayEquals(chargerList.toArray(), manage.getData().toArray());
+
     }
 
     @Test
@@ -334,12 +299,8 @@ public class MainManagerTest {
         manage.adjustQuery("connectorcurrent", "AC", ComparisonType.CONTAINS);
         manage.makeAllChargers();
         // Checks the sizes of each list
-        assertEquals(chargerList.size(), manage.getData().size());
-        // checks the address of each of the elements since they should be unique
-        for (int i = 0; i < chargerList.size(); i++) {
-            assertEquals(chargerList.get(i).getLocation().getAddress(),
-                    manage.getData().get(i).getLocation().getAddress());
-        }
+        assertArrayEquals(chargerList.toArray(), manage.getData().toArray());
+
     }
 
     /**
@@ -359,11 +320,7 @@ public class MainManagerTest {
         manage.resetQuery();
         manage.makeAllChargers();
         // Checks the sizes of each list
-        assertEquals(chargerList.size(), manage.getCloseChargerData().size());
-        // checks the address of each of the elements since they should be unique
-        for (int i = 0; i < chargerList.size(); i++) {
-            assertEquals(chargerList.get(i).getLocation().getAddress(),
-                    manage.getCloseChargerData().get(i).getLocation().getAddress());
-        }
+        assertArrayEquals(chargerList.toArray(), manage.getCloseChargerData().toArray());
+
     }
 }

@@ -146,7 +146,12 @@ public class Coordinate {
 
     @Override
     public boolean equals(Object o) {
-        Coordinate c = (Coordinate) o;
+        Coordinate c;
+        if (o instanceof Coordinate) {
+            c = (Coordinate) o;
+        } else {
+            return false;
+        }
 
         return c.getXpos().equals(this.getXpos())
                 && c.getYpos().equals(this.getYpos())

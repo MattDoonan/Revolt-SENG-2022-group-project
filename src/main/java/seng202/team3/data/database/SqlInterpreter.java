@@ -21,6 +21,7 @@ import java.util.List;
 import javax.management.InstanceAlreadyExistsException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.javatuples.Triplet;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
@@ -247,7 +248,46 @@ public class SqlInterpreter implements DataManager {
         List<Object> objects = new ArrayList<>();
         String sql = "SELECT * FROM " + query.getSource();
 
-        // TODO: add filters
+        switch (objectToInterpretAs.getSimpleName()) {
+            case "Charger":
+                sql += " INNER JOIN connector ON connector.chargerid = charger.chargerid";
+                break;
+            default:
+                break;
+
+        }
+
+        for (Triplet<String, String, ComparisonType> filter : query.getFilters()) {
+            if (query.getFilters().indexOf(filter) == 0) {
+                sql += " WHERE ";
+            } else {
+                sql += " AND ";
+            }
+
+            switch (filter.getValue2()) {
+                case CONTAINS:
+                    sql += filter.getValue0() + " LIKE '%" + filter.getValue1() + "%'";
+                    break;
+                case EQUAL:
+                    sql += filter.getValue0() + " = " + filter.getValue1();
+                    break;
+                case GREATER_THAN:
+                    sql += filter.getValue0() + " > " + filter.getValue1();
+                    break;
+                case GREATER_THAN_EQUAL:
+                    sql += filter.getValue0() + " >= " + filter.getValue1();
+                    break;
+                case LESS_THAN:
+                    sql += filter.getValue0() + " < " + filter.getValue1();
+                    break;
+                case LESS_THAN_EQUAL:
+                    sql += filter.getValue0() + " <= " + filter.getValue1();
+                    break;
+                default:
+                    break;
+            }
+
+        }
 
         sql += ";";
         try (Connection conn = createConnection();
@@ -291,37 +331,43 @@ public class SqlInterpreter implements DataManager {
     private List<Object> asCharger(ResultSet rs) throws SQLException {
         List<Object> chargers = new ArrayList<>();
         List<Object> connectors = new ArrayList<>();
+        List<Integer> observedChargers = new ArrayList<>();
         while (rs.next()) {
+            // Skip record if already processed
+            if (observedChargers.contains(rs.getInt("chargerid"))) {
+                continue;
+            }
+
             // Get connectors
             ResultSet connectorRs = createConnection().createStatement()
-                    .executeQuery("SELECT * FROM connector WHERE chargerID = "
-                            + rs.getInt("chargerID") + ";");
+                    .executeQuery("SELECT * FROM connector WHERE chargerid = "
+                            + rs.getInt("chargerid") + ";");
 
             connectors = asConnector(connectorRs);
 
             // Make charger
             Charger charger = new Charger();
-            charger.setChargerId(rs.getInt("chargerID"));
-            charger.setDateOpened(rs.getString("dateOpened"));
+            charger.setChargerId(rs.getInt("chargerid"));
+            charger.setDateOpened(rs.getString("datefirstoperational"));
             charger.setName(rs.getString("name"));
             charger.setLocation(new Coordinate(
-                    rs.getDouble("xPos"),
-                    rs.getDouble("yPos"),
-                    rs.getDouble("latPos"),
-                    rs.getDouble("lonPos"),
+                    rs.getDouble("x"),
+                    rs.getDouble("y"),
+                    rs.getDouble("latitude"),
+                    rs.getDouble("longitude"),
                     rs.getString("address")));
-            charger.setAvailableParks(rs.getInt("numCarParks"));
-            charger.setTimeLimit(rs.getDouble("timeLimit"));
+            charger.setAvailableParks(rs.getInt("carparkcount"));
+            charger.setTimeLimit(rs.getDouble("maxtimelimit"));
             charger.setOperator(rs.getString("operator"));
             charger.setOwner(rs.getString("owner"));
-            charger.setHasAttraction(rs.getBoolean("attraction"));
-            charger.setAvailable24Hrs(rs.getBoolean("is24Hrs"));
-            charger.setParkingCost(rs.getBoolean("hasCarParkCost"));
-            charger.setChargeCost(rs.getBoolean("chargingCost"));
+            charger.setHasAttraction(rs.getBoolean("hastouristattraction"));
+            charger.setAvailable24Hrs(rs.getBoolean("is24hours"));
+            charger.setParkingCost(rs.getBoolean("hascarparkcost"));
+            charger.setChargeCost(rs.getBoolean("haschargingcost"));
             for (Object c : connectors) {
                 charger.addConnector((Connector) c);
             }
-
+            observedChargers.add(charger.getChargerId());
             chargers.add(charger);
         }
 
@@ -339,12 +385,12 @@ public class SqlInterpreter implements DataManager {
         List<Object> connectors = new ArrayList<>();
         while (rs.next()) {
             connectors.add(new Connector(
-                    rs.getString("type"),
-                    rs.getString("power"),
-                    rs.getString("isOperational"),
-                    rs.getString("currentType"),
+                    rs.getString("connectortype"),
+                    rs.getString("connectorpowerdraw"),
+                    rs.getString("connectorstatus"),
+                    rs.getString("connectorcurrent"),
                     rs.getInt("count"),
-                    rs.getInt("connectorID")));
+                    rs.getInt("connectorid")));
         }
         return connectors;
     }
@@ -385,9 +431,10 @@ public class SqlInterpreter implements DataManager {
      * @param c charger object
      */
     public void writeCharger(Charger c) {
-        String toAdd = "INSERT INTO charger (xPos, yPos, name, operator, owner, address, is24Hrs, "
-                + "numCarParks, hasCarParkCost, timeLimit, attraction, latPos, lonPos, dateOpened,"
-                + " chargingCost) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+        String toAdd = "INSERT INTO charger (x, y, name, operator, owner, address, is24hours, "
+                + "carparkcount, hascarparkcost, maxtimelimit, hastouristattraction, latitude, "
+                + "longitude, datefirstoperational, haschargingcost, currenttype)"
+                + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
         try (Connection connection = createConnection();
                 PreparedStatement statement = connection.prepareStatement(toAdd)) {
             statement.setDouble(1, c.getLocation().getXpos());
@@ -405,6 +452,7 @@ public class SqlInterpreter implements DataManager {
             statement.setDouble(13, c.getLocation().getLon());
             statement.setString(14, c.getDateOpened());
             statement.setBoolean(15, c.getChargeCost());
+            statement.setString(16, c.getCurrentType());
             statement.executeUpdate();
             writeConnector(c.getConnectors(), statement.getGeneratedKeys().getInt(1));
         } catch (SQLException e) {
@@ -430,8 +478,8 @@ public class SqlInterpreter implements DataManager {
      * @param chargerId an Integer with the specified charger id
      */
     public void writeConnector(Connector c, int chargerId) {
-        String toAdd = "INSERT INTO connector (currentType, power, count, isOperational, "
-                + "chargerID, type) values(?,?,?,?,?,?)";
+        String toAdd = "INSERT INTO connector (connectorcurrent, connectorpowerdraw, "
+                + "count, connectorstatus, chargerid, connectortype) values(?,?,?,?,?,?)";
         try (Connection connection = createConnection();
                 PreparedStatement statement = connection.prepareStatement(toAdd)) {
             statement.setString(1, c.getCurrent());

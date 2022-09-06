@@ -2,35 +2,36 @@ DROP TABLE IF EXISTS charger;
 --SPLIT
 CREATE TABLE IF NOT EXISTS charger
 (
-    chargerID INTEGER PRIMARY KEY AUTOINCREMENT,
-    xPos REAL,
-    yPos REAL,
+    chargerid INTEGER PRIMARY KEY AUTOINCREMENT,
+    x REAL,
+    y REAL,
     operator VARCHAR(50),
     owner VARCHAR(50) NOT NULL,
     address VARCHAR(255) NOT NULL,
     name VARCHAR(50) NOT NULL,
-    is24Hrs BIT,
-    numCarParks INTEGER,
-    hasCarParkCost BIT,
-    timeLimit REAL,
-    attraction BIT,
-    latPos INTEGER,
-    lonPos INTEGER,
-    dateOpened TEXT,
-    chargingCost BIT
+    is24hours BIT,
+    carparkcount INTEGER,
+    hascarparkcost BIT,
+    maxtimelimit REAL,
+    hastouristattraction BIT,
+    latitude INTEGER,
+    longitude INTEGER,
+    datefirstoperational TEXT,
+    haschargingcost BIT,
+    currenttype VARCHAR(10)
     );
 --SPLIT
 DROP TABLE IF EXISTS connector;
 --SPLIT
 CREATE TABLE IF NOT EXISTS connector
 (
-    connectorID INTEGER constraint dk_connector PRIMARY KEY AUTOINCREMENT,
-    currentType VARCHAR(50) NOT NULL,
-    power VARCHAR(50) NOT NULL,
+    connectorid INTEGER constraint dk_connector PRIMARY KEY AUTOINCREMENT,
+    connectorcurrent VARCHAR(50) NOT NULL,
+    connectorpowerdraw VARCHAR(50) NOT NULL,
     count INTEGER,
-    isOperational VARCHAR(30),
-    chargerID INTEGER NOT NULL references Charger(chargerID),
-    type VARCHAR(50) NOT NULL
+    connectorstatus VARCHAR(30),
+    chargerid INTEGER NOT NULL references Charger(chargerID),
+    connectortype VARCHAR(50) NOT NULL
     );
 --SPLIT
 DROP TABLE IF EXISTS note;
