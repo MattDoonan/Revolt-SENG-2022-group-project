@@ -92,6 +92,7 @@ public class SearchFilterStepDefs extends TestFXBase {
     @Then("The user gets shown the chargers that best match their query {string}")
     public void chargersFilteredCorrectly(String query) {
         boolean isValid = true;
+
         assertTrue(isValid);
     }
 

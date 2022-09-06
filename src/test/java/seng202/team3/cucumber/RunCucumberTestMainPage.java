@@ -24,7 +24,7 @@ import static io.cucumber.junit.platform.engine.Constants.*;
 
 @Suite
 @IncludeEngines("cucumber")
-@SelectClasspathResource("features/main_page_features")
+@SelectClasspathResource("features/main_features")
 @ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "pretty")
 @ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "seng202.team3.cucumber.mainPageSteps")
 @ConfigurationParameter(key = SNIPPET_TYPE_PROPERTY_NAME, value = "camelcase")
