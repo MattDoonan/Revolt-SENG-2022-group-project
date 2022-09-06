@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -34,6 +33,7 @@ public class SqlInterpreterTest {
     static Connector testConnector1;
     static Connector testConnector2;
     static Charger testCharger;
+    static Vehicle testVehicle;
 
     /*
      * TODO: database currently has sample data.
@@ -65,6 +65,13 @@ public class SqlInterpreterTest {
                 true,
                 false);
         testCharger.setChargerId(1);
+
+        testVehicle = new Vehicle(
+                "Nissan",
+                "Leaf",
+                100,
+                new ArrayList<String>(Arrays.asList("ChardaMo", "Type 2 Socketed")));
+        testVehicle.setVehicleId(1);
     }
 
     @BeforeEach
@@ -221,7 +228,7 @@ public class SqlInterpreterTest {
         Query q = new QueryBuilderImpl().withSource("charger").build();
         int res = db.readData(q, Charger.class).size();
         db.writeCharger(new ArrayList<>(Arrays.asList(c, x)));
-        Assertions.assertEquals(res + 2, db.readData(q, Charger.class).size());
+        assertEquals(res + 2, db.readData(q, Charger.class).size());
     }
 
     /**
@@ -232,7 +239,7 @@ public class SqlInterpreterTest {
         Query q = new QueryBuilderImpl().withSource("connector").build();
         db.writeCharger(testCharger);
         List<Object> result = db.readData(q, Connector.class);
-        Assertions.assertArrayEquals(testCharger.getConnectors().toArray(), result.toArray());
+        assertArrayEquals(testCharger.getConnectors().toArray(), result.toArray());
     }
 
     /**
@@ -247,22 +254,18 @@ public class SqlInterpreterTest {
         newConnector.setId(3);
         db.writeConnector(newConnector, 1);
         result.add(newConnector);
-        Assertions.assertArrayEquals(result.toArray(), db.readData(q, Connector.class).toArray());
+        assertArrayEquals(result.toArray(), db.readData(q, Connector.class).toArray());
     }
 
     /**
-     * Cannot test until read function is implemented
+     * Check that a vehicle can be added to the database
      */
     @Test
     public void addVehicle() throws IOException {
-        // Query q = new QueryBuilderImpl().withSource("vehicle").build();
-        // int result = db.readData(q,Vehicle.class).size();
-        ArrayList<String> con = new ArrayList<String>();
-        con.add("Con1");
-        con.add("Con2");
-        Vehicle v = new Vehicle("Telsa", "Y", 300, con);
-        db.writeVehicle(v);
-        // Assertions.assertEquals(result+1,db.readData(q,Vehicle.class).size());
+        db.writeVehicle(testVehicle);
+        Query q = new QueryBuilderImpl().withSource("vehicle").build();
+        List<Object> result = db.readData(q, Vehicle.class);
+        assertArrayEquals(new Object[] { testVehicle }, result.toArray());
     }
 
     /**

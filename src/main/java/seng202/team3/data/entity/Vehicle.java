@@ -31,6 +31,11 @@ public class Vehicle {
     /** Path to vehicle image */
     private String imgPath;
 
+    /**
+     * Default filepath for missing images
+     */
+    public static final String defaultImgPath = "";
+
     /** Constructor for Vehicle */
     public Vehicle(String make, String model, int maxRange,
             ArrayList<String> connectors) {
@@ -38,6 +43,10 @@ public class Vehicle {
         this.model = model;
         this.maxRange = maxRange;
         this.connectors = connectors;
+        this.imgPath = defaultImgPath;
+    }
+
+    public Vehicle() {
     }
 
     /**
@@ -135,8 +144,8 @@ public class Vehicle {
      * 
      * @return current range of the vehicle
      */
-    public double getCurrentRange() {
-        return maxRange * (batteryPercent / 100);
+    public Double getCurrentRange() {
+        return (double) (maxRange * (batteryPercent / 100));
     }
 
     /**
@@ -173,5 +182,19 @@ public class Vehicle {
      */
     public int getVehicleId() {
         return vehicleId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        Vehicle v = (Vehicle) o;
+
+        return v.getMake().equals(this.getMake())
+                && v.getModel().equals(this.getModel())
+                && v.getBatteryPercent() == this.getBatteryPercent()
+                && v.getMaxRange() == this.getMaxRange()
+                && v.getConnectors().equals(this.getConnectors())
+                && v.getCurrentRange().equals(this.getCurrentRange())
+                && v.getImgPath().equals(this.getImgPath())
+                && v.getVehicleId() == this.getVehicleId();
     }
 }

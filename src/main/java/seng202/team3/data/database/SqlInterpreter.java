@@ -16,6 +16,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.management.InstanceAlreadyExistsException;
 import org.apache.logging.log4j.LogManager;
@@ -260,6 +261,9 @@ public class SqlInterpreter implements DataManager {
                 case "Connector":
                     objects = asConnector(rs);
                     break;
+                case "Vehicle":
+                    objects = asVehicle(rs);
+                    break;
                 default: // Gets fields as list of strings
                     while (rs.next()) {
                         ArrayList<String> list = new ArrayList<>();
@@ -343,6 +347,36 @@ public class SqlInterpreter implements DataManager {
                     rs.getInt("connectorID")));
         }
         return connectors;
+    }
+
+    /**
+     * Reads ResultSet as vehicles
+     * 
+     * @param rs ResultSet to read from
+     * 
+     * @return list of vehicles
+     */
+    private List<Object> asVehicle(ResultSet rs) throws SQLException {
+        List<Object> vehicles = new ArrayList<>();
+        while (rs.next()) {
+            Vehicle v = new Vehicle();
+            v.setMake(rs.getString("make"));
+            v.setModel(rs.getString("model"));
+            v.setBatteryPercent(rs.getInt("batteryPercent"));
+            v.setMaxRange(rs.getInt("rangeKM"));
+            if (rs.getString("imgPath") == null) {
+                v.setImgPath(Vehicle.defaultImgPath);
+            } else {
+                v.setImgPath(rs.getString("imgPath"));
+            }
+            v.setVehicleId(rs.getInt("vehicleID"));
+            v.setConnectors(
+                    new ArrayList<String>(Arrays.asList(rs.getString("connectorType").split(","))));
+            vehicles.add(v);
+        }
+
+        return vehicles;
+
     }
 
     /**
@@ -439,9 +473,11 @@ public class SqlInterpreter implements DataManager {
             statement.setString(2, v.getModel());
             statement.setInt(3, v.getMaxRange());
             String connectors = "";
-            for (int i = 0; i < v.getConnectors().size(); i++) {
-                connectors += "" + v.getConnectors().get(i) + " ";
+            int i = 0;
+            for (; i < v.getConnectors().size() - 1; i++) {
+                connectors += v.getConnectors().get(i) + ",";
             }
+            connectors += v.getConnectors().get(i);
             statement.setString(4, connectors);
             statement.executeUpdate();
         } catch (SQLException e) {
