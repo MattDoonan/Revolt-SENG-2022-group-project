@@ -2,6 +2,7 @@ package seng202.team3.cucumber;
 
 import io.cucumber.java.After;
 import io.cucumber.java.AfterAll;
+import io.cucumber.java.Before;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -9,7 +10,6 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
-import org.junit.Before;
 import org.junit.platform.suite.api.ConfigurationParameter;
 import org.junit.platform.suite.api.IncludeEngines;
 import org.junit.platform.suite.api.SelectClasspathResource;
@@ -38,8 +38,12 @@ import static io.cucumber.junit.platform.engine.Constants.*;
  */
 public class RunCucumberTestMainPage extends ApplicationTest {
 
+    private MainController controller;
+
     /**
-     * Sets up the main screen with some data
+     * Implements the abstract method for this window
+     *
+     * @throws Exception if fail to launch
      */
     @Before
     public void setUp() throws Exception {
@@ -47,20 +51,30 @@ public class RunCucumberTestMainPage extends ApplicationTest {
     }
 
     /**
-     * Overridden load
+     * Starts the main for testing
      *
-     * @param primaryStage A stage
-     * @throws Exception The exception to be thrown if it doesn't work
+     * @param stage the stage of the application
+     * @throws Exception if fail to launch
      */
     @Override
-    public void start(Stage primaryStage) throws Exception {
-        FXMLLoader baseLoader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
-        Parent root = baseLoader.load();
-        MainController baseController = baseLoader.getController();
-        baseController.init(primaryStage);
-        Scene scene = new Scene(root);
-        primaryStage.setScene(scene);
-        primaryStage.show();
+    public void start(Stage stage) throws Exception {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
+        Parent page = loader.load();
+        initState(loader, stage);
+        Scene scene = new Scene(page);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    /**
+     * Initialises the state of the current application
+     *
+     * @param loader the FXML loader after loading
+     * @param stage the stage of the application
+     */
+    public void initState(FXMLLoader loader, Stage stage) {
+        controller = loader.getController();
+        controller.init(stage);
     }
 
     /**

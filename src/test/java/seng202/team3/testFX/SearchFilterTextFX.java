@@ -1,11 +1,13 @@
 package seng202.team3.testFX;
 
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
+import seng202.team3.data.entity.Charger;
 import seng202.team3.gui.MainController;
 import seng202.team3.gui.MainWindow;
 
@@ -28,7 +30,7 @@ public class SearchFilterTextFX extends TestFXBase {
      * @throws Exception if fail to launch
      */
     @Override
-    public void setUpClass() throws Exception {
+    public void setUp() throws Exception {
         ApplicationTest.launch(MainWindow.class);
     }
 
@@ -75,5 +77,26 @@ public class SearchFilterTextFX extends TestFXBase {
         clickOn("#executeSearch");
         int newTotal = controller.getManager().getCloseChargerData().size();
         assertTrue(total > newTotal);
+    }
+
+    @Test
+    public void containsAddress() {
+        boolean isValid = true;
+        clickOn("#filters");
+        clickOn("#distanceDisplay");
+        clickOn("#filters");
+        clickOn("#distanceDisplay");
+        clickOn("#executeSearch");
+        clickOn("#searchCharger");
+        write("christ");
+        clickOn("#executeSearch");
+        ObservableList<Charger> chargers = controller.getManager().getCloseChargerData();
+        for (Charger charger : chargers) {
+            String lowerAddress = charger.getLocation().getAddress().toLowerCase();
+            if (!lowerAddress.contains("christ")) {
+                isValid = false;
+            }
+        }
+        assertTrue(isValid);
     }
 }

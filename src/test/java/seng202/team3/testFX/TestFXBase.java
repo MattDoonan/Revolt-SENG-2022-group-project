@@ -21,8 +21,9 @@ import java.util.concurrent.TimeoutException;
 public abstract class TestFXBase extends ApplicationTest {
 
     @BeforeEach
-    public abstract void setUpClass() throws Exception;
+    public abstract void setUp() throws Exception;
 
+    @BeforeEach
     @Override
     public abstract void start(Stage stage) throws Exception;
 
