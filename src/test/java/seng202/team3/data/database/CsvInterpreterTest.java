@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
+import seng202.team3.data.entity.Coordinate;
 
 /**
  * Testing suite for CSV importing and parsing
@@ -165,42 +167,19 @@ public class CsvInterpreterTest {
     }
 
     @Test
-    public void checkConnectorsSame() {
-        Charger c = (Charger) result.get(0);
-        List<Connector> expectedConnectors = Arrays
-                .asList(new Connector("Type 2 Socketed", "22 kW", "Operative", "AC", 1));
-
-        boolean isIdentical = true;
-
-        for (int i = 0; i < expectedConnectors.size(); i++) {
-            if (!(expectedConnectors.get(i).getType().equals(c.getConnectors().get(i).getType()))
-                    || !(expectedConnectors.get(i).getPower()
-                            .equals(c.getConnectors().get(i).getPower()))
-                    || !(expectedConnectors.get(i).getStatus()
-                            .equals(c.getConnectors().get(i).getStatus()))
-                    || !(expectedConnectors.get(i).getCurrent()
-                            .equals(c.getConnectors().get(i).getCurrent()))
-                    || (expectedConnectors.get(i).getCount() != c.getConnectors().get(i)
-                            .getCount())) {
-                isIdentical = false;
-                break;
-            }
-        }
-        assertTrue(isIdentical);
-    }
-
-    @Test
-    public void checkChargerObjects() {
-        boolean isDifferent = false;
-
-        Charger c = (Charger) result.get(0);
-        if ((c.getChargerId() != 1) || (c.getAvailableParks() != 1)
-                || (!c.getDateOpened().equals("2020/05/01 00:00:00+00"))
-                || (c.getHasAttraction()) || (!c.getChargeCost()) || (c.getParkingCost()
-                        || (c.getLocation().getLon() != 170.100913))) {
-            isDifferent = true;
-        }
-
-        assertFalse(isDifferent);
+    public void checkChargersSame() {
+        ArrayList<Connector> expectedConnectors = new ArrayList<>(
+                Arrays.asList(new Connector("Type 2 Socketed", "22 kW", "Operative", "AC", 1)));
+        Charger c = new Charger(expectedConnectors, "YHA MT COOK",
+                new Coordinate(1366541.235400,
+                        5153202.164200,
+                        -43.737450,
+                        170.100913,
+                        "4 Kitchener Dr, Mount Cook National Park 7999, New Zealand"),
+                1, 0.0, "MERIDIAN ENERGY LIMITED",
+                "MERIDIAN ENERGY LIMITED", "2020/05/01 00:00:00+00",
+                false, true, true, false);
+        c.setChargerId(1);
+        assertEquals(c, (Charger) result.get(0));
     }
 }

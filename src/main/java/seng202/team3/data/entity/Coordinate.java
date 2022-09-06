@@ -144,4 +144,15 @@ public class Coordinate {
         this.address = address;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        Coordinate c = (Coordinate) o;
+
+        return c.getXpos().equals(this.getXpos())
+                && c.getYpos().equals(this.getYpos())
+                && c.getLat().equals(this.getLat())
+                && c.getLon().equals(this.getLon())
+                && c.getAddress().equals(this.getAddress());
+    }
+
 }

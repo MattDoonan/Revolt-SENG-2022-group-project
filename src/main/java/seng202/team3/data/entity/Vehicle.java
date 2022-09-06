@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class Vehicle {
 
     /** Vehicle id */
-    private int vehicleID;
+    private int vehicleId;
 
     /** Make of the vehicle */
     private String make;
@@ -162,12 +162,16 @@ public class Vehicle {
      *
      * @param number integer for the id
      */
-    public void setVehicleID(int number) { this.vehicleID = number; }
+    public void setVehicleId(int number) {
+        this.vehicleId = number;
+    }
 
     /**
      * returns the vehicle id number
      *
      * @return the id integer
      */
-    public int getVehicleID() { return vehicleID; }
+    public int getVehicleId() {
+        return vehicleId;
+    }
 }

@@ -31,7 +31,7 @@ public class Journey {
     private boolean isFavourite;
 
     /** the journeys id number **/
-    private int journeyID;
+    private int journeyId;
 
     /**
      * Constructor for the Journey
@@ -159,15 +159,20 @@ public class Journey {
 
     /**
      * sets the ID number
+     * 
      * @param number integer for the id
      */
-    public void setJourneyID(int number) { this.journeyID = number; }
+    public void setJourneyId(int number) {
+        this.journeyId = number;
+    }
 
     /**
      * returns the unique id number
      *
      * @return the integer id number
      */
-    public int getJourneyID() { return this.journeyID; }
+    public int getJourneyId() {
+        return this.journeyId;
+    }
 
 }

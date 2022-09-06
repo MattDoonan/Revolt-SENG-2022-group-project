@@ -87,8 +87,8 @@ public class Charger {
 
     /** Constructor for the Charger */
     public Charger(ArrayList<Connector> connectors, String name, Coordinate location,
-            int availableParks, Double timeLimit, String operator, String owner,
-            boolean hasAttraction) {
+            int availableParks, Double timeLimit, String operator, String owner, String dateOpened,
+            boolean hasAttraction, boolean is24Hrs, boolean hasChargeCost, boolean hasParkingCost) {
         this.connectors = connectors;
         setLocation(location);
         setAvailableParks(availableParks);
@@ -98,6 +98,10 @@ public class Charger {
         setHasAttraction(hasAttraction);
         setName(name);
         setOwner(owner);
+        setDateOpened(dateOpened);
+        setChargeCost(hasChargeCost);
+        setParkingCost(hasParkingCost);
+        setAvailable24Hrs(is24Hrs);
     }
 
     /**
@@ -139,10 +143,10 @@ public class Charger {
     /**
      * Add a new {@link Connector connector} to the charger
      * 
-     * @param connector Connector to add
+     * @param c Connector to add
      */
-    public void addConnector(Connector connector) {
-        connectors.add(connector);
+    public void addConnector(Connector c) {
+        connectors.add(c);
     }
 
     /**
@@ -395,5 +399,28 @@ public class Charger {
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        Charger c = (Charger) o;
+        // System.out.println("test");
+        boolean test = c.getChargerId() == this.getChargerId()
+                && c.getDateOpened().equals(this.getDateOpened())
+                && c.getName().equals(this.getName())
+                && c.getConnectors().equals(this.getConnectors())
+                && c.getLocation().equals(this.getLocation())
+                && c.getAvailableParks() == this.getAvailableParks()
+                && c.getTimeLimit().equals(this.getTimeLimit())
+                && c.getOperator().equals(this.getOperator())
+                && c.getOwner().equals(this.getOwner())
+                && c.getPublic() == this.getPublic()
+                && c.getHasAttraction() == this.getHasAttraction()
+                && c.getAvailableParks() == this.getAvailableParks()
+                && c.getParkingCost() == this.getParkingCost()
+                && c.getChargeCost() == this.getChargeCost()
+                && c.getWarnings().equals(this.getWarnings());
+
+        return test;
     }
 }

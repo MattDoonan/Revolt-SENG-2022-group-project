@@ -159,4 +159,14 @@ public class Connector {
         this.connectorId = connectorId;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        Connector c = (Connector) o;
+
+        return c.getType().equals(this.getType())
+                && c.getPower().equals(this.getPower())
+                && c.getStatus().equals(this.getStatus())
+                && c.getCurrent().equals(this.getCurrent())
+                && c.getId() == this.getId();
+    }
 }

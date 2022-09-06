@@ -76,7 +76,7 @@ public class MainManagerTest {
         connectorList.add(dummyConnector);
         Coordinate coord = new Coordinate(4.5, 5.7, -36.85918, 174.76602);
         Charger c = new Charger(connectorList, "Test1", coord, 1, 0.3,
-                "Meridian", "Meridian", true);
+                "Meridian", "Meridian", "2020/1/1 00:00:00", true, true, true, true);
         manage.setSelectedCharger(c);
         assertEquals(c.getLocation().getLat(),
                 manage.getSelectedCharger().getLocation().getLat());
@@ -104,8 +104,8 @@ public class MainManagerTest {
         assertEquals(chargerList.size(), manage.getData().size());
         // checks the address of each of the elements since they should be unique
         for (int i = 0; i < chargerList.size(); i++) {
-            assertEquals(chargerList.get(i).getLocation().getAddress(),
-                    manage.getData().get(i).getLocation().getAddress());
+            assertEquals(chargerList.get(i),
+                    manage.getData().get(i));
         }
     }
 
