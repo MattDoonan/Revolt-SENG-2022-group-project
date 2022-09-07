@@ -14,26 +14,36 @@ import seng202.team3.gui.MainController;
 public class MapManager {
 
     /**
-     * Contains the MainController for reference
+     * Contains the MainManager for reference
      */
-    private final MainManager controller;
+    private final MainManager manager;
 
     /**
-     * Constructs the MapManager from the {@link MainController}
+     * Constructs the MapManager from the {@link MainManager}
      *
-     * @param controller the MainController currently being used
+     * @param manager the MainManager currently being used
      */
-    public MapManager(MainManager controller) {
-        this.controller = controller;
+    public MapManager(MainManager manager) {
+        this.manager = manager;
     }
 
     /**
-     * Returns the controller object
+     * Returns the manager object
      *
-     * @return {@link MainController}, the MainController
+     * @return {@link MainManager}, the MainManager
      */
     public MainManager getController() {
-        return controller;
+        return manager;
+    }
+
+    /**
+     * Associates this map with this coordinate {@link Coordinate}
+     *
+     * @param coordinate the coordinate which is selected
+     */
+    public void makeCoordinate(Coordinate coordinate) {
+        manager.setPosition(coordinate);
+        manager.getCloseChargerData();
     }
 
 }

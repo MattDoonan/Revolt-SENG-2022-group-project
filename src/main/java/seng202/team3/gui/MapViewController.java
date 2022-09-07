@@ -105,9 +105,7 @@ public class MapViewController {
     public void makeCoordinate(Coordinate coordinate) {
         javaScriptConnector.call("addCoordinate", "Current Coordinate: ",
                 coordinate.getLat(), coordinate.getLon());
-        map.getController().setPosition(coordinate);
-        map.getController().getCloseChargerData();
-
+        map.makeCoordinate(coordinate);
     }
 
     /**
@@ -119,7 +117,6 @@ public class MapViewController {
     public void changePosition(Coordinate coordinate) {
         javaScriptConnector.call("movePosition",
                 coordinate.getLat(), coordinate.getLon());
-
     }
 
     /**
