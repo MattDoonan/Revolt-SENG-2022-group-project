@@ -34,6 +34,7 @@ public class SqlInterpreterTest {
     static Connector testConnector2;
     static Charger testCharger;
     static Vehicle testVehicle;
+    static Journey testJourney;
 
     @BeforeAll
     static void setup() throws InstanceAlreadyExistsException {
@@ -67,6 +68,12 @@ public class SqlInterpreterTest {
                 100,
                 new ArrayList<String>(Arrays.asList("ChardaMo", "Type 2 Socketed")));
         testVehicle.setVehicleId(1);
+        testJourney = new Journey(testVehicle,
+                new Coordinate(5.6, 7.7, -36.6543, 174.74532),
+                new Coordinate(5.8, 7.2, -37.45543, 176.45652),
+                "2020/1/1 00:00:00", "2020/1/3 00:00:00");
+        testJourney.addCharger(testCharger);
+        testJourney.setJourneyId(1);
     }
 
     @BeforeEach
@@ -107,7 +114,7 @@ public class SqlInterpreterTest {
     }
 
     @Test
-    public void interpretAsWrongObject() {
+    public void interpretAsWrongObject() throws IOException {
         db.writeCharger(testCharger);
         Query q = new QueryBuilderImpl().withSource("charger").build();
         assertThrows(IOException.class, () -> {
@@ -242,9 +249,10 @@ public class SqlInterpreterTest {
      */
     @Test
     public void addJourney() throws IOException {
-        Coordinate start = new Coordinate(5.6, 7.7, -36.6543, 174.74532, "Start");
-        Coordinate end = new Coordinate(5.8, 7.2, -37.45543, 176.45652, "Start");
-        Journey j = new Journey(start, end);
-        db.writeJourney(j);
+        db.writeJourney(testJourney);
+        Query q = new QueryBuilderImpl().withSource("journey").build();
+        List<Object> result = db.readData(q, Journey.class);
+        assertArrayEquals(new Object[] { testJourney }, result.toArray());
+
     }
 }

@@ -36,12 +36,18 @@ public class Journey {
     /**
      * Constructor for the Journey
      */
-    public Journey(Coordinate startPosition, Coordinate endPosition) {
-        ArrayList<String> connectors = new ArrayList<>();
-        connectors.add("temp"); // change default connectors to all for veh?
-        this.vehicle = new Vehicle("temp", "temp", 300, connectors);
+    public Journey(Vehicle vehicle, Coordinate startPosition,
+            Coordinate endPosition, String startDate,
+            String endDate) {
         this.startPosition = startPosition;
         this.endPosition = endPosition;
+        this.vehicle = vehicle;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.isFavourite = false;
+    }
+
+    public Journey() {
     }
 
     /**
@@ -95,12 +101,30 @@ public class Journey {
     }
 
     /**
+     * Sets the start position of the journey
+     * 
+     * @param coord starting position
+     */
+    public void setStartPosition(Coordinate coord) {
+        startPosition = coord;
+    }
+
+    /**
      * Gets the {@link Coordinate coordinate} of the end of the journey
      * 
      * @return end position of journey
      */
     public Coordinate getEndPosition() {
         return endPosition;
+    }
+
+    /**
+     * Sets the end position of the journey
+     * 
+     * @param coord ending position
+     */
+    public void setEndPosition(Coordinate coord) {
+        endPosition = coord;
     }
 
     /**
@@ -173,6 +197,22 @@ public class Journey {
      */
     public int getJourneyId() {
         return this.journeyId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        Journey j = (Journey) o;
+        boolean test;
+        test = j.getChargers().equals(this.getChargers());
+        test = j.getVehicle().equals(this.getVehicle());
+        test = j.getStartPosition().equals(this.getStartPosition());
+        test = j.getEndPosition().equals(this.getEndPosition());
+        test = j.getStartDate().equals(this.getStartDate());
+        test = j.getEndDate().equals(this.getEndDate());
+        test = j.getFavourite() == this.getFavourite();
+        test = j.getJourneyId() == this.getJourneyId();
+
+        return test;
     }
 
 }

@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.management.InstanceAlreadyExistsException;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.javatuples.Triplet;
@@ -57,22 +58,22 @@ public class SqlInterpreter implements DataManager {
         if (!checkExist(url)) {
             createFile(url);
             defaultDatabase();
-            addCsvToData();
+            try {
+                addCsvToData();
+            } catch (IOException e) {
+                logManager.log(Level.WARN, "Could not import default csv data");
+            }
         }
     }
 
     /**
      * Adds all the charger data stored in the CSV file to the database
      */
-    public void addCsvToData() {
+    public void addCsvToData() throws IOException {
         Query q = new QueryBuilderImpl().withSource("charger").build();
         ArrayList<Charger> chargerList = new ArrayList<>();
-        try {
-            for (Object o : new CsvInterpreter().readData(q, Charger.class)) {
-                chargerList.add((Charger) o);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        for (Object o : new CsvInterpreter().readData(q, Charger.class)) {
+            chargerList.add((Charger) o);
         }
         writeCharger(chargerList);
     }
@@ -304,6 +305,9 @@ public class SqlInterpreter implements DataManager {
                 case "Vehicle":
                     objects = asVehicle(rs);
                     break;
+                case "Journey":
+                    objects = asJourney(rs);
+                    break;
                 default: // Gets fields as list of strings
                     while (rs.next()) {
                         ArrayList<String> list = new ArrayList<>();
@@ -426,11 +430,65 @@ public class SqlInterpreter implements DataManager {
     }
 
     /**
+     * Reads ResultSet as journeys
+     * 
+     * @param rs ResultSet to read from
+     * 
+     * @return list of journeys
+     */
+    private List<Object> asJourney(ResultSet rs) throws SQLException {
+        List<Object> journeys = new ArrayList<>();
+
+        while (rs.next()) {
+            Journey journey = new Journey();
+            journey.setJourneyId(rs.getInt("journeyid"));
+            journey.setStartPosition(
+                    new Coordinate(rs.getDouble("startX"), rs.getDouble("startY"),
+                            rs.getDouble("startLat"), rs.getDouble("startLon")));
+            journey.setEndPosition(
+                    new Coordinate(rs.getDouble("endX"), rs.getDouble("endY"),
+                            rs.getDouble("endLat"), rs.getDouble("endLon")));
+            journey.setStartDate(rs.getString("startDate"));
+            journey.setEndDate(rs.getString("endDate"));
+
+            // Get vehicle
+            ResultSet vehicleRs = createConnection().createStatement()
+                    .executeQuery("SELECT * FROM vehicle WHERE vehicleID = "
+                            + rs.getInt("vehicleID") + ";");
+
+            List<Object> vehicles = asVehicle(vehicleRs);
+            if (vehicles.size() == 1) {
+                journey.setVehicle((Vehicle) vehicles.get(0));
+            } else {
+                throw new SQLException("Journey object is missing an associated vehicle");
+            }
+
+            // Get stops
+            ResultSet stopRs = createConnection().createStatement()
+                    .executeQuery("SELECT * FROM stop "
+                            + " INNER JOIN charger ON charger.chargerid = stop.chargerid"
+                            + " WHERE journeyid = "
+                            + rs.getInt("journeyid")
+                            + " ORDER BY position ASC;");
+
+            List<Object> stops = asCharger(stopRs);
+            for (Object c : stops) {
+                journey.addCharger((Charger) c);
+            }
+
+            journeys.add(journey);
+
+        }
+
+        return journeys;
+    }
+
+    /**
      * Adds a new charger to the database from a charger object
      * 
      * @param c charger object
      */
-    public void writeCharger(Charger c) {
+    public void writeCharger(Charger c) throws IOException {
         String toAdd = "INSERT INTO charger (x, y, name, operator, owner, address, is24hours, "
                 + "carparkcount, hascarparkcost, maxtimelimit, hastouristattraction, latitude, "
                 + "longitude, datefirstoperational, haschargingcost, currenttype)"
@@ -456,7 +514,7 @@ public class SqlInterpreter implements DataManager {
             statement.executeUpdate();
             writeConnector(c.getConnectors(), statement.getGeneratedKeys().getInt(1));
         } catch (SQLException e) {
-            logManager.error(e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -465,7 +523,7 @@ public class SqlInterpreter implements DataManager {
      * 
      * @param chargers array list of charger objects
      */
-    public void writeCharger(ArrayList<Charger> chargers) {
+    public void writeCharger(ArrayList<Charger> chargers) throws IOException {
         for (Charger charger : chargers) {
             writeCharger(charger);
         }
@@ -477,7 +535,7 @@ public class SqlInterpreter implements DataManager {
      * @param c         a connector object
      * @param chargerId an Integer with the specified charger id
      */
-    public void writeConnector(Connector c, int chargerId) {
+    public void writeConnector(Connector c, int chargerId) throws IOException {
         String toAdd = "INSERT INTO connector (connectorcurrent, connectorpowerdraw, "
                 + "count, connectorstatus, chargerid, connectortype) values(?,?,?,?,?,?)";
         try (Connection connection = createConnection();
@@ -490,7 +548,7 @@ public class SqlInterpreter implements DataManager {
             statement.setString(6, c.getType());
             statement.executeUpdate();
         } catch (SQLException e) {
-            logManager.error(e);
+            throw new IOException(e.getMessage());
         }
 
     }
@@ -502,7 +560,7 @@ public class SqlInterpreter implements DataManager {
      * @param connectors an Array list of Connector objects
      * @param chargerId  Integer representing the associated charger
      */
-    public void writeConnector(ArrayList<Connector> connectors, int chargerId) {
+    public void writeConnector(ArrayList<Connector> connectors, int chargerId) throws IOException {
         for (Connector connector : connectors) {
             writeConnector(connector, chargerId);
         }
@@ -513,7 +571,7 @@ public class SqlInterpreter implements DataManager {
      * 
      * @param v the object Vehicle
      */
-    public void writeVehicle(Vehicle v) {
+    public void writeVehicle(Vehicle v) throws IOException {
         String toAdd = "INSERT INTO vehicle (make, model, rangeKM, connectorType) values(?,?,?,?)";
         try (Connection connection = createConnection();
                 PreparedStatement statement = connection.prepareStatement(toAdd)) {
@@ -529,7 +587,7 @@ public class SqlInterpreter implements DataManager {
             statement.setString(4, connectors);
             statement.executeUpdate();
         } catch (SQLException e) {
-            logManager.error(e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -538,21 +596,47 @@ public class SqlInterpreter implements DataManager {
      * 
      * @param j the object journey
      */
-    public void writeJourney(Journey j) {
-        String toAdd = "INSERT INTO journey (vehicleID, startLat, startLon, endLat, endLon,"
-                + " startDate, finishDate) values(?,?,?,?,?,?,?)";
+    public void writeJourney(Journey j) throws IOException {
+        writeVehicle(j.getVehicle());
+        String toAdd = "INSERT INTO journey (vehicleID, startLat, startLon, startX, startY, "
+                + "endLat, endLon, endX, endY, startDate, endDate) "
+                + "values(?,?,?,?,?,?,?,?,?,?,?);";
         try (Connection connection = createConnection();
-                PreparedStatement statement = connection.prepareStatement(toAdd)) {
-            statement.setInt(1, j.getVehicle().getVehicleId());
-            statement.setDouble(2, j.getStartPosition().getLat());
-            statement.setDouble(3, j.getStartPosition().getLon());
-            statement.setDouble(4, j.getEndPosition().getLat());
-            statement.setDouble(5, j.getEndPosition().getLon());
-            statement.setString(6, j.getStartDate());
-            statement.setString(7, j.getEndDate());
-            statement.executeUpdate();
+                PreparedStatement addJourney = connection.prepareStatement(toAdd)) {
+            addJourney.setInt(1, j.getVehicle().getVehicleId());
+            addJourney.setDouble(2, j.getStartPosition().getLat());
+            addJourney.setDouble(3, j.getStartPosition().getLon());
+            addJourney.setDouble(4, j.getStartPosition().getXpos());
+            addJourney.setDouble(5, j.getStartPosition().getYpos());
+            addJourney.setDouble(6, j.getEndPosition().getLat());
+            addJourney.setDouble(7, j.getEndPosition().getLon());
+            addJourney.setDouble(8, j.getEndPosition().getXpos());
+            addJourney.setDouble(9, j.getEndPosition().getYpos());
+            addJourney.setString(10, j.getStartDate());
+            addJourney.setString(11, j.getEndDate());
+            addJourney.executeUpdate();
+
+            writeCharger(j.getChargers());
+            String addStops = "INSERT INTO stop (journeyid, chargerid, position) values ";
+            for (int i = 0; i < j.getChargers().size(); i++) {
+
+                if (i != 0) {
+                    addStops += ",";
+                }
+                addStops += "(" + j.getJourneyId() + ","
+                        + j.getChargers().get(i).getChargerId() + ","
+                        + i + ")";
+            }
+            addStops += ";";
+
+            if (j.getChargers().size() > 0) {
+                connection.createStatement().executeUpdate(addStops);
+            } else {
+                throw new SQLException("Error writing journey. No stops found.");
+            }
+
         } catch (SQLException e) {
-            logManager.error(e);
+            throw new IOException(e.getMessage());
         }
     }
 

@@ -39,7 +39,7 @@ DROP TABLE IF EXISTS note;
 CREATE TABLE if not exists note
 (
     reviewId INTEGER constraint dk_note PRIMARY KEY AUTOINCREMENT,
-    chargerID INTEGER NOT NULL references Charger(chargerID),
+    chargerid INTEGER NOT NULL references Charger(chargerID),
     rating REAL,
     publicText VARCHAR(255),
     privateText VARCHAR(255)
@@ -50,7 +50,7 @@ DROP TABLE IF EXISTS favourite;
 CREATE TABLE if not exists favourite
 (
     favouriteID INTEGER constraint dk_fav PRIMARY KEY AUTOINCREMENT,
-    chargerID INTEGER NOT NULL references Charger(chargerID)
+    chargerid INTEGER NOT NULL references Charger(chargerid)
 
     );
 --SPLIT
@@ -71,24 +71,26 @@ DROP TABLE IF EXISTS journey;
 --SPLIT
 CREATE TABLE if not exists journey
 (
-    journeyId INTEGER constraint dk_journey PRIMARY KEY AUTOINCREMENT,
+    journeyid INTEGER constraint dk_journey PRIMARY KEY AUTOINCREMENT,
     vehicleID INTEGER NOT NULL references Vehicle(vehicleID),
     startLat REAL NOT NULL,
     startLon REAL NOT NULL,
+    startX REAL,
+    startY REAL,
     endLat REAL NOT NULL,
     endLon REAL NOT NULL,
+    endX REAL,
+    endY REAL,
     startDate TEXT,
-    finishDate TEXT
+    endDate TEXT
     );
 --SPLIT
 DROP TABLE IF EXISTS stop;
 --SPLIT
 CREATE TABLE if not exists stop
 (
-    stopID INTEGER constraint dk_stop PRIMARY KEY AUTOINCREMENT,
-    latPos INTEGER,
-    lonPos INTEGER,
-    journeyID INTEGER NOT NULL references Journey(journeyId),
-    chargerID INTEGER references Charger(chargerID),
-    stopOrder INTEGER NOT NULL
+    stopid INTEGER constraint dk_stop PRIMARY KEY AUTOINCREMENT,
+    journeyid INTEGER NOT NULL references Journey(journeyid),
+    chargerid INTEGER NOT NULL references Charger(chargerid),
+    position INTEGER NOT NULL
     );
