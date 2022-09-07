@@ -24,6 +24,7 @@ import javafx.stage.Stage;
 import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.logic.Calculations;
+import seng202.team3.logic.JavaScriptBridge;
 import seng202.team3.logic.MainManager;
 import seng202.team3.logic.MapManager;
 import seng202.team3.logic.TempData;
@@ -321,6 +322,14 @@ public class MainController {
 
     }
 
+    /**
+     * Uses the JavaScript Bridge to load the charger edit functionality of the
+     * selected charger
+     */
+    public void editCharger() {
+        JavaScriptBridge bridge = new JavaScriptBridge();
+        bridge.loadMoreInfo(manage.getSelectedCharger().getChargerId());
+    }
 
     /**
      * Toggles the route view on.

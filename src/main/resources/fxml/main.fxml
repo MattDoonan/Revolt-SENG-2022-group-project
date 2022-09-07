@@ -107,7 +107,7 @@
                         </Button>
                     </items>
                   </SplitPane>
-                                <TextArea fx:id="displayInfo" editable="false" layoutX="14.0" layoutY="177.0" prefHeight="88.0" prefWidth="347.0" style="-fx-font-size: 15;" />
+                                <TextArea fx:id="displayInfo" onMouseClicked="#editCharger" editable="false" layoutX="14.0" layoutY="177.0" prefHeight="88.0" prefWidth="347.0" style="-fx-font-size: 15;" />
                                 <TableView fx:id="chargerTable" fixedCellSize="50.0" layoutX="14.0" layoutY="385.0" prefHeight="236.0" prefWidth="220.0" style="-fx-table-cell-border-color: transparent; -fx-background-color: black; -fx-my-cell-background: white;" />
                             </items>
                         </SplitPane>
