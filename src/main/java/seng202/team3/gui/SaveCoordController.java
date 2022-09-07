@@ -23,6 +23,7 @@ public class SaveCoordController {
     public SaveCoordController() {
     }
 
+
     /**
      * Adds a coordinate with a specified name and closes the box
      */

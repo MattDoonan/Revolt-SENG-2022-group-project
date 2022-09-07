@@ -99,7 +99,7 @@
 
 
         /**
-         * Adds a marker to the map and stores it in the markers array for later use (e.g. removal)
+         * Adds a charger marker to the map and stores it in the markers array for later use (e.g. removal)
          *
          * @param title tooltip to display on hover
          * @param lat latitude to place marker at
@@ -107,7 +107,9 @@
          */
         function addMarker(title, lat, lng, id) {
             var m = new L.Marker([lat, lng])
-            m.bindPopup("Address: " + title).openPopup()
+            m.id = id
+            m.bindPopup("Address: " + title + "<br><button type='button' onclick='javaScriptBridge.loadMoreInfo("+
+                id + ")'>More Info</button>")
             m.on("mouseover", function(ev) {m.openPopup();})
             m.addTo(map).on("click", e => javaScriptBridge.chargerHandler(id),
             )
@@ -132,14 +134,12 @@
          */
         function addCoordinate(title, lat, lng) {
             coordinate = new L.Marker([lat, lng])
-            coordinate.bindPopup(title + ": " + lat.toFixed(4) + " " + lng.toFixed(4) + " ").openPopup()
+            coordinate.bindPopup(title + ": " + lat.toFixed(4) + " " + lng.toFixed(4) + "<br>" +
+                "<button type=\"button\" onclick='javaScriptBridge.saveCoord()'>Save</button>")
             coordinate.on("mouseover", function(ev) {coordinate.openPopup()})
-            coordinate.addTo(map).on("click", e => {
-                javaScriptBridge.saveCoord()
-            })
+            coordinate.addTo(map)
             movePosition(lat, lng)
         }
-
 
         /**
          * Remove coordinate

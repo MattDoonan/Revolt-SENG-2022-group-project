@@ -18,6 +18,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import seng202.team3.data.database.ComparisonType;
@@ -319,6 +320,7 @@ public class MainController {
         }
 
     }
+
 
     /**
      * Toggles the route view on.

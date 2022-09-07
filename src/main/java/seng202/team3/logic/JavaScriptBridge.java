@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -12,7 +13,9 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
+import seng202.team3.gui.ChargerController;
 import seng202.team3.gui.MainController;
+import seng202.team3.gui.SaveCoordController;
 
 
 /**
@@ -79,6 +82,8 @@ public class JavaScriptBridge {
             modal.setResizable(false);
             modal.setTitle("Add a coordinate");
             modal.initModality(Modality.WINDOW_MODAL);
+            SaveCoordController saveCoord = saveCoordLoader.getController();
+            saveCoord.addCoordinate();
             modal.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();
@@ -95,7 +100,7 @@ public class JavaScriptBridge {
 
     /**
      * Displays the charger according to id and also zooms to it, if it is not a journey.
-     * Else, it displays it and adds it to the respective journey.
+     * Sets the charger as the selected charger
      *
      * @param id the charger id selected
      */
@@ -130,5 +135,32 @@ public class JavaScriptBridge {
         controller.getMapController().addStopInRoute(parseCoordinate(latlng));
     }
 
+
+    /**
+     * Loads the charger information on a separate pop-up
+     */
+    public void loadMoreInfo(int id) {
+        chargerHandler(id);
+        try {
+            FXMLLoader chargerCont = new FXMLLoader(getClass().getResource(
+                    "/fxml/charger_info.fxml"));
+            AnchorPane root = chargerCont.load();
+            Scene modalScene = new Scene(root);
+            Stage modal = new Stage();
+            modal.setScene(modalScene);
+            modal.setWidth(400);
+            modal.setHeight(400);
+            modal.setResizable(false);
+            modal.setTitle("Charger Information");
+            modal.initModality(Modality.WINDOW_MODAL);
+            ChargerController controller = chargerCont.getController();
+            controller.displayChargerInfo();
+            modal.showAndWait();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 
 }
