@@ -34,7 +34,7 @@ import static org.testfx.api.FxAssert.verifyThat;
  */
 public class SearchFilterStepDefs {
 
-    private static MainManager manager;
+    private MainManager manager;
 
     /**
      * Initialises the Cucumber Test Base
@@ -45,8 +45,8 @@ public class SearchFilterStepDefs {
     /**
      * Implements a manager
      */
-    @BeforeAll
-    public static void setUpAll() {
+    @Given("There is a manager")
+    public void setUpAll() {
         manager = new MainManager();
     }
 
