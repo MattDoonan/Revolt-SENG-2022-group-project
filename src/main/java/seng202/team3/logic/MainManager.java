@@ -147,7 +147,7 @@ public class MainManager {
      * Takes an input of field, criteria and type to adjust the main data query.
      * 
      * @param field a String of the field for the query
-     * @param criteria a String of the criterial for the query
+     * @param criteria a String of the criteria for the query
      * @param type an enum of the comparison type of the query
      */
     public void adjustQuery(String field, String criteria, ComparisonType type) {

@@ -1,8 +1,5 @@
 Feature: Searching and filtering chargers
 
-  Background:
-    Given There is a valid instance
-
   Scenario: User inputs a search on a list of chargers, and the query is valid
     Given There is no current input given
     When The user inputs a valid query "Dunedin"
