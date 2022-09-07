@@ -45,8 +45,8 @@ public class SearchFilterStepDefs {
     /**
      * Implements a manager
      */
-    @Given("There is a manager")
-    public void setUpAll() {
+    @Given("There is a valid instance")
+    public void setUpManager() {
         manager = new MainManager();
     }
 
