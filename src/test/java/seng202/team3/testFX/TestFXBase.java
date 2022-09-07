@@ -23,7 +23,6 @@ public abstract class TestFXBase extends ApplicationTest {
     @BeforeEach
     public abstract void setUp() throws Exception;
 
-    @BeforeEach
     @Override
     public abstract void start(Stage stage) throws Exception;
 
