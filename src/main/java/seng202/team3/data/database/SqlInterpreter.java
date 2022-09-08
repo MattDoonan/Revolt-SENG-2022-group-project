@@ -484,17 +484,14 @@ public class SqlInterpreter implements DataManager {
     }
 
     /**
-     * Adds a new charger to the database from a charger object
-     * 
-     * @param c charger object
+     * Creates connection with the database and executes a charger statement 
+     * @param state A string of the sql code
+     * @param c the object charger
+     * @param update Boolean of whether it is update a charger or adding a new charger
      */
-    public void writeCharger(Charger c) throws IOException {
-        String toAdd = "INSERT INTO charger (x, y, name, operator, owner, address, is24hours, "
-                + "carparkcount, hascarparkcost, maxtimelimit, hastouristattraction, latitude, "
-                + "longitude, datefirstoperational, haschargingcost, currenttype)"
-                + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+    public void chargerStatement(String state, Charger c, Boolean update) throws IOException {
         try (Connection connection = createConnection();
-                PreparedStatement statement = connection.prepareStatement(toAdd)) {
+             PreparedStatement statement = connection.prepareStatement(state)) {
             statement.setDouble(1, c.getLocation().getXpos());
             statement.setDouble(2, c.getLocation().getYpos());
             statement.setString(3, c.getName());
@@ -511,11 +508,42 @@ public class SqlInterpreter implements DataManager {
             statement.setString(14, c.getDateOpened());
             statement.setBoolean(15, c.getChargeCost());
             statement.setString(16, c.getCurrentType());
+            if (update) {
+                statement.setInt(17, c.getChargerId());
+            }
             statement.executeUpdate();
-            writeConnector(c.getConnectors(), statement.getGeneratedKeys().getInt(1));
+            if(!update) {
+                c.setChargerId(statement.getGeneratedKeys().getInt(1));
+                writeConnector(c.getConnectors(), statement.getGeneratedKeys().getInt(1));
+            }
         } catch (SQLException e) {
             throw new IOException(e.getMessage());
         }
+    }
+
+    /**
+     * Creates the String for the adding a charge in sql then calls charger statement
+     * 
+     * @param c charger object
+     */
+    public void writeCharger(Charger c) throws IOException {
+        String toAdd = "INSERT INTO charger (x, y, name, operator, owner, address, is24hours, "
+                + "carparkcount, hascarparkcost, maxtimelimit, hastouristattraction, latitude, "
+                + "longitude, datefirstoperational, haschargingcost, currenttype)"
+                + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+        chargerStatement(toAdd, c, false);
+    }
+
+    /**
+     * Creates the String for updating a charge in sql then calls charger statement
+     *
+     * @param c a charger object
+     */
+    public void updateCharger(Charger c) throws IOException {
+        String toUpdate = "update charger set x = ?, y = ?, name = ?, operator = ?, owner = ?, address = ?, is24hours = ?, " +
+                "carparkcount = ?, hascarparkcost = ?, maxtimelimit = ?, hastouristattraction = ?, latitude = ?, longitude = ?, " +
+                "datefirstoperational = ?, haschargingcost = ?, currenttype = ? where chargerid = ?";
+        chargerStatement(toUpdate, c, true);
     }
 
     /**

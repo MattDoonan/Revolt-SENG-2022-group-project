@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.management.InstanceAlreadyExistsException;
+
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -205,6 +207,24 @@ public class SqlInterpreterTest {
         int res = db.readData(q, Charger.class).size();
         db.writeCharger(new ArrayList<>(Arrays.asList(c, x)));
         assertEquals(res + 2, db.readData(q, Charger.class).size());
+    }
+
+    /**
+     * Adds charger to database then edits some variables anc checks if variables have changed
+     */
+    @Test
+    public void updateCharger() throws IOException {
+        db.writeCharger(testCharger);
+        testCharger.setOwner("Tesla");
+        testCharger.setAvailable24Hrs(false);
+        testCharger.setOperator("Seng202");
+        db.updateCharger(testCharger);
+        Query q = new QueryBuilderImpl().withSource("charger").build();
+        List<Object> get = db.readData(q, Charger.class);
+        Charger result  = (Charger) get.get(0);
+        Assertions.assertEquals("Tesla", result.getOwner());
+        Assertions.assertEquals(false, result.getAvailable24Hrs());
+        Assertions.assertEquals("Seng202", result.getOperator());
     }
 
     /**
