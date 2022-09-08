@@ -193,6 +193,19 @@ public class MainManager {
         return position;
     }
 
+    /**
+     * Adds a charger at the location of the coordinate.
+     * Initial values are set "default"
+     * TODO add appropriate functionality
+     */
+    public void addCharger() {
+    }
 
+    /**
+     * Removes the selected charger and replaces it with null
+     * TODO add appropriate functionality
+     */
+    public void deleteCharger() {
+    }
 
 }

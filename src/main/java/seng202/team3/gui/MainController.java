@@ -323,6 +323,58 @@ public class MainController {
     }
 
     /**
+     * Executes an add prompt
+     */
+    @FXML
+    public void addCharger() {
+        loadPromptScreens("Click on a position on the map\n"
+                + "(coordinate) and confirm to\n"
+                + "add a charger: \n\n", "add");
+    }
+
+    /**
+     * Executes an edit prompt
+     */
+    @FXML
+    public void editChargerFx() {
+        loadPromptScreens("Click on a charger on the map and\n"
+                + "confirm to edit a charger: \n\n", "edit");
+    }
+
+    /**
+     * Executes a delete prompt
+     */
+    @FXML
+    public void deleteCharger() {
+        loadPromptScreens("Click on a charger on the map and\n"
+                + "confirm to DELETE a charger: \n\n", "delete");
+    }
+
+    /**
+     * Loads a generic prompt screen pop-up {@link PromptPopUp}
+     *
+     * @param prompt a String of the instructions
+     */
+    public void loadPromptScreens(String prompt, String type) {
+        try {
+            FXMLLoader popUp = new FXMLLoader(getClass().getResource(
+                    "/fxml/prompt_popup.fxml"));
+            VBox root = popUp.load();
+            Scene modalScene = new Scene(root);
+            Stage modal = new Stage();
+            modal.setScene(modalScene);
+            modal.setResizable(false);
+            modal.setTitle("Click or cancel:");
+            modal.initModality(Modality.WINDOW_MODAL);
+            PromptPopUp popController = popUp.getController();
+            popController.addPrompt(prompt, type);
+            modal.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * Uses the JavaScript Bridge to load the charger edit functionality of the
      * selected charger
      */
@@ -330,6 +382,7 @@ public class MainController {
         JavaScriptBridge bridge = new JavaScriptBridge();
         bridge.loadMoreInfo(manage.getSelectedCharger().getChargerId());
     }
+
 
     /**
      * Toggles the route view on.
