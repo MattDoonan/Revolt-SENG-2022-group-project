@@ -484,7 +484,9 @@ public class SqlInterpreter implements DataManager {
     }
 
     /**
-     * Creates connection with the database and executes a charger statement 
+     * Creates connection with the database and executes a charger statement
+     * Changes if it is an update or add
+     *
      * @param state A string of the sql code
      * @param c the object charger
      * @param update Boolean of whether it is update a charger or adding a new charger
