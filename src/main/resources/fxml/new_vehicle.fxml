@@ -48,5 +48,6 @@
             <Font size="14.0" />
          </font>
       </Label>
+      <Label fx:id="imgName" layoutX="209.0" layoutY="243.0" prefHeight="26.0" prefWidth="150.0" />
    </children>
 </AnchorPane>

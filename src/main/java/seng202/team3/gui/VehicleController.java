@@ -20,6 +20,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -98,6 +99,9 @@ public class VehicleController {
     private TextField connectionsText;
 
     @FXML
+    private Label imgName;
+
+    @FXML
     private ScrollPane imgsDisplay;
 
     private ObservableList<Vehicle> vehicleData = FXCollections.observableArrayList();
@@ -106,7 +110,8 @@ public class VehicleController {
 
     private ArrayList<String> connections = new ArrayList<String>();
 
-    private String[] imgNames = {"car_one.png", "car_two.png", "car_three.png"};
+    private String[] imgNames = {"car_one.png", "car_two.png", "car_three.png", 
+        "truck_one.png", "truck_two.png"};
 
     private String selectedImg;
     
@@ -129,6 +134,7 @@ public class VehicleController {
         }
 
         addVehicle.setOnAction(e -> displayPopup());
+
     }
 
     /**
@@ -172,7 +178,10 @@ public class VehicleController {
         Vehicle vehicle = new Vehicle(licenseText.getText(), makeText.getText(),
                 modelText.getText(), Float.parseFloat(curChargeText.getText()),
                 Integer.parseInt(maxRangeText.getText()), connections);
+        vehicle.setImgPath("src/main/resources/images/" + selectedImg);
         vehicleData.add(vehicle);
+
+        System.out.println(vehicle);
 
         Stage popupStage = (Stage) addVehicleBtn.getScene().getWindow();
         popupStage.close();
@@ -243,6 +252,7 @@ public class VehicleController {
      */
     public void save() {
         System.out.println(selectedImg);
+        imgName.setText(selectedImg);
         Stage popupStage = (Stage) saveImg.getScene().getWindow();
         popupStage.close();
     }
@@ -311,8 +321,10 @@ public class VehicleController {
         vehicleData.get(1).setImgPath("src/main/resources/images/car_three.png");
         vehicleData.get(2).setImgPath("src/main/resources/images/car_two.png");
         vehicleData.get(3).setImgPath("src/main/resources/images/car_one.png");
+        vehicleData.get(4).setImgPath("src/main/resources/images/truck_one.png");
         vehicleData.get(5).setImgPath("src/main/resources/images/car_three.png");
         vehicleData.get(6).setImgPath("src/main/resources/images/car_two.png");
+        vehicleData.get(7).setImgPath("src/main/resources/images/truck_two.png");
     }
 
     /**
