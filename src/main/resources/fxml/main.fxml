@@ -69,7 +69,7 @@
                                             </content>
                                         </CustomMenuItem>
                                         <SeparatorMenuItem mnemonicParsing="false" />
-                                        <Menu mnemonicParsing="false" text="Charger Types">
+                                        <Menu mnemonicParsing="false" fx:id="chargerTypes" text="Charger Types">
                                             <items>
                                                 <CustomMenuItem mnemonicParsing="false" text="AC button">
                                                     <content>
