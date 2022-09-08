@@ -224,7 +224,7 @@ public class SqlInterpreterTest {
         List<Object> get = db.readData(q, Charger.class);
         Charger result  = (Charger) get.get(0);
         Assertions.assertEquals("Tesla", result.getOwner());
-        Assertions.assertEquals(false, result.getAvailable24Hrs());
+        assertFalse(result.getAvailable24Hrs());
         Assertions.assertEquals("Seng202", result.getOperator());
     }
 
@@ -303,10 +303,33 @@ public class SqlInterpreterTest {
      */
     @Test
     public void addJourney() throws IOException {
+        db.writeVehicle(testVehicle);
+        testJourney.setVehicle(testVehicle);
         db.writeJourney(testJourney);
         Query q = new QueryBuilderImpl().withSource("journey").build();
         List<Object> result = db.readData(q, Journey.class);
         assertArrayEquals(new Object[] { testJourney }, result.toArray());
+    }
+
+    /**
+     * Updates an  already existing journey
+     */
+    @Test
+    public void updateJourney() throws IOException {
+        testJourney.addCharger(testCharger);
+        db.writeVehicle(testVehicle);
+        int numChargers = testJourney.getChargers().size();
+        testJourney.setVehicle(testVehicle);
+        db.writeJourney(testJourney);
+        Query q = new QueryBuilderImpl().withSource("journey").build();
+        testJourney.setEndPosition(new Coordinate(4.56, 9.9, -50.6543, 154.74562));
+        testJourney.addCharger(testCharger);
+        db.updateJourney(testJourney);
+        List<Object> get = db.readData(q, Journey.class);
+        Journey result = (Journey) get.get(0);
+        assertEquals(-50.6543, result.getEndPosition().getLat());
+        assertEquals(154.74562, result.getEndPosition().getLon());
+        assertEquals(numChargers + 1, testJourney.getChargers().size());
     }
 
     /**
@@ -316,7 +339,6 @@ public class SqlInterpreterTest {
     @Test
     public void addNote() throws IOException {
         db.writeNote(testNote);
-        Query q = new QueryBuilderImpl().withSource("note").build();
     }
 
     @Test
