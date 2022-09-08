@@ -58,10 +58,10 @@ DROP TABLE IF EXISTS vehicle;
 --SPLIT
 CREATE TABLE if not exists vehicle
 (
-    vehicleID INTEGER constraint dk_Veh PRIMARY KEY AUTOINCREMENT,
+    vehicleid INTEGER constraint dk_Veh PRIMARY KEY AUTOINCREMENT,
     make VARCHAR(10),
     model VARCHAR(10),
-    rangeKM INTEGER not null,
+    rangekm INTEGER not null,
     connectorType VARCHAR(40),
     batteryPercent INTEGER,
     imgPath VARCHAR(100)
@@ -72,7 +72,7 @@ DROP TABLE IF EXISTS journey;
 CREATE TABLE if not exists journey
 (
     journeyid INTEGER constraint dk_journey PRIMARY KEY AUTOINCREMENT,
-    vehicleID INTEGER NOT NULL references Vehicle(vehicleID),
+    vehicleid INTEGER NOT NULL references Vehicle(vehicleID),
     startLat REAL NOT NULL,
     startLon REAL NOT NULL,
     startX REAL,

@@ -254,6 +254,24 @@ public class SqlInterpreterTest {
     }
 
     /**
+     * Checks if updating a connector works
+     */
+    @Test
+    public void updateConnector() throws IOException {
+        db.writeCharger(testCharger);
+        Query q = new QueryBuilderImpl().withSource("connector").build();
+        testConnector1.setPower("UpdatedPower");
+        testConnector1.setOperational("out of order");
+        testConnector1.setCurrent("UpdatedCurrent");
+        db.updateConnector(testConnector1, testCharger.getChargerId());
+        List<Object> get = db.readData(q, Connector.class);
+        Connector result  = (Connector) get.get(0);
+        Assertions.assertEquals("UpdatedPower", result.getPower());
+        Assertions.assertEquals("out of order", result.getStatus());
+        Assertions.assertEquals("UpdatedCurrent", result.getCurrent());
+    }
+
+    /**
      * Check that a vehicle can be added to the database
      */
     @Test
@@ -262,6 +280,21 @@ public class SqlInterpreterTest {
         Query q = new QueryBuilderImpl().withSource("vehicle").build();
         List<Object> result = db.readData(q, Vehicle.class);
         assertArrayEquals(new Object[] { testVehicle }, result.toArray());
+    }
+
+    @Test
+    public void updateVehicle() throws IOException {
+        db.writeVehicle(testVehicle);
+        Query q = new QueryBuilderImpl().withSource("vehicle").build();
+        testVehicle.setMake("Updated make");
+        testVehicle.setMaxRange(210);
+        testVehicle.setModel("Updated model");
+        db.updateVehicle(testVehicle);
+        List<Object> get = db.readData(q, Vehicle.class);
+        Vehicle result = (Vehicle) get.get(0);
+        Assertions.assertEquals("Updated make", result.getMake());
+        Assertions.assertEquals(210, result.getMaxRange());
+        Assertions.assertEquals("Updated model", result.getModel());
     }
 
     /**
@@ -273,6 +306,5 @@ public class SqlInterpreterTest {
         Query q = new QueryBuilderImpl().withSource("journey").build();
         List<Object> result = db.readData(q, Journey.class);
         assertArrayEquals(new Object[] { testJourney }, result.toArray());
-
     }
 }
