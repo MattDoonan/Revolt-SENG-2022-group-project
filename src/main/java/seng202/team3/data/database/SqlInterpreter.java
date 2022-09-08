@@ -23,11 +23,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.javatuples.Triplet;
-import seng202.team3.data.entity.Charger;
-import seng202.team3.data.entity.Connector;
-import seng202.team3.data.entity.Coordinate;
-import seng202.team3.data.entity.Journey;
-import seng202.team3.data.entity.Vehicle;
+import seng202.team3.data.entity.*;
 
 /**
  * Class that interacts with the SQLite database
@@ -626,6 +622,14 @@ public class SqlInterpreter implements DataManager {
         }
     }
 
+    /**
+     * Connects to the databse and creates a statement for vehicles and sends it
+     *
+     * @param state String for the statement
+     * @param v the vehicle object
+     * @param update Boolean for if it is an update or an add
+     * @throws IOException
+     */
     public void vehicleStatement(String state, Vehicle v, Boolean update) throws IOException {
         try (Connection connection = createConnection();
              PreparedStatement statement = connection.prepareStatement(state)) {
@@ -661,9 +665,62 @@ public class SqlInterpreter implements DataManager {
         vehicleStatement(toAdd, v, false);
     }
 
+    /**
+     * Updates and existing vehicle in the database
+     *
+     * @param v the object vehicle to update
+     */
     public void updateVehicle(Vehicle v) throws IOException {
         String toUpdate = "update vehicle set make = ?, model = ?, rangekm = ?, connectorType = ? where vehicleid = ?";
         vehicleStatement(toUpdate, v, true);
+    }
+
+    /**
+     * Connects to the database then creates a statement to edit it
+     *
+     * @param state the String for the statement
+     * @param n the object Note
+     * @param update Boolean for if it is an update or an add
+     */
+    public void noteStatement(String state, Note n, Boolean update) throws IOException {
+        try (Connection connection = createConnection();
+             PreparedStatement statement = connection.prepareStatement(state)) {
+            statement.setInt(1, n.getChargerId());
+            statement.setInt(2, n.getRating());
+            statement.setString(3, n.getPublicText());
+            statement.setString(4, n.getPrivateText());
+            if(update) {
+                statement.setInt(5, n.getReviewId());
+            }
+            statement.executeUpdate();
+            if(!update) {
+                n.setReviewId(statement.getGeneratedKeys().getInt(1));
+            }
+        } catch (SQLException e) {
+            throw new IOException(e.getMessage());
+        }
+    }
+
+    /**
+     * Creates a Add string to send to the noteStatement
+     *
+     * @param n the object Note
+     * @throws IOException
+     */
+    public void writeNote(Note n) throws IOException {
+        String toAdd = "INSERT INTO note (chargerid, rating, publicText, privateText) values(?,?,?,?)";
+        noteStatement(toAdd, n, false);
+    }
+
+    /**
+     * Creates an Update string to send to the noteStatement
+     *
+     * @param n the object note
+     * @throws IOException
+     */
+    public void updateNote(Note n) throws IOException {
+        String toUpdate = "update note set chargerid = ?, rating = ?, publicText = ?, privateText = ? where reviewId = ?";
+        noteStatement(toUpdate, n, true);
     }
 
     /**

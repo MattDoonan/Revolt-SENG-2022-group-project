@@ -18,11 +18,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import seng202.team3.data.entity.Charger;
-import seng202.team3.data.entity.Connector;
-import seng202.team3.data.entity.Coordinate;
-import seng202.team3.data.entity.Journey;
-import seng202.team3.data.entity.Vehicle;
+import seng202.team3.data.entity.*;
 
 /**
  * Tests for SqlInterpreter {@link SqlInterpreter} Class
@@ -37,6 +33,7 @@ public class SqlInterpreterTest {
     static Charger testCharger;
     static Vehicle testVehicle;
     static Journey testJourney;
+    static Note testNote;
 
     @BeforeAll
     static void setup() throws InstanceAlreadyExistsException {
@@ -76,6 +73,10 @@ public class SqlInterpreterTest {
                 "2020/1/1 00:00:00", "2020/1/3 00:00:00");
         testJourney.addCharger(testCharger);
         testJourney.setJourneyId(1);
+
+        testNote = new Note(1,4);
+        testNote.setPublicText("This charger is great");
+        testNote.setReviewId(1);
     }
 
     @BeforeEach
@@ -306,5 +307,24 @@ public class SqlInterpreterTest {
         Query q = new QueryBuilderImpl().withSource("journey").build();
         List<Object> result = db.readData(q, Journey.class);
         assertArrayEquals(new Object[] { testJourney }, result.toArray());
+    }
+
+    /**
+     * Cannot implement until read has been added
+     * Works checking manually
+     */
+    @Test
+    public void addNote() throws IOException {
+        db.writeNote(testNote);
+        Query q = new QueryBuilderImpl().withSource("note").build();
+    }
+
+    @Test
+    public void updateNote() throws IOException {
+        db.writeNote(testNote);
+        testNote.setPrivateText("Sucks");
+        testNote.setRating(2);
+        testNote.setPublicText("So bad now");
+        db.updateNote(testNote);
     }
 }
