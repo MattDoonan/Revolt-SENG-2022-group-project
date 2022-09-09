@@ -13,12 +13,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.management.InstanceAlreadyExistsException;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import seng202.team3.data.entity.*;
+import seng202.team3.data.entity.Charger;
+import seng202.team3.data.entity.Connector;
+import seng202.team3.data.entity.Coordinate;
+import seng202.team3.data.entity.Journey;
+import seng202.team3.data.entity.Note;
+import seng202.team3.data.entity.Vehicle;
 
 /**
  * Tests for SqlInterpreter {@link SqlInterpreter} Class
@@ -74,7 +78,7 @@ public class SqlInterpreterTest {
         testJourney.addCharger(testCharger);
         testJourney.setJourneyId(1);
 
-        testNote = new Note(1,4);
+        testNote = new Note(1, 4);
         testNote.setPublicText("This charger is great");
         testNote.setReviewId(1);
     }
@@ -196,7 +200,7 @@ public class SqlInterpreterTest {
     public void addManyChargers() throws IOException {
         Connector dummyConnector = new Connector("ChardaMo", "AC", "Available",
                 "123", 3);
-        ArrayList<Connector> connectorList = new ArrayList<>(1);
+        ArrayList<Connector> connectorList = new ArrayList<>();
         connectorList.add(dummyConnector);
         Coordinate coord = new Coordinate(4.5, 5.7, -36.85918, 174.76602,
                 "testAddy");
@@ -211,7 +215,8 @@ public class SqlInterpreterTest {
     }
 
     /**
-     * Adds charger to database then edits some variables anc checks if variables have changed
+     * Adds charger to database then edits some variables and checks if variables
+     * have changed
      */
     @Test
     public void updateCharger() throws IOException {
@@ -219,13 +224,10 @@ public class SqlInterpreterTest {
         testCharger.setOwner("Tesla");
         testCharger.setAvailable24Hrs(false);
         testCharger.setOperator("Seng202");
-        db.updateCharger(testCharger);
+        db.writeCharger(testCharger);
         Query q = new QueryBuilderImpl().withSource("charger").build();
-        List<Object> get = db.readData(q, Charger.class);
-        Charger result  = (Charger) get.get(0);
-        Assertions.assertEquals("Tesla", result.getOwner());
-        assertFalse(result.getAvailable24Hrs());
-        Assertions.assertEquals("Seng202", result.getOperator());
+        List<Object> result = db.readData(q, Charger.class);
+        assertArrayEquals(new Object[] { testCharger }, result.toArray());
     }
 
     /**
@@ -259,14 +261,14 @@ public class SqlInterpreterTest {
      */
     @Test
     public void updateConnector() throws IOException {
-        db.writeCharger(testCharger);
-        Query q = new QueryBuilderImpl().withSource("connector").build();
+        db.writeConnector(testConnector1, 1);
         testConnector1.setPower("UpdatedPower");
         testConnector1.setOperational("out of order");
         testConnector1.setCurrent("UpdatedCurrent");
-        db.updateConnector(testConnector1, testCharger.getChargerId());
+        db.writeConnector(testConnector1, 1);
+        Query q = new QueryBuilderImpl().withSource("connector").build();
         List<Object> get = db.readData(q, Connector.class);
-        Connector result  = (Connector) get.get(0);
+        Connector result = (Connector) get.get(0);
         Assertions.assertEquals("UpdatedPower", result.getPower());
         Assertions.assertEquals("out of order", result.getStatus());
         Assertions.assertEquals("UpdatedCurrent", result.getCurrent());
@@ -286,16 +288,13 @@ public class SqlInterpreterTest {
     @Test
     public void updateVehicle() throws IOException {
         db.writeVehicle(testVehicle);
-        Query q = new QueryBuilderImpl().withSource("vehicle").build();
         testVehicle.setMake("Updated make");
         testVehicle.setMaxRange(210);
         testVehicle.setModel("Updated model");
-        db.updateVehicle(testVehicle);
-        List<Object> get = db.readData(q, Vehicle.class);
-        Vehicle result = (Vehicle) get.get(0);
-        Assertions.assertEquals("Updated make", result.getMake());
-        Assertions.assertEquals(210, result.getMaxRange());
-        Assertions.assertEquals("Updated model", result.getModel());
+        db.writeVehicle(testVehicle);
+        Query q = new QueryBuilderImpl().withSource("vehicle").build();
+        List<Object> result = db.readData(q, Vehicle.class);
+        assertArrayEquals(new Object[] { testVehicle }, result.toArray());
     }
 
     /**
@@ -312,41 +311,16 @@ public class SqlInterpreterTest {
     }
 
     /**
-     * Updates an  already existing journey
+     * Updates an already existing journey
      */
     @Test
     public void updateJourney() throws IOException {
-        testJourney.addCharger(testCharger);
-        db.writeVehicle(testVehicle);
-        int numChargers = testJourney.getChargers().size();
-        testJourney.setVehicle(testVehicle);
+        db.writeJourney(testJourney);
+        testJourney.setEndPosition(new Coordinate(4.56, 9.9, -50.6543, 154.74562));
+        testJourney.setStartDate("1/1/1111 00:00:00");
         db.writeJourney(testJourney);
         Query q = new QueryBuilderImpl().withSource("journey").build();
-        testJourney.setEndPosition(new Coordinate(4.56, 9.9, -50.6543, 154.74562));
-        testJourney.addCharger(testCharger);
-        db.updateJourney(testJourney);
-        List<Object> get = db.readData(q, Journey.class);
-        Journey result = (Journey) get.get(0);
-        assertEquals(-50.6543, result.getEndPosition().getLat());
-        assertEquals(154.74562, result.getEndPosition().getLon());
-        assertEquals(numChargers + 1, testJourney.getChargers().size());
-    }
-
-    /**
-     * Cannot implement until read has been added
-     * Works checking manually
-     */
-    @Test
-    public void addNote() throws IOException {
-        db.writeNote(testNote);
-    }
-
-    @Test
-    public void updateNote() throws IOException {
-        db.writeNote(testNote);
-        testNote.setPrivateText("Sucks");
-        testNote.setRating(2);
-        testNote.setPublicText("So bad now");
-        db.updateNote(testNote);
+        List<Object> result = db.readData(q, Journey.class);
+        assertArrayEquals(new Object[] { testJourney }, result.toArray());
     }
 }

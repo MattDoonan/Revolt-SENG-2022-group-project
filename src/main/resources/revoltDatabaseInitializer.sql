@@ -17,8 +17,7 @@ CREATE TABLE IF NOT EXISTS charger
     latitude INTEGER,
     longitude INTEGER,
     datefirstoperational TEXT,
-    haschargingcost BIT,
-    currenttype VARCHAR(10)
+    haschargingcost BIT
     );
 --SPLIT
 DROP TABLE IF EXISTS connector;
@@ -63,7 +62,7 @@ CREATE TABLE if not exists vehicle
     model VARCHAR(10),
     rangekm INTEGER not null,
     connectorType VARCHAR(40),
-    batteryPercent INTEGER,
+    batteryPercent REAL,
     imgPath VARCHAR(100)
     );
 --SPLIT
@@ -89,8 +88,8 @@ DROP TABLE IF EXISTS stop;
 --SPLIT
 CREATE TABLE if not exists stop
 (
-    stopid INTEGER constraint dk_stop PRIMARY KEY AUTOINCREMENT,
     journeyid INTEGER NOT NULL references Journey(journeyid),
+    position INTEGER NOT NULL,
     chargerid INTEGER NOT NULL references Charger(chargerid),
-    position INTEGER NOT NULL
+    PRIMARY KEY (journeyid, position)
     );

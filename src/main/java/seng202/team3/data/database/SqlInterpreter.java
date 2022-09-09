@@ -23,7 +23,11 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.javatuples.Triplet;
-import seng202.team3.data.entity.*;
+import seng202.team3.data.entity.Charger;
+import seng202.team3.data.entity.Connector;
+import seng202.team3.data.entity.Coordinate;
+import seng202.team3.data.entity.Journey;
+import seng202.team3.data.entity.Vehicle;
 
 /**
  * Class that interacts with the SQLite database
@@ -42,7 +46,7 @@ public class SqlInterpreter implements DataManager {
     /**
      * Initializes the SqlInterpreter and checks if the url is null
      * calls createAFile and defaultDatabase if the database doesn't exist
-     *
+     * 
      * @param db the url sent through
      */
     private SqlInterpreter(String db) {
@@ -76,7 +80,7 @@ public class SqlInterpreter implements DataManager {
 
     /**
      * Returns the instance of the class
-     *
+     * 
      * @return the instance
      */
     public static SqlInterpreter getInstance() {
@@ -91,7 +95,7 @@ public class SqlInterpreter implements DataManager {
      * test databases, but may be useful
      * in future) USE WITH CAUTION. This does not override the current singleton
      * instance so must be the first call.
-     *
+     * 
      * @param url string url of database to load (this needs to be full url e.g.
      *            "jdbc:sqlite:./src/...")
      * @return current singleton instance
@@ -113,7 +117,7 @@ public class SqlInterpreter implements DataManager {
 
     /**
      * Gets and then returns the path of the file name as a String
-     *
+     * 
      * @return String of the file path
      */
     private String getDatabasePath() {
@@ -128,7 +132,7 @@ public class SqlInterpreter implements DataManager {
 
     /**
      * WARNING Sets the current singleton instance to null
-     *
+     * 
      * @author Morgan English, Dec 21
      */
     public static void removeInstance() {
@@ -137,7 +141,7 @@ public class SqlInterpreter implements DataManager {
 
     /**
      * Checks if the file already exists in the specified path
-     *
+     * 
      * @param path the url
      * @return Boolean yes or no if it exists
      */
@@ -148,7 +152,7 @@ public class SqlInterpreter implements DataManager {
 
     /**
      * creates a new database file at a location specified
-     *
+     * 
      * @param path the location specified
      */
     private void createFile(String path) {
@@ -181,7 +185,7 @@ public class SqlInterpreter implements DataManager {
 
     /**
      * Creates connection to the database
-     *
+     * 
      * @return the connection
      */
     public Connection createConnection() {
@@ -197,7 +201,7 @@ public class SqlInterpreter implements DataManager {
     /**
      * Executes all the lines in the SQL file
      * It knows a line ends if it has --SPLIT
-     *
+     * 
      * @param source the SQL file
      */
     private void executeSql(InputStream source) {
@@ -209,7 +213,7 @@ public class SqlInterpreter implements DataManager {
             }
             String[] state = buff.toString().split("--SPLIT");
             try (Connection connection = createConnection();
-                 Statement statement = connection.createStatement()) {
+                    Statement statement = connection.createStatement()) {
                 for (String single : state) {
                     statement.executeUpdate(single);
                 }
@@ -225,15 +229,15 @@ public class SqlInterpreter implements DataManager {
 
     /**
      * Deletes data from the database
-     *
+     * 
      * @param type String of the name of the table
      * @param id   Integer of the id number of the entity
      */
     public void deleteData(String type, int id) {
-        String idName = "" + type.toLowerCase() + "id";
+        String idName = "" + type.toLowerCase() + "ID";
         String delete = "DELETE FROM " + type.toLowerCase() + " WHERE " + idName + " = " + id + ";";
         try (Connection connection = createConnection();
-             Statement stmt = connection.createStatement()) {
+                Statement stmt = connection.createStatement()) {
             stmt.executeUpdate(delete);
         } catch (SQLException e) {
             logManager.error(e);
@@ -288,8 +292,8 @@ public class SqlInterpreter implements DataManager {
 
         sql += ";";
         try (Connection conn = createConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)) {
 
             switch (objectToInterpretAs.getSimpleName()) {
                 case "Charger":
@@ -323,8 +327,9 @@ public class SqlInterpreter implements DataManager {
 
     /**
      * Reads ResultSet as chargers
-     *
+     * 
      * @param rs ResultSet to read from
+     * 
      * @return list of chargers
      */
     private List<Object> asCharger(ResultSet rs) throws SQLException {
@@ -375,8 +380,9 @@ public class SqlInterpreter implements DataManager {
 
     /**
      * Reads ResultSet as connectors
-     *
+     * 
      * @param rs ResultSet to read from
+     * 
      * @return list of connectors
      */
     private List<Object> asConnector(ResultSet rs) throws SQLException {
@@ -395,8 +401,9 @@ public class SqlInterpreter implements DataManager {
 
     /**
      * Reads ResultSet as vehicles
-     *
+     * 
      * @param rs ResultSet to read from
+     * 
      * @return list of vehicles
      */
     private List<Object> asVehicle(ResultSet rs) throws SQLException {
@@ -424,8 +431,9 @@ public class SqlInterpreter implements DataManager {
 
     /**
      * Reads ResultSet as journeys
-     *
+     * 
      * @param rs ResultSet to read from
+     * 
      * @return list of journeys
      */
     private List<Object> asJourney(ResultSet rs) throws SQLException {
@@ -476,73 +484,68 @@ public class SqlInterpreter implements DataManager {
     }
 
     /**
-     * Creates connection with the database and executes a charger statement
-     * Changes if it is an update or add
-     *
-     * @param state  A string of the sql code
-     * @param c      the object charger
-     * @param update Boolean of whether it is update a charger or adding a new charger
+     * Adds a new charger to the database from a charger object
+     * 
+     * @param c charger object
      */
-    public void chargerStatement(String state, Charger c, Boolean update) throws IOException {
+    public void writeCharger(Charger c) throws IOException {
+        String toAdd = "INSERT INTO charger "
+                + "(chargerid, x, y, name, operator, owner, address, is24hours, "
+                + "carparkcount, hascarparkcost, maxtimelimit, hastouristattraction, latitude, "
+                + "longitude, datefirstoperational, haschargingcost)"
+                + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(chargerid) DO UPDATE SET"
+                + " x = ?, y = ?, name = ?, operator = ?, owner = ?, address = ?, is24hours = ?, "
+                + "carparkcount = ?, hascarparkcost = ?, maxtimelimit = ?, hastouristattraction = ?"
+                + ", latitude = ?, longitude = ?, datefirstoperational = ?, haschargingcost = ?";
+
         try (Connection connection = createConnection();
-             PreparedStatement statement = connection.prepareStatement(state)) {
-            statement.setDouble(1, c.getLocation().getXpos());
-            statement.setDouble(2, c.getLocation().getYpos());
-            statement.setString(3, c.getName());
-            statement.setString(4, c.getOperator());
-            statement.setString(5, c.getOwner());
-            statement.setString(6, c.getLocation().getAddress());
-            statement.setBoolean(7, c.getAvailable24Hrs());
-            statement.setInt(8, c.getAvailableParks());
-            statement.setBoolean(9, c.getParkingCost());
-            statement.setDouble(10, c.getTimeLimit());
-            statement.setBoolean(11, c.getHasAttraction());
-            statement.setDouble(12, c.getLocation().getLat());
-            statement.setDouble(13, c.getLocation().getLon());
-            statement.setString(14, c.getDateOpened());
-            statement.setBoolean(15, c.getChargeCost());
-            statement.setString(16, c.getCurrentType());
-            if (update) {
-                statement.setInt(17, c.getChargerId());
+                PreparedStatement statement = connection.prepareStatement(toAdd)) {
+            if (c.getChargerId() == 0) {
+                statement.setNull(1, 0);
+            } else {
+                statement.setInt(1, c.getChargerId());
             }
+            statement.setDouble(2, c.getLocation().getXpos());
+            statement.setDouble(3, c.getLocation().getYpos());
+            statement.setString(4, c.getName());
+            statement.setString(5, c.getOperator());
+            statement.setString(6, c.getOwner());
+            statement.setString(7, c.getLocation().getAddress());
+            statement.setBoolean(8, c.getAvailable24Hrs());
+            statement.setInt(9, c.getAvailableParks());
+            statement.setBoolean(10, c.getParkingCost());
+            statement.setDouble(11, c.getTimeLimit());
+            statement.setBoolean(12, c.getHasAttraction());
+            statement.setDouble(13, c.getLocation().getLat());
+            statement.setDouble(14, c.getLocation().getLon());
+            statement.setString(15, c.getDateOpened());
+            statement.setBoolean(16, c.getChargeCost());
+            statement.setDouble(17, c.getLocation().getXpos());
+            statement.setDouble(18, c.getLocation().getYpos());
+            statement.setString(19, c.getName());
+            statement.setString(20, c.getOperator());
+            statement.setString(21, c.getOwner());
+            statement.setString(22, c.getLocation().getAddress());
+            statement.setBoolean(23, c.getAvailable24Hrs());
+            statement.setInt(24, c.getAvailableParks());
+            statement.setBoolean(25, c.getParkingCost());
+            statement.setDouble(26, c.getTimeLimit());
+            statement.setBoolean(27, c.getHasAttraction());
+            statement.setDouble(28, c.getLocation().getLat());
+            statement.setDouble(29, c.getLocation().getLon());
+            statement.setString(30, c.getDateOpened());
+            statement.setBoolean(31, c.getChargeCost());
+
             statement.executeUpdate();
-            if (!update) {
-                c.setChargerId(statement.getGeneratedKeys().getInt(1));
-                writeConnector(c.getConnectors(), statement.getGeneratedKeys().getInt(1));
-            }
+            writeConnector(c.getConnectors(), c.getChargerId());
         } catch (SQLException e) {
             throw new IOException(e.getMessage());
         }
     }
 
     /**
-     * Creates the String for the adding a charge in sql then calls charger statement
-     *
-     * @param c charger object
-     */
-    public void writeCharger(Charger c) throws IOException {
-        String toAdd = "INSERT INTO charger (x, y, name, operator, owner, address, is24hours, "
-                + "carparkcount, hascarparkcost, maxtimelimit, hastouristattraction, latitude, "
-                + "longitude, datefirstoperational, haschargingcost, currenttype)"
-                + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
-        chargerStatement(toAdd, c, false);
-    }
-
-    /**
-     * Creates the String for updating a charge in sql then calls charger statement
-     *
-     * @param c a charger object
-     */
-    public void updateCharger(Charger c) throws IOException {
-        String toUpdate = "update charger set x = ?, y = ?, name = ?, operator = ?, owner = ?, address = ?, is24hours = ?, " +
-                "carparkcount = ?, hascarparkcost = ?, maxtimelimit = ?, hastouristattraction = ?, latitude = ?, longitude = ?, " +
-                "datefirstoperational = ?, haschargingcost = ?, currenttype = ? where chargerid = ?";
-        chargerStatement(toUpdate, c, true);
-    }
-
-    /**
      * Receives a list of chargers and sends them to writeCharger
-     *
+     * 
      * @param chargers array list of charger objects
      */
     public void writeCharger(ArrayList<Charger> chargers) throws IOException {
@@ -552,63 +555,62 @@ public class SqlInterpreter implements DataManager {
     }
 
     /**
-     * Connects to the database and then creates a statement to add or update a connector
-     *
-     * @param state     the statement String
-     * @param c         Connector object
-     * @param chargerId integer for the ID of the charger that it is owned by
-     * @param update    Boolean true if it is an update
-     */
-    public void connectorStatement(String state, Connector c, int chargerId, Boolean update) throws IOException {
-        try (Connection connection = createConnection();
-             PreparedStatement statement = connection.prepareStatement(state)) {
-            statement.setString(1, c.getCurrent());
-            statement.setString(2, c.getPower());
-            statement.setInt(3, c.getCount());
-            statement.setString(4, c.getStatus());
-            statement.setInt(5, chargerId);
-            statement.setString(6, c.getType());
-            if (update) {
-                statement.setInt(7, c.getId());
-            }
-            statement.executeUpdate();
-            if (!update) {
-                c.setId(statement.getGeneratedKeys().getInt(1));
-            }
-        } catch (SQLException e) {
-            throw new IOException(e.getMessage());
-        }
-    }
-
-    /**
      * Adds connectors to the database
-     *
+     * Defaults to the most recent charger if chargerId is null (0)
+     * 
      * @param c         a connector object
      * @param chargerId an Integer with the specified charger id
      */
     public void writeConnector(Connector c, int chargerId) throws IOException {
-        String toAdd = "INSERT INTO connector (connectorcurrent, connectorpowerdraw, "
-                + "count, connectorstatus, chargerid, connectortype) values(?,?,?,?,?,?)";
-        connectorStatement(toAdd, c, chargerId, false);
+        String toAdd = "INSERT INTO connector (connectorid, connectorcurrent, connectorpowerdraw, "
+                + "count, connectorstatus, chargerid, connectortype) "
+                + "values(?,?,?,?,?,?,?) ON CONFLICT(connectorid) DO UPDATE SET "
+                + "connectorcurrent = ?, connectorpowerdraw = ?, count = ?,"
+                + "connectorstatus = ?, chargerid = ?, connectortype = ?";
 
-    }
+        if (chargerId == 0) {
+            try (Connection conn = createConnection();
+                    Statement stmt = conn.createStatement();
+                    ResultSet rs = stmt.executeQuery("SELECT chargerid "
+                            + "FROM charger ORDER BY chargerid DESC LIMIT 0,1")) {
+                chargerId = rs.getInt("chargerid");
 
-    /**
-     * Updates a connector in the database
-     *
-     * @param c         the connector object
-     * @param chargerId the charger id associated with the connector
-     */
-    public void updateConnector(Connector c, int chargerId) throws IOException {
-        String toUpdate = "update connector set connectorcurrent = ?, connectorpowerdraw = ?, count = ?," +
-                "connectorstatus = ?, chargerid = ?, connectortype = ? where connectorID = ?";
-        connectorStatement(toUpdate, c, chargerId, true);
+            } catch (SQLException e) {
+                throw new IOException(e.getMessage());
+            }
+        }
+
+        try (Connection connection = createConnection();
+                PreparedStatement statement = connection.prepareStatement(toAdd)) {
+
+            if (c.getId() == 0) {
+                statement.setNull(1, 0);
+            } else {
+                statement.setInt(1, c.getId());
+            }
+            statement.setString(2, c.getCurrent());
+            statement.setString(3, c.getPower());
+            statement.setInt(4, c.getCount());
+            statement.setString(5, c.getStatus());
+            statement.setInt(6, chargerId);
+            statement.setString(7, c.getType());
+            statement.setString(8, c.getCurrent());
+            statement.setString(9, c.getPower());
+            statement.setInt(10, c.getCount());
+            statement.setString(11, c.getStatus());
+            statement.setInt(12, chargerId);
+            statement.setString(13, c.getType());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new IOException(e.getMessage());
+        }
+
     }
 
     /**
      * Recievies a list of connectors and calls writeConnector to add it to the
      * database
-     *
+     * 
      * @param connectors an Array list of Connector objects
      * @param chargerId  Integer representing the associated charger
      */
@@ -619,179 +621,141 @@ public class SqlInterpreter implements DataManager {
     }
 
     /**
-     * Connects to the databse and creates a statement for vehicles and sends it
-     *
-     * @param state  String for the statement
-     * @param v      the vehicle object
-     * @param update Boolean for if it is an update or an add
-     */
-    public void vehicleStatement(String state, Vehicle v, Boolean update) throws IOException {
-        try (Connection connection = createConnection();
-             PreparedStatement statement = connection.prepareStatement(state)) {
-            statement.setString(1, v.getMake());
-            statement.setString(2, v.getModel());
-            statement.setInt(3, v.getMaxRange());
-            StringBuilder connectors = new StringBuilder();
-            int i = 0;
-            for (; i < v.getConnectors().size() - 1; i++) {
-                connectors.append(v.getConnectors().get(i)).append(",");
-            }
-            connectors.append(v.getConnectors().get(i));
-            statement.setString(4, connectors.toString());
-            if (update) {
-                statement.setInt(5, v.getVehicleId());
-            }
-            statement.executeUpdate();
-            if (!update) {
-                v.setVehicleId(statement.getGeneratedKeys().getInt(1));
-            }
-        } catch (SQLException e) {
-            throw new IOException(e.getMessage());
-        }
-    }
-
-    /**
      * Adds an object Vehicle to the database
-     *
+     * 
      * @param v the object Vehicle
      */
     public void writeVehicle(Vehicle v) throws IOException {
-        String toAdd = "INSERT INTO vehicle (make, model, rangeKM, connectorType) values(?,?,?,?)";
-        vehicleStatement(toAdd, v, false);
-    }
-
-    /**
-     * Updates and existing vehicle in the database
-     *
-     * @param v the object vehicle to update
-     */
-    public void updateVehicle(Vehicle v) throws IOException {
-        String toUpdate = "update vehicle set make = ?, model = ?, rangekm = ?, connectorType = ? where vehicleid = ?";
-        vehicleStatement(toUpdate, v, true);
-    }
-
-    /**
-     * Connects to the database then creates a statement to edit it
-     *
-     * @param state  the String for the statement
-     * @param n      the object Note
-     * @param update Boolean for if it is an update or an add
-     */
-    public void noteStatement(String state, Note n, Boolean update) throws IOException {
+        String toAdd = "INSERT INTO vehicle (vehicleid, make, model, rangekm, "
+                + "connectorType, batteryPercent, imgPath) values(?,?,?,?,?,?,?)"
+                + "ON CONFLICT(vehicleid) DO UPDATE SET make = ?, model = ?, "
+                + "rangekm = ?, connectorType = ?, batteryPercent = ?, imgPath = ?";
         try (Connection connection = createConnection();
-             PreparedStatement statement = connection.prepareStatement(state)) {
-            statement.setInt(1, n.getChargerId());
-            statement.setInt(2, n.getRating());
-            statement.setString(3, n.getPublicText());
-            statement.setString(4, n.getPrivateText());
-            if (update) {
-                statement.setInt(5, n.getReviewId());
+                PreparedStatement statement = connection.prepareStatement(toAdd)) {
+            if (v.getVehicleId() == 0) {
+                statement.setNull(1, 0);
+            } else {
+                statement.setInt(1, v.getVehicleId());
             }
+            statement.setString(2, v.getMake());
+            statement.setString(3, v.getModel());
+            statement.setInt(4, v.getMaxRange());
+            String connectors = "";
+            int i = 0;
+            for (; i < v.getConnectors().size() - 1; i++) {
+                connectors += v.getConnectors().get(i) + ",";
+            }
+            connectors += v.getConnectors().get(i);
+            statement.setString(5, connectors);
+            statement.setFloat(6, v.getBatteryPercent());
+            statement.setString(7, v.getImgPath());
+            statement.setString(8, v.getMake());
+            statement.setString(9, v.getModel());
+            statement.setInt(10, v.getMaxRange());
+            statement.setString(11, connectors);
+            statement.setFloat(12, v.getBatteryPercent());
+            statement.setString(13, v.getImgPath());
+
             statement.executeUpdate();
-            if (!update) {
-                n.setReviewId(statement.getGeneratedKeys().getInt(1));
-            }
         } catch (SQLException e) {
             throw new IOException(e.getMessage());
         }
     }
 
     /**
-     * Creates a Add string to send to the noteStatement
-     *
-     * @param n the object Note
+     * Adds list of vehicle objects to the database
+     * 
+     * @param v the list of vehicle objects
+     * @throws IOException cannot write to database
      */
-    public void writeNote(Note n) throws IOException {
-        String toAdd = "INSERT INTO note (chargerid, rating, publicText, privateText) values(?,?,?,?)";
-        noteStatement(toAdd, n, false);
-    }
-
-    /**
-     * Creates an Update string to send to the noteStatement
-     *
-     * @param n the object note
-     */
-    public void updateNote(Note n) throws IOException {
-        String toUpdate = "update note set chargerid = ?, rating = ?, publicText = ?, privateText = ? where reviewId = ?";
-        noteStatement(toUpdate, n, true);
-    }
-
-    /**
-     * Creates a connection with the database and then creates the journey statement
-     * Afterwards it will add all the stops
-     *
-     * @param state the statement as a String
-     * @param j the journey object
-     * @param update Boolean for whether it is an update or an add
-     */
-    public void journeyStatement(String state, Journey j, Boolean update) throws IOException {
-        try (Connection connection = createConnection();
-             PreparedStatement addJourney = connection.prepareStatement(state)) {
-            addJourney.setInt(1, j.getVehicle().getVehicleId());
-            addJourney.setDouble(2, j.getStartPosition().getLat());
-            addJourney.setDouble(3, j.getStartPosition().getLon());
-            addJourney.setDouble(4, j.getStartPosition().getXpos());
-            addJourney.setDouble(5, j.getStartPosition().getYpos());
-            addJourney.setDouble(6, j.getEndPosition().getLat());
-            addJourney.setDouble(7, j.getEndPosition().getLon());
-            addJourney.setDouble(8, j.getEndPosition().getXpos());
-            addJourney.setDouble(9, j.getEndPosition().getYpos());
-            addJourney.setString(10, j.getStartDate());
-            addJourney.setString(11, j.getEndDate());
-            if (update) {
-                addJourney.setInt(12, j.getJourneyId());
-            }
-            if (j.getChargers().size() > 0) {
-                addJourney.executeUpdate();
-            } else {
-                throw new SQLException("Error writing journey. No stops found.");
-            }
-
-            if (!update) {
-                j.setJourneyId(addJourney.getGeneratedKeys().getInt(1));
-            } else {
-                String delete = "DELETE FROM stop WHERE journeyid = " + j.getJourneyId() + ";";
-                connection.createStatement().executeUpdate(delete);
-            }
-
-            String addStops = "INSERT INTO stop (journeyid, chargerid, position) values";
-            for (int i = 0; i < j.getChargers().size(); i++) {
-
-                if (i != 0) {
-                    addStops += ",";
-                }
-                addStops += "(" + j.getJourneyId() + ","+ j.getChargers().get(i).getChargerId() + "," + i + ")";
-            }
-            addStops += ";";
-
-            connection.createStatement().executeUpdate(addStops);
-        } catch (SQLException e) {
-            throw new IOException(e.getMessage());
+    public void writeVehicle(List<Vehicle> v) throws IOException {
+        for (Vehicle vehicle : v) {
+            writeVehicle(vehicle);
         }
     }
-
 
     /**
      * Adds an object Journey to the database
-     *
+     * 
      * @param j the object journey
      */
     public void writeJourney(Journey j) throws IOException {
-        String toAdd = "INSERT INTO journey (vehicleid, startLat, startLon, startX, startY, "
+        String toAdd = "INSERT INTO journey (journeyid, vehicleID, startLat, "
+                + "startLon, startX, startY, "
                 + "endLat, endLon, endX, endY, startDate, endDate) "
-                + "values(?,?,?,?,?,?,?,?,?,?,?);";
-        journeyStatement(toAdd, j, false);
+                + "values(?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(journeyid) DO UPDATE SET "
+                + "vehicleid = ?, startLat = ?, startLon = ?, startX = ?,"
+                + " startY = ?, endLat = ?, endLon = ?, endX = ?, endY = ?, "
+                + "startDate = ?, endDate = ?";
+
+        try (Connection connection = createConnection();
+                PreparedStatement addJourney = connection.prepareStatement(toAdd)) {
+            if (j.getJourneyId() == 0) {
+                addJourney.setNull(1, 0);
+            } else {
+                addJourney.setInt(1, j.getJourneyId());
+            }
+            addJourney.setInt(2, j.getVehicle().getVehicleId());
+            addJourney.setDouble(3, j.getStartPosition().getLat());
+            addJourney.setDouble(4, j.getStartPosition().getLon());
+            addJourney.setDouble(5, j.getStartPosition().getXpos());
+            addJourney.setDouble(6, j.getStartPosition().getYpos());
+            addJourney.setDouble(7, j.getEndPosition().getLat());
+            addJourney.setDouble(8, j.getEndPosition().getLon());
+            addJourney.setDouble(9, j.getEndPosition().getXpos());
+            addJourney.setDouble(10, j.getEndPosition().getYpos());
+            addJourney.setString(11, j.getStartDate());
+            addJourney.setString(12, j.getEndDate());
+            addJourney.setInt(13, j.getVehicle().getVehicleId());
+            addJourney.setDouble(14, j.getStartPosition().getLat());
+            addJourney.setDouble(15, j.getStartPosition().getLon());
+            addJourney.setDouble(16, j.getStartPosition().getXpos());
+            addJourney.setDouble(17, j.getStartPosition().getYpos());
+            addJourney.setDouble(18, j.getEndPosition().getLat());
+            addJourney.setDouble(19, j.getEndPosition().getLon());
+            addJourney.setDouble(20, j.getEndPosition().getXpos());
+            addJourney.setDouble(21, j.getEndPosition().getYpos());
+            addJourney.setString(22, j.getStartDate());
+            addJourney.setString(23, j.getEndDate());
+
+            if (j.getChargers().size() <= 0) {
+                throw new SQLException("Error writing journey. No stops found.");
+            }
+
+            addJourney.executeUpdate();
+            writeVehicle(j.getVehicle());
+            writeCharger(j.getChargers());
+
+            String stopQuery = "INSERT INTO stop (journeyid, chargerid, position) "
+                    + "values (?,?,?) ON CONFLICT(journeyid, position) DO UPDATE SET "
+                    + "journeyid = ?, chargerid = ?, position = ?";
+            PreparedStatement statement = connection.prepareStatement(stopQuery);
+            int journeyIdForStop = j.getJourneyId();
+            if (j.getJourneyId() == 0) {
+                try (Connection conn = createConnection();
+                        Statement stmt = conn.createStatement();
+                        ResultSet rs = stmt.executeQuery("SELECT journeyid "
+                                + "FROM journey ORDER BY journeyid DESC LIMIT 0,1")) {
+                    journeyIdForStop = rs.getInt("journeyid");
+
+                } catch (SQLException e) {
+                    throw new IOException(e.getMessage());
+                }
+            }
+
+            for (int i = 0; i < j.getChargers().size(); i++) {
+                statement.setInt(1, journeyIdForStop);
+                statement.setInt(2, j.getChargers().get(i).getChargerId());
+                statement.setInt(3, i);
+                statement.setInt(4, j.getJourneyId());
+                statement.setInt(5, j.getChargers().get(i).getChargerId());
+                statement.setInt(6, i);
+                statement.executeUpdate();
+            }
+
+        } catch (SQLException e) {
+            throw new IOException(e.getMessage());
+        }
     }
 
-    /**
-     * updates a journey object in the database
-     *
-     * @param j the journey object
-     */
-    public void updateJourney(Journey j) throws IOException {
-        String toUpdate = "update journey set vehicleid = ?, startLat = ?, startLon = ?, startX = ?," +
-                " startY = ?, endLat = ?, endLon = ?, endX = ?, endY = ?, startDate = ?, endDate = ?" +
-                "where journeyid = ?";
-        journeyStatement(toUpdate, j, true);
-    }
 }
