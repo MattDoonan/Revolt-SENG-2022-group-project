@@ -71,11 +71,7 @@ public class Charger {
     @CsvBindByName(column = "hasChargingCost", required = true)
     boolean hasChargeCost;
 
-    /**
-     * Current used by connectors
-     */
-    @CsvBindByName(column = "currentType")
-    String currentUsed;
+    /** Stores the type of current used by connectors */
     private String currentType;
 
     /** Empty constructor for CSV object builder */
