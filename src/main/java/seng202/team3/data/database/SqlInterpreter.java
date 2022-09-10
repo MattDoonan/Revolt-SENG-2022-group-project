@@ -59,7 +59,7 @@ public class SqlInterpreter implements DataManager {
             createFile(url);
             defaultDatabase();
             try {
-                addCsvToData();
+                addChargerCsvToData("charger");
             } catch (IOException e) {
                 logManager.log(Level.WARN, "Could not import default csv data");
             }
@@ -69,8 +69,8 @@ public class SqlInterpreter implements DataManager {
     /**
      * Adds all the charger data stored in the CSV file to the database
      */
-    public void addCsvToData() throws IOException {
-        Query q = new QueryBuilderImpl().withSource("charger").build();
+    public void addChargerCsvToData(String source) throws IOException {
+        Query q = new QueryBuilderImpl().withSource(source).build();
         ArrayList<Charger> chargerList = new ArrayList<>();
         for (Object o : new CsvInterpreter().readData(q, Charger.class)) {
             chargerList.add((Charger) o);
@@ -249,13 +249,8 @@ public class SqlInterpreter implements DataManager {
         List<Object> objects = new ArrayList<>();
         String sql = "SELECT * FROM " + query.getSource();
 
-        switch (objectToInterpretAs.getSimpleName()) {
-            case "Charger":
-                sql += " INNER JOIN connector ON connector.chargerid = charger.chargerid";
-                break;
-            default:
-                break;
-
+        if (objectToInterpretAs == Charger.class) {
+            sql += " INNER JOIN connector ON connector.chargerid = charger.chargerid";
         }
 
         for (Triplet<String, String, ComparisonType> filter : query.getFilters()) {
@@ -267,7 +262,8 @@ public class SqlInterpreter implements DataManager {
 
             switch (filter.getValue2()) {
                 case CONTAINS:
-                    sql += filter.getValue0() + " LIKE '%" + filter.getValue1() + "%'";
+                    sql += "UPPER(" + filter.getValue0() + ") LIKE UPPER('%"
+                            + filter.getValue1() + "%')";
                     break;
                 case EQUAL:
                     sql += filter.getValue0() + " = " + filter.getValue1();
@@ -412,7 +408,7 @@ public class SqlInterpreter implements DataManager {
             Vehicle v = new Vehicle();
             v.setMake(rs.getString("make"));
             v.setModel(rs.getString("model"));
-            v.setBatteryPercent(rs.getInt("batteryPercent"));
+            v.setBatteryPercent(rs.getDouble("batteryPercent"));
             v.setMaxRange(rs.getInt("rangeKM"));
             if (rs.getString("imgPath") == null) {
                 v.setImgPath(Vehicle.defaultImgPath);
@@ -538,7 +534,7 @@ public class SqlInterpreter implements DataManager {
 
             statement.executeUpdate();
             writeConnector(c.getConnectors(), c.getChargerId());
-        } catch (SQLException e) {
+        } catch (SQLException | NullPointerException e) {
             throw new IOException(e.getMessage());
         }
     }
@@ -575,7 +571,7 @@ public class SqlInterpreter implements DataManager {
                             + "FROM charger ORDER BY chargerid DESC LIMIT 0,1")) {
                 chargerId = rs.getInt("chargerid");
 
-            } catch (SQLException e) {
+            } catch (SQLException | NullPointerException e) {
                 throw new IOException(e.getMessage());
             }
         }
@@ -601,7 +597,7 @@ public class SqlInterpreter implements DataManager {
             statement.setInt(12, chargerId);
             statement.setString(13, c.getType());
             statement.executeUpdate();
-        } catch (SQLException e) {
+        } catch (SQLException | NullPointerException e) {
             throw new IOException(e.getMessage());
         }
 
@@ -647,17 +643,17 @@ public class SqlInterpreter implements DataManager {
             }
             connectors += v.getConnectors().get(i);
             statement.setString(5, connectors);
-            statement.setFloat(6, v.getBatteryPercent());
+            statement.setDouble(6, v.getBatteryPercent());
             statement.setString(7, v.getImgPath());
             statement.setString(8, v.getMake());
             statement.setString(9, v.getModel());
             statement.setInt(10, v.getMaxRange());
             statement.setString(11, connectors);
-            statement.setFloat(12, v.getBatteryPercent());
+            statement.setDouble(12, v.getBatteryPercent());
             statement.setString(13, v.getImgPath());
 
             statement.executeUpdate();
-        } catch (SQLException e) {
+        } catch (SQLException | NullPointerException e) {
             throw new IOException(e.getMessage());
         }
     }
@@ -753,7 +749,7 @@ public class SqlInterpreter implements DataManager {
                 statement.executeUpdate();
             }
 
-        } catch (SQLException e) {
+        } catch (SQLException | NullPointerException e) {
             throw new IOException(e.getMessage());
         }
     }

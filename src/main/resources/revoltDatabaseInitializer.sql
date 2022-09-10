@@ -60,9 +60,9 @@ CREATE TABLE if not exists vehicle
     vehicleid INTEGER constraint dk_Veh PRIMARY KEY AUTOINCREMENT,
     make VARCHAR(10),
     model VARCHAR(10),
-    rangekm INTEGER not null,
+    rangekm INTEGER NOT NULL,
     connectorType VARCHAR(40),
-    batteryPercent REAL,
+    batteryPercent REAL NOT NULL,
     imgPath VARCHAR(100)
     );
 --SPLIT

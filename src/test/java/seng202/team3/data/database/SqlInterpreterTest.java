@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
@@ -14,6 +15,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Stream;
 import javax.management.InstanceAlreadyExistsException;
@@ -78,11 +80,6 @@ public class SqlInterpreterTest {
      * @return stream of arguments for parameterized tests
      */
     private static Stream<Arguments> dbSingleEntities() {
-        try {
-            setup();
-        } catch (InstanceAlreadyExistsException e) {
-            ;// Do Nothing
-        }
         return Stream.of(
                 Arguments.of(testCharger, "charger"),
                 Arguments.of(testConnector1, "connector"),
@@ -373,4 +370,178 @@ public class SqlInterpreterTest {
                 Journey.class);
         assertArrayEquals(new Object[] { testJourney }, result.toArray());
     }
+
+    /**
+     * Check doesn't add record when missing required field
+     * 
+     * @param objectToTest object to add
+     * @param dbTable      table to add to
+     * @throws IOException read from database fails
+     */
+    @ParameterizedTest
+    @MethodSource("dbSingleEntities")
+    public void missingRequiredFieldTest(Object objectToTest, String dbTable) throws IOException {
+
+        switch (objectToTest.getClass().getSimpleName()) {
+            case "Charger":
+                ((Charger) objectToTest).setOwner(null);
+                break;
+            case "Connector":
+                ((Connector) objectToTest).setCurrent(null);
+                break;
+            case "Vehicle":
+                ((Vehicle) objectToTest).setBatteryPercent(null);
+                break;
+            case "Journey":
+                ((Journey) objectToTest).setStartPosition(
+                        new Coordinate(4.8, 6.2, null, 177.77702, "testAddy1"));
+                break;
+            default:
+                fail();
+        }
+
+        assertThrows(IOException.class, () -> {
+            writeSingleEntity(objectToTest);
+        });
+
+        List<Object> result = db.readData(
+                new QueryBuilderImpl().withSource(dbTable).build(),
+                objectToTest.getClass());
+        assertArrayEquals(new Object[] {}, result.toArray());
+    }
+
+    @Test
+    public void allRecordsOnlyOnceTest() throws IOException {
+        // objectToTest is unused but defined so existing methodsource can be used
+
+        db.addChargerCsvToData("src/test/resources/csvtest/validChargers.csv");
+
+        List<Object> result = db.readData(
+                new QueryBuilderImpl().withSource("charger").build(),
+                Charger.class);
+
+        HashSet<Object> unique = new HashSet<Object>();
+        assertTrue(result.size() > 0);
+        for (Object object : result) {
+            if (!unique.add(object)) {
+                fail("Duplicate object");
+            }
+        }
+    }
+
+    @Test
+    public void singleFilterTest() throws IOException {
+        db.addChargerCsvToData("src/test/resources/csvtest/filtering.csv");
+
+        List<Object> result = db.readData(
+                new QueryBuilderImpl().withSource("charger")
+                        .withFilter("owner", "MERIDIAN", ComparisonType.CONTAINS)
+                        .build(),
+                Charger.class);
+
+        for (Object o : result) {
+            if (!((Charger) o).getOwner().contains("MERIDIAN")) {
+                fail("Charger did not match filter");
+            }
+        }
+
+    }
+
+    @Test
+    public void singleFilterCaseInsensitiveTest() throws IOException {
+        db.addChargerCsvToData("src/test/resources/csvtest/filtering.csv");
+
+        List<Object> result = db.readData(
+                new QueryBuilderImpl().withSource("charger")
+                        .withFilter("operator", "MERIDIAN", ComparisonType.CONTAINS)
+                        .build(),
+                Charger.class);
+
+        for (Object o : result) {
+            if (!((Charger) o).getOperator().toLowerCase().contains("meridian")) {
+                fail("Charger did not match filter");
+            }
+        }
+
+    }
+
+    @Test
+    public void multipleFilterTest() throws IOException {
+        db.addChargerCsvToData("src/test/resources/csvtest/filtering.csv");
+
+        List<Object> result = db.readData(
+                new QueryBuilderImpl().withSource("charger")
+                        .withFilter("owner", "MERIDIAN", ComparisonType.CONTAINS)
+                        .withFilter("haschargingcost", "false", ComparisonType.EQUAL)
+                        .build(),
+                Charger.class);
+
+        for (Object o : result) {
+            if (!((Charger) o).getOwner().contains("MERIDIAN")
+                    || ((Charger) o).getChargeCost()) {
+                fail("Charger did not match filter");
+            }
+        }
+    }
+
+    @Test
+    public void filterByColumnOnRelatedTableTest() throws IOException {
+        db.addChargerCsvToData("src/test/resources/csvtest/filtering.csv");
+
+        List<Object> result = db.readData(
+                new QueryBuilderImpl().withSource("charger")
+                        .withFilter("connectorstatus", "operative", ComparisonType.CONTAINS)
+                        .build(),
+                Charger.class);
+
+        for (Object o : result) {
+            boolean valid = false;
+            for (Connector c : ((Charger) o).getConnectors()) {
+                if (c.getStatus().toLowerCase().contains("operative")) {
+                    valid = true;
+                    break;
+                }
+            }
+
+            if (!valid) {
+                fail("Charger did not match filter");
+            }
+        }
+
+    }
+
+    @Test
+    public void multipleFilterSameAttributeTest() throws IOException {
+        db.addChargerCsvToData("src/test/resources/csvtest/filtering.csv");
+
+        List<Object> result = db.readData(
+                new QueryBuilderImpl().withSource("charger")
+                        .withFilter("connectorcurrent", "AC", ComparisonType.CONTAINS)
+                        .withFilter("connectorcurrent", "DC", ComparisonType.CONTAINS)
+                        .build(),
+                Charger.class);
+
+        for (Object o : result) {
+            System.out.println(((Charger) o).getOwner());
+            if (!((Charger) o).getCurrentType().contains("AC")
+                    || !((Charger) o).getCurrentType().contains("DC")) {
+                fail("Charger did not match filter");
+            }
+        }
+    }
+
+    @Test
+    public void filterByNonExistentColumnTest() throws IOException {
+
+        db.addChargerCsvToData("src/test/resources/csvtest/filtering.csv");
+
+        assertThrows(IOException.class, () -> {
+            db.readData(
+                    new QueryBuilderImpl().withSource("charger")
+                            .withFilter("nonExistentColumn", "1", ComparisonType.GREATER_THAN)
+                            .build(),
+                    Charger.class);
+        });
+    }
+
 }

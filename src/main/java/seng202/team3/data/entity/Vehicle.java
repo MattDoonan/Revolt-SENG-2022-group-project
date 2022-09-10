@@ -20,7 +20,7 @@ public class Vehicle {
     private String model;
 
     /** Current battery percentage (0 - 100) */
-    private float batteryPercent;
+    private Double batteryPercent;
 
     /** Range of vehicle with full battery capacity, in kms */
     private int maxRange;
@@ -44,6 +44,7 @@ public class Vehicle {
         this.maxRange = maxRange;
         this.connectors = connectors;
         this.imgPath = defaultImgPath;
+        this.batteryPercent = 100.0;
     }
 
     public Vehicle() {
@@ -90,7 +91,7 @@ public class Vehicle {
      * 
      * @return current battery percentage
      */
-    public float getBatteryPercent() {
+    public Double getBatteryPercent() {
         return batteryPercent;
     }
 
@@ -99,7 +100,7 @@ public class Vehicle {
      * 
      * @param batteryPercent current battery percentage
      */
-    public void setBatteryPercent(float batteryPercent) {
+    public void setBatteryPercent(Double batteryPercent) {
         this.batteryPercent = batteryPercent;
     }
 
@@ -195,7 +196,7 @@ public class Vehicle {
 
         return v.getMake().equals(this.getMake())
                 && v.getModel().equals(this.getModel())
-                && v.getBatteryPercent() == this.getBatteryPercent()
+                && v.getBatteryPercent().equals(this.getBatteryPercent())
                 && v.getMaxRange() == this.getMaxRange()
                 && v.getConnectors().equals(this.getConnectors())
                 && v.getCurrentRange().equals(this.getCurrentRange())
