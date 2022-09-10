@@ -33,26 +33,6 @@ CREATE TABLE IF NOT EXISTS connector
     connectortype VARCHAR(50) NOT NULL
     );
 --SPLIT
-DROP TABLE IF EXISTS note;
---SPLIT
-CREATE TABLE if not exists note
-(
-    reviewid INTEGER constraint dk_note PRIMARY KEY AUTOINCREMENT,
-    chargerid INTEGER NOT NULL references Charger(chargerid),
-    rating REAL,
-    publicText VARCHAR(255),
-    privateText VARCHAR(255)
-    );
---SPLIT
-DROP TABLE IF EXISTS favourite;
---SPLIT
-CREATE TABLE if not exists favourite
-(
-    favouriteid INTEGER constraint dk_fav PRIMARY KEY AUTOINCREMENT,
-    chargerid INTEGER NOT NULL references Charger(chargerid)
-
-    );
---SPLIT
 DROP TABLE IF EXISTS vehicle;
 --SPLIT
 CREATE TABLE if not exists vehicle

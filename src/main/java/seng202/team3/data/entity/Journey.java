@@ -27,9 +27,6 @@ public class Journey {
     /** Ending date and time */
     private String endDate;
 
-    /** User has favourited */
-    private boolean isFavourite;
-
     /** the journeys id number **/
     private int journeyId;
 
@@ -44,7 +41,6 @@ public class Journey {
         this.vehicle = vehicle;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.isFavourite = false;
     }
 
     public Journey() {
@@ -164,24 +160,6 @@ public class Journey {
     }
 
     /**
-     * Get favourited value of journey
-     * 
-     * @return favourite boolean value
-     */
-    public boolean getFavourite() {
-        return isFavourite;
-    }
-
-    /**
-     * Add or remove journey from favourites
-     * 
-     * @param isFavourite boolean of what to change favourite to
-     */
-    public void setFavourite(boolean isFavourite) {
-        this.isFavourite = isFavourite;
-    }
-
-    /**
      * sets the ID number
      * 
      * @param number integer for the id
@@ -202,17 +180,13 @@ public class Journey {
     @Override
     public boolean equals(Object o) {
         Journey j = (Journey) o;
-        boolean test;
-        test = j.getChargers().equals(this.getChargers());
-        test = j.getVehicle().equals(this.getVehicle());
-        test = j.getStartPosition().equals(this.getStartPosition());
-        test = j.getEndPosition().equals(this.getEndPosition());
-        test = j.getStartDate().equals(this.getStartDate());
-        test = j.getEndDate().equals(this.getEndDate());
-        test = j.getFavourite() == this.getFavourite();
-        test = j.getJourneyId() == this.getJourneyId();
-
-        return test;
+        return j.getChargers().equals(this.getChargers())
+                && j.getVehicle().equals(this.getVehicle())
+                && j.getStartPosition().equals(this.getStartPosition())
+                && j.getEndPosition().equals(this.getEndPosition())
+                && j.getStartDate().equals(this.getStartDate())
+                && j.getEndDate().equals(this.getEndDate())
+                && j.getJourneyId() == this.getJourneyId();
     }
 
 }

@@ -29,7 +29,6 @@ import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
 import seng202.team3.data.entity.Journey;
-import seng202.team3.data.entity.Note;
 import seng202.team3.data.entity.Vehicle;
 
 /**
@@ -45,7 +44,6 @@ public class SqlInterpreterTest {
     static Charger testCharger;
     static Vehicle testVehicle;
     static Journey testJourney;
-    static Note testNote;
 
     static final int DEFAULTID = 1;
 
@@ -127,9 +125,6 @@ public class SqlInterpreterTest {
                 "2020/1/1 00:00:00", "2020/1/3 00:00:00");
         testJourney.addCharger(testCharger);
 
-        testNote = new Note(DEFAULTID, 4);
-        testNote.setPublicText("This charger is great");
-        testNote.setReviewId(DEFAULTID);
     }
 
     @Test
