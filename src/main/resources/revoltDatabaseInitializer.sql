@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS connector
     connectorpowerdraw VARCHAR(50) NOT NULL,
     count INTEGER,
     connectorstatus VARCHAR(30),
-    chargerid INTEGER NOT NULL references Charger(chargerID),
+    chargerid INTEGER NOT NULL references Charger(chargerid),
     connectortype VARCHAR(50) NOT NULL
     );
 --SPLIT
@@ -37,8 +37,8 @@ DROP TABLE IF EXISTS note;
 --SPLIT
 CREATE TABLE if not exists note
 (
-    reviewId INTEGER constraint dk_note PRIMARY KEY AUTOINCREMENT,
-    chargerid INTEGER NOT NULL references Charger(chargerID),
+    reviewid INTEGER constraint dk_note PRIMARY KEY AUTOINCREMENT,
+    chargerid INTEGER NOT NULL references Charger(chargerid),
     rating REAL,
     publicText VARCHAR(255),
     privateText VARCHAR(255)
@@ -48,7 +48,7 @@ DROP TABLE IF EXISTS favourite;
 --SPLIT
 CREATE TABLE if not exists favourite
 (
-    favouriteID INTEGER constraint dk_fav PRIMARY KEY AUTOINCREMENT,
+    favouriteid INTEGER constraint dk_fav PRIMARY KEY AUTOINCREMENT,
     chargerid INTEGER NOT NULL references Charger(chargerid)
 
     );
@@ -71,7 +71,7 @@ DROP TABLE IF EXISTS journey;
 CREATE TABLE if not exists journey
 (
     journeyid INTEGER constraint dk_journey PRIMARY KEY AUTOINCREMENT,
-    vehicleid INTEGER NOT NULL references Vehicle(vehicleID),
+    vehicleid INTEGER NOT NULL references Vehicle(vehicleid),
     startLat REAL NOT NULL,
     startLon REAL NOT NULL,
     startX REAL,

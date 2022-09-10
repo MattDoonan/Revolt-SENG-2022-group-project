@@ -234,10 +234,35 @@ public class SqlInterpreter implements DataManager {
      * @param id   Integer of the id number of the entity
      */
     public void deleteData(String type, int id) {
-        String idName = "" + type.toLowerCase() + "ID";
+        String idName = "" + type.toLowerCase() + "id";
         String delete = "DELETE FROM " + type.toLowerCase() + " WHERE " + idName + " = " + id + ";";
         try (Connection connection = createConnection();
                 Statement stmt = connection.createStatement()) {
+            switch (type){
+                case "charger":
+                    connection.createStatement()
+                            .executeUpdate("DELETE FROM connector WHERE chargerid = " + id + ";");
+                    connection.createStatement()
+                            .executeUpdate("DELETE FROM stop WHERE chargerid = " + id + ";");
+                    break;
+                case "connector":
+                    try{
+                        if (readData(new QueryBuilderImpl().withSource("connector").build(), Connector.class).size() == 1) {
+                            throw new Error("Cannot delete connector. Charger must have 1 connector");
+                        }
+                    } catch (IOException e){
+                        throw new SQLException(e.getMessage());
+                    }
+                    break;
+                case "journey":
+                    connection.createStatement()
+                            .executeUpdate("DELETE FROM stop WHERE journeyid = " + id + ";");
+                    break;
+                case "vehicle":
+                    connection.createStatement()
+                            .executeUpdate("DELETE FROM journey WHERE vehicleid = " + id + ";");
+                    break;
+            }
             stmt.executeUpdate(delete);
         } catch (SQLException e) {
             logManager.error(e);
@@ -415,7 +440,7 @@ public class SqlInterpreter implements DataManager {
             } else {
                 v.setImgPath(rs.getString("imgPath"));
             }
-            v.setVehicleId(rs.getInt("vehicleID"));
+            v.setVehicleId(rs.getInt("vehicleid"));
             v.setConnectors(
                     new ArrayList<String>(Arrays.asList(rs.getString("connectorType").split(","))));
             vehicles.add(v);
@@ -449,8 +474,8 @@ public class SqlInterpreter implements DataManager {
 
             // Get vehicle
             ResultSet vehicleRs = createConnection().createStatement()
-                    .executeQuery("SELECT * FROM vehicle WHERE vehicleID = "
-                            + rs.getInt("vehicleID") + ";");
+                    .executeQuery("SELECT * FROM vehicle WHERE vehicleid = "
+                            + rs.getInt("vehicleid") + ";");
 
             List<Object> vehicles = asVehicle(vehicleRs);
             if (vehicles.size() == 1) {
@@ -533,6 +558,9 @@ public class SqlInterpreter implements DataManager {
             statement.setBoolean(31, c.getChargeCost());
 
             statement.executeUpdate();
+            if (c.getChargerId() == 0) {
+                c.setChargerId(statement.getGeneratedKeys().getInt(1));
+            }
             writeConnector(c.getConnectors(), c.getChargerId());
         } catch (SQLException | NullPointerException e) {
             throw new IOException(e.getMessage());
@@ -597,6 +625,9 @@ public class SqlInterpreter implements DataManager {
             statement.setInt(12, chargerId);
             statement.setString(13, c.getType());
             statement.executeUpdate();
+            if (c.getId() == 0) {
+                c.setId(statement.getGeneratedKeys().getInt(1));
+            }
         } catch (SQLException | NullPointerException e) {
             throw new IOException(e.getMessage());
         }
@@ -653,6 +684,9 @@ public class SqlInterpreter implements DataManager {
             statement.setString(13, v.getImgPath());
 
             statement.executeUpdate();
+            if (v.getVehicleId() == 0) {
+                v.setVehicleId(statement.getGeneratedKeys().getInt(1));
+            }
         } catch (SQLException | NullPointerException e) {
             throw new IOException(e.getMessage());
         }
@@ -675,15 +709,19 @@ public class SqlInterpreter implements DataManager {
      * 
      * @param j the object journey
      */
-    public void writeJourney(Journey j) throws IOException {
-        String toAdd = "INSERT INTO journey (journeyid, vehicleID, startLat, "
+    public void writeJourney(Journey j) throws IOException, SQLException {
+        String toAdd = "INSERT INTO journey (journeyid, vehicleid, startLat, "
                 + "startLon, startX, startY, "
                 + "endLat, endLon, endX, endY, startDate, endDate) "
                 + "values(?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(journeyid) DO UPDATE SET "
                 + "vehicleid = ?, startLat = ?, startLon = ?, startX = ?,"
                 + " startY = ?, endLat = ?, endLon = ?, endX = ?, endY = ?, "
                 + "startDate = ?, endDate = ?";
-
+        if (j.getChargers().size() < 1) {
+            throw new SQLException("Error writing journey. No stops found.");
+        } else if (j.getVehicle() == null) {
+            throw new SQLException("Error writing journey. No Vehicle Attached.");
+        }
         try (Connection connection = createConnection();
                 PreparedStatement addJourney = connection.prepareStatement(toAdd)) {
             if (j.getJourneyId() == 0) {
@@ -714,13 +752,10 @@ public class SqlInterpreter implements DataManager {
             addJourney.setString(22, j.getStartDate());
             addJourney.setString(23, j.getEndDate());
 
-            if (j.getChargers().size() <= 0) {
-                throw new SQLException("Error writing journey. No stops found.");
-            }
-
             addJourney.executeUpdate();
-            writeVehicle(j.getVehicle());
-            writeCharger(j.getChargers());
+            if (j.getJourneyId() == 0) {
+                j.setJourneyId(addJourney.getGeneratedKeys().getInt(1));
+            }
 
             String stopQuery = "INSERT INTO stop (journeyid, chargerid, position) "
                     + "values (?,?,?) ON CONFLICT(journeyid, position) DO UPDATE SET "
