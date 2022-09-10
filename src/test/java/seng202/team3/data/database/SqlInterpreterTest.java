@@ -184,6 +184,25 @@ public class SqlInterpreterTest {
         assertArrayEquals(new Object[] { objectToTest }, result.toArray());
     }
 
+    @Test
+    public void writeChargersFromCsvTest() throws IOException {
+        db.addChargerCsvToData("src/test/resources/csvtest/validChargers.csv");
+        QueryBuilder q = new QueryBuilderImpl().withSource("charger");
+        List<Object> result = db.readData(q.build(), Charger.class);
+
+        List<Object> expected = new CsvInterpreter().readData(
+                q.withSource("src/test/resources/csvtest/validChargers.csv").build(),
+                Charger.class);
+
+        int id = 1; // Add expected connector ids to expected connectors
+        for (Object o : expected) {
+            for (Connector c : ((Charger) o).getConnectors()) {
+                c.setId(id++);
+            }
+        }
+        assertArrayEquals(expected.toArray(), result.toArray());
+    }
+
     /**
      * Tests errors are thrown correctly when unparsable object is provided
      */
@@ -543,5 +562,4 @@ public class SqlInterpreterTest {
                     Charger.class);
         });
     }
-
 }
