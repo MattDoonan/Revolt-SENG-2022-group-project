@@ -233,12 +233,12 @@ public class SqlInterpreter implements DataManager {
      * @param type String of the name of the table
      * @param id   Integer of the id number of the entity
      */
-    public void deleteData(String type, int id) {
+    public void deleteData(String type, int id) throws IOException {
         String idName = "" + type.toLowerCase() + "id";
         String delete = "DELETE FROM " + type.toLowerCase() + " WHERE " + idName + " = " + id + ";";
         try (Connection connection = createConnection();
                 Statement stmt = connection.createStatement()) {
-            switch (type){
+            switch (type) {
                 case "charger":
                     connection.createStatement()
                             .executeUpdate("DELETE FROM connector WHERE chargerid = " + id + ";");
@@ -246,12 +246,11 @@ public class SqlInterpreter implements DataManager {
                             .executeUpdate("DELETE FROM stop WHERE chargerid = " + id + ";");
                     break;
                 case "connector":
-                    try{
-                        if (readData(new QueryBuilderImpl().withSource("connector").build(), Connector.class).size() == 1) {
-                            throw new Error("Cannot delete connector. Charger must have 1 connector");
-                        }
-                    } catch (IOException e){
-                        throw new SQLException(e.getMessage());
+                    if (readData(new QueryBuilderImpl().withSource("connector").build(),
+                            Connector.class)
+                            .size() == 1) {
+                        throw new SQLException(
+                                "Cannot delete connector. Charger must have 1 connector");
                     }
                     break;
                 case "journey":
@@ -262,10 +261,13 @@ public class SqlInterpreter implements DataManager {
                     connection.createStatement()
                             .executeUpdate("DELETE FROM journey WHERE vehicleid = " + id + ";");
                     break;
+
+                default:
+                    break;
             }
             stmt.executeUpdate(delete);
         } catch (SQLException e) {
-            logManager.error(e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -709,7 +711,7 @@ public class SqlInterpreter implements DataManager {
      * 
      * @param j the object journey
      */
-    public void writeJourney(Journey j) throws IOException, SQLException {
+    public void writeJourney(Journey j) throws IOException {
         String toAdd = "INSERT INTO journey (journeyid, vehicleid, startLat, "
                 + "startLon, startX, startY, "
                 + "endLat, endLon, endX, endY, startDate, endDate) "
@@ -718,9 +720,9 @@ public class SqlInterpreter implements DataManager {
                 + " startY = ?, endLat = ?, endLon = ?, endX = ?, endY = ?, "
                 + "startDate = ?, endDate = ?";
         if (j.getChargers().size() < 1) {
-            throw new SQLException("Error writing journey. No stops found.");
+            throw new IOException("Error writing journey. No stops found.");
         } else if (j.getVehicle() == null) {
-            throw new SQLException("Error writing journey. No Vehicle Attached.");
+            throw new IOException("Error writing journey. No Vehicle Attached.");
         }
         try (Connection connection = createConnection();
                 PreparedStatement addJourney = connection.prepareStatement(toAdd)) {

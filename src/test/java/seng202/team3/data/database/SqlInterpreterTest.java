@@ -55,7 +55,7 @@ public class SqlInterpreterTest {
      * @param objectToTest obeject to write to database
      * @throws IOException if the writing fails
      */
-    private void writeSingleEntity(Object objectToTest) throws IOException, SQLException {
+    private void writeSingleEntity(Object objectToTest) throws IOException {
         switch (objectToTest.getClass().getSimpleName()) {
             case "Charger":
                 db.writeCharger((Charger) objectToTest);
@@ -205,7 +205,7 @@ public class SqlInterpreterTest {
      */
     @ParameterizedTest
     @MethodSource("dbSingleEntities")
-    public void interpretAsWrongObjectTest(Object objectToTest, String dbTable) throws IOException, SQLException {
+    public void interpretAsWrongObjectTest(Object objectToTest, String dbTable) throws IOException {
         writeSingleEntity(objectToTest); // Write to db
 
         assertThrows(IOException.class, () -> { // Interpret as abstract Object
@@ -220,7 +220,7 @@ public class SqlInterpreterTest {
      */
     @ParameterizedTest
     @MethodSource("dbSingleEntities")
-    public void deleteEntityTest(Object objectToTest, String dbTable) throws IOException, SQLException {
+    public void deleteEntityTest(Object objectToTest, String dbTable) throws IOException {
         writeSingleEntity(objectToTest); // Add to db
         if (objectToTest.getClass() == Connector.class) {
             writeSingleEntity(testConnector2);
@@ -254,7 +254,7 @@ public class SqlInterpreterTest {
     @ParameterizedTest
     @MethodSource("dbSingleEntities")
     // TODO: simplify with an 'entity' interface/superclass with getId etc.
-    public void autoIncrementIdTest(Object objectToTest, String dbTable) throws IOException, SQLException {
+    public void autoIncrementIdTest(Object objectToTest, String dbTable) throws IOException {
         if (objectToTest.getClass() == Journey.class) {
             ((Journey) objectToTest).setVehicle(testVehicle);
         }
@@ -296,38 +296,6 @@ public class SqlInterpreterTest {
     }
 
     /**
-     * Checks if the ID's of the objects update when added
-     */
-    @ParameterizedTest
-    @MethodSource("dbSingleEntities")
-    // TODO: simplify with an 'entity' interface/superclass with getId etc.
-    public void objectIDUpdate(Object objectToTest, String dbTable) throws IOException, SQLException {
-        writeSingleEntity(objectToTest);
-        if (objectToTest.getClass() == Charger.class) {
-            assertEquals(1, ((Charger) objectToTest).getChargerId());
-        } else if (objectToTest.getClass() == Connector.class) {
-            assertEquals(1, ((Connector) objectToTest).getId());
-        } else if (objectToTest.getClass() == Vehicle.class) {
-            assertEquals(1, ((Vehicle) objectToTest).getVehicleId());
-        } else if (objectToTest.getClass() == Journey.class) {
-            assertEquals(1, ((Journey) objectToTest).getJourneyId());
-        }
-    }
-
-    /**
-     * Checks if the connectors are added when a charger is added to the db
-     */
-    @Test
-    public void checkConnectorsTest() throws SQLException, IOException {
-        writeSingleEntity(testCharger);
-        List<Object> result = db.readData(
-                new QueryBuilderImpl().withSource("connector").withFilter("chargerid",
-                        String.valueOf(testCharger.getChargerId()), ComparisonType.CONTAINS).build(),
-                Connector.class);
-        assertArrayEquals(new Object[] { testConnector1, testConnector2 }, result.toArray());
-    }
-
-    /**
      * Checks if the connectors associated with the chargers are deleted
      */
     @Test
@@ -337,21 +305,23 @@ public class SqlInterpreterTest {
         List<Object> result = db.readData(
                 new QueryBuilderImpl().withSource("connector")
                         .withFilter("chargerid", String.valueOf(testCharger.getChargerId()),
-                                ComparisonType.CONTAINS).build(),
+                                ComparisonType.CONTAINS)
+                        .build(),
                 Connector.class);
-        assertEquals(0, result.size());
+        assertArrayEquals(new Object[] {}, result.toArray());
     }
 
     /**
-     * Checks if there are stops still stored in the database when a journey is deleted
+     * Checks if there are stops still stored in the database when a journey is
+     * deleted
      */
     @Test
     public void delJourneyTestForStops() throws SQLException, IOException {
         writeSingleEntity(testJourney);
         db.deleteData("journey", testJourney.getJourneyId());
-        ResultSet result = db.createConnection().createStatement()
-                .executeQuery("SELECT * FROM stop WHERE journeyid = "+testJourney.getJourneyId()+";");
-        assertEquals(false, result.getBoolean(1));
+        ResultSet result = db.createConnection().createStatement().executeQuery(
+                "SELECT * FROM stop WHERE journeyid = " + testJourney.getJourneyId() + ";");
+        assertFalse(result.getBoolean(1));
     }
 
     /**
@@ -359,11 +329,11 @@ public class SqlInterpreterTest {
      */
     @Test
     public void delChargerTestForStops() throws SQLException, IOException {
-        writeSingleEntity(testCharger);
+        db.writeCharger(testCharger);
         db.deleteData("charger", testCharger.getChargerId());
-        ResultSet result = db.createConnection().createStatement()
-                .executeQuery("SELECT * FROM stop WHERE chargerid = "+testCharger.getChargerId()+";");
-        assertEquals(false, result.getBoolean(3));
+        ResultSet result = db.createConnection().createStatement().executeQuery(
+                "SELECT * FROM stop WHERE chargerid = " + testCharger.getChargerId() + ";");
+        assertFalse(result.getBoolean(3));
     }
 
     /**
@@ -371,56 +341,59 @@ public class SqlInterpreterTest {
      */
     @Test
     public void delVehicleTestForJourney() throws SQLException, IOException {
-        writeSingleEntity(testJourney);
+        db.writeJourney(testJourney);
         db.deleteData("vehicle", testVehicle.getVehicleId());
         List<Object> result = db.readData(
                 new QueryBuilderImpl().withSource("journey")
                         .withFilter("vehicleid", String.valueOf(testVehicle.getVehicleId()),
-                                ComparisonType.CONTAINS).build(),Journey.class);
-        assertEquals(0, result.size());
+                                ComparisonType.CONTAINS)
+                        .build(),
+                Journey.class);
+        assertArrayEquals(new Object[] {}, result.toArray());
     }
 
     /**
      * Checks what happens if a vehicle is null
      */
     @Test
-    public void noVehicleForJourneyTest() throws IOException{
+    public void noVehicleForJourneyTest() throws IOException {
         testJourney.setVehicle(null);
-        try {
-            writeSingleEntity(testJourney);
-            fail("Journey added despite no vehicle");
-        } catch (SQLException e) {
-            assertEquals("Error writing journey. No Vehicle Attached.", e.getMessage());
-        }
+
+        Exception e = assertThrows(IOException.class, () -> {
+            db.writeJourney(testJourney);
+        });
+
+        assertTrue(e.getMessage().contains("Error writing journey. No Vehicle Attached."));
     }
 
     /**
      * Checks what happens if there are no chargers in a journey
      */
     @Test
-    public void noChargersForJourneyTest() throws IOException{
+    public void noChargersForJourneyTest() throws IOException {
         testJourney.removeCharger(testCharger);
-        try {
-            writeSingleEntity(testJourney);
-            fail("Journey added despite no chargers");
-        } catch (SQLException e) {
-            assertEquals("Error writing journey. No stops found.", e.getMessage());
-        }
+
+        Exception e = assertThrows(IOException.class, () -> {
+            db.writeJourney(testJourney);
+        });
+
+        assertTrue(e.getMessage().contains("Error writing journey. No stops found."));
     }
 
     /**
      * Checks the requirement for chargers to have one connector
      */
     @Test
-    public void removingToManyConnectorsTest() throws SQLException, IOException {
+    public void removingTooManyConnectorsTest() throws SQLException, IOException {
         writeSingleEntity(testCharger);
         db.deleteData("connector", testConnector1.getId());
-        try {
+
+        Exception e = assertThrows(IOException.class, () -> {
             db.deleteData("connector", testConnector2.getId());
-            fail("Connector deleted despite charger only having 1");
-        } catch (Error e) {
-            assertEquals("Cannot delete connector. Charger must have 1 connector", e.getMessage());
-        }
+        });
+
+        assertTrue(e.getMessage()
+                .contains("Cannot delete connector. Charger must have 1 connector"));
     }
 
     /**
@@ -511,7 +484,8 @@ public class SqlInterpreterTest {
         writeSingleEntity(testJourney);
         List<Object> result = db.readData(
                 new QueryBuilderImpl().withSource("journey").withFilter("vehicleid",
-                        String.valueOf(testJourney.getVehicle().getVehicleId()), ComparisonType.CONTAINS).build(),
+                        String.valueOf(testJourney.getVehicle().getVehicleId()),
+                        ComparisonType.CONTAINS).build(),
                 Journey.class);
         assertArrayEquals(new Object[] { testJourney }, result.toArray());
     }
@@ -528,7 +502,8 @@ public class SqlInterpreterTest {
         writeSingleEntity(testJourney.getChargers().get(0));
         List<Object> result = db.readData(
                 new QueryBuilderImpl().withSource("journey").withFilter("journeyid",
-                        String.valueOf(testJourney.getJourneyId()), ComparisonType.CONTAINS).build(),
+                        String.valueOf(testJourney.getJourneyId()),
+                        ComparisonType.CONTAINS).build(),
                 Journey.class);
         assertArrayEquals(new Object[] { testJourney }, result.toArray());
     }
@@ -547,7 +522,8 @@ public class SqlInterpreterTest {
         writeSingleEntity(testCharger);
         List<Object> result = db.readData(
                 new QueryBuilderImpl().withSource("connector").withFilter("chargerid",
-                        String.valueOf(testCharger.getChargerId()), ComparisonType.CONTAINS).build(),
+                        String.valueOf(testCharger.getChargerId()),
+                        ComparisonType.CONTAINS).build(),
                 Connector.class);
         assertArrayEquals(new Object[] { testConnector1, testConnector2 }, result.toArray());
     }
