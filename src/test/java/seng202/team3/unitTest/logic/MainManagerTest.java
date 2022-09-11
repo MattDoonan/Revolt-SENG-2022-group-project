@@ -1,4 +1,4 @@
-package seng202.team3.logic;
+package seng202.team3.unitTest.logic;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -20,6 +20,8 @@ import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
+import seng202.team3.logic.ChargerManager;
+import seng202.team3.logic.MainManager;
 
 /**
  * Unit tests for {@link MainManager} MainManager class in logic

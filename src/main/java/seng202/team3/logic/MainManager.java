@@ -65,6 +65,15 @@ public class MainManager {
         this.distance = distance;
     }
 
+    /**
+     * Gets the distance
+     *
+     * @return the double distance of the distance
+     */
+    public double getDistance() {
+        return distance;
+    }
+
 
     /**
      * Adds a coordinate into the coordinate list
