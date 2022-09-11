@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Leaflet & OSM Map Demo</title>
+    <title>Map</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" />
     <link rel="stylesheet"
         href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
@@ -38,6 +38,16 @@
         let routeToCharger;
         let pointCoordinates = []; // contains a list of all the coordinates in a route in order.
 
+
+        /**
+         * Creates a star icon
+         */
+        let redIcon = L.icon({
+            iconUrl: 'icons/red_icon.png',
+            iconSize: [24, 24],
+            iconAnchor: [12, 0],
+        })
+
         /**
          * This object can be returned to our java code, where we can call the functions we define inside of it
          */
@@ -51,6 +61,7 @@
             clearMarkers: clearMarkers,
             addLocationToRoute: addLocationToRoute,
         };
+
 
         /**
          * Creates an object with the lat, lon, id and type attributes
