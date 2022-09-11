@@ -674,7 +674,6 @@ public class SqlInterpreterTest {
                 Charger.class);
 
         for (Object o : result) {
-            System.out.println(((Charger) o).getOwner());
             if (!((Charger) o).getCurrentType().contains("AC")
                     || !((Charger) o).getCurrentType().contains("DC")) {
                 fail("Charger did not match filter");
