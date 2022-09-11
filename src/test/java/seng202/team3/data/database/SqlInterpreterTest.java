@@ -668,8 +668,8 @@ public class SqlInterpreterTest {
 
         List<Object> result = db.readData(
                 new QueryBuilderImpl().withSource("charger")
-                        .withFilter("connectorcurrent", "AC", ComparisonType.CONTAINS)
-                        .withFilter("connectorcurrent", "DC", ComparisonType.CONTAINS)
+                        .withFilter("currenttype", "AC", ComparisonType.CONTAINS)
+                        .withFilter("currenttype", "DC", ComparisonType.CONTAINS)
                         .build(),
                 Charger.class);
 

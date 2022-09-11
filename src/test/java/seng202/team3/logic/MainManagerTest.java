@@ -8,13 +8,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javax.management.InstanceAlreadyExistsException;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import seng202.team3.data.database.ComparisonType;
-import seng202.team3.data.database.CsvInterpreter;
 import seng202.team3.data.database.QueryBuilder;
 import seng202.team3.data.database.QueryBuilderImpl;
+import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
@@ -29,6 +31,14 @@ public class MainManagerTest {
 
     private MainManager manage;
     private ChargerManager charge;
+    static SqlInterpreter db;
+
+    @BeforeAll
+    static void intialize() throws InstanceAlreadyExistsException {
+        SqlInterpreter.removeInstance();
+        db = SqlInterpreter.initialiseInstanceWithUrl(
+                "jdbc:sqlite:./src/test/resources/test_database.db");
+    }
 
     /**
      * Set up managers for testing purposes
@@ -37,7 +47,7 @@ public class MainManagerTest {
     public void setUp() {
         manage = new MainManager();
         charge = new ChargerManager();
-
+        db.defaultDatabase();
     }
 
     /** Tears down the initialized managers after test */
@@ -92,9 +102,11 @@ public class MainManagerTest {
      */
     @Test
     public void originalListTest() throws IOException {
+        db.addChargerCsvToData("src/test/resources/csvtest/filtering.csv");
+
         QueryBuilder q = new QueryBuilderImpl().withSource("charger");
         ArrayList<Charger> chargerList = new ArrayList<>();
-        for (Object o : new CsvInterpreter().readData(q.build(), Charger.class)) {
+        for (Object o : SqlInterpreter.getInstance().readData(q.build(), Charger.class)) {
             chargerList.add((Charger) o);
         }
 
@@ -107,18 +119,20 @@ public class MainManagerTest {
     /**
      * tests if the manager is returning the correct list of chargers with Distances
      * Distance set to 50
+     * 
+     * @throws IOException if db interaction fails
      */
     @Test
-    public void distanceOriginalListTest() {
+    public void distanceOriginalListTest() throws IOException {
+        db.addChargerCsvToData("src/test/resources/csvtest/filtering.csv");
+
         QueryBuilder q = new QueryBuilderImpl().withSource("charger");
         ArrayList<Charger> chargerList = new ArrayList<>();
-        try {
-            for (Object o : new CsvInterpreter().readData(q.build(), Charger.class)) {
-                chargerList.add((Charger) o);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+
+        for (Object o : SqlInterpreter.getInstance().readData(q.build(), Charger.class)) {
+            chargerList.add((Charger) o);
         }
+
         Coordinate coordinate = new Coordinate(1.1, 2.3, -43.53418, 172.627572);
         ArrayList<Charger> cc = charge.getNearbyChargers(chargerList, coordinate, 50.0);
         manage.setPosition(coordinate);
@@ -135,18 +149,20 @@ public class MainManagerTest {
 
     /**
      * Distance set to 90 instead of 50
+     * 
+     * @throws IOException if db interaction fails
      */
     @Test
-    public void changeDistanceTest() {
+    public void changeDistanceTest() throws IOException {
+        db.addChargerCsvToData("src/test/resources/csvtest/filtering.csv");
+
         QueryBuilder q = new QueryBuilderImpl().withSource("charger");
         ArrayList<Charger> chargerList = new ArrayList<>();
-        try {
-            for (Object o : new CsvInterpreter().readData(q.build(), Charger.class)) {
-                chargerList.add((Charger) o);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+
+        for (Object o : SqlInterpreter.getInstance().readData(q.build(), Charger.class)) {
+            chargerList.add((Charger) o);
         }
+
         Coordinate coordinate = new Coordinate(1.1, 2.3, -43.53418, 172.627572);
         ArrayList<Charger> cc = charge.getNearbyChargers(chargerList, coordinate, 90.0);
         manage.setPosition(coordinate);
@@ -164,19 +180,20 @@ public class MainManagerTest {
     /**
      * Checks the lists of chargers when a QUERY filter connectorcurrent AC is
      * added.
+     * 
+     * @throws IOException if db interaction fails
      */
     @Test
-    public void addAcTypeQuery() {
+    public void addAcTypeQuery() throws IOException {
+        db.addChargerCsvToData("src/test/resources/csvtest/filtering.csv");
+
         QueryBuilder q = new QueryBuilderImpl().withSource("charger")
                 .withFilter("connectorcurrent", "AC", ComparisonType.CONTAINS);
         ArrayList<Charger> chargerList = new ArrayList<>();
-        try {
-            for (Object o : new CsvInterpreter().readData(q.build(), Charger.class)) {
-                chargerList.add((Charger) o);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        for (Object o : SqlInterpreter.getInstance().readData(q.build(), Charger.class)) {
+            chargerList.add((Charger) o);
         }
+
         manage.resetQuery();
         manage.adjustQuery("connectorcurrent", "AC", ComparisonType.CONTAINS);
         manage.makeAllChargers();
@@ -188,14 +205,18 @@ public class MainManagerTest {
     /**
      * Checks the lists of chargers when a QUERY filter connectorcurrent DC is
      * added.
+     * 
+     * @throws IOException if db interaction fails
      */
     @Test
-    public void addDcTypeQuery() {
+    public void addDcTypeQuery() throws IOException {
+        db.addChargerCsvToData("src/test/resources/csvtest/filtering.csv");
+
         QueryBuilder q = new QueryBuilderImpl().withSource("charger")
                 .withFilter("connectorcurrent", "DC", ComparisonType.CONTAINS);
         ArrayList<Charger> chargerList = new ArrayList<>();
         try {
-            for (Object o : new CsvInterpreter().readData(q.build(), Charger.class)) {
+            for (Object o : SqlInterpreter.getInstance().readData(q.build(), Charger.class)) {
                 chargerList.add((Charger) o);
             }
         } catch (IOException e) {
@@ -211,14 +232,17 @@ public class MainManagerTest {
     /**
      * Checks the lists of chargers when a QUERY filter hastouristattraction true is
      * added.
+     * 
+     * @throws IOException if db interaction fails
      */
     @Test
-    public void addAttractionQuery() {
+    public void addAttractionQuery() throws IOException {
+        db.addChargerCsvToData("src/test/resources/csvtest/filtering.csv");
         QueryBuilder q = new QueryBuilderImpl().withSource("charger")
                 .withFilter("hastouristattraction", "True", ComparisonType.CONTAINS);
         ArrayList<Charger> chargerList = new ArrayList<>();
         try {
-            for (Object o : new CsvInterpreter().readData(q.build(), Charger.class)) {
+            for (Object o : SqlInterpreter.getInstance().readData(q.build(), Charger.class)) {
                 chargerList.add((Charger) o);
             }
         } catch (IOException e) {
@@ -235,14 +259,17 @@ public class MainManagerTest {
     /**
      * Checks the lists of chargers when a QUERY filter haschargingcost False is
      * added.
+     * 
+     * @throws IOException if db interaction fails
      */
     @Test
-    public void addChargingCostQuery() {
+    public void addChargingCostQuery() throws IOException {
+        db.addChargerCsvToData("src/test/resources/csvtest/filtering.csv");
         QueryBuilder q = new QueryBuilderImpl().withSource("charger")
                 .withFilter("haschargingcost", "False", ComparisonType.CONTAINS);
         ArrayList<Charger> chargerList = new ArrayList<>();
         try {
-            for (Object o : new CsvInterpreter().readData(q.build(), Charger.class)) {
+            for (Object o : SqlInterpreter.getInstance().readData(q.build(), Charger.class)) {
                 chargerList.add((Charger) o);
             }
         } catch (IOException e) {
@@ -258,15 +285,18 @@ public class MainManagerTest {
 
     /**
      * Checks what happens there are multiple QUERY's added
+     * 
+     * @throws IOException if db interaction fails
      */
     @Test
-    public void queryChargeCostWithCurrentTest() {
+    public void queryChargeCostWithCurrentTest() throws IOException {
+        db.addChargerCsvToData("src/test/resources/csvtest/filtering.csv");
         QueryBuilder q = new QueryBuilderImpl().withSource("charger")
                 .withFilter("haschargingcost", "False", ComparisonType.CONTAINS)
                 .withFilter("connectorcurrent", "DC", ComparisonType.CONTAINS);
         ArrayList<Charger> chargerList = new ArrayList<>();
         try {
-            for (Object o : new CsvInterpreter().readData(q.build(), Charger.class)) {
+            for (Object o : SqlInterpreter.getInstance().readData(q.build(), Charger.class)) {
                 chargerList.add((Charger) o);
             }
         } catch (IOException e) {
@@ -282,13 +312,14 @@ public class MainManagerTest {
     }
 
     @Test
-    public void queryTouristAttractionWithCurrentTest() {
+    public void queryTouristAttractionWithCurrentTest() throws IOException {
+        db.addChargerCsvToData("src/test/resources/csvtest/filtering.csv");
         QueryBuilder q = new QueryBuilderImpl().withSource("charger")
                 .withFilter("hastouristattraction", "True", ComparisonType.CONTAINS)
                 .withFilter("connectorcurrent", "AC", ComparisonType.CONTAINS);
         ArrayList<Charger> chargerList = new ArrayList<>();
         try {
-            for (Object o : new CsvInterpreter().readData(q.build(), Charger.class)) {
+            for (Object o : SqlInterpreter.getInstance().readData(q.build(), Charger.class)) {
                 chargerList.add((Charger) o);
             }
         } catch (IOException e) {
@@ -305,13 +336,16 @@ public class MainManagerTest {
 
     /**
      * Checks what happens when the position is null
+     * 
+     * @throws IOException if db interaction fails
      */
     @Test
-    public void positionNull() {
+    public void positionNull() throws IOException {
+        db.addChargerCsvToData("src/test/resources/csvtest/filtering.csv");
         QueryBuilder q = new QueryBuilderImpl().withSource("charger");
         ArrayList<Charger> chargerList = new ArrayList<>();
         try {
-            for (Object o : new CsvInterpreter().readData(q.build(), Charger.class)) {
+            for (Object o : SqlInterpreter.getInstance().readData(q.build(), Charger.class)) {
                 chargerList.add((Charger) o);
             }
         } catch (IOException e) {

@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.management.InstanceAlreadyExistsException;
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.javatuples.Triplet;
@@ -58,10 +57,11 @@ public class SqlInterpreter implements DataManager {
         if (!checkExist(url)) {
             createFile(url);
             defaultDatabase();
+            // TODO: remove this when import functionality is implemented
             try {
                 addChargerCsvToData("charger");
             } catch (IOException e) {
-                logManager.log(Level.WARN, "Could not import default csv data");
+                // Do Nothing
             }
         }
     }
@@ -394,6 +394,7 @@ public class SqlInterpreter implements DataManager {
             for (Object c : connectors) {
                 charger.addConnector((Connector) c);
             }
+            charger.setCurrentType();
             observedChargers.add(charger.getChargerId());
             chargers.add(charger);
         }
@@ -515,11 +516,12 @@ public class SqlInterpreter implements DataManager {
         String toAdd = "INSERT INTO charger "
                 + "(chargerid, x, y, name, operator, owner, address, is24hours, "
                 + "carparkcount, hascarparkcost, maxtimelimit, hastouristattraction, latitude, "
-                + "longitude, datefirstoperational, haschargingcost)"
-                + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(chargerid) DO UPDATE SET"
+                + "longitude, datefirstoperational, haschargingcost, currenttype)"
+                + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(chargerid) DO UPDATE SET"
                 + " x = ?, y = ?, name = ?, operator = ?, owner = ?, address = ?, is24hours = ?, "
                 + "carparkcount = ?, hascarparkcost = ?, maxtimelimit = ?, hastouristattraction = ?"
-                + ", latitude = ?, longitude = ?, datefirstoperational = ?, haschargingcost = ?";
+                + ", latitude = ?, longitude = ?, datefirstoperational = ?, haschargingcost = ?, "
+                + "currenttype = ?";
 
         try (Connection connection = createConnection();
                 PreparedStatement statement = connection.prepareStatement(toAdd)) {
@@ -543,21 +545,23 @@ public class SqlInterpreter implements DataManager {
             statement.setDouble(14, c.getLocation().getLon());
             statement.setString(15, c.getDateOpened());
             statement.setBoolean(16, c.getChargeCost());
-            statement.setDouble(17, c.getLocation().getXpos());
-            statement.setDouble(18, c.getLocation().getYpos());
-            statement.setString(19, c.getName());
-            statement.setString(20, c.getOperator());
-            statement.setString(21, c.getOwner());
-            statement.setString(22, c.getLocation().getAddress());
-            statement.setBoolean(23, c.getAvailable24Hrs());
-            statement.setInt(24, c.getAvailableParks());
-            statement.setBoolean(25, c.getParkingCost());
-            statement.setDouble(26, c.getTimeLimit());
-            statement.setBoolean(27, c.getHasAttraction());
-            statement.setDouble(28, c.getLocation().getLat());
-            statement.setDouble(29, c.getLocation().getLon());
-            statement.setString(30, c.getDateOpened());
-            statement.setBoolean(31, c.getChargeCost());
+            statement.setString(17, c.getCurrentType());
+            statement.setDouble(18, c.getLocation().getXpos());
+            statement.setDouble(19, c.getLocation().getYpos());
+            statement.setString(20, c.getName());
+            statement.setString(21, c.getOperator());
+            statement.setString(22, c.getOwner());
+            statement.setString(23, c.getLocation().getAddress());
+            statement.setBoolean(24, c.getAvailable24Hrs());
+            statement.setInt(25, c.getAvailableParks());
+            statement.setBoolean(26, c.getParkingCost());
+            statement.setDouble(27, c.getTimeLimit());
+            statement.setBoolean(28, c.getHasAttraction());
+            statement.setDouble(29, c.getLocation().getLat());
+            statement.setDouble(30, c.getLocation().getLon());
+            statement.setString(31, c.getDateOpened());
+            statement.setBoolean(32, c.getChargeCost());
+            statement.setString(33, c.getCurrentType());
 
             statement.executeUpdate();
             if (c.getChargerId() == 0) {

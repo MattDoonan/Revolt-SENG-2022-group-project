@@ -6,9 +6,9 @@ import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seng202.team3.data.database.ComparisonType;
-import seng202.team3.data.database.CsvInterpreter;
 import seng202.team3.data.database.QueryBuilder;
 import seng202.team3.data.database.QueryBuilderImpl;
+import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
 
@@ -113,7 +113,7 @@ public class MainManager {
     public void makeAllChargers() {
         try {
             List<Charger> chargerList = new ArrayList<>();
-            for (Object o : new CsvInterpreter()
+            for (Object o : SqlInterpreter.getInstance()
                     .readData(mainDataQuery.build(), Charger.class)) {
                 chargerList.add((Charger) o);
             }

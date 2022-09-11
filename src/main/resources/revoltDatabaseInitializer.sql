@@ -17,7 +17,8 @@ CREATE TABLE IF NOT EXISTS charger
     latitude INTEGER,
     longitude INTEGER,
     datefirstoperational TEXT,
-    haschargingcost BIT
+    haschargingcost BIT,
+    currenttype VARCHAR(20)
     );
 --SPLIT
 DROP TABLE IF EXISTS connector;

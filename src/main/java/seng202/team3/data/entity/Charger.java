@@ -27,7 +27,7 @@ public class Charger {
     String name;
 
     /** {@link Connector Connectors} available on charger */
-    @CsvBindAndSplitByName(column = "connectorsList", elementType = Connector.class, 
+    @CsvBindAndSplitByName(column = "connectorsList", elementType = Connector.class,
                             splitOn = ",(?=( )*\\{)", converter = ConnectorConverter.class, 
                             required = true)
     ArrayList<Connector> connectors;
@@ -452,6 +452,8 @@ public class Charger {
         } else {
             return false;
         }
+        c.getCurrentType();
+        this.getCurrentType();
         return c.getChargerId() == this.getChargerId()
                 && c.getDateOpened().equals(this.getDateOpened())
                 && c.getName().equals(this.getName())
