@@ -1,9 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.web.WebView?>
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.MapViewController">
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.web.*?>
+
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.MapViewController">
     <center>
         <WebView fx:id="webView" prefHeight="500.0" prefWidth="200.0" />
     </center>
+   <top>
+      <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <items>
+            <Button mnemonicParsing="false" text="Add Charger" onMouseClicked="#addCharger">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Button>
+            <Button mnemonicParsing="false" text="Edit Charger" onMouseClicked="#editCharger">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Button>
+          <Button mnemonicParsing="false" text="Delete Charger" onMouseClicked="#deleteCharger">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Button>
+        </items>
+      </ToolBar>
+   </top>
 </BorderPane>

@@ -10,13 +10,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -30,7 +28,7 @@ import seng202.team3.logic.MapManager;
 import seng202.team3.logic.TempData;
 
 /**
- * Controller for the main.fxml window
+ * Controller for the main.fxml window (the home)
  * 
  * @author Matthew Doonan, Michelle Hsieh
  * @version 1.0.1, Aug 22
@@ -63,9 +61,6 @@ public class MainController {
 
     @FXML
     private CheckBox chargingCost;
-
-    @FXML
-    private MenuItem openVehicles;
 
     @FXML
     private final TableColumn<Charger, String> addressCol = new TableColumn<>("Address");
@@ -299,79 +294,6 @@ public class MainController {
      */
     public MainManager getManager() {
         return manage;
-    }
-
-    /**
-     * Loads the vehicle screen upon click
-     */
-    public void loadVehicleScreen() {
-        try {
-            FXMLLoader vehicleLoader = new FXMLLoader(getClass().getResource(
-                    "/fxml/vehicle.fxml"));
-            AnchorPane root = vehicleLoader.load();
-            Scene modalScene = new Scene(root);
-            Stage modal = new Stage();
-            modal.setScene(modalScene);
-            modal.setResizable(false);
-            modal.setTitle("Vehicle Screen");
-            modal.initModality(Modality.WINDOW_MODAL);
-            modal.showAndWait();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    /**
-     * Executes an add prompt
-     */
-    @FXML
-    public void addCharger() {
-        loadPromptScreens("Click on a position on the map\n"
-                + "(coordinate) and confirm to\n"
-                + "add a charger: \n\n", "add");
-    }
-
-    /**
-     * Executes an edit prompt
-     */
-    @FXML
-    public void editChargerFx() {
-        loadPromptScreens("Click on a charger on the map and\n"
-                + "confirm to edit a charger: \n\n", "edit");
-    }
-
-    /**
-     * Executes a delete prompt
-     */
-    @FXML
-    public void deleteCharger() {
-        loadPromptScreens("Click on a charger on the map and\n"
-                + "confirm to DELETE a charger: \n\n", "delete");
-    }
-
-    /**
-     * Loads a generic prompt screen pop-up {@link PromptPopUp}
-     *
-     * @param prompt a String of the instructions
-     */
-    public void loadPromptScreens(String prompt, String type) {
-        try {
-            FXMLLoader popUp = new FXMLLoader(getClass().getResource(
-                    "/fxml/prompt_popup.fxml"));
-            VBox root = popUp.load();
-            Scene modalScene = new Scene(root);
-            Stage modal = new Stage();
-            modal.setScene(modalScene);
-            modal.setResizable(false);
-            modal.setTitle("Click or cancel:");
-            modal.initModality(Modality.WINDOW_MODAL);
-            PromptPopUp popController = popUp.getController();
-            popController.addPrompt(prompt, type);
-            modal.showAndWait();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     /**

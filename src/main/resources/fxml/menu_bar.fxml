@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<SplitPane dividerPositions="0.10552763819095477" minHeight="100" minWidth="300" orientation="VERTICAL" prefHeight="461.0" prefWidth="701.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.MenuController">
+    <items>
+
+        <MenuBar layoutX="-1.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="60.0" minHeight="60.0" style="-fx-background-color: #e06666;">
+            <menus>
+                <Menu fx:id="accountMenu" mnemonicParsing="false" style="-fx-font-size: 20;" text="Account">
+                    <items>
+                        <MenuItem fx:id="viewAccountMenu" mnemonicParsing="false"  onAction="#loadVehicleScreen"  text="View Account" />
+                        <MenuItem fx:id="logOutMenu" mnemonicParsing="false" text="Log Out" />
+                    </items>
+                </Menu>
+                <Menu fx:id="planJourneyMenu" mnemonicParsing="false" style="-fx-font-size: 20;" text="Plan Journey">
+                    <items>
+                        <MenuItem fx:id="newJourney" mnemonicParsing="false" text="New Journey" />
+                        <MenuItem fx:id="existingJourney" mnemonicParsing="false" text="Existing Journey" />
+                    </items>
+                </Menu>
+                <Menu fx:id="manageVehiclesMenu" mnemonicParsing="false" style="-fx-font-size: 20;" text="Manage Vehicles">
+                    <items>
+                        <MenuItem fx:id="openVehicles" mnemonicParsing="false" style="-fx-font-size: 20;" text="Open Garage" onAction="#loadVehicleScreen" />
+                    </items>
+                </Menu>
+                <Menu fx:id="homeMenu" mnemonicParsing="false" style="-fx-font-size: 20;" text="Home">
+                    <MenuItem fx:id="loadHome" mnemonicParsing="false" onAction="#loadHome" text="Main Page"/>
+                </Menu>
+            </menus>
+        </MenuBar>
+        <BorderPane fx:id="mainWindow" maxHeight="Infinity" maxWidth="Infinity" />
+
+    </items>
+</SplitPane>

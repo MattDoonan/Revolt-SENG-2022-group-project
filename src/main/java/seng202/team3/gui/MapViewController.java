@@ -1,14 +1,19 @@
 package seng202.team3.gui;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.stream.Collectors;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import netscape.javascript.JSObject;
 import seng202.team3.data.entity.Charger;
@@ -30,6 +35,7 @@ public class MapViewController {
      */
     @FXML
     private WebView webView;
+
     private WebEngine webEngine;
     private Stage stage;
     private MapManager map;
@@ -172,6 +178,59 @@ public class MapViewController {
         } else {
             addRouteToCharger();
         }
+    }
+
+
+    /**
+     * Loads a generic prompt screen pop-up {@link PromptPopUp}
+     *
+     * @param prompt a String of the instructions
+     */
+    public void loadPromptScreens(String prompt, String type) {
+        try {
+            FXMLLoader popUp = new FXMLLoader(getClass().getResource(
+                    "/fxml/prompt_popup.fxml"));
+            VBox root = popUp.load();
+            Scene modalScene = new Scene(root);
+            Stage modal = new Stage();
+            modal.setScene(modalScene);
+            modal.setResizable(false);
+            modal.setTitle("Click or cancel:");
+            modal.initModality(Modality.WINDOW_MODAL);
+            PromptPopUp popController = popUp.getController();
+            popController.addPrompt(prompt, type);
+            modal.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Executes an add prompt
+     */
+    @FXML
+    public void addCharger() {
+        loadPromptScreens("Click on a position on the map\n"
+                + "(coordinate) and confirm to\n"
+                + "add a charger: \n\n", "add");
+    }
+
+    /**
+     * Executes an edit prompt
+     */
+    @FXML
+    public void editCharger() {
+        loadPromptScreens("Click on a charger on the map and\n"
+                + "confirm to edit a charger: \n\n", "edit");
+    }
+
+    /**
+     * Executes a delete prompt
+     */
+    @FXML
+    public void deleteCharger() {
+        loadPromptScreens("Click on a charger on the map and\n"
+                + "confirm to DELETE a charger: \n\n", "delete");
     }
 
 
