@@ -91,7 +91,7 @@ public class SqlInterpreterTest {
     static void setup() throws InstanceAlreadyExistsException {
         SqlInterpreter.removeInstance();
         db = SqlInterpreter.initialiseInstanceWithUrl(
-                "jdbc:sqlite:./src/test/resources/test_database.db");
+                "jdbc:sqlite:./src/test/resources/database.db");
     }
 
     @BeforeEach

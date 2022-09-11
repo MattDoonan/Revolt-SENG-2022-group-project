@@ -228,7 +228,7 @@ public class MainController {
             manage.adjustQuery("hastouristattraction", "True", ComparisonType.EQUAL);
         }
         if (chargingCost.isSelected()) {
-            manage.adjustQuery("haschargingcost", "True", ComparisonType.EQUAL);
+            manage.adjustQuery("haschargingcost", "False", ComparisonType.EQUAL);
         }
         if (searchCharger.getText().length() != 0) {
             manage.adjustQuery("address", searchCharger.getText(), ComparisonType.CONTAINS);

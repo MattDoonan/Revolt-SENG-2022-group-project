@@ -51,6 +51,7 @@ public class SqlInterpreter implements DataManager {
     private SqlInterpreter(String db) {
         if (db == null || db.isEmpty()) {
             url = getDatabasePath();
+            System.out.println(getDatabasePath());
         } else {
             url = db;
         }
