@@ -39,7 +39,7 @@ public class PromptPopUp {
 
     /**
      * Executes the correct action as needed
-     * TODO add the stubs functionality for the chargers to be added/deleted once DB up
+     *
      */
     @FXML
     public void confirm() {

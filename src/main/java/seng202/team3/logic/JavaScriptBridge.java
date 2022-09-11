@@ -134,12 +134,14 @@ public class JavaScriptBridge {
             Stage modal = new Stage();
             modal.setScene(modalScene);
             modal.setWidth(400);
-            modal.setHeight(400);
+            modal.setHeight(550);
             modal.setResizable(false);
             modal.setTitle("Charger Information");
             modal.initModality(Modality.WINDOW_MODAL);
             ChargerController controller = chargerCont.getController();
             controller.displayChargerInfo();
+            controller.setStage(modal);
+            modal.setAlwaysOnTop(true);
             modal.showAndWait();
 
         } catch (IOException e) {
