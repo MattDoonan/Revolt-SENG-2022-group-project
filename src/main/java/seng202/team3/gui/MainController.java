@@ -10,11 +10,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -215,16 +217,18 @@ public class MainController {
     public void executeSearch() {
         manage.resetQuery();
         if (acButton.isSelected()) {
-            manage.adjustQuery("connectorcurrent", "AC", ComparisonType.CONTAINS);
+            manage.adjustQuery("currenttype", "AC", ComparisonType.CONTAINS);
         }
+
         if (dcButton.isSelected()) {
-            manage.adjustQuery("connectorcurrent", "DC", ComparisonType.CONTAINS);
+            manage.adjustQuery("currenttype", "DC", ComparisonType.CONTAINS);
         }
+
         if (attractionButton.isSelected()) {
-            manage.adjustQuery("hastouristattraction", "True", ComparisonType.CONTAINS);
+            manage.adjustQuery("hastouristattraction", "True", ComparisonType.EQUAL);
         }
         if (chargingCost.isSelected()) {
-            manage.adjustQuery("hastouristattraction", "True", ComparisonType.CONTAINS);
+            manage.adjustQuery("haschargingcost", "True", ComparisonType.EQUAL);
         }
         if (searchCharger.getText().length() != 0) {
             manage.adjustQuery("address", searchCharger.getText(), ComparisonType.CONTAINS);

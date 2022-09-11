@@ -46,7 +46,7 @@ public class ChargerFilter implements BeanVerifier<Object> {
         boolean result;
 
         switch (field) { // cases are all lower case to allow field argument to be case insensitive
-            case "objectid":
+            case "chargerid":
                 result = compare(c.getChargerId());
                 break;
             case "carparkcount":
