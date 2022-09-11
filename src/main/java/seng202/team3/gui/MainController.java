@@ -208,16 +208,18 @@ public class MainController {
     public void executeSearch() {
         manage.resetQuery();
         if (acButton.isSelected()) {
-            manage.adjustQuery("connectorcurrent", "AC", ComparisonType.CONTAINS);
+            manage.adjustQuery("currenttype", "AC", ComparisonType.CONTAINS);
         }
+
         if (dcButton.isSelected()) {
-            manage.adjustQuery("connectorcurrent", "DC", ComparisonType.CONTAINS);
+            manage.adjustQuery("currenttype", "DC", ComparisonType.CONTAINS);
         }
+
         if (attractionButton.isSelected()) {
-            manage.adjustQuery("hastouristattraction", "True", ComparisonType.CONTAINS);
+            manage.adjustQuery("hastouristattraction", "True", ComparisonType.EQUAL);
         }
         if (chargingCost.isSelected()) {
-            manage.adjustQuery("hastouristattraction", "True", ComparisonType.CONTAINS);
+            manage.adjustQuery("haschargingcost", "True", ComparisonType.EQUAL);
         }
         if (searchCharger.getText().length() != 0) {
             manage.adjustQuery("address", searchCharger.getText(), ComparisonType.CONTAINS);

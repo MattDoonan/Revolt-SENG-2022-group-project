@@ -13,8 +13,9 @@ import java.util.ArrayList;
  * @version 1.0.1, Aug 22
  */
 public class Charger {
+
     /** Unique identifier */
-    @CsvBindByName(column = "OBJECTID", required = true)
+    @CsvBindByName(column = "CHARGERID", required = true)
     int chargerId;
 
     /** When the charger was first available */
@@ -27,8 +28,8 @@ public class Charger {
 
     /** {@link Connector Connectors} available on charger */
     @CsvBindAndSplitByName(column = "connectorsList", elementType = Connector.class,
-                           splitOn = ",(?=( )*\\{)", converter = ConnectorConverter.class,
-                           required = true)
+                            splitOn = ",(?=( )*\\{)", converter = ConnectorConverter.class, 
+                            required = true)
     ArrayList<Connector> connectors;
 
     /** {@link Coordinate Coordinate} information for the charger */
@@ -70,8 +71,12 @@ public class Charger {
     @CsvBindByName(column = "hasChargingCost", required = true)
     boolean hasChargeCost;
 
+    /** Stores the type of current used by connectors */
+    private String currentType;
+
     /** Empty constructor for CSV object builder */
     public Charger() {
+        connectors = new ArrayList<>();
     }
 
     /** Has warning for charger high cost */
@@ -81,12 +86,12 @@ public class Charger {
     boolean warningLongWait;
 
     /** Has warning for charger low availabilty */
-    boolean warningLowAvailability;    
+    boolean warningLowAvailability;
 
     /** Constructor for the Charger */
     public Charger(ArrayList<Connector> connectors, String name, Coordinate location,
-            int availableParks, Double timeLimit, String operator,
-            boolean hasAttraction) {
+            int availableParks, Double timeLimit, String operator, String owner, String dateOpened,
+            boolean hasAttraction, boolean is24Hrs, boolean hasChargeCost, boolean hasParkingCost) {
         this.connectors = connectors;
         setLocation(location);
         setAvailableParks(availableParks);
@@ -95,6 +100,12 @@ public class Charger {
         setPublic(false); // TODO: retrieve from data once implemented
         setHasAttraction(hasAttraction);
         setName(name);
+        setOwner(owner);
+        setDateOpened(dateOpened);
+        setChargeCost(hasChargeCost);
+        setParkingCost(hasParkingCost);
+        setAvailable24Hrs(is24Hrs);
+        setCurrentType();
     }
 
     /**
@@ -136,10 +147,11 @@ public class Charger {
     /**
      * Add a new {@link Connector connector} to the charger
      * 
-     * @param connector Connector to add
+     * @param c Connector to add
      */
-    public void addConnector(Connector connector) {
-        connectors.add(connector);
+    public void addConnector(Connector c) {
+        connectors.add(c);
+        setCurrentType();
     }
 
     /**
@@ -149,6 +161,7 @@ public class Charger {
      */
     public void removeConnector(Connector connector) {
         connectors.remove(connector);
+        setCurrentType();
     }
 
     /**
@@ -347,7 +360,7 @@ public class Charger {
     public void setWarningLongWait(boolean warningLongWait) {
         this.warningLongWait = warningLongWait;
     }
-    
+
     /**
      * Set warning high cost
      * 
@@ -392,5 +405,70 @@ public class Charger {
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * Set the current type of the charger
+     */
+    public void setCurrentType() {
+        ArrayList<String> types = new ArrayList<>();
+        for (Connector c : this.connectors) {
+            if (!types.contains(c.getCurrent())) {
+                types.add(c.getCurrent());
+            }
+        }
+        currentType = "";
+        if (types.size() > 1) {
+            for (String type : types) {
+                if (types.indexOf(type) == 0) {
+                    currentType += type;
+                } else {
+                    currentType += " " + type;
+                }
+            }
+        } else {
+            currentType = types.get(0);
+        }
+
+    }
+
+    /**
+     * Get the current type of the charger
+     * 
+     * @return the current type of the charger
+     */
+    public String getCurrentType() {
+        if (currentType == null) {
+            setCurrentType();
+        }
+        return currentType;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        Charger c;
+        if (o instanceof Charger) {
+            c = (Charger) o;
+        } else {
+            return false;
+        }
+        c.getCurrentType();
+        this.getCurrentType();
+        return c.getChargerId() == this.getChargerId()
+                && c.getDateOpened().equals(this.getDateOpened())
+                && c.getName().equals(this.getName())
+                && c.getConnectors().equals(this.getConnectors())
+                && c.getLocation().equals(this.getLocation())
+                && c.getAvailableParks() == this.getAvailableParks()
+                && c.getTimeLimit().equals(this.getTimeLimit())
+                && c.getOperator().equals(this.getOperator())
+                && c.getOwner().equals(this.getOwner())
+                && c.getPublic() == this.getPublic()
+                && c.getHasAttraction() == this.getHasAttraction()
+                && c.getAvailableParks() == this.getAvailableParks()
+                && c.getParkingCost() == this.getParkingCost()
+                && c.getChargeCost() == this.getChargeCost()
+                && c.getWarnings().equals(this.getWarnings())
+                && c.getCurrentType().equals(this.getCurrentType());
     }
 }

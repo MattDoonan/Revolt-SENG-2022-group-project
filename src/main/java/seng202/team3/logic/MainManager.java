@@ -6,9 +6,9 @@ import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seng202.team3.data.database.ComparisonType;
-import seng202.team3.data.database.CsvInterpreter;
 import seng202.team3.data.database.QueryBuilder;
 import seng202.team3.data.database.QueryBuilderImpl;
+import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
 
@@ -38,7 +38,6 @@ public class MainManager {
         savedCoordinates = new ArrayList<>();
     }
 
-
     /**
      * Sets the selected charger
      *
@@ -66,11 +65,11 @@ public class MainManager {
         this.distance = distance;
     }
 
-
     /**
      * Adds a coordinate into the coordinate list
      *
-     * @param coordinate {@link Coordinate} a coordinate to be added into the list of coordinates
+     * @param coordinate {@link Coordinate} a coordinate to be added into the list
+     *                   of coordinates
      */
     public void addCoordinate(Coordinate coordinate) {
         savedCoordinates.add(coordinate);
@@ -114,7 +113,8 @@ public class MainManager {
     public void makeAllChargers() {
         try {
             List<Charger> chargerList = new ArrayList<>();
-            for (Object o : new CsvInterpreter().readData(mainDataQuery.build(), Charger.class)) {
+            for (Object o : SqlInterpreter.getInstance()
+                    .readData(mainDataQuery.build(), Charger.class)) {
                 chargerList.add((Charger) o);
             }
 
@@ -146,16 +146,17 @@ public class MainManager {
     /**
      * Takes an input of field, criteria and type to adjust the main data query.
      * 
-     * @param field a String of the field for the query
+     * @param field    a String of the field for the query
      * @param criteria a String of the criterial for the query
-     * @param type an enum of the comparison type of the query
+     * @param type     an enum of the comparison type of the query
      */
     public void adjustQuery(String field, String criteria, ComparisonType type) {
         mainDataQuery.withFilter(field, criteria, type);
     }
 
     /**
-     * Returns a list of the closest chargers according to set distance from position
+     * Returns a list of the closest chargers according to set distance from
+     * position
      *
      * @return an Observable list of chargers
      */
@@ -192,7 +193,5 @@ public class MainManager {
     public Coordinate getPosition() {
         return position;
     }
-
-
 
 }
