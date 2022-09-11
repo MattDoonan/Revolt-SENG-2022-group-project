@@ -1,4 +1,4 @@
-package seng202.team3.data.database;
+package seng202.team3.unitTest.data.database;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,6 +25,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import seng202.team3.data.database.*;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
@@ -91,7 +92,7 @@ public class SqlInterpreterTest {
     static void setup() throws InstanceAlreadyExistsException {
         SqlInterpreter.removeInstance();
         db = SqlInterpreter.initialiseInstanceWithUrl(
-                "jdbc:sqlite:./src/test/resources/database.db");
+                "jdbc:sqlite:./src/test/resources/test_database.db");
     }
 
     @BeforeEach

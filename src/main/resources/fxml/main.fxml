@@ -20,7 +20,7 @@
   </SplitPane>
   <SplitPane dividerPositions="0.7198067632850241" maxHeight="40.0">
     <items>
-                      <MenuButton mnemonicParsing="false" prefHeight="40.0" prefWidth="510.0" style="-fx-font-size: 20;" text="Filters">
+                      <MenuButton fx:id="filters" mnemonicParsing="false" prefHeight="40.0" prefWidth="510.0" style="-fx-font-size: 20;" text="Filters">
                           <font>
                               <Font size="16.0" />
                           </font>
@@ -47,7 +47,7 @@
                                   </content>
                               </CustomMenuItem>
                               <SeparatorMenuItem mnemonicParsing="false" />
-                              <Menu mnemonicParsing="false" text="Charger Types">
+                              <Menu fx:id="chargerTypes" mnemonicParsing="false" text="Charger Types">
                                   <items>
                                       <CustomMenuItem mnemonicParsing="false" text="AC button">
                                           <content>
