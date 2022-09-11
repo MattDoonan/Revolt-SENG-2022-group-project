@@ -5,13 +5,13 @@
 <?import javafx.scene.text.*?>
 
 
-<SplitPane dividerPositions="0.3" minWidth="200.0" maxHeight="Infinity" maxWidth="Infinity" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.MainController">
+<SplitPane dividerPositions="0.3" minWidth="200.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.MainController">
     <items>
         <SplitPane dividerPositions="0.10287081339712918, 0.21291866028708134, 0.44258373205741625" orientation="VERTICAL" prefHeight="0.0" prefWidth="212.0">
             <items>
   <SplitPane dividerPositions="0.7294685990338164" maxHeight="40.0">
     <items>
-                      <TextField fx:id="searchCharger" prefHeight="40" prefWidth="420" promptText="Search Charger" style="-fx-font-size: 20;" />
+        <TextField fx:id="searchCharger" prefHeight="40" prefWidth="420" promptText="Search Charger" style="-fx-font-size: 20;" />
         <Button fx:id="executeSearch" minWidth="82.0" mnemonicParsing="false" onAction="#executeSearch" prefHeight="39.0" prefWidth="82.0" text="Search" >
            <font>
               <Font size="16.0" />
@@ -86,7 +86,7 @@
                 <TableView fx:id="chargerTable" fixedCellSize="50.0" layoutX="14.0" layoutY="385.0" prefHeight="236.0" prefWidth="220.0" style="-fx-table-cell-border-color: transparent; -fx-background-color: black; -fx-my-cell-background: white;" />
             </items>
         </SplitPane>
-  <BorderPane fx:id="mainWindow">
+  <BorderPane fx:id="mainWindow" maxWidth="Infinity" maxHeight="Infinity">
 <top>
 </top>
 </BorderPane>

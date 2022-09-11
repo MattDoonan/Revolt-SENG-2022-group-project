@@ -5,6 +5,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
@@ -30,8 +32,7 @@ public class MenuController {
      */
     public void init(Stage stage) {
         this.stage = stage;
-        initHome();
-
+        launchWelcome();
     }
 
     /**
@@ -76,6 +77,23 @@ public class MenuController {
             e.printStackTrace();
         }
 
+    }
+
+
+    /**
+     * Initialises the welcome page;
+     */
+    public void launchWelcome() {
+        try {
+            FXMLLoader mainScene = new FXMLLoader(getClass()
+                    .getResource("/fxml/welcome_page.fxml"));
+            Parent mainNode = mainScene.load();
+            WelcomeController controller = mainScene.getController();
+            controller.init(stage, this);
+            mainWindow.setCenter(mainNode);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
