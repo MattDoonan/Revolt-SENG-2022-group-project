@@ -8,18 +8,13 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.entity.Charger;
@@ -27,7 +22,6 @@ import seng202.team3.logic.Calculations;
 import seng202.team3.logic.JavaScriptBridge;
 import seng202.team3.logic.MainManager;
 import seng202.team3.logic.MapManager;
-import seng202.team3.logic.TempData;
 
 /**
  * Controller for the main.fxml window (the home)
@@ -36,6 +30,7 @@ import seng202.team3.logic.TempData;
  * @version 1.0.1, Aug 22
  */
 public class MainController {
+
 
     @FXML
     private CheckBox acButton;
@@ -82,8 +77,6 @@ public class MainController {
 
     private MainManager manage;
 
-    private SaveCoordController coordController;
-
     /**
      * Initialize the window
      *
@@ -92,7 +85,6 @@ public class MainController {
     public void init(Stage stage) {
         this.stage = stage;
         manage = new MainManager();
-        TempData.setController(this);
         loadMapView(this.stage);
         tableMaker();
         manage.resetQuery();
@@ -100,7 +92,6 @@ public class MainController {
         manage.setDistance(changeDistance.getValue());
         addChargersToDisplay(manage.getCloseChargerData());
         selectToView();
-        coordController = new SaveCoordController();
         change();
 
     }
@@ -282,14 +273,6 @@ public class MainController {
         }
     }
 
-    /**
-     * Gets the coordinate controller to allow coordinate saving
-     *
-     * @return {@link SaveCoordController} the controller for the saved coordinates
-     */
-    public SaveCoordController getCoordController() {
-        return coordController;
-    }
 
     /**
      * Gets the MainManager created by the MainController

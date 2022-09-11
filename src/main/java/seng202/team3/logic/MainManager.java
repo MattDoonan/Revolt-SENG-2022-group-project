@@ -148,7 +148,6 @@ public class MainManager {
                     arrayChargers, position, distance);
         }
         ObservableList<Charger> closerChargers = FXCollections.observableList(arrayChargers);
-        TempData.setChargerList(closerChargers);
 
         return closerChargers;
     }

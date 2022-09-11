@@ -21,6 +21,7 @@ import javafx.stage.Stage;
 public class MenuController {
 
     private Stage stage;
+    private static MainController controller;
 
     @FXML
     private BorderPane mainWindow;
@@ -32,7 +33,6 @@ public class MenuController {
      */
     public void init(Stage stage) {
         this.stage = stage;
-        launchWelcome();
     }
 
     /**
@@ -42,12 +42,21 @@ public class MenuController {
         try {
             FXMLLoader mainScene = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
             Parent mainNode = mainScene.load();
-            MainController controller = mainScene.getController();
+            controller = mainScene.getController();
             controller.init(stage);
             mainWindow.setCenter(mainNode);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Gets the static Main Controller
+     *
+     * @return {@link MainController} the main controller of this run
+     */
+    public MainController getController() {
+        return controller;
     }
 
     /**

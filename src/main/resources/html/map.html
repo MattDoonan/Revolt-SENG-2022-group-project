@@ -145,8 +145,7 @@
          */
         function addCoordinate(title, lat, lng) {
             coordinate = new L.Marker([lat, lng])
-            coordinate.bindPopup(title + ": " + lat.toFixed(4) + " " + lng.toFixed(4) + "<br>" +
-                "<button type=\"button\" onclick='javaScriptBridge.saveCoord()'>Save</button>")
+            coordinate.bindPopup(title + ": " + lat.toFixed(4) + " " + lng.toFixed(4))
             coordinate.on("mouseover", function(ev) {coordinate.openPopup()})
             coordinate.addTo(map)
             movePosition(lat, lng)
