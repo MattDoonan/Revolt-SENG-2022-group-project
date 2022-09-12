@@ -1,4 +1,4 @@
-package seng202.team3.data.database;
+package seng202.team3.unitTest.data.database;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import seng202.team3.data.database.ChargerFilter;
+import seng202.team3.data.database.ComparisonType;
+import seng202.team3.data.database.CsvInterpreter;
+import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.entity.Charger;
 
 /**
@@ -32,14 +36,14 @@ public class ChargerFilterTest {
     }
 
     /**
-     * Tests filter objectid
+     * Tests filter CHARGERID
      */
     @Test
-    public void testObjectId() throws IOException {
+    public void testChargerId() throws IOException {
         test = new CsvInterpreter().readData(
                 new QueryBuilderImpl()
                         .withSource("charger")
-                        .withFilter("objectid", "30", ComparisonType.LESS_THAN)
+                        .withFilter("CHARGERID", "30", ComparisonType.LESS_THAN)
                         .build(),
                 Charger.class);
 
@@ -53,7 +57,7 @@ public class ChargerFilterTest {
     }
 
     @Test
-    public void testUniqueObjectIds() throws IOException {
+    public void testUniqueChargerIds() throws IOException {
         test = new CsvInterpreter().readData(
                 new QueryBuilderImpl()
                         .withSource("charger")

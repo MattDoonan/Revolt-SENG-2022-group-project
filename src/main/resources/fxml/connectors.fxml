@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="287.0" prefWidth="568.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.ConnectorController">
+   <children>
+      <TableView fx:id="connectorTable" layoutX="14.0" layoutY="14.0" prefHeight="195.0" prefWidth="540.0">
+        <columns>
+          <TableColumn fx:id="current" prefWidth="75.0" text="Current:" />
+          <TableColumn fx:id="wattage" prefWidth="75.0" text="Wattage:" />
+            <TableColumn fx:id="chargingPoints" prefWidth="162.0" text="No. Charging Points:" />
+            <TableColumn fx:id="connectorTypes" prefWidth="137.0" text="Connector Type:" />
+            <TableColumn fx:id="status" prefWidth="90.0" text="Status:" />
+        </columns>
+      </TableView>
+      <Button layoutX="33.0" layoutY="231.0" mnemonicParsing="false" onAction="#addConnector" text="Add Connector:" />
+      <Button layoutX="225.0" layoutY="231.0" mnemonicParsing="false" onAction="#editConnector" text="Edit Connector:" />
+      <Button layoutX="402.0" layoutY="231.0" mnemonicParsing="false" onAction="#deleteConnector" text="Delete Connector:" />
+   </children>
+</AnchorPane>

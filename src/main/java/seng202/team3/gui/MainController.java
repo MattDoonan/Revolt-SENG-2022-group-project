@@ -8,7 +8,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TableColumn;
@@ -16,8 +15,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.entity.Charger;
@@ -25,7 +22,6 @@ import seng202.team3.logic.Calculations;
 import seng202.team3.logic.JavaScriptBridge;
 import seng202.team3.logic.MainManager;
 import seng202.team3.logic.MapManager;
-import seng202.team3.logic.TempData;
 
 /**
  * Controller for the main.fxml window (the home)
@@ -34,6 +30,7 @@ import seng202.team3.logic.TempData;
  * @version 1.0.1, Aug 22
  */
 public class MainController {
+
 
     @FXML
     private CheckBox acButton;
@@ -80,8 +77,6 @@ public class MainController {
 
     private MainManager manage;
 
-    private SaveCoordController coordController;
-
     /**
      * Initialize the window
      *
@@ -90,7 +85,6 @@ public class MainController {
     public void init(Stage stage) {
         this.stage = stage;
         manage = new MainManager();
-        TempData.setController(this);
         loadMapView(this.stage);
         tableMaker();
         manage.resetQuery();
@@ -98,7 +92,6 @@ public class MainController {
         manage.setDistance(changeDistance.getValue());
         addChargersToDisplay(manage.getCloseChargerData());
         selectToView();
-        coordController = new SaveCoordController();
         change();
 
     }
@@ -110,22 +103,26 @@ public class MainController {
      */
     public void viewChargers(Charger c) {
         displayInfo.clear();
-        StringBuilder word = new StringBuilder();
-        ArrayList<String> check = new ArrayList<>();
-        for (int i = 0; i < c.getConnectors().size(); i++) {
-            if (!check.contains(c.getConnectors().get(i).getCurrent())) {
-                word.append(" ").append(c.getConnectors().get(i).getCurrent());
-                check.add(c.getConnectors().get(i).getCurrent());
+        if (c == null) {
+            displayInfo.setText("No Charger Selected");
+        } else {
+            StringBuilder word = new StringBuilder();
+            ArrayList<String> check = new ArrayList<>();
+            for (int i = 0; i < c.getConnectors().size(); i++) {
+                if (!check.contains(c.getConnectors().get(i).getCurrent())) {
+                    word.append(" ").append(c.getConnectors().get(i).getCurrent());
+                    check.add(c.getConnectors().get(i).getCurrent());
+                }
             }
+            displayInfo.appendText("Operator: " + c.getOperator() + "\n"
+                    + "Location: " + c.getLocation().getAddress()
+                    + "\n" + "Number of parks: " + c.getAvailableParks()
+                    + "\nTime Limit " + c.getTimeLimit()
+                    + "\nHas Attraction = " + c.getHasAttraction()
+                    + "\nHas cost " + c.getChargeCost() + "\nCharger Type:"
+                    + word + "");
+            getManager().setSelectedCharger(c);
         }
-        displayInfo.appendText("Operator: " + c.getOperator() + "\n"
-                + "Location: " + c.getLocation().getAddress()
-                + "\n" + "Number of parks: " + c.getAvailableParks()
-                + "\nTime Limit " + c.getTimeLimit()
-                + "\nHas Attraction = " + c.getHasAttraction()
-                + "\nHas cost " + c.getChargeCost() + "\nCharger Type:"
-                + word + "");
-        getManager().setSelectedCharger(c);
     }
 
     /**
@@ -215,16 +212,18 @@ public class MainController {
     public void executeSearch() {
         manage.resetQuery();
         if (acButton.isSelected()) {
-            manage.adjustQuery("connectorcurrent", "AC", ComparisonType.CONTAINS);
+            manage.adjustQuery("currenttype", "AC", ComparisonType.CONTAINS);
         }
+
         if (dcButton.isSelected()) {
-            manage.adjustQuery("connectorcurrent", "DC", ComparisonType.CONTAINS);
+            manage.adjustQuery("currenttype", "DC", ComparisonType.CONTAINS);
         }
+
         if (attractionButton.isSelected()) {
-            manage.adjustQuery("hastouristattraction", "True", ComparisonType.CONTAINS);
+            manage.adjustQuery("hastouristattraction", "True", ComparisonType.EQUAL);
         }
         if (chargingCost.isSelected()) {
-            manage.adjustQuery("hastouristattraction", "True", ComparisonType.CONTAINS);
+            manage.adjustQuery("haschargingcost", "False", ComparisonType.EQUAL);
         }
         if (searchCharger.getText().length() != 0) {
             manage.adjustQuery("address", searchCharger.getText(), ComparisonType.CONTAINS);
@@ -278,14 +277,6 @@ public class MainController {
         }
     }
 
-    /**
-     * Gets the coordinate controller to allow coordinate saving
-     *
-     * @return {@link SaveCoordController} the controller for the saved coordinates
-     */
-    public SaveCoordController getCoordController() {
-        return coordController;
-    }
 
     /**
      * Gets the MainManager created by the MainController
@@ -301,8 +292,10 @@ public class MainController {
      * selected charger
      */
     public void editCharger() {
-        JavaScriptBridge bridge = new JavaScriptBridge();
-        bridge.loadMoreInfo(manage.getSelectedCharger().getChargerId());
+        if (manage.getSelectedCharger() != null) {
+            JavaScriptBridge bridge = new JavaScriptBridge();
+            bridge.loadMoreInfo(manage.getSelectedCharger().getChargerId());
+        }
     }
 
 

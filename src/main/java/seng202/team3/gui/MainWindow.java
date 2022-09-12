@@ -26,12 +26,11 @@ public class MainWindow extends Application {
     public void start(Stage primaryStage) throws IOException {
         FXMLLoader baseLoader = new FXMLLoader(getClass().getResource("/fxml/menu_bar.fxml"));
         Parent root = baseLoader.load();
-
         MenuController baseController = baseLoader.getController();
         baseController.init(primaryStage);
-
         primaryStage.setTitle("Revolt App");
         Scene scene = new Scene(root, 1920, 1080);
+        baseController.launchWelcome();
         primaryStage.setScene(scene);
         primaryStage.show();
     }
