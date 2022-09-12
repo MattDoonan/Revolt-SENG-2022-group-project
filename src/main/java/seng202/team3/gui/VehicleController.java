@@ -11,8 +11,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.HPos;
-import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -220,8 +218,8 @@ public class VehicleController {
      */
     @FXML
     public void addVehicle() {
-        Vehicle vehicle = new Vehicle(licenseText.getText(), makeText.getText(),
-                modelText.getText(), Float.parseFloat(curChargeText.getText()),
+        Vehicle vehicle = new Vehicle(makeText.getText(),
+                modelText.getText(),
                 Integer.parseInt(maxRangeText.getText()), connections);
         vehicle.setImgPath("src/main/resources/images/" + selectedImg);
         vehicleData.add(vehicle);
@@ -312,7 +310,6 @@ public class VehicleController {
     public void setData(TextArea display, ImageView imageview, int index) {
         display.setText(vehicleData.get(index).getMake() + " " 
                 + vehicleData.get(index).getModel() + "\n\n"
-                + "License Plate: " + vehicleData.get(index).getLicensePlate() + "\n"
                 + "Current Charge: " + vehicleData.get(index).getBatteryPercent() + "\n"
                 + "Max. Range: " + vehicleData.get(index).getMaxRange() + "\n"
                 + "Connections: " + vehicleData.get(index).getConnectors().toString());
@@ -339,29 +336,21 @@ public class VehicleController {
     public void makeTestVehicles() {
 
         vehicleData.add(
-                new Vehicle("ABC123", "Nissan", "Leaf", (float) 60.5, 270,
-                        new ArrayList<>()));
+                new Vehicle("Nissan", "Leaf", 270, new ArrayList<>()));
         vehicleData.add(
-                new Vehicle("AAA111", "Nissan", "Leaf E+", (float) 87, 385,
-                        new ArrayList<>()));
+                new Vehicle("Nissan", "Leaf E+", 385, new ArrayList<>()));
         vehicleData.add(
-                new Vehicle("XYZ789", "Tesla", "X", (float) 100.5, 536,
-                        new ArrayList<>()));
+                new Vehicle("Tesla", "X", 536, new ArrayList<>()));
         vehicleData.add(
-                new Vehicle("QWE768", "Jaguar", "I-Pace", (float) 40, 470,
-                        new ArrayList<>()));
+                new Vehicle("Jaguar", "I-Pace", 470, new ArrayList<>()));
         vehicleData.add(
-                new Vehicle("FJG788", "Audi", "E-Tron", (float) 63, 441,
-                        new ArrayList<>()));
+                new Vehicle("Audi", "E-Tron", 441, new ArrayList<>()));
         vehicleData.add(
-                new Vehicle("WWW333", "Tesla", "5", (float) 43, 637,
-                        new ArrayList<>()));
+                new Vehicle("Tesla", "5", 637, new ArrayList<>()));
         vehicleData.add(
-                new Vehicle("HGJ449", "Mercedes Benz", "EQC", (float) 77, 430,
-                        new ArrayList<>()));
+                new Vehicle("Mercedes Benz", "EQC", 430, new ArrayList<>()));
         vehicleData.add(
-                new Vehicle("IUH909", "Porsche", "Taycan", (float) 98, 480,
-                        new ArrayList<>()));
+                new Vehicle("Porsche", "Taycan", 480, new ArrayList<>()));
         vehicleData.get(0).setImgPath("src/main/resources/images/car_one.png");
         vehicleData.get(1).setImgPath("src/main/resources/images/car_three.png");
         vehicleData.get(2).setImgPath("src/main/resources/images/car_two.png");
