@@ -92,9 +92,6 @@ public class VehicleController {
     private TextField modelText;
 
     @FXML
-    private TextField curChargeText;
-
-    @FXML
     private TextField maxRangeText;
 
     @FXML

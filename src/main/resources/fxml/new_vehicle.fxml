@@ -14,8 +14,7 @@
       <TextField fx:id="modelText" layoutX="386.0" layoutY="132.0" prefHeight="26.0" prefWidth="150.0" promptText="Model" />
       <TextField fx:id="licenseText" layoutX="210.0" layoutY="79.0" prefHeight="26.0" prefWidth="186.0" />
       <TextField fx:id="makeText" layoutX="210.0" layoutY="132.0" promptText="Make" />
-      <TextField fx:id="curChargeText" layoutX="210.0" layoutY="190.0" promptText="Current charge" />
-      <TextField fx:id="maxRangeText" layoutX="386.0" layoutY="190.0" promptText="Maximum range" />
+      <TextField fx:id="maxRangeText" layoutX="210.0" layoutY="190.0" promptText="Maximum range" />
       <Label layoutX="93.0" layoutY="82.0" text="License Plate:">
          <font>
             <Font size="14.0" />
@@ -26,7 +25,7 @@
             <Font size="14.0" />
          </font>
       </Label>
-      <Label layoutX="70.0" layoutY="193.0" text="Charge &amp; Range:">
+      <Label layoutX="130.0" layoutY="193.0" text="Range:">
          <font>
             <Font size="14.0" />
          </font>
