@@ -25,7 +25,6 @@ import seng202.team3.data.entity.Connector;
 public class ConnectorController {
 
     private ObservableList<Connector> connectorList;
-    private ChargerController controller;
 
     @FXML
     private TableColumn<Connector, String> current;
@@ -43,7 +42,7 @@ public class ConnectorController {
     private TableColumn<Connector, String> status;
 
     @FXML
-    private TableView<Connector> connectors;
+    private TableView<Connector> connectorTable;
 
     private Stage stage;
 
@@ -57,7 +56,7 @@ public class ConnectorController {
      * Displays all the connector information in the table
      */
     public void displayConnectorInfo() {
-        connectors.setItems(connectorList);
+        connectorTable.setItems(connectorList);
 
         current.setCellValueFactory(new PropertyValueFactory<>("current"));
 
@@ -103,6 +102,17 @@ public class ConnectorController {
      */
     @FXML
     public void deleteConnector() {
+        int deletedValue = -1;
+        for (int i = 0; i < connectorList.size(); i++) {
+            if (connectorList.get(i) == connectorTable.getSelectionModel().getSelectedItem()) {
+                deletedValue = i;
+            }
+        }
+        if (deletedValue != -1) {
+            connectorList.remove(deletedValue);
+        }
+        connectorTable.refresh();
+        displayConnectorInfo();
     }
 
     /**
@@ -111,21 +121,12 @@ public class ConnectorController {
     @FXML
     public void editConnector() {
 
-        Connector connector = connectors.getSelectionModel().getSelectedItem();
+        Connector connector = connectorTable.getSelectionModel().getSelectedItem();
         if (connector != null) {
             launchEditable(connector);
         }
-
     }
 
-    /**
-     * Sets the chargercontroller
-     *
-     * @param controller the controller object
-     */
-    public void setController(ChargerController controller) {
-        this.controller = controller;
-    }
 
     /**
      * Launches the editable portion
@@ -133,7 +134,7 @@ public class ConnectorController {
      * @param connector the {@link Connector} for the connector info. Null if adding.
      */
     public void launchEditable(Connector connector) {
-        stage = (Stage) connectors.getScene().getWindow();
+        stage = (Stage) connectorTable.getScene().getWindow();
         try {
             stage.setAlwaysOnTop(false);
             FXMLLoader connectorEdit = new FXMLLoader(getClass().getResource(
@@ -154,7 +155,7 @@ public class ConnectorController {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            connectors.refresh();
+            connectorTable.refresh();
             displayConnectorInfo();
         }
     }

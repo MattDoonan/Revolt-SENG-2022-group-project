@@ -205,16 +205,25 @@ public class MainManager {
 
     /**
      * Adds a charger at the location of the coordinate.
-     * Initial values are set "default"
      */
     public void addCharger() {
+        new JavaScriptBridge().loadChargerEdit(null);
     }
 
     /**
      * Removes the selected charger and replaces it with null
-     * TODO add appropriate functionality
+     *
      */
     public void deleteCharger() {
+        if (selectedCharger != null) {
+            try {
+                SqlInterpreter.getInstance().deleteData("charger", selectedCharger.getChargerId());
+                selectedCharger = null;
+                makeAllChargers();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }

@@ -32,6 +32,7 @@ public class ChargerController {
     private Charger charger;
     private Stage stage;
     private ObservableList<Connector> connectors;
+    private ArrayList<String> errors = new ArrayList<>();
 
     @FXML
     private TextField name;
@@ -64,11 +65,19 @@ public class ChargerController {
     }
 
     /**
+     * Sets the Charger being edited
+     *
+     * @param charger {@link Charger} the charger being edited
+     */
+    public void setCharger(Charger charger) {
+        this.charger = charger;
+    }
+
+    /**
      * Adds a coordinate with a specified name and closes the box
      */
     @FXML
     public void displayChargerInfo() {
-        charger = new MenuController().getController().getManager().getSelectedCharger();
         if (charger != null) {
             connectors = FXCollections.observableList(charger.getConnectors());
             name.setText(charger.getName());
@@ -125,7 +134,6 @@ public class ChargerController {
             newCharger.setChargerId(charger.getChargerId());
         }
         coordinate.setAddress(address.getText());
-        newCharger.setTimeLimit(Double.parseDouble(time.getText()));
         newCharger.setLocation(coordinate);
         newCharger.setOperator(operator.getText());
         newCharger.setOwner(owner.getText());
@@ -134,21 +142,39 @@ public class ChargerController {
         newCharger.setChargeCost(cost.isSelected());
         newCharger.setParkingCost(costParks.isSelected());
         newCharger.setHasAttraction(attractions.isSelected());
-        newCharger.setAvailableParks(Integer.parseInt(parks.getText()));
+
+        try {
+            newCharger.setTimeLimit(Double.parseDouble(time.getText()));
+        } catch (NullPointerException e) {
+            errors.add("Needs a Time Limit");
+        } catch (NumberFormatException e) {
+            errors.add("Time Limit is not a valid number");
+        }
+
+        try {
+            newCharger.setAvailableParks(Integer.parseInt(parks.getText()));
+        } catch (NumberFormatException e) {
+            errors.add("A Charger must have a whole number of parks");
+        }
+
         for (Connector connector : connectors) {
             newCharger.addConnector(connector);
         }
 
-        try {
-            SqlInterpreter.getInstance().writeCharger(newCharger);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (connectors.size() == 0) {
+            errors.add("A Charger must have at least one Connector!");
         }
 
-        MainController controller = new MenuController().getController();
-        controller.getMapController().addChargersOnMap();
-        controller.viewChargers(newCharger);
-        stage.close();
+        if (errors.size() == 0) {
+            try {
+                SqlInterpreter.getInstance().writeCharger(newCharger);
+                stage.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            launchErrorPopUps();
+        }
     }
 
     /**
@@ -158,16 +184,18 @@ public class ChargerController {
      */
     public ObservableList<Connector> getConnectors() {
         ArrayList<Connector> connectArray =  new ArrayList<>();
-        QueryBuilder query = new QueryBuilderImpl().withSource("connector")
-                .withFilter("chargerid", Integer.toString(charger.getChargerId()),
-                        ComparisonType.EQUAL);
-        try {
-            for (Object object : SqlInterpreter.getInstance()
-                    .readData(query.build(), Connector.class)) {
-                connectArray.add((Connector) object);
+        if (charger != null) {
+            QueryBuilder query = new QueryBuilderImpl().withSource("connector")
+                    .withFilter("chargerid", Integer.toString(charger.getChargerId()),
+                            ComparisonType.EQUAL);
+            try {
+                for (Object object : SqlInterpreter.getInstance()
+                        .readData(query.build(), Connector.class)) {
+                    connectArray.add((Connector) object);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
         return (FXCollections.observableList(connectArray));
     }
@@ -199,7 +227,6 @@ public class ChargerController {
             modal.setTitle("Connector Information");
             modal.initModality(Modality.WINDOW_MODAL);
             ConnectorController controller = connectorCont.getController();
-            controller.setController(this);
             controller.setConnectorList(connectors);
             controller.displayConnectorInfo();
             modal.setAlwaysOnTop(true);
@@ -210,6 +237,30 @@ public class ChargerController {
 
     }
 
-
-
+    /**
+     * Launches an error popup when trying to do illegal things
+     */
+    public void launchErrorPopUps() {
+        try {
+            stage.setAlwaysOnTop(false);
+            FXMLLoader error = new FXMLLoader(getClass().getResource(
+                    "/fxml/error_popup.fxml"));
+            AnchorPane base = error.load();
+            Scene modalScene = new Scene(base);
+            Stage modal = new Stage();
+            modal.setScene(modalScene);
+            modal.setResizable(false);
+            modal.setTitle("Error With Charger:");
+            modal.initModality(Modality.WINDOW_MODAL);
+            ErrorController controller = error.getController();
+            controller.init();
+            controller.setErrors(errors);
+            controller.setPromptType("error");
+            controller.displayErrors();
+            modal.setAlwaysOnTop(true);
+            modal.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

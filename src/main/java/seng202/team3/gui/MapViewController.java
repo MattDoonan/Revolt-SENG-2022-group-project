@@ -143,12 +143,14 @@ public class MapViewController {
         routeDisplayed = true;
         Coordinate coord = map.getController().getPosition();
         Charger charger = map.getController().getSelectedCharger();
-        Coordinate chargerCoord = charger.getLocation();
-        javaScriptConnector.call("addLocationToRoute", coord.getLat(), coord.getLon(),
-                coord.getAddress(), "p", 0);
-        javaScriptConnector.call("addLocationToRoute", chargerCoord.getLat(), chargerCoord.getLon(),
-                charger.getChargerId(), "c", 1);
-        javaScriptConnector.call("addRoute");
+        if (charger != null) {
+            Coordinate chargerCoord = charger.getLocation();
+            javaScriptConnector.call("addLocationToRoute", coord.getLat(), coord.getLon(),
+                    coord.getAddress(), "p", 0);
+            javaScriptConnector.call("addLocationToRoute",
+                    chargerCoord.getLat(), chargerCoord.getLon(), charger.getChargerId(), "c", 1);
+            javaScriptConnector.call("addRoute");
+        }
     }
 
     /**
@@ -202,6 +204,9 @@ public class MapViewController {
             modal.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            addChargersOnMap();
+            new MenuController().getController().viewChargers(null);
         }
     }
 
@@ -210,9 +215,8 @@ public class MapViewController {
      */
     @FXML
     public void addCharger() {
-        loadPromptScreens("Click on a position on the map\n"
-                + "(coordinate) and confirm to\n"
-                + "add a charger: \n\n", "add");
+        loadPromptScreens("Click on a position on the map (coordinate)\n"
+                + "and confirm to add a charger: \n\n", "add");
     }
 
     /**

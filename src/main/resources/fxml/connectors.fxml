@@ -5,7 +5,7 @@
 
 <AnchorPane prefHeight="287.0" prefWidth="568.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.ConnectorController">
    <children>
-      <TableView fx:id="connectors" layoutX="14.0" layoutY="14.0" prefHeight="195.0" prefWidth="540.0">
+      <TableView fx:id="connectorTable" layoutX="14.0" layoutY="14.0" prefHeight="195.0" prefWidth="540.0">
         <columns>
           <TableColumn fx:id="current" prefWidth="75.0" text="Current:" />
           <TableColumn fx:id="wattage" prefWidth="75.0" text="Wattage:" />

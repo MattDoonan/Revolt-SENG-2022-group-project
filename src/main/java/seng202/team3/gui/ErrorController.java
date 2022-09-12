@@ -7,6 +7,8 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 
@@ -19,12 +21,16 @@ import javafx.stage.Stage;
 public class ErrorController {
 
     private Stage stage;
+    private ObservableList<String> errorList;
 
     @FXML
     private TableColumn<String, String> errors;
 
     @FXML
     private Label prompt;
+
+    @FXML
+    private TableView<String> table;
 
 
     /**
@@ -43,12 +49,20 @@ public class ErrorController {
     /**
      * Displays the errors and solutions as an observable list
      *
-     * @param errorList a String list of all the errors
      */
-    public void displayErrors(ArrayList<String> errorList) {
+    public void displayErrors() {
         stage.setAlwaysOnTop(true);
-        ObservableList<String> errorsList = FXCollections.observableList(errorList);
+        table.setItems(errorList);
         errors.setCellValueFactory(error -> new ReadOnlyStringWrapper(error.getValue()));
+    }
+
+    /**
+     * Sets and displays the errors
+     *
+     * @param errorsList sets the list of errors (String)
+     */
+    public void setErrors(ArrayList<String> errorsList) {
+        errorList = FXCollections.observableList(errorsList);
     }
 
     /**
@@ -61,26 +75,16 @@ public class ErrorController {
             case ("error") -> {
                 prompt.setText("Please fix the following errors: ");
                 errors.setText("Errors:");
-                break;
             }
             case ("warning") -> {
                 prompt.setText("The following warnings are on these chargers: ");
                 errors.setText("Warnings:");
-                break;
             }
             default -> throw new IllegalStateException("Unexpected value: " + type);
         }
 
     }
 
-    /**
-     * Sets the header string
-     *
-     * @param header the title of the box
-     */
-    public void setHeader(String header) {
-        stage.setTitle(header);
-    }
 
     /**
      * Closes the stage

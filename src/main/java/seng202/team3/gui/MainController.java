@@ -103,22 +103,26 @@ public class MainController {
      */
     public void viewChargers(Charger c) {
         displayInfo.clear();
-        StringBuilder word = new StringBuilder();
-        ArrayList<String> check = new ArrayList<>();
-        for (int i = 0; i < c.getConnectors().size(); i++) {
-            if (!check.contains(c.getConnectors().get(i).getCurrent())) {
-                word.append(" ").append(c.getConnectors().get(i).getCurrent());
-                check.add(c.getConnectors().get(i).getCurrent());
+        if (c == null) {
+            displayInfo.setText("No Charger Selected");
+        } else {
+            StringBuilder word = new StringBuilder();
+            ArrayList<String> check = new ArrayList<>();
+            for (int i = 0; i < c.getConnectors().size(); i++) {
+                if (!check.contains(c.getConnectors().get(i).getCurrent())) {
+                    word.append(" ").append(c.getConnectors().get(i).getCurrent());
+                    check.add(c.getConnectors().get(i).getCurrent());
+                }
             }
+            displayInfo.appendText("Operator: " + c.getOperator() + "\n"
+                    + "Location: " + c.getLocation().getAddress()
+                    + "\n" + "Number of parks: " + c.getAvailableParks()
+                    + "\nTime Limit " + c.getTimeLimit()
+                    + "\nHas Attraction = " + c.getHasAttraction()
+                    + "\nHas cost " + c.getChargeCost() + "\nCharger Type:"
+                    + word + "");
+            getManager().setSelectedCharger(c);
         }
-        displayInfo.appendText("Operator: " + c.getOperator() + "\n"
-                + "Location: " + c.getLocation().getAddress()
-                + "\n" + "Number of parks: " + c.getAvailableParks()
-                + "\nTime Limit " + c.getTimeLimit()
-                + "\nHas Attraction = " + c.getHasAttraction()
-                + "\nHas cost " + c.getChargeCost() + "\nCharger Type:"
-                + word + "");
-        getManager().setSelectedCharger(c);
     }
 
     /**
@@ -288,8 +292,10 @@ public class MainController {
      * selected charger
      */
     public void editCharger() {
-        JavaScriptBridge bridge = new JavaScriptBridge();
-        bridge.loadMoreInfo(manage.getSelectedCharger().getChargerId());
+        if (manage.getSelectedCharger() != null) {
+            JavaScriptBridge bridge = new JavaScriptBridge();
+            bridge.loadMoreInfo(manage.getSelectedCharger().getChargerId());
+        }
     }
 
 
