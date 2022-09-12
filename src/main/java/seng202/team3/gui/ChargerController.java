@@ -2,6 +2,7 @@ package seng202.team3.gui;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -12,6 +13,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import seng202.team3.data.database.ComparisonType;
+import seng202.team3.data.database.QueryBuilder;
+import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
@@ -75,27 +79,28 @@ public class ChargerController {
             owner.setText(charger.getOwner());
             operator.setText(charger.getOperator());
             if (charger.getAvailable24Hrs()) {
-                open24.isSelected();
+                open24.setSelected(true);
             }
             if (charger.getChargeCost()) {
-                cost.isSelected();
+                cost.setSelected(true);
             }
             if (charger.getHasAttraction()) {
-                attractions.isSelected();
+                attractions.setSelected(true);
             }
             if (charger.getParkingCost()) {
-                costParks.isSelected();
+                costParks.setSelected(true);
             }
         }
     }
 
     /**
-     * Sets the stage for this controller
+     * Initialises this controller
      *
      * @param stage the stage this controller is on
      */
-    public void setStage(Stage stage) {
+    public void init(Stage stage) {
         this.stage = stage;
+        setConnectors(getConnectors());
     }
 
     /**
@@ -127,6 +132,8 @@ public class ChargerController {
         newCharger.setName(name.getText());
         newCharger.setAvailable24Hrs(open24.isSelected());
         newCharger.setChargeCost(cost.isSelected());
+        newCharger.setParkingCost(costParks.isSelected());
+        newCharger.setHasAttraction(attractions.isSelected());
         newCharger.setAvailableParks(Integer.parseInt(parks.getText()));
         for (Connector connector : connectors) {
             newCharger.addConnector(connector);
@@ -145,6 +152,37 @@ public class ChargerController {
     }
 
     /**
+     * Gets the connectors from the charger
+     *
+     * @return an ObservableList of {@link Connector}s
+     */
+    public ObservableList<Connector> getConnectors() {
+        ArrayList<Connector> connectArray =  new ArrayList<>();
+        QueryBuilder query = new QueryBuilderImpl().withSource("connector")
+                .withFilter("chargerid", Integer.toString(charger.getChargerId()),
+                        ComparisonType.EQUAL);
+        try {
+            for (Object object : SqlInterpreter.getInstance()
+                    .readData(query.build(), Connector.class)) {
+                connectArray.add((Connector) object);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return (FXCollections.observableList(connectArray));
+    }
+
+    /**
+     * Sets the connectors appropriately
+     *
+     * @param connectors an ObservableList of Connectors
+     */
+    public void setConnectors(ObservableList<Connector> connectors) {
+        this.connectors = connectors;
+    }
+
+
+    /**
      * Initialises the editConnectors screen
      */
     @FXML
@@ -161,15 +199,17 @@ public class ChargerController {
             modal.setTitle("Connector Information");
             modal.initModality(Modality.WINDOW_MODAL);
             ConnectorController controller = connectorCont.getController();
+            controller.setController(this);
+            controller.setConnectorList(connectors);
             controller.displayConnectorInfo();
             modal.setAlwaysOnTop(true);
             modal.showAndWait();
-
         } catch (IOException e) {
             e.printStackTrace();
         }
 
     }
+
 
 
 }

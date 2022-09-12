@@ -206,7 +206,6 @@ public class MainManager {
     /**
      * Adds a charger at the location of the coordinate.
      * Initial values are set "default"
-     * TODO add appropriate functionality
      */
     public void addCharger() {
     }

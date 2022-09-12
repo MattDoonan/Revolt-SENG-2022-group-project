@@ -1,19 +1,17 @@
 package seng202.team3.gui;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.PointLight;
+import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
-import seng202.team3.data.database.ComparisonType;
-import seng202.team3.data.database.QueryBuilder;
-import seng202.team3.data.database.QueryBuilderImpl;
-import seng202.team3.data.database.SqlInterpreter;
-import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 
 
@@ -26,8 +24,8 @@ import seng202.team3.data.entity.Connector;
  */
 public class ConnectorController {
 
-    private Stage stage;
     private ObservableList<Connector> connectorList;
+    private ChargerController controller;
 
     @FXML
     private TableColumn<Connector, String> current;
@@ -36,7 +34,7 @@ public class ConnectorController {
     private TableColumn<Connector, String> wattage;
 
     @FXML
-    private TableColumn<Connector, String> chargingPoints;
+    private TableColumn<Connector, Integer> chargingPoints;
 
     @FXML
     private TableColumn<Connector, String> connectorTypes;
@@ -46,6 +44,8 @@ public class ConnectorController {
 
     @FXML
     private TableView<Connector> connectors;
+
+    private Stage stage;
 
     /**
      * Initialises the connectorcontroller
@@ -57,61 +57,107 @@ public class ConnectorController {
      * Displays all the connector information in the table
      */
     public void displayConnectorInfo() {
-        ArrayList<Connector> connectArray =  new ArrayList<>();
-        Charger selectedCharger = new MenuController().getController()
-                .getManager().getSelectedCharger();
-        QueryBuilder query = new QueryBuilderImpl().withSource("connector")
-                .withFilter("chargerid", Integer.toString(selectedCharger.getChargerId()),
-                        ComparisonType.EQUAL);
-        try {
-            for (Object object : SqlInterpreter.getInstance()
-                    .readData(query.build(), Connector.class)) {
-                connectArray.add((Connector) object);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        connectorList = FXCollections.observableList(connectArray);
-
         connectors.setItems(connectorList);
 
-        current.setCellValueFactory(connector
-                -> new ReadOnlyStringWrapper(connector.getValue().getCurrent()));
+        current.setCellValueFactory(new PropertyValueFactory<>("current"));
 
-        wattage.setCellValueFactory(connector
-                -> new ReadOnlyStringWrapper(connector.getValue().getPower()));
+        wattage.setCellValueFactory(new PropertyValueFactory<>("power"));
 
-        chargingPoints.setCellValueFactory(connector
-                -> new ReadOnlyStringWrapper(Integer.toString(connector.getValue().getCount())));
+        chargingPoints.setCellValueFactory(new PropertyValueFactory<>("count"));
 
-        connectorTypes.setCellValueFactory(connector
-                -> new ReadOnlyStringWrapper(connector.getValue().getType()));
+        connectorTypes.setCellValueFactory(new PropertyValueFactory<>("type"));
 
-        status.setCellValueFactory(connector
-                -> new ReadOnlyStringWrapper(connector.getValue().getStatus()));
+        status.setCellValueFactory(new PropertyValueFactory<>("status"));
 
     }
 
     /**
-     * TODO Add this functionality with a new window
+     * Sets the list of connectors currently being edited.
+     *
+     * @param connectorList an observablelist of Connectors
+     */
+    public void setConnectorList(ObservableList<Connector> connectorList) {
+        this.connectorList = connectorList;
+    }
+
+    /**
+     * Gets the connectorlist
+     *
+     * @return and observable list of {@link Connector}s
+     */
+    public ObservableList<Connector> getConnectorList() {
+        return connectorList;
+    }
+
+
+    /**
+     * Opens a new add window
      */
     @FXML
     public void addConnector() {
-
+        launchEditable(null);
     }
 
     /**
-     * TODO Add this functionality
+     * Deletes a connector
      */
     @FXML
     public void deleteConnector() {
     }
 
     /**
-     * TODO Add this functionality
+     * Edits a connector
      */
     @FXML
     public void editConnector() {
 
+        Connector connector = connectors.getSelectionModel().getSelectedItem();
+        if (connector != null) {
+            launchEditable(connector);
+        }
+
     }
+
+    /**
+     * Sets the chargercontroller
+     *
+     * @param controller the controller object
+     */
+    public void setController(ChargerController controller) {
+        this.controller = controller;
+    }
+
+    /**
+     * Launches the editable portion
+     *
+     * @param connector the {@link Connector} for the connector info. Null if adding.
+     */
+    public void launchEditable(Connector connector) {
+        stage = (Stage) connectors.getScene().getWindow();
+        try {
+            stage.setAlwaysOnTop(false);
+            FXMLLoader connectorEdit = new FXMLLoader(getClass().getResource(
+                    "/fxml/connector_info.fxml"));
+            AnchorPane root = connectorEdit.load();
+            Scene modalScene = new Scene(root);
+            Stage modal = new Stage();
+            modal.setScene(modalScene);
+            modal.setResizable(false);
+            modal.setTitle("Connector Information");
+            modal.initModality(Modality.WINDOW_MODAL);
+            ConnectorEditController controller = connectorEdit.getController();
+            controller.setController(this);
+            controller.addConnector(connector);
+            controller.displayInfo();
+            modal.setAlwaysOnTop(true);
+            modal.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            connectors.refresh();
+            displayConnectorInfo();
+        }
+    }
+
+
 }

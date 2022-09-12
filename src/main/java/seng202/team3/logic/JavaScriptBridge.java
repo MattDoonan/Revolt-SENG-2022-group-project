@@ -1,7 +1,6 @@
 package seng202.team3.logic;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -140,7 +139,7 @@ public class JavaScriptBridge {
             modal.initModality(Modality.WINDOW_MODAL);
             ChargerController controller = chargerCont.getController();
             controller.displayChargerInfo();
-            controller.setStage(modal);
+            controller.init(modal);
             modal.setAlwaysOnTop(true);
             modal.showAndWait();
 
