@@ -27,18 +27,23 @@ public class Journey {
     /** Ending date and time */
     private String endDate;
 
-    /** User has favourited */
-    private boolean isFavourite;
+    /** the journeys id number **/
+    private int journeyId;
 
     /**
      * Constructor for the Journey
      */
-    public Journey(Coordinate startPosition, Coordinate endPosition) {
-        ArrayList<String> connectors = new ArrayList<>();
-        connectors.add("temp"); // change default connectors to all for veh?
-        this.vehicle = new Vehicle("temp", "temp", "temp", 100, 20000, connectors);
+    public Journey(Vehicle vehicle, Coordinate startPosition,
+            Coordinate endPosition, String startDate,
+            String endDate) {
         this.startPosition = startPosition;
         this.endPosition = endPosition;
+        this.vehicle = vehicle;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+
+    public Journey() {
     }
 
     /**
@@ -92,12 +97,30 @@ public class Journey {
     }
 
     /**
+     * Sets the start position of the journey
+     * 
+     * @param coord starting position
+     */
+    public void setStartPosition(Coordinate coord) {
+        startPosition = coord;
+    }
+
+    /**
      * Gets the {@link Coordinate coordinate} of the end of the journey
      * 
      * @return end position of journey
      */
     public Coordinate getEndPosition() {
         return endPosition;
+    }
+
+    /**
+     * Sets the end position of the journey
+     * 
+     * @param coord ending position
+     */
+    public void setEndPosition(Coordinate coord) {
+        endPosition = coord;
     }
 
     /**
@@ -137,21 +160,33 @@ public class Journey {
     }
 
     /**
-     * Get favourited value of journey
+     * sets the ID number
      * 
-     * @return favourite boolean value
+     * @param number integer for the id
      */
-    public boolean getFavourite() {
-        return isFavourite;
+    public void setJourneyId(int number) {
+        this.journeyId = number;
     }
 
     /**
-     * Add or remove journey from favourites
-     * 
-     * @param isFavourite boolean of what to change favourite to
+     * returns the unique id number
+     *
+     * @return the integer id number
      */
-    public void setFavourite(boolean isFavourite) {
-        this.isFavourite = isFavourite;
+    public int getJourneyId() {
+        return this.journeyId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        Journey j = (Journey) o;
+        return j.getChargers().equals(this.getChargers())
+                && j.getVehicle().equals(this.getVehicle())
+                && j.getStartPosition().equals(this.getStartPosition())
+                && j.getEndPosition().equals(this.getEndPosition())
+                && j.getStartDate().equals(this.getStartDate())
+                && j.getEndDate().equals(this.getEndDate())
+                && j.getJourneyId() == this.getJourneyId();
     }
 
 }

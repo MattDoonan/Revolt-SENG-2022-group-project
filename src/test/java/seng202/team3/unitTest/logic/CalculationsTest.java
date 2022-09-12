@@ -1,4 +1,4 @@
-package seng202.team3.logic;
+package seng202.team3.unitTest.logic;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -10,6 +10,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import seng202.team3.data.entity.Coordinate;
+import seng202.team3.logic.Calculations;
 
 /**
  * Unit tests for a {@link Calculations} Calculations Class in Logic

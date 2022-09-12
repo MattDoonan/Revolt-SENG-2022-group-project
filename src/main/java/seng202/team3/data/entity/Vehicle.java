@@ -10,8 +10,8 @@ import java.util.ArrayList;
  */
 public class Vehicle {
 
-    /** Numberplate of vehicle (unique identifier) */
-    private String license;
+    /** Vehicle id */
+    private int vehicleId;
 
     /** Make of the vehicle */
     private String make;
@@ -20,7 +20,7 @@ public class Vehicle {
     private String model;
 
     /** Current battery percentage (0 - 100) */
-    private float batteryPercent;
+    private Double batteryPercent;
 
     /** Range of vehicle with full battery capacity, in kms */
     private int maxRange;
@@ -28,33 +28,26 @@ public class Vehicle {
     /** List of connector types */
     private ArrayList<String> connectors;
 
+    /** Path to vehicle image */
+    private String imgPath;
+
+    /**
+     * Default filepath for missing images
+     */
+    public static final String defaultImgPath = "";
+
     /** Constructor for Vehicle */
-    public Vehicle(String license, String make, String model, float batteryPercent, int maxRange,
+    public Vehicle(String make, String model, int maxRange,
             ArrayList<String> connectors) {
-        this.license = license;
         this.make = make;
         this.model = model;
-        this.batteryPercent = batteryPercent;
         this.maxRange = maxRange;
         this.connectors = connectors;
+        this.imgPath = defaultImgPath;
+        this.batteryPercent = 100.0;
     }
 
-    /**
-     * Get numberplate of vehicle (unique identifier)
-     * 
-     * @return license
-     */
-    public String getLicensePlate() {
-        return license;
-    }
-
-    /**
-     * Set numberplate of vehicle
-     * 
-     * @param licensePlate numberplate of vehicle (unique identifier)
-     */
-    public void setLicensePlate(String licensePlate) {
-        this.license = licensePlate;
+    public Vehicle() {
     }
 
     /**
@@ -98,7 +91,7 @@ public class Vehicle {
      * 
      * @return current battery percentage
      */
-    public float getBatteryPercent() {
+    public Double getBatteryPercent() {
         return batteryPercent;
     }
 
@@ -107,7 +100,7 @@ public class Vehicle {
      * 
      * @param batteryPercent current battery percentage
      */
-    public void setBatteryPercent(float batteryPercent) {
+    public void setBatteryPercent(Double batteryPercent) {
         this.batteryPercent = batteryPercent;
     }
 
@@ -152,7 +145,62 @@ public class Vehicle {
      * 
      * @return current range of the vehicle
      */
-    public double getCurrentRange() {
-        return maxRange * (batteryPercent / 100);
+    public Double getCurrentRange() {
+        return (double) (maxRange * (batteryPercent / 100));
+    }
+
+    /**
+     * Get a vehicle's image path
+     * 
+     * @return string of image path
+     */
+    public String getImgPath() {
+        return imgPath;
+    }
+
+    /**
+     * Set vehicle image path
+     * 
+     * @param path string of image path
+     */
+    public void setImgPath(String path) {
+        this.imgPath = path;
+    }
+
+    /**
+     * Set the vehicle id number
+     *
+     * @param number integer for the id
+     */
+    public void setVehicleId(int number) {
+        this.vehicleId = number;
+    }
+
+    /**
+     * returns the vehicle id number
+     *
+     * @return the id integer
+     */
+    public int getVehicleId() {
+        return vehicleId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        Vehicle v;
+        if (o instanceof Vehicle) {
+            v = (Vehicle) o;
+        } else {
+            return false;
+        }
+
+        return v.getMake().equals(this.getMake())
+                && v.getModel().equals(this.getModel())
+                && v.getBatteryPercent().equals(this.getBatteryPercent())
+                && v.getMaxRange() == this.getMaxRange()
+                && v.getConnectors().equals(this.getConnectors())
+                && v.getCurrentRange().equals(this.getCurrentRange())
+                && v.getImgPath().equals(this.getImgPath())
+                && v.getVehicleId() == this.getVehicleId();
     }
 }

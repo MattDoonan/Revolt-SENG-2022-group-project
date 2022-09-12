@@ -1,5 +1,6 @@
-package seng202.team3.logic;
+package seng202.team3.unitTest.logic;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -7,16 +8,20 @@ import java.io.IOException;
 import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javax.management.InstanceAlreadyExistsException;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import seng202.team3.data.database.ComparisonType;
-import seng202.team3.data.database.CsvInterpreter;
 import seng202.team3.data.database.QueryBuilder;
 import seng202.team3.data.database.QueryBuilderImpl;
+import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
+import seng202.team3.logic.ChargerManager;
+import seng202.team3.logic.MainManager;
 
 /**
  * Unit tests for {@link MainManager} MainManager class in logic
@@ -28,6 +33,14 @@ public class MainManagerTest {
 
     private MainManager manage;
     private ChargerManager charge;
+    static SqlInterpreter db;
+
+    @BeforeAll
+    static void intialize() throws InstanceAlreadyExistsException {
+        SqlInterpreter.removeInstance();
+        db = SqlInterpreter.initialiseInstanceWithUrl(
+                "jdbc:sqlite:./src/test/resources/test_database.db");
+    }
 
     /**
      * Set up managers for testing purposes
@@ -36,7 +49,7 @@ public class MainManagerTest {
     public void setUp() {
         manage = new MainManager();
         charge = new ChargerManager();
-
+        db.defaultDatabase();
     }
 
     /** Tears down the initialized managers after test */
@@ -75,7 +88,8 @@ public class MainManagerTest {
         ArrayList<Connector> connectorList = new ArrayList<>(1);
         connectorList.add(dummyConnector);
         Coordinate coord = new Coordinate(4.5, 5.7, -36.85918, 174.76602);
-        Charger c = new Charger(connectorList, "Test1", coord, 1, 0.3, "Meridian", true);
+        Charger c = new Charger(connectorList, "Test1", coord, 1, 0.3,
+                "Meridian", "Meridian", "2020/1/1 00:00:00", true, true, true, true);
         manage.setSelectedCharger(c);
         assertEquals(c.getLocation().getLat(),
                 manage.getSelectedCharger().getLocation().getLat());
@@ -85,44 +99,42 @@ public class MainManagerTest {
 
     /**
      * Tests for the list of chargers
+     * 
+     * @throws IOException if data cannot be read
      */
     @Test
-    public void originalListTest() {
+    public void originalListTest() throws IOException {
+        db.addChargerCsvToData("src/test/resources/csvtest/filtering.csv");
+
         QueryBuilder q = new QueryBuilderImpl().withSource("charger");
         ArrayList<Charger> chargerList = new ArrayList<>();
-        try {
-            for (Object o : new CsvInterpreter().readData(q.build(), Charger.class)) {
-                chargerList.add((Charger) o);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        for (Object o : SqlInterpreter.getInstance().readData(q.build(), Charger.class)) {
+            chargerList.add((Charger) o);
         }
+
         manage.resetQuery();
         manage.makeAllChargers();
         // Checks the sizes of each list
-        assertEquals(chargerList.size(), manage.getData().size());
-        // checks the address of each of the elements since they should be unique
-        for (int i = 0; i < chargerList.size(); i++) {
-            assertEquals(chargerList.get(i).getLocation().getAddress(),
-                    manage.getData().get(i).getLocation().getAddress());
-        }
+        assertArrayEquals(chargerList.toArray(), manage.getData().toArray());
     }
 
     /**
      * tests if the manager is returning the correct list of chargers with Distances
      * Distance set to 50
+     * 
+     * @throws IOException if db interaction fails
      */
     @Test
-    public void distanceOriginalListTest() {
+    public void distanceOriginalListTest() throws IOException {
+        db.addChargerCsvToData("src/test/resources/csvtest/filtering.csv");
+
         QueryBuilder q = new QueryBuilderImpl().withSource("charger");
         ArrayList<Charger> chargerList = new ArrayList<>();
-        try {
-            for (Object o : new CsvInterpreter().readData(q.build(), Charger.class)) {
-                chargerList.add((Charger) o);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+
+        for (Object o : SqlInterpreter.getInstance().readData(q.build(), Charger.class)) {
+            chargerList.add((Charger) o);
         }
+
         Coordinate coordinate = new Coordinate(1.1, 2.3, -43.53418, 172.627572);
         ArrayList<Charger> cc = charge.getNearbyChargers(chargerList, coordinate, 50.0);
         manage.setPosition(coordinate);
@@ -133,29 +145,26 @@ public class MainManagerTest {
         ObservableList<Charger> result = FXCollections.observableList(cc);
         ObservableList<Charger> returnVal = manage.getCloseChargerData();
 
-        // Checks the sizes of each list
-        assertEquals(result.size(), returnVal.size());
-        // checks the address of each of the elements since they should be unique
-        for (int i = 0; i < result.size(); i++) {
-            assertEquals(result.get(i).getLocation().getAddress(),
-                    returnVal.get(i).getLocation().getAddress());
-        }
+        assertArrayEquals(result.toArray(), returnVal.toArray());
+
     }
 
     /**
      * Distance set to 90 instead of 50
+     * 
+     * @throws IOException if db interaction fails
      */
     @Test
-    public void changeDistanceTest() {
+    public void changeDistanceTest() throws IOException {
+        db.addChargerCsvToData("src/test/resources/csvtest/filtering.csv");
+
         QueryBuilder q = new QueryBuilderImpl().withSource("charger");
         ArrayList<Charger> chargerList = new ArrayList<>();
-        try {
-            for (Object o : new CsvInterpreter().readData(q.build(), Charger.class)) {
-                chargerList.add((Charger) o);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+
+        for (Object o : SqlInterpreter.getInstance().readData(q.build(), Charger.class)) {
+            chargerList.add((Charger) o);
         }
+
         Coordinate coordinate = new Coordinate(1.1, 2.3, -43.53418, 172.627572);
         ArrayList<Charger> cc = charge.getNearbyChargers(chargerList, coordinate, 90.0);
         manage.setPosition(coordinate);
@@ -166,53 +175,50 @@ public class MainManagerTest {
         ObservableList<Charger> result = FXCollections.observableList(cc);
         ObservableList<Charger> returnVal = manage.getCloseChargerData();
         // Checks the sizes of each list
-        assertEquals(result.size(), returnVal.size());
-        // checks the address of each of the elements since they should be unique
-        for (int i = 0; i < result.size(); i++) {
-            assertEquals(result.get(i).getLocation().getAddress(),
-                    returnVal.get(i).getLocation().getAddress());
-        }
+        assertArrayEquals(result.toArray(), returnVal.toArray());
+
     }
 
     /**
      * Checks the lists of chargers when a QUERY filter connectorcurrent AC is
      * added.
+     * 
+     * @throws IOException if db interaction fails
      */
     @Test
-    public void addAcTypeQuery() {
+    public void addAcTypeQuery() throws IOException {
+        db.addChargerCsvToData("src/test/resources/csvtest/filtering.csv");
+
         QueryBuilder q = new QueryBuilderImpl().withSource("charger")
                 .withFilter("connectorcurrent", "AC", ComparisonType.CONTAINS);
         ArrayList<Charger> chargerList = new ArrayList<>();
-        try {
-            for (Object o : new CsvInterpreter().readData(q.build(), Charger.class)) {
-                chargerList.add((Charger) o);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        for (Object o : SqlInterpreter.getInstance().readData(q.build(), Charger.class)) {
+            chargerList.add((Charger) o);
         }
+
         manage.resetQuery();
         manage.adjustQuery("connectorcurrent", "AC", ComparisonType.CONTAINS);
         manage.makeAllChargers();
         // Checks the sizes of each list
-        assertEquals(chargerList.size(), manage.getData().size());
-        // checks the address of each of the elements since they should be unique
-        for (int i = 0; i < chargerList.size(); i++) {
-            assertEquals(chargerList.get(i).getLocation().getAddress(),
-                    manage.getData().get(i).getLocation().getAddress());
-        }
+        assertArrayEquals(chargerList.toArray(), manage.getData().toArray());
+
     }
 
     /**
      * Checks the lists of chargers when a QUERY filter connectorcurrent DC is
      * added.
+     * 
+     * @throws IOException if db interaction fails
      */
     @Test
-    public void addDcTypeQuery() {
+    public void addDcTypeQuery() throws IOException {
+        db.addChargerCsvToData("src/test/resources/csvtest/filtering.csv");
+
         QueryBuilder q = new QueryBuilderImpl().withSource("charger")
                 .withFilter("connectorcurrent", "DC", ComparisonType.CONTAINS);
         ArrayList<Charger> chargerList = new ArrayList<>();
         try {
-            for (Object o : new CsvInterpreter().readData(q.build(), Charger.class)) {
+            for (Object o : SqlInterpreter.getInstance().readData(q.build(), Charger.class)) {
                 chargerList.add((Charger) o);
             }
         } catch (IOException e) {
@@ -222,25 +228,23 @@ public class MainManagerTest {
         manage.adjustQuery("connectorcurrent", "DC", ComparisonType.CONTAINS);
         manage.makeAllChargers();
         // Checks the sizes of each list
-        assertEquals(chargerList.size(), manage.getData().size());
-        // checks the address of each of the elements since they should be unique
-        for (int i = 0; i < chargerList.size(); i++) {
-            assertEquals(chargerList.get(i).getLocation().getAddress(),
-                    manage.getData().get(i).getLocation().getAddress());
-        }
+        assertArrayEquals(chargerList.toArray(), manage.getData().toArray());
     }
 
     /**
      * Checks the lists of chargers when a QUERY filter hastouristattraction true is
      * added.
+     * 
+     * @throws IOException if db interaction fails
      */
     @Test
-    public void addAttractionQuery() {
+    public void addAttractionQuery() throws IOException {
+        db.addChargerCsvToData("src/test/resources/csvtest/filtering.csv");
         QueryBuilder q = new QueryBuilderImpl().withSource("charger")
                 .withFilter("hastouristattraction", "True", ComparisonType.CONTAINS);
         ArrayList<Charger> chargerList = new ArrayList<>();
         try {
-            for (Object o : new CsvInterpreter().readData(q.build(), Charger.class)) {
+            for (Object o : SqlInterpreter.getInstance().readData(q.build(), Charger.class)) {
                 chargerList.add((Charger) o);
             }
         } catch (IOException e) {
@@ -250,25 +254,24 @@ public class MainManagerTest {
         manage.adjustQuery("hastouristattraction", "True", ComparisonType.CONTAINS);
         manage.makeAllChargers();
         // Checks the sizes of each list
-        assertEquals(chargerList.size(), manage.getData().size());
-        // checks the address of each of the elements since they should be unique
-        for (int i = 0; i < chargerList.size(); i++) {
-            assertEquals(chargerList.get(i).getLocation().getAddress(),
-                    manage.getData().get(i).getLocation().getAddress());
-        }
+        assertArrayEquals(chargerList.toArray(), manage.getData().toArray());
+
     }
 
     /**
      * Checks the lists of chargers when a QUERY filter haschargingcost False is
      * added.
+     * 
+     * @throws IOException if db interaction fails
      */
     @Test
-    public void addChargingCostQuery() {
+    public void addChargingCostQuery() throws IOException {
+        db.addChargerCsvToData("src/test/resources/csvtest/filtering.csv");
         QueryBuilder q = new QueryBuilderImpl().withSource("charger")
                 .withFilter("haschargingcost", "False", ComparisonType.CONTAINS);
         ArrayList<Charger> chargerList = new ArrayList<>();
         try {
-            for (Object o : new CsvInterpreter().readData(q.build(), Charger.class)) {
+            for (Object o : SqlInterpreter.getInstance().readData(q.build(), Charger.class)) {
                 chargerList.add((Charger) o);
             }
         } catch (IOException e) {
@@ -278,25 +281,24 @@ public class MainManagerTest {
         manage.adjustQuery("haschargingcost", "False", ComparisonType.CONTAINS);
         manage.makeAllChargers();
         // Checks the sizes of each list
-        assertEquals(chargerList.size(), manage.getData().size());
-        // checks the address of each of the elements since they should be unique
-        for (int i = 0; i < chargerList.size(); i++) {
-            assertEquals(chargerList.get(i).getLocation().getAddress(),
-                    manage.getData().get(i).getLocation().getAddress());
-        }
+        assertArrayEquals(chargerList.toArray(), manage.getData().toArray());
+
     }
 
     /**
      * Checks what happens there are multiple QUERY's added
+     * 
+     * @throws IOException if db interaction fails
      */
     @Test
-    public void queryChargeCostWithCurrentTest() {
+    public void queryChargeCostWithCurrentTest() throws IOException {
+        db.addChargerCsvToData("src/test/resources/csvtest/filtering.csv");
         QueryBuilder q = new QueryBuilderImpl().withSource("charger")
                 .withFilter("haschargingcost", "False", ComparisonType.CONTAINS)
                 .withFilter("connectorcurrent", "DC", ComparisonType.CONTAINS);
         ArrayList<Charger> chargerList = new ArrayList<>();
         try {
-            for (Object o : new CsvInterpreter().readData(q.build(), Charger.class)) {
+            for (Object o : SqlInterpreter.getInstance().readData(q.build(), Charger.class)) {
                 chargerList.add((Charger) o);
             }
         } catch (IOException e) {
@@ -307,22 +309,19 @@ public class MainManagerTest {
         manage.adjustQuery("connectorcurrent", "DC", ComparisonType.CONTAINS);
         manage.makeAllChargers();
         // Checks the sizes of each list
-        assertEquals(chargerList.size(), manage.getData().size());
-        // checks the address of each of the elements since they should be unique
-        for (int i = 0; i < chargerList.size(); i++) {
-            assertEquals(chargerList.get(i).getLocation().getAddress(),
-                    manage.getData().get(i).getLocation().getAddress());
-        }
+        assertArrayEquals(chargerList.toArray(), manage.getData().toArray());
+
     }
 
     @Test
-    public void queryTouristAttractionWithCurrentTest() {
+    public void queryTouristAttractionWithCurrentTest() throws IOException {
+        db.addChargerCsvToData("src/test/resources/csvtest/filtering.csv");
         QueryBuilder q = new QueryBuilderImpl().withSource("charger")
                 .withFilter("hastouristattraction", "True", ComparisonType.CONTAINS)
                 .withFilter("connectorcurrent", "AC", ComparisonType.CONTAINS);
         ArrayList<Charger> chargerList = new ArrayList<>();
         try {
-            for (Object o : new CsvInterpreter().readData(q.build(), Charger.class)) {
+            for (Object o : SqlInterpreter.getInstance().readData(q.build(), Charger.class)) {
                 chargerList.add((Charger) o);
             }
         } catch (IOException e) {
@@ -333,23 +332,22 @@ public class MainManagerTest {
         manage.adjustQuery("connectorcurrent", "AC", ComparisonType.CONTAINS);
         manage.makeAllChargers();
         // Checks the sizes of each list
-        assertEquals(chargerList.size(), manage.getData().size());
-        // checks the address of each of the elements since they should be unique
-        for (int i = 0; i < chargerList.size(); i++) {
-            assertEquals(chargerList.get(i).getLocation().getAddress(),
-                    manage.getData().get(i).getLocation().getAddress());
-        }
+        assertArrayEquals(chargerList.toArray(), manage.getData().toArray());
+
     }
 
     /**
      * Checks what happens when the position is null
+     * 
+     * @throws IOException if db interaction fails
      */
     @Test
-    public void positionNull() {
+    public void positionNull() throws IOException {
+        db.addChargerCsvToData("src/test/resources/csvtest/filtering.csv");
         QueryBuilder q = new QueryBuilderImpl().withSource("charger");
         ArrayList<Charger> chargerList = new ArrayList<>();
         try {
-            for (Object o : new CsvInterpreter().readData(q.build(), Charger.class)) {
+            for (Object o : SqlInterpreter.getInstance().readData(q.build(), Charger.class)) {
                 chargerList.add((Charger) o);
             }
         } catch (IOException e) {
@@ -358,11 +356,7 @@ public class MainManagerTest {
         manage.resetQuery();
         manage.makeAllChargers();
         // Checks the sizes of each list
-        assertEquals(chargerList.size(), manage.getCloseChargerData().size());
-        // checks the address of each of the elements since they should be unique
-        for (int i = 0; i < chargerList.size(); i++) {
-            assertEquals(chargerList.get(i).getLocation().getAddress(),
-                    manage.getCloseChargerData().get(i).getLocation().getAddress());
-        }
+        assertArrayEquals(chargerList.toArray(), manage.getCloseChargerData().toArray());
+
     }
 }

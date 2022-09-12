@@ -5,6 +5,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
@@ -19,6 +21,7 @@ import javafx.stage.Stage;
 public class MenuController {
 
     private Stage stage;
+    private static MainController controller;
 
     @FXML
     private BorderPane mainWindow;
@@ -30,8 +33,6 @@ public class MenuController {
      */
     public void init(Stage stage) {
         this.stage = stage;
-        initHome();
-
     }
 
     /**
@@ -41,12 +42,21 @@ public class MenuController {
         try {
             FXMLLoader mainScene = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
             Parent mainNode = mainScene.load();
-            MainController controller = mainScene.getController();
+            controller = mainScene.getController();
             controller.init(stage);
             mainWindow.setCenter(mainNode);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Gets the static Main Controller
+     *
+     * @return {@link MainController} the main controller of this run
+     */
+    public MainController getController() {
+        return controller;
     }
 
     /**
@@ -76,6 +86,35 @@ public class MenuController {
             e.printStackTrace();
         }
 
+    }
+
+
+    /**
+     * Initialises the welcome page;
+     */
+    public void launchWelcome() {
+        try {
+            FXMLLoader mainScene = new FXMLLoader(getClass()
+                    .getResource("/fxml/welcome_page.fxml"));
+            Parent mainNode = mainScene.load();
+            WelcomeController controller = mainScene.getController();
+            controller.init(stage, this);
+            mainWindow.setCenter(mainNode);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void launchJourneyScreen() {
+        try {
+            FXMLLoader journeyLoader = new FXMLLoader(getClass().getResource("/fxml/journey.fxml"));
+            Parent journeyViewParent = journeyLoader.load();
+            JourneyController controller = journeyLoader.getController();
+            controller.init(stage, this);
+            mainWindow.setCenter(journeyViewParent);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

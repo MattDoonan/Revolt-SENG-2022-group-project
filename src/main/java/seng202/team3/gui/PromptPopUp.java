@@ -3,8 +3,6 @@ package seng202.team3.gui;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
-import seng202.team3.logic.JavaScriptBridge;
-import seng202.team3.logic.TempData;
 
 /**
  * A prompt for clicking on the map or the charger list for information to happen.
@@ -41,19 +39,20 @@ public class PromptPopUp {
 
     /**
      * Executes the correct action as needed
-     * TODO add the stubs functionality for the chargers to be added/deleted once DB up
+     *
      */
     @FXML
     public void confirm() {
+        MainController controller = new MenuController().getController();
         stage.setAlwaysOnTop(false);
         if (type.equals("edit")) {
-            TempData.getController().editCharger();
+            controller.editCharger();
             cancel();
         } else if (type.equals("delete")) {
-            TempData.getController().getManager().deleteCharger();
+            controller.getManager().deleteCharger();
             cancel();
         } else if (type.equals("add")) {
-            TempData.getController().getManager().addCharger();
+            controller.getManager().addCharger();
             cancel();
         }
     }

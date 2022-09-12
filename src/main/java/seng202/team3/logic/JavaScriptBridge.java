@@ -5,17 +5,20 @@ import java.util.List;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import seng202.team3.data.database.ComparisonType;
+import seng202.team3.data.database.QueryBuilder;
+import seng202.team3.data.database.QueryBuilderImpl;
+import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
 import seng202.team3.gui.ChargerController;
 import seng202.team3.gui.MainController;
-import seng202.team3.gui.SaveCoordController;
+import seng202.team3.gui.MenuController;
 
 
 /**
@@ -32,9 +35,9 @@ public class JavaScriptBridge {
      * @param latlng the string created with latitude and longitude
      */
     public void addCoordinateFromClick(String latlng) {
-        TempData.setCoordinate(parseCoordinate(latlng));
-        MainController controller = TempData.getController();
-        controller.getManager().setPosition(TempData.getCoordinate());
+        MenuController menu = new MenuController();
+        MainController controller = menu.getController();
+        controller.getManager().setPosition(parseCoordinate(latlng));
     }
 
     /**
@@ -59,42 +62,27 @@ public class JavaScriptBridge {
     }
 
     /**
-     * Refreshes the table
+     * Takes a string with the name of the string and adds it to the current coordinate
+     *
+     * @param address String of the address
      */
-    public void refreshTable() {
-        MainController controller = TempData.getController();
-        controller.refreshTable();
+    public void addLocationName(String address) {
+        new MenuController().getController().getManager().getPosition().setAddress(address);
     }
 
     /**
-     * Adds the coordinate
+     * Refreshes the table
      */
-    public void saveCoord() {
-        try {
-            FXMLLoader saveCoordLoader = new FXMLLoader(getClass().getResource(
-                    "/fxml/save_coord.fxml"));
-            VBox root = saveCoordLoader.load();
-            Scene modalScene = new Scene(root);
-            Stage modal = new Stage();
-            modal.setScene(modalScene);
-            modal.setWidth(300);
-            modal.setHeight(150);
-            modal.setResizable(false);
-            modal.setTitle("Add a coordinate");
-            modal.initModality(Modality.WINDOW_MODAL);
-            SaveCoordController saveCoord = saveCoordLoader.getController();
-            saveCoord.addCoordinate();
-            modal.showAndWait();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void refreshTable() {
+        MainController controller = new MenuController().getController();
+        controller.refreshTable();
     }
 
     /**
      * Recalls a query with all the components at the new location
      */
     public void refreshQuery() {
-        MainController controller = TempData.getController();
+        MainController controller = new MenuController().getController();
         controller.executeSearch();
     }
 
@@ -105,15 +93,20 @@ public class JavaScriptBridge {
      * @param id the charger id selected
      */
     public void chargerHandler(int id) {
-        MainController controller = TempData.getController();
-        List<Charger> chargers = controller.getManager().getData().stream()
-                .filter(c -> c.getChargerId() == id)
-                .toList();
-        if (chargers != null) {
-            Charger charger = chargers.get(0);
-            controller.getManager().setSelectedCharger(charger);
-            controller.viewChargers(charger);
-            controller.getMapController().changePosition(charger.getLocation());
+        MainController controller = new MenuController().getController();
+        QueryBuilder query = new QueryBuilderImpl().withSource("charger")
+                .withFilter("charger.chargerId", Integer.toString(id), ComparisonType.EQUAL);
+        try {
+            List<Object> object = SqlInterpreter.getInstance()
+                    .readData(query.build(), Charger.class);
+            if (object.size() == 1) {
+                Charger charger = (Charger) object.get(0);
+                controller.getManager().setSelectedCharger(charger);
+                controller.viewChargers(charger);
+                controller.getMapController().changePosition(charger.getLocation());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -121,7 +114,7 @@ public class JavaScriptBridge {
      * Zooms to a point
      */
     public void zoomToPoint(String latlng) {
-        MainController controller = TempData.getController();
+        MainController controller = new MenuController().getController();
         controller.getMapController().changePosition(parseCoordinate(latlng));
     }
 
@@ -131,7 +124,7 @@ public class JavaScriptBridge {
      * @param latlng the String from the route.
      */
     public void addStopInRoute(String latlng) {
-        MainController controller = TempData.getController();
+        MainController controller = new MenuController().getController();
         controller.getMapController().addStopInRoute(parseCoordinate(latlng));
     }
 
@@ -141,6 +134,17 @@ public class JavaScriptBridge {
      */
     public void loadMoreInfo(int id) {
         chargerHandler(id);
+        loadChargerEdit(new MenuController().getController()
+                .getManager().getSelectedCharger());
+
+    }
+
+    /**
+     * Creates the charger adding/editing screen when necessary
+     *
+     * @param charger the {@link Charger} that is being selected
+     */
+    public void loadChargerEdit(Charger charger) {
         try {
             FXMLLoader chargerCont = new FXMLLoader(getClass().getResource(
                     "/fxml/charger_info.fxml"));
@@ -149,12 +153,15 @@ public class JavaScriptBridge {
             Stage modal = new Stage();
             modal.setScene(modalScene);
             modal.setWidth(400);
-            modal.setHeight(400);
+            modal.setHeight(550);
             modal.setResizable(false);
             modal.setTitle("Charger Information");
             modal.initModality(Modality.WINDOW_MODAL);
             ChargerController controller = chargerCont.getController();
+            controller.setCharger(charger);
             controller.displayChargerInfo();
+            controller.init(modal);
+            modal.setAlwaysOnTop(true);
             modal.showAndWait();
 
         } catch (IOException e) {
