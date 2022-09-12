@@ -15,12 +15,12 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -96,7 +96,7 @@ public class VehicleController {
     private TextField maxRangeText;
 
     @FXML
-    private TextField connectionsText;
+    private ComboBox<String> connectorType;
 
     @FXML
     private Label imgName;
@@ -164,10 +164,10 @@ public class VehicleController {
      */
     @FXML
     public void addConnection() {
-        connections.add(connectionsText.getText());
+        connections.add(connectorType.getValue());
         addedConnections.setText("Connection: "
-                + connectionsText.getText() + "\n" + addedConnections.getText());
-        connectionsText.setText(null);
+                + connectorType.getValue() + "\n" + addedConnections.getText());
+        // connectionsText.setText(null);
     }
 
     /**
