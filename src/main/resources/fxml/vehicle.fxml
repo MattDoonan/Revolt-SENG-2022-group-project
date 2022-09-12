@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1080.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.VehicleController">
+   <children>
+      <MenuBar layoutY="8.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" prefWidth="1080.0" style="-fx-background-color: #e06666;">
+      </MenuBar>
+      <Label layoutX="478.0" layoutY="107.0" text="My Garage">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <Button fx:id="addVehicle" layoutX="503.0" layoutY="587.0" mnemonicParsing="false" text="Add New" />
+      <Button fx:id="nextBtn" layoutX="907.0" layoutY="320.0" mnemonicParsing="false" onAction="#nextBtnClicked" prefHeight="40.0" prefWidth="42.0" text="&gt;&gt;" />
+      <Button fx:id="prevBtn" layoutX="130.0" layoutY="320.0" mnemonicParsing="false" onAction="#prevBtnClicked" prefHeight="40.0" prefWidth="42.0" text="&lt;&lt;" />
+      <TextArea fx:id="vehicleDisplayOne" editable="false" layoutX="201.0" layoutY="218.0" prefHeight="318.0" prefWidth="200.0" style="-fx-border-color: black;" />
+      <ImageView fx:id="vehicleImageOne" fitHeight="130.0" fitWidth="200.0" layoutX="201.0" layoutY="377.0" pickOnBounds="true" preserveRatio="true" />
+      <TextArea fx:id="vehicleDisplayTwo" editable="false" layoutX="436.0" layoutY="218.0" prefHeight="318.0" prefWidth="200.0" style="-fx-border-color: black;" />
+      <TextArea fx:id="vehicleDisplayThree" editable="false" layoutX="665.0" layoutY="218.0" prefHeight="318.0" prefWidth="200.0" style="-fx-border-color: black;" />
+      <ImageView fx:id="vehicleImageTwo" fitHeight="130.0" fitWidth="200.0" layoutX="436.0" layoutY="377.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="vehicleImageThree" fitHeight="130.0" fitWidth="200.0" layoutX="665.0" layoutY="377.0" pickOnBounds="true" preserveRatio="true" />
+   </children>
+</AnchorPane>
