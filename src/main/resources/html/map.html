@@ -6,6 +6,8 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" />
     <link rel="stylesheet"
         href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+
     <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
     <style>
@@ -27,6 +29,7 @@
     <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
     <script
         src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
     <script>
         let map;
         let lat = -43.5279;
@@ -37,7 +40,6 @@
         let isRoute;
         let routeToCharger;
         let pointCoordinates = []; // contains a list of all the coordinates in a route in order.
-
 
         /**
          * Creates a star icon
@@ -82,6 +84,7 @@
 
         /**
          * creates and initialises the Google map, also defines on click event that calls java code
+         *
          */
         function initMap() {
 
@@ -94,18 +97,52 @@
                 attribution: '© OpenStreetMap contributors<br>Served by University of Canterbury'
             }).addTo(map)
 
+            createBar().addTo(map)
+
             map.on("click", (map_event) => {
                 var latlng = map.mouseEventToLatLng(map_event.originalEvent)
                 if (!isRoute) {
                     javaScriptBridge.addCoordinateFromClick(`{"lat": ${latlng.lat}, "lng": ${latlng.lng}}`)
                     removeCoordinate()
-                    addCoordinate("Selected Location", latlng.lat, latlng.lng)
+                    new L.Control.Geocoder.Nominatim({
+                        geocodingQueryParams: {
+                            countrycodes: 'nz'
+                        }}).reverse(latlng, map.options.crs.scale(map.getZoom()), results => {
+                        var r = results[0]
+                        if (r) {
+                            addCoordinate(r.name, latlng.lat, latlng.lng)
+                            javaScriptBridge.addLocationName(r.name)
+                        } else {
+                            addCoordinate("Selected Coordinate: ", latlng.lat, latlng.lng)
+                        }
+                    })
                     javaScriptBridge.refreshTable()
                 }
-                else {
-                    javaScriptBridge.addStopInRoute(`{"lat": ${latlng.lat}, "lng": ${latlng.lng}}`)
-                }
             })
+        }
+
+        /**
+         * Creates and sets a searchBar for basic geolocation needs and parsing
+         */
+        function createBar() {
+            var searchBar = L.Control.geocoder({
+                geocoder: new L.Control.Geocoder.Nominatim({
+                    geocodingQueryParams: {
+                        countrycodes: 'nz'
+                    }}),
+                defaultMarkGeocode: false,
+                position: "topleft",
+                collapsed: false,
+                placeholder: "Search location",
+            }).on('markgeocode', function(e) {
+                var latlng = e.geocode.center
+                javaScriptBridge.addCoordinateFromClick(`{"lat": ${latlng.lat}, "lng": ${latlng.lng}}`)
+                removeCoordinate()
+                addCoordinate(e.geocode.name, latlng.lat, latlng.lng)
+                javaScriptBridge.addLocationName(e.geocode.name)
+                javaScriptBridge.refreshTable()
+            })
+            return searchBar;
         }
 
 
@@ -146,7 +183,7 @@
         function addCoordinate(title, lat, lng) {
             coordinate = new L.Marker([lat, lng])
             coordinate.bindPopup(title + ": " + lat.toFixed(4) + " " + lng.toFixed(4))
-            coordinate.on("mouseover", function(ev) {coordinate.openPopup()})
+            coordinate.on("click", function(ev) {coordinate.openPopup()})
             coordinate.addTo(map)
             movePosition(lat, lng)
         }
@@ -196,7 +233,11 @@
             routeToCharger = L.Routing.control({
                 waypoints: coordinates,
                 serviceUrl: 'https://tile.csse.canterbury.ac.nz/route/v1',
-                routeWhileDragging: true
+                routeWhileDragging: true,
+                geocoder: new L.Control.Geocoder.Nominatim({
+                    geocodingQueryParams: {
+                        countrycodes: 'nz'
+                    }}),
             }).addTo(map);
         }
 

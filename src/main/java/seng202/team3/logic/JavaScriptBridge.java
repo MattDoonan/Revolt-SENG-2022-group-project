@@ -62,6 +62,15 @@ public class JavaScriptBridge {
     }
 
     /**
+     * Takes a string with the name of the string and adds it to the current coordinate
+     *
+     * @param address String of the address
+     */
+    public void addLocationName(String address) {
+        new MenuController().getController().getManager().getPosition().setAddress(address);
+    }
+
+    /**
      * Refreshes the table
      */
     public void refreshTable() {

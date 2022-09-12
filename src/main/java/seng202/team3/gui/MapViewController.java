@@ -215,7 +215,7 @@ public class MapViewController {
      */
     @FXML
     public void addCharger() {
-        loadPromptScreens("Click on a position on the map (coordinate)\n"
+        loadPromptScreens("Search an address or click on the map\n"
                 + "and confirm to add a charger: \n\n", "add");
     }
 

@@ -99,6 +99,9 @@ public class ChargerController {
             if (charger.getParkingCost()) {
                 costParks.setSelected(true);
             }
+        } else {
+            address.setText(new MenuController().getController()
+                    .getManager().getPosition().getAddress());
         }
     }
 
