@@ -58,6 +58,7 @@
                <String fx:id="Type_2" fx:value="Type 2" />
                <String fx:id="CCS" fx:value="CCS" />
                <String fx:id="CHAdeMO" fx:value="CHAdeMO" />
+               <String fx:id="other" fx:value="Other..." />
             </FXCollections>
          </items>
       </ComboBox>

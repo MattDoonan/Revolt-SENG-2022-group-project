@@ -11,6 +11,8 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.HPos;
+import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -23,7 +25,9 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -119,6 +123,8 @@ public class VehicleController {
 
     private Stage popup = new Stage();
 
+    private Stage popupConnector = new Stage();
+
 
     /**
      * Initialize the window
@@ -164,9 +170,48 @@ public class VehicleController {
      */
     @FXML
     public void addConnection() {
-        connections.add(connectorType.getValue());
-        addedConnections.setText("Connection: "
-                + connectorType.getValue() + "\n" + addedConnections.getText());
+
+
+        if (connectorType.getValue().equals("Other...")) {
+
+
+            GridPane root = new GridPane();
+
+            Button save = new Button("Save");
+            TextField connector = new TextField("Connector Type");
+            // root.getChildren().addAll(connector, save);
+            root.addRow(0, connector);
+            root.addRow(1, save);
+
+            root.setStyle("-fx-padding: 20;");
+
+            // root.getChildren().add(connector);
+            // root.getChildren().add(save);
+
+            save.setOnMouseClicked((MouseEvent event) -> {
+                connections.add(connector.getText());
+                addedConnections.setText("Connection: "
+                        + connector.getText() + "\n" + addedConnections.getText());
+                Stage connectorStage = (Stage) save.getScene().getWindow();
+                connectorStage.close();
+            });
+
+            popupConnector.initModality(Modality.APPLICATION_MODAL);
+            popupConnector.setResizable(false);
+            popupConnector.setTitle("Other Connector");
+            popupConnector.setScene(new Scene(root, 300, 100));
+            popupConnector.showAndWait();
+
+
+        } else {
+            connections.add(connectorType.getValue());
+            addedConnections.setText("Connection: "
+                    + connectorType.getValue() + "\n" + addedConnections.getText());
+        }
+
+        
+
+
         // connectionsText.setText(null);
     }
 
