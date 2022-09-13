@@ -27,6 +27,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import seng202.team3.data.database.SqlInterpreter;
@@ -58,6 +59,15 @@ public class VehicleController {
     private TextArea vehicleDisplayThree;
 
     @FXML
+    private TextArea makeModelOne;
+
+    @FXML
+    private TextArea makeModelTwo;
+
+    @FXML
+    private TextArea makeModelThree;
+
+    @FXML
     private ImageView vehicleImageOne;
 
     @FXML
@@ -65,6 +75,15 @@ public class VehicleController {
 
     @FXML
     private ImageView vehicleImageThree;
+
+    @FXML
+    private TextArea carDetailsOne;
+
+    @FXML
+    private TextArea carDetailsTwo;
+
+    @FXML
+    private TextArea carDetailsThree;
 
     @FXML
     private Button addVehicle;
@@ -329,12 +348,12 @@ public class VehicleController {
      * Adds vehicle data to each display if vehicleData size is large enough
      */
     public void setData() {
-        populateDisplays(vehicleDisplayOne, vehicleImageOne, 0);
+        populateDisplays("one", vehicleImageOne, 0);
         if (vehicleData.size() > 1) {
-            populateDisplays(vehicleDisplayTwo, vehicleImageTwo, 1);
+            populateDisplays("two", vehicleImageTwo, 1);
         }
         if (vehicleData.size() > 2) {
-            populateDisplays(vehicleDisplayThree, vehicleImageThree, 2);
+            populateDisplays("three", vehicleImageThree, 2);
         }
     }
 
@@ -345,26 +364,44 @@ public class VehicleController {
      * @param imageview path to vehicle image
      * @param index     index of the vehicle to display
      */
-    public void populateDisplays(TextArea display, ImageView imageview, int index) {
+    public void populateDisplays(String display, ImageView imageview, int index) {
         if (vehicleData.size() > 0) {
 
-            
-            display.setText(vehicleData.get(index).getMake() + " "
-                    + vehicleData.get(index).getModel() + "\n\n"
-                    + "Current Charge: " + vehicleData.get(index).getBatteryPercent() + "\n"
-                    + "Max. Range: " + vehicleData.get(index).getMaxRange() + "\n"
-                    + "Connections: " + vehicleData.get(index).getConnectors().toString());
-
+            switch (display) {
+                case "one":
+                    makeModelOne.setText(vehicleData.get(index).getMake() + " "
+                        + vehicleData.get(index).getModel() + "\n\n");
+                    carDetailsOne.setText(
+                        "Current Charge: " + vehicleData.get(index).getBatteryPercent() + "\n"
+                        + "Max. Range: " + vehicleData.get(index).getMaxRange() + "\n"
+                        + "Connections: " + vehicleData.get(index).getConnectors().toString());
+                    break;
+                case "two":
+                    makeModelTwo.setText(vehicleData.get(index).getMake() + " "
+                        + vehicleData.get(index).getModel() + "\n\n");
+                    carDetailsTwo.setText(
+                        "Current Charge: " + vehicleData.get(index).getBatteryPercent() + "\n"
+                        + "Max. Range: " + vehicleData.get(index).getMaxRange() + "\n"
+                        + "Connections: " + vehicleData.get(index).getConnectors().toString());
+                    break;
+                case "three":
+                    makeModelThree.setText(vehicleData.get(index).getMake() + " "
+                        + vehicleData.get(index).getModel() + "\n\n");
+                    carDetailsThree.setText(
+                        "Current Charge: " + vehicleData.get(index).getBatteryPercent() + "\n"
+                        + "Max. Range: " + vehicleData.get(index).getMaxRange() + "\n"
+                        + "Connections: " + vehicleData.get(index).getConnectors().toString());
+                    break;
+                default:
+                    break;
+            }
 
             try {
                 if (vehicleData.get(index).getImgPath() != null) {
                     // Image image = new Image(new FileInputStream(
                     //     vehicleData.get(index).getImgPath()));
-
                     Image image = new Image(new FileInputStream(
                         "src/main/resources/images/car_one.png"));
-                        
-                        
                     imageview.setImage(image);
                 } else {
                     imageview.setImage(null);
