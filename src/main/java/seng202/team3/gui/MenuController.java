@@ -67,27 +67,6 @@ public class MenuController {
         initHome();
     }
 
-    /**
-     * Loads the vehicle screen upon click
-     */
-    public void loadVehicleScreen() {
-        try {
-            FXMLLoader vehicleLoader = new FXMLLoader(getClass().getResource(
-                    "/fxml/vehicle.fxml"));
-            AnchorPane root = vehicleLoader.load();
-            Scene modalScene = new Scene(root);
-            Stage modal = new Stage();
-            modal.setScene(modalScene);
-            modal.setResizable(false);
-            modal.setTitle("Vehicle Screen");
-            modal.initModality(Modality.WINDOW_MODAL);
-            modal.showAndWait();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
 
     /**
      * Initialises the welcome page;
@@ -118,6 +97,30 @@ public class MenuController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+
+    /**
+     * Loads the vehicle screen upon click
+     */
+    public void loadVehicleScreen() {
+        try {
+            FXMLLoader vehicleLoader = new FXMLLoader(getClass().getResource(
+                    "/fxml/vehicle.fxml"));
+            AnchorPane root = vehicleLoader.load();
+            VehicleController baseController = vehicleLoader.getController();
+            baseController.init();
+            Scene modalScene = new Scene(root);
+            Stage modal = new Stage();
+            modal.setScene(modalScene);
+            modal.setResizable(false);
+            modal.setTitle("Vehicle Screen");
+            modal.initModality(Modality.WINDOW_MODAL);
+            modal.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
 }
