@@ -122,7 +122,7 @@ public class VehicleController {
 
     private Stage popupConnector = new Stage();
 
-    private VehicleManager manage;
+    private VehicleManager manage = new VehicleManager();
 
 
     /**
@@ -131,18 +131,11 @@ public class VehicleController {
      */
     public void init() {
 
-        manage = new VehicleManager();
+        
         manage.resetQuery();
         manage.getAllVehicles();
         vehicleData = manage.getData();
-
-        // makeTestVehicles();
-        setData(vehicleDisplayOne, vehicleImageOne, 0);
-
-        if (vehicleData.size() > 1) {
-            setData(vehicleDisplayTwo, vehicleImageTwo, 1);
-            setData(vehicleDisplayThree, vehicleImageThree, 2);
-        }
+        setData();
 
         addVehicle.setOnAction(e -> displayPopup());
 
@@ -240,6 +233,9 @@ public class VehicleController {
 
         System.out.println(vehicle);
 
+        // manage = new VehicleManager();
+
+
         // TODO: Vehicles are re-pulled from database, and displayed
 
         // MainController controller = new MenuController().getController();
@@ -249,6 +245,12 @@ public class VehicleController {
 
         Stage popupStage = (Stage) addVehicleBtn.getScene().getWindow();
         popupStage.close();
+
+        manage.resetQuery();
+        manage.getAllVehicles();
+        vehicleData = manage.getData();
+        setData();
+        System.out.println("finished");
     }
 
 
@@ -321,66 +323,85 @@ public class VehicleController {
         popupStage.close();
     }
 
+
     /**
-     * Populate display with index-th vehicle
+     * Adds vehicle data to each display if vehicleData size is large enough
+     */
+    public void setData() {
+        populateDisplays(vehicleDisplayOne, vehicleImageOne, 0);
+        if (vehicleData.size() > 1) {
+            populateDisplays(vehicleDisplayTwo, vehicleImageTwo, 1);
+        }
+        if (vehicleData.size() > 2) {
+            populateDisplays(vehicleDisplayThree, vehicleImageThree, 2);
+        }
+    }
+
+    /**
+     * Populate the given display with the vehicle at the given index
      *
      * @param display   location to put the text
      * @param imageview path to vehicle image
      * @param index     index of the vehicle to display
      */
-    public void setData(TextArea display, ImageView imageview, int index) {
-        display.setText(vehicleData.get(index).getMake() + " "
-                + vehicleData.get(index).getModel() + "\n\n"
-                + "Current Charge: " + vehicleData.get(index).getBatteryPercent() + "\n"
-                + "Max. Range: " + vehicleData.get(index).getMaxRange() + "\n"
-                + "Connections: " + vehicleData.get(index).getConnectors().toString());
+    public void populateDisplays(TextArea display, ImageView imageview, int index) {
+        if (vehicleData.size() > 0) {
+
+            
+            display.setText(vehicleData.get(index).getMake() + " "
+                    + vehicleData.get(index).getModel() + "\n\n"
+                    + "Current Charge: " + vehicleData.get(index).getBatteryPercent() + "\n"
+                    + "Max. Range: " + vehicleData.get(index).getMaxRange() + "\n"
+                    + "Connections: " + vehicleData.get(index).getConnectors().toString());
 
 
-        try {
-            if (vehicleData.get(index).getImgPath() != null) {
-                Image image = new Image(new FileInputStream(vehicleData.get(index).getImgPath()));
-                imageview.setImage(image);
-            } else {
-                imageview.setImage(null);
+            try {
+                if (vehicleData.get(index).getImgPath() != null) {
+                    Image image = new Image(new FileInputStream(
+                        vehicleData.get(index).getImgPath()));
+                    imageview.setImage(image);
+                } else {
+                    imageview.setImage(null);
+                }
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
             }
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         }
 
     }
 
-    /**
-     * Creates test vehicles
-     * TODO: Remove once data can be properly pulled from the database
-     */
-    public void makeTestVehicles() {
+    // /**
+    //  * Creates test vehicles
+    //  * TODO: Remove once data can be properly pulled from the database
+    //  */
+    // public void makeTestVehicles() {
 
-        vehicleData.add(
-                new Vehicle("Nissan", "Leaf", 270, new ArrayList<>()));
-        vehicleData.add(
-                new Vehicle("Nissan", "Leaf E+", 385, new ArrayList<>()));
-        vehicleData.add(
-                new Vehicle("Tesla", "X", 536, new ArrayList<>()));
-        vehicleData.add(
-                new Vehicle("Jaguar", "I-Pace", 470, new ArrayList<>()));
-        vehicleData.add(
-                new Vehicle("Audi", "E-Tron", 441, new ArrayList<>()));
-        vehicleData.add(
-                new Vehicle("Tesla", "5", 637, new ArrayList<>()));
-        vehicleData.add(
-                new Vehicle("Mercedes Benz", "EQC", 430, new ArrayList<>()));
-        vehicleData.add(
-                new Vehicle("Porsche", "Taycan", 480, new ArrayList<>()));
-        vehicleData.get(0).setImgPath("src/main/resources/images/car_one.png");
-        vehicleData.get(1).setImgPath("src/main/resources/images/car_three.png");
-        vehicleData.get(2).setImgPath("src/main/resources/images/car_two.png");
-        vehicleData.get(3).setImgPath("src/main/resources/images/car_one.png");
-        vehicleData.get(4).setImgPath("src/main/resources/images/truck_one.png");
-        vehicleData.get(5).setImgPath("src/main/resources/images/car_three.png");
-        vehicleData.get(6).setImgPath("src/main/resources/images/car_two.png");
-        vehicleData.get(7).setImgPath("src/main/resources/images/truck_two.png");
-    }
+    //     vehicleData.add(
+    //             new Vehicle("Nissan", "Leaf", 270, new ArrayList<>()));
+    //     vehicleData.add(
+    //             new Vehicle("Nissan", "Leaf E+", 385, new ArrayList<>()));
+    //     vehicleData.add(
+    //             new Vehicle("Tesla", "X", 536, new ArrayList<>()));
+    //     vehicleData.add(
+    //             new Vehicle("Jaguar", "I-Pace", 470, new ArrayList<>()));
+    //     vehicleData.add(
+    //             new Vehicle("Audi", "E-Tron", 441, new ArrayList<>()));
+    //     vehicleData.add(
+    //             new Vehicle("Tesla", "5", 637, new ArrayList<>()));
+    //     vehicleData.add(
+    //             new Vehicle("Mercedes Benz", "EQC", 430, new ArrayList<>()));
+    //     vehicleData.add(
+    //             new Vehicle("Porsche", "Taycan", 480, new ArrayList<>()));
+    //     vehicleData.get(0).setImgPath("src/main/resources/images/car_one.png");
+    //     vehicleData.get(1).setImgPath("src/main/resources/images/car_three.png");
+    //     vehicleData.get(2).setImgPath("src/main/resources/images/car_two.png");
+    //     vehicleData.get(3).setImgPath("src/main/resources/images/car_one.png");
+    //     vehicleData.get(4).setImgPath("src/main/resources/images/truck_one.png");
+    //     vehicleData.get(5).setImgPath("src/main/resources/images/car_three.png");
+    //     vehicleData.get(6).setImgPath("src/main/resources/images/car_two.png");
+    //     vehicleData.get(7).setImgPath("src/main/resources/images/truck_two.png");
+    // }
 
     /**
      * Method to call when next button is clicked
@@ -392,9 +413,7 @@ public class VehicleController {
             Vehicle vehicle = vehicleData.get(0);
             vehicleData.remove(vehicle);
             vehicleData.add(vehicle);
-            setData(vehicleDisplayOne, vehicleImageOne, 0);
-            setData(vehicleDisplayTwo, vehicleImageTwo, 1);
-            setData(vehicleDisplayThree, vehicleImageThree, 2);
+            setData();
         }
     }
 
@@ -410,9 +429,7 @@ public class VehicleController {
             Vehicle vehicle = vehicleData.get(vehicleData.size() - 1);
             vehicleData.remove(vehicle);
             vehicleData.add(0, vehicle);
-            setData(vehicleDisplayOne, vehicleImageOne, 0);
-            setData(vehicleDisplayTwo, vehicleImageTwo, 1);
-            setData(vehicleDisplayThree, vehicleImageThree, 2);
+            setData();
         }
     }
 }
