@@ -109,7 +109,7 @@ public class VehicleController {
     private Button addConnection;
 
     @FXML
-    private Button addVehicleBtn;
+    private Button saveChanges;
 
     @FXML
     private Button confirmDelete;
@@ -146,25 +146,11 @@ public class VehicleController {
 
     private Vehicle selectedVehicle;
 
-    private String[] imgNames = {"car_one.png", "car_two.png", "car_three.png",
-        "truck_one.png", "truck_two.png"};
-
-    private String selectedImg;
-
-    private Button saveImg = new Button("Select");
-
-    private Stage popup = new Stage();
-
-    private Stage popupConnector = new Stage();
-
-    private Stage editVehicleStage;
+    private Stage updatePopup = new Stage();
 
     private VehicleManager manage = new VehicleManager();
 
     private VehicleController controller;
-
-    private String status;
-
 
 
     /**
@@ -176,29 +162,23 @@ public class VehicleController {
         manage.getAllVehicles();
         vehicleData = manage.getData();
         setData();
-        addVehicle.setOnAction(e -> displayPopup());
+        addVehicle.setOnAction(e -> displayUpdate());
         addVehicle.setOnAction(e -> selectedVehicle = null);
     }
 
     /**
      * Displays pop-up window to add a new vehicle to the garage
      */
-    public void displayPopup() {
+    @FXML
+    public void displayUpdate() {
+        System.out.println("displayUpdate");
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/vehicle_update.fxml"));
-            popup.initModality(Modality.APPLICATION_MODAL);
-            popup.setResizable(false);
-            popup.setTitle("Add Vehicle");
-            popup.setScene(new Scene(root, 600, 500));
-            popup.showAndWait();
-            // if (selectedVehicle != null) {
-            //     this.licenseText.setText("null");
-            //     this.makeText.setText(selectedVehicle.getMake());
-            //     this.modelText.setText(selectedVehicle.getModel());
-            //     this.maxRangeText.setText(Integer.toString(selectedVehicle.getMaxRange()));
-            //     this.addedConnections.setText(selectedVehicle.getConnectors().toString());
-            //     this.imgName.setText(selectedVehicle.getImgPath());
-            // }
+            updatePopup.initModality(Modality.APPLICATION_MODAL);
+            updatePopup.setResizable(false);
+            updatePopup.setTitle("Vehicle Information");
+            updatePopup.setScene(new Scene(root, 600, 500));
+            updatePopup.showAndWait();
         } catch (IOException e) {
             Logger logger = Logger.getLogger(getClass().getName());
             logger.log(Level.SEVERE, "Failed to create new Window.", e);
@@ -208,117 +188,12 @@ public class VehicleController {
 
 
     /**
-     * Adds a new connection (for an EV) when the button is clicked
-     */
-    @FXML
-    public void addConnection() {
-        if (connectorType.getValue().equals("Other...")) {
-            GridPane root = new GridPane();
-
-            Button save = new Button("Save");
-            TextField connector = new TextField("Connector Type");
-            // root.getChildren().addAll(connector, save);
-            root.addRow(0, connector);
-            root.addRow(1, save);
-            root.setStyle("-fx-padding: 20;");
-
-            // root.getChildren().add(connector);
-            // root.getChildren().add(save);
-
-            save.setOnMouseClicked((MouseEvent event) -> {
-                connections.add(connector.getText());
-                addedConnections.setText("Connection: "
-                        + connector.getText() + "\n" + addedConnections.getText());
-                Stage connectorStage = (Stage) save.getScene().getWindow();
-                connectorStage.close();
-            });
-
-            popupConnector.initModality(Modality.APPLICATION_MODAL);
-            popupConnector.setResizable(false);
-            popupConnector.setTitle("Other Connector");
-            popupConnector.setScene(new Scene(root, 300, 100));
-            popupConnector.showAndWait();
-
-
-        } else {
-            connections.add(connectorType.getValue());
-            addedConnections.setText("Connection: "
-                    + connectorType.getValue() + "\n" + addedConnections.getText());
-        }
-    }
-
-    /**
-     * Saves the changes; if new, will use the coordinates to make an entry
-     */
-    @FXML
-    public void addVehicle() {
-        Vehicle vehicle;
-        System.out.println("selectedVehicle: " + selectedVehicle);
-        System.out.println("selectedVehicle null?: " + Boolean.toString(selectedVehicle == null));
-
-        if (selectedVehicle != null) {
-            selectedVehicle.setImgPath("src/main/resources/images/" + selectedImg);
-            selectedVehicle.setConnectors(connections);
-            selectedVehicle.setMaxRange(Integer.parseInt(maxRangeText.getText()));
-            selectedVehicle.setModel(modelText.getText());
-            selectedVehicle.setMake(makeText.getText());
-            vehicle = selectedVehicle;
-            System.out.println("VControl selectedVehicleID: " + selectedVehicle.getVehicleId());
-
-        } else {
-            vehicle = new Vehicle(makeText.getText(),
-            modelText.getText(),
-            Integer.parseInt(maxRangeText.getText()), connections);
-            vehicle.setImgPath("src/main/resources/images/" + selectedImg);
-            System.out.println("VControl vehicleid: " + vehicle.getVehicleId());
-        }
-
-        System.out.println("VControl VehicleID: " + vehicle.getVehicleId());
-
-        try {
-            SqlInterpreter.getInstance().writeVehicle(vehicle);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // vehicleData.add(vehicle);
-
-        System.out.println(vehicle);
-        selectedVehicle = null;
-
-        // manage = new VehicleManager();
-
-
-        // TODO: Vehicles are re-pulled from database, and displayed
-
-        // MainController controller = new MenuController().getController();
-        // controller.getMapController().addChargersOnMap();
-        // controller.viewChargers(newCharger);
-        // stage.close();
-
-        Stage popupStage = (Stage) addVehicleBtn.getScene().getWindow();
-        popupStage.close();
-        
-        // manage.resetQuery();
-        // manage.getAllVehicles();
-        // vehicleData = manage.getData();
-        // setData();
-        // System.out.println("finished");
-
-    }
-
-
-
-
-    /**
      * Launches the editable portion
      *
      * @param vehicle the {@link Vehicle} for the vehicle info. Null if adding.
      */
     public void launchEditable(Vehicle vehicle) {
-        // editVehicleStage = (Stage) addVehicleBtn.getScene().getWindow();
         try {
-            // editVehicleStage.setAlwaysOnTop(false);
             FXMLLoader vehicleEdit = new FXMLLoader(getClass().getResource(
                     "/fxml/vehicle_update.fxml"));
             AnchorPane root = vehicleEdit.load();
@@ -328,7 +203,7 @@ public class VehicleController {
             modal.setResizable(false);
             modal.setTitle("Vehicle Information");
             modal.initModality(Modality.WINDOW_MODAL);
-            VehicleController controller = vehicleEdit.getController();
+            VehicleUpdateController controller = vehicleEdit.getController();
             controller.setController(this);
             controller.displayInfo(vehicle);
             modal.setAlwaysOnTop(true);
@@ -366,19 +241,11 @@ public class VehicleController {
 
 
     /**
-     * Executes a delete prompt
-     */
-    @FXML
-    public void deleteVehiclePrompt(ActionEvent event) {
-        
-    }
-
-    /**
-     * Allows a user to delete a vehicle
+     * Sets the vehicle to be deleted
      * @paramn event
      */
     @FXML
-    public void deleteVehicle(ActionEvent event) {
+    public void setDelete(ActionEvent event) {
         String source = ((Button) event.getSource()).getId();
         System.out.println("delete source: " + source);
 
@@ -399,6 +266,41 @@ public class VehicleController {
         launchDelete(selectedVehicle);
 
     }
+
+
+    /**
+     * Launches the confirm delete popup
+     *
+     * @param vehicle the vehicle to be deleted
+    */
+    public void launchDelete(Vehicle vehicle) {
+
+        System.out.println("promptscreen1 selectedVehicle: " + selectedVehicle);
+        try {
+            FXMLLoader vehicleDelete = new FXMLLoader(getClass().getResource(
+                    "/fxml/vehicle_prompt.fxml"));
+            VBox root = vehicleDelete.load();
+            Scene modalScene = new Scene(root);
+            Stage modal = new Stage();
+            modal.setScene(modalScene);
+            modal.setResizable(false);
+            modal.setTitle("Delete Vehicle:");
+            modal.initModality(Modality.WINDOW_MODAL);
+            VehicleController controller = vehicleDelete.getController();
+            controller.setController(this);
+            modal.setAlwaysOnTop(true);
+            modal.showAndWait();
+            System.out.println("promptscreen2 selectedVehicle: " + selectedVehicle);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            System.out.println("promptscreen3 selectedVehicle: " + selectedVehicle);
+            setData();
+        }
+    }
+
+
 
     /**
      * Deletes the selected vehicle
@@ -429,7 +331,6 @@ public class VehicleController {
         System.out.println("selectedVehicleDelete: " + selectedVehicle);
         cancel();
         confirmDelete();
-        status = "confirm";
     }
 
     /**
@@ -437,52 +338,11 @@ public class VehicleController {
      */
     @FXML
     public void cancel() {
-        status = "cancel";
         Stage stage = (Stage) inputBox.getScene().getWindow();
         stage.close();
     }
 
-    /**
-     * Loads a generic prompt screen pop-up {@link PromptPopUp}
-     *
-     * @param vehicle the vehicle to be deleted
-     */
-    public void launchDelete(Vehicle vehicle) {
 
-        System.out.println("promptscreen1 selectedVehicle: " + selectedVehicle);
-        try {
-            FXMLLoader vehicleDelete = new FXMLLoader(getClass().getResource(
-                    "/fxml/vehicle_prompt.fxml"));
-            VBox root = vehicleDelete.load();
-            Scene modalScene = new Scene(root);
-            Stage modal = new Stage();
-            modal.setScene(modalScene);
-            modal.setResizable(false);
-            modal.setTitle("Delete Vehicle:");
-            modal.initModality(Modality.WINDOW_MODAL);
-            VehicleController controller = vehicleDelete.getController();
-            controller.setController(this);
-
-
-            // PromptPopUp popController = popUp.getController();
-            // popController.addPrompt(prompt, type);
-
-            // inputBox.setText(prompt);
-            // stage = (Stage) inputBox.getScene().getWindow();
-            modal.setAlwaysOnTop(true);
-            modal.showAndWait();
-            System.out.println("promptscreen2 selectedVehicle: " + selectedVehicle);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            System.out.println("status: " + status);
-            System.out.println("promptscreen3 selectedVehicle: " + selectedVehicle);
-            setData();
-            // addChargersOnMap();
-            // new MenuController().getController().viewChargers(null);
-        }
-    }
 
 
     /**
@@ -495,7 +355,7 @@ public class VehicleController {
     }
 
     /**
-     * Displays all the info of the connector, if there is a connector
+     * Displays all the info of the vehicle, if there is a vehicle
      */
     public void displayInfo(Vehicle vehicle) {
         // System.out.println("vehicle: " + vehicle.toString());
@@ -513,65 +373,11 @@ public class VehicleController {
     }
 
 
-    /**
-     * Lets the user select an image (from a list) to represent their vehicle
-     */
-    @FXML
-    public void selectImg() {
-        try {
-            saveImg.setOnAction(e -> save());
-            saveImg.setLayoutX(538);
-            saveImg.setLayoutY(360);
 
-            for (int i = 0; i < imgNames.length; i++) {
 
-                Image img = new Image(new FileInputStream("src/main/resources/images/"
-                    + imgNames[i]));
-                ImageView view = new ImageView(img);
-                Button button = new Button();
-                button.setGraphic(view);
-                button.setId(imgNames[i]);
-                imgBtns.add(button);
-                button.setOnAction(e -> btnSelected(e));
-            }
-            VBox anchor = new VBox();
-            anchor.getChildren().addAll(imgBtns);
 
-            ScrollPane imgsDisplay = new ScrollPane();
-            imgsDisplay.setPrefViewportWidth(570);
-            imgsDisplay.setPrefViewportHeight(330);
-            imgsDisplay.setContent(anchor);
-            imgsDisplay.setPannable(true);
-            AnchorPane root = new AnchorPane();
-            root.getChildren().addAll(imgsDisplay, saveImg);
-            popup.initModality(Modality.APPLICATION_MODAL);
-            popup.setResizable(false);
-            popup.setTitle("Select Image");
-            popup.setScene(new Scene(root, 600, 400));
-            popup.showAndWait();
-        } catch (IOException e) {
-            Logger logger = Logger.getLogger(getClass().getName());
-            logger.log(Level.SEVERE, "Failed to create new Window.", e);
-        }
-    }
 
-    /**
-     * Updates selectedImg to the ID of the currently-selected image
-     * @param e ActionEvent
-     */
-    public void btnSelected(ActionEvent e) {
-        selectedImg = ((Node) e.getSource()).getId();
-    }
 
-    /**
-     * Saves the currently selected image for the user's vehicle
-     */
-    public void save() {
-        System.out.println(selectedImg);
-        imgName.setText(selectedImg);
-        Stage popupStage = (Stage) saveImg.getScene().getWindow();
-        popupStage.close();
-    }
 
 
     /**

@@ -34,7 +34,7 @@
             <Font size="14.0" />
          </font>
       </Label>
-      <Button fx:id="addVehicleBtn" layoutX="260.0" layoutY="348.0" mnemonicParsing="false" onAction="#addVehicle" text="Add Vehicle" />
+      <Button fx:id="saveChanges" layoutX="260.0" layoutY="348.0" mnemonicParsing="false" onAction="#addVehicle" text="Add Vehicle" />
       <Label layoutX="251.0" layoutY="31.0" text="New Vehicle">
          <font>
             <Font size="18.0" />
