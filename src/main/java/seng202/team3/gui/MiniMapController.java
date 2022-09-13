@@ -73,7 +73,6 @@ public class MiniMapController {
     public void getCoordinateWithAddress() {
         MainController main = new MenuController().getController();
         if (main.getManager().getPosition() != null) {
-            manager.setCoordinate(main.getManager().getPosition());
             System.out.println(main.getManager().getPosition().getAddress());
         }
         main.getManager().setPosition(null);
