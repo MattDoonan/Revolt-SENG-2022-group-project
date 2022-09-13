@@ -29,7 +29,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Vehicle;
+import seng202.team3.logic.VehicleManager;
 
 
 /**
@@ -120,13 +122,21 @@ public class VehicleController {
 
     private Stage popupConnector = new Stage();
 
+    private VehicleManager manage;
+
 
     /**
      * Initialize the window
      *
      */
     public void init() {
-        makeTestVehicles();
+
+        manage = new VehicleManager();
+        manage.resetQuery();
+        manage.getAllVehicles();
+        vehicleData = manage.getData();
+
+        // makeTestVehicles();
         setData(vehicleDisplayOne, vehicleImageOne, 0);
 
         if (vehicleData.size() > 1) {
@@ -211,7 +221,7 @@ public class VehicleController {
     }
 
     /**
-     * Adds the new vehicle to the list of vehicles (doesn't work quite yet)
+     * Saves the changes; if new, will use the coordinates to make an entry
      */
     @FXML
     public void addVehicle() {
@@ -219,9 +229,23 @@ public class VehicleController {
                 modelText.getText(),
                 Integer.parseInt(maxRangeText.getText()), connections);
         vehicle.setImgPath("src/main/resources/images/" + selectedImg);
-        vehicleData.add(vehicle);
+
+        try {
+            SqlInterpreter.getInstance().writeVehicle(vehicle);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // vehicleData.add(vehicle);
 
         System.out.println(vehicle);
+
+        // TODO: Vehicles are re-pulled from database, and displayed
+
+        // MainController controller = new MenuController().getController();
+        // controller.getMapController().addChargersOnMap();
+        // controller.viewChargers(newCharger);
+        // stage.close();
 
         Stage popupStage = (Stage) addVehicleBtn.getScene().getWindow();
         popupStage.close();
