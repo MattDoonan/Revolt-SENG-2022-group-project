@@ -99,7 +99,6 @@ public class SearchFilterTextFX extends TestFXBase {
         clickOn("#filters");
         clickOn("#chargerTypes");
         clickOn("#acButton");
-        clickOn("#filters");
         clickOn("#chargingCost");
         clickOn("#executeSearch");
         ObservableList<Charger> chargers = controller.getManager().getCloseChargerData();
