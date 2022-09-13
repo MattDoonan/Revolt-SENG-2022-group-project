@@ -87,8 +87,6 @@ public class VehicleUpdateController {
     }
 
 
-
-
     /**
      * Saves the changes; if new, will use the coordinates to make an entry
      */
@@ -121,7 +119,6 @@ public class VehicleUpdateController {
         selectedVehicle = null;
         Stage popupStage = (Stage) saveChanges.getScene().getWindow();
         popupStage.close();
-
     }
 
 

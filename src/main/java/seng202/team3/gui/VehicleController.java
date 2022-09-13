@@ -158,12 +158,19 @@ public class VehicleController {
      *
      */
     public void init() {
+        refresh();
+        // openVehicleUpdate.setOnAction(e -> displayUpdate());
+        // openVehicleUpdate.setOnAction(e -> selectedVehicle = null);
+    }
+
+    /**
+     * Refresh the garage display with the user's up-to-date vehicles
+     */
+    public void refresh() {
         manage.resetQuery();
         manage.getAllVehicles();
         vehicleData = manage.getData();
         setData();
-        // openVehicleUpdate.setOnAction(e -> displayUpdate());
-        // openVehicleUpdate.setOnAction(e -> selectedVehicle = null);
     }
 
     // /**
@@ -191,7 +198,6 @@ public class VehicleController {
      */
     @FXML
     public void displayUpdate() {
-        System.out.println("clickme");
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/vehicle_update.fxml"));
             updatePopup.initModality(Modality.APPLICATION_MODAL);
@@ -202,6 +208,8 @@ public class VehicleController {
         } catch (IOException e) {
             Logger logger = Logger.getLogger(getClass().getName());
             logger.log(Level.SEVERE, "Failed to create new Window.", e);
+        } finally {
+            refresh();
         }
     }
 
