@@ -45,6 +45,8 @@ public class VehicleController {
 
     // private static final Logger log = LogManager.getLogger();
 
+    @FXML
+    private Label inputBox;
 
     @FXML
     private ListView<String> vehicleList;
@@ -110,6 +112,9 @@ public class VehicleController {
     private Button addVehicleBtn;
 
     @FXML
+    private Button confirmDelete;
+
+    @FXML
     private Label addedConnections;
 
     @FXML
@@ -157,6 +162,8 @@ public class VehicleController {
     private VehicleManager manage = new VehicleManager();
 
     private VehicleController controller;
+
+    private String status;
 
 
 
@@ -323,7 +330,6 @@ public class VehicleController {
             modal.initModality(Modality.WINDOW_MODAL);
             VehicleController controller = vehicleEdit.getController();
             controller.setController(this);
-            // controller.addConnector(connector);
             controller.displayInfo(vehicle);
             modal.setAlwaysOnTop(true);
             modal.showAndWait();
@@ -341,8 +347,7 @@ public class VehicleController {
     @FXML
     public void editVehicle(ActionEvent event) {
         String source = ((Button) event.getSource()).getId();
-        System.out.println("source: " + source);
-
+        System.out.println("edit source: " + source);
         switch (source) {
             case "editCarOne":
                 selectedVehicle = vehicleData.get(0);
@@ -357,15 +362,16 @@ public class VehicleController {
                 break;
         }
         launchEditable(selectedVehicle);
-        // displayPopup(selectedVehicle);
-        // licenseText.setText("null");
-        // makeText.setText(selectedVehicle.getMake());
-        // modelText.setText(selectedVehicle.getModel());
-        // maxRangeText.setText(Integer.toString(selectedVehicle.getMaxRange()));
-        // addedConnections.setText(selectedVehicle.getConnectors().toString());
-        // imgName.setText(selectedVehicle.getImgPath());
     }
 
+
+    /**
+     * Executes a delete prompt
+     */
+    @FXML
+    public void deleteVehiclePrompt(ActionEvent event) {
+        
+    }
 
     /**
      * Allows a user to delete a vehicle
@@ -373,7 +379,111 @@ public class VehicleController {
      */
     @FXML
     public void deleteVehicle(ActionEvent event) {
+        String source = ((Button) event.getSource()).getId();
+        System.out.println("delete source: " + source);
+
+        switch (source) {
+            case "deleteCarOne":
+                selectedVehicle = vehicleData.get(0);
+                break;
+            case "deleteCarTwo":
+                selectedVehicle = vehicleData.get(1);
+                break;
+            case "deleteCarThree":
+                selectedVehicle = vehicleData.get(2);  
+                break;
+            default:
+                break;
+        }
+
+        launchDelete(selectedVehicle);
+
     }
+
+    /**
+     * Deletes the selected vehicle
+     */
+    public void confirmDelete() {
+        System.out.println("selectedVehicle: " + selectedVehicle);
+        if (selectedVehicle != null) {
+            try {
+                SqlInterpreter.getInstance().deleteData("vehicle", 
+                    selectedVehicle.getVehicleId());
+                selectedVehicle = null;
+                // getAllVehicles();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                cancel();
+            }
+        }
+
+    }
+
+
+    /**
+     * Deletes the selected vehicle
+     */
+    @FXML
+    public void confirm() {
+        System.out.println("selectedVehicleDelete: " + selectedVehicle);
+        cancel();
+        confirmDelete();
+        status = "confirm";
+    }
+
+    /**
+     * Cancels and closes the window
+     */
+    @FXML
+    public void cancel() {
+        status = "cancel";
+        Stage stage = (Stage) inputBox.getScene().getWindow();
+        stage.close();
+    }
+
+    /**
+     * Loads a generic prompt screen pop-up {@link PromptPopUp}
+     *
+     * @param vehicle the vehicle to be deleted
+     */
+    public void launchDelete(Vehicle vehicle) {
+
+        System.out.println("promptscreen1 selectedVehicle: " + selectedVehicle);
+        try {
+            FXMLLoader vehicleDelete = new FXMLLoader(getClass().getResource(
+                    "/fxml/vehicle_prompt.fxml"));
+            VBox root = vehicleDelete.load();
+            Scene modalScene = new Scene(root);
+            Stage modal = new Stage();
+            modal.setScene(modalScene);
+            modal.setResizable(false);
+            modal.setTitle("Delete Vehicle:");
+            modal.initModality(Modality.WINDOW_MODAL);
+            VehicleController controller = vehicleDelete.getController();
+            controller.setController(this);
+
+
+            // PromptPopUp popController = popUp.getController();
+            // popController.addPrompt(prompt, type);
+
+            // inputBox.setText(prompt);
+            // stage = (Stage) inputBox.getScene().getWindow();
+            modal.setAlwaysOnTop(true);
+            modal.showAndWait();
+            System.out.println("promptscreen2 selectedVehicle: " + selectedVehicle);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            System.out.println("status: " + status);
+            System.out.println("promptscreen3 selectedVehicle: " + selectedVehicle);
+            setData();
+            // addChargersOnMap();
+            // new MenuController().getController().viewChargers(null);
+        }
+    }
+
 
     /**
      * Sets the ConnectorController holding all the controllers
@@ -388,8 +498,8 @@ public class VehicleController {
      * Displays all the info of the connector, if there is a connector
      */
     public void displayInfo(Vehicle vehicle) {
-        System.out.println("vehicle: " + vehicle.toString());
-        System.out.println("vehicleID: " + Integer.toString(vehicle.getVehicleId()));
+        // System.out.println("vehicle: " + vehicle.toString());
+        // System.out.println("vehicleID: " + Integer.toString(vehicle.getVehicleId()));
         selectedVehicle = vehicle;
         if (vehicle != null) {
             licenseText.setText("null");
