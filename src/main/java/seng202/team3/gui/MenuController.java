@@ -123,5 +123,21 @@ public class MenuController {
 
     }
 
+    /**
+     * Initialises the welcome page;
+     */
+    public void loadTableView() {
+        try {
+            FXMLLoader mainScene = new FXMLLoader(getClass()
+                    .getResource("/fxml/main_table.fxml"));
+            Parent mainNode = mainScene.load();
+            TableController controller = mainScene.getController();
+            controller.init(stage);
+            mainWindow.setCenter(mainNode);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }

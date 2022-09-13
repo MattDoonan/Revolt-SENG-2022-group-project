@@ -46,7 +46,7 @@ public class JavaScriptBridge {
      * @param latlng the string to be parsed
      * @return {@link Coordinate}, the coordinate end product
      */
-    private Coordinate parseCoordinate(String latlng) {
+    public Coordinate parseCoordinate(String latlng) {
         JSONParser parser = new JSONParser();
         Coordinate coord = new Coordinate();
         try {
@@ -60,6 +60,7 @@ public class JavaScriptBridge {
         }
         return coord;
     }
+
 
     /**
      * Takes a string with the name of the string and adds it to the current coordinate

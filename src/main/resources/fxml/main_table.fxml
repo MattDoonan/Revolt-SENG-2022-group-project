@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.TableController">
    <center>
       <TableView prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <columns>
@@ -17,14 +17,16 @@
       <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
    </padding>
    <top>
-      <MenuBar BorderPane.alignment="CENTER">
+      <MenuBar prefHeight="27.0" prefWidth="463.0" BorderPane.alignment="CENTER">
         <menus>
-          <Menu mnemonicParsing="false" text="Select Columns">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Close" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Filter Chargers">
+            <Menu mnemonicParsing="false" style="-fx-font-size: 17" text="Adjust Table">
+              <items>
+                <MenuItem mnemonicParsing="false" text="Reload Table" />
+                  <MenuItem mnemonicParsing="false" text="Reset Table" />
+              </items>
+            </Menu>
+          <Menu mnemonicParsing="false" style="-fx-font-size: 17" text="Select Columns" />
+          <Menu mnemonicParsing="false" style="-fx-font-size: 17" text="Filter Chargers">
             <items>
                         <Menu fx:id="chargerTypes" mnemonicParsing="false" text="Charger Types">
                             <items>
@@ -58,11 +60,11 @@
 
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Modify Chargers">
+          <Menu mnemonicParsing="false" style="-fx-font-size: 17" text="Modify Chargers">
                <items>
-                  <MenuItem mnemonicParsing="false" text="Add Charger" />
-                  <MenuItem mnemonicParsing="false" text="Edit Charger" />
-                  <MenuItem mnemonicParsing="false" text="Delete Charger" />
+                  <MenuItem mnemonicParsing="false" onAction="#addCharger" text="Add Charger" />
+                  <MenuItem mnemonicParsing="false" onAction="#editCharger" text="Edit Charger" />
+                  <MenuItem mnemonicParsing="false" onAction="#deleteCharger" text="Delete Charger" />
                </items>
           </Menu>
         </menus>

@@ -40,6 +40,7 @@
         let isRoute;
         let routeToCharger;
         let pointCoordinates = []; // contains a list of all the coordinates in a route in order.
+        let isMini = false;
 
         /**
          * Creates a red icon
@@ -63,7 +64,7 @@
             initMap: initMap,
             clearMarkers: clearMarkers,
             addLocationToRoute: addLocationToRoute,
-            addCoordinateName: addCoordinateName
+            addCoordinateName: addCoordinateName,
         };
 
 
@@ -82,7 +83,6 @@
             this.id = id;
             this.type = type;
         }
-
 
         /**
          * creates and initialises the Google map, also defines on click event that calls java code
@@ -153,7 +153,9 @@
                 removeCoordinate()
                 addCoordinate(e.geocode.name, latlng.lat, latlng.lng)
                 javaScriptBridge.addLocationName(e.geocode.name)
-                javaScriptBridge.refreshTable()
+                if (!isMini) {
+                    javaScriptBridge.refreshTable()
+                }
             })
             return searchBar;
         }
