@@ -13,7 +13,7 @@ import seng202.team3.data.entity.Vehicle;
  * @author Celia Allen
  * @version 1.0.0, Sep 22
  */
-public class VehicleEditController {
+public class VehicleUpdateController {
 
     @FXML
     private TextField licenseText;
@@ -43,7 +43,7 @@ public class VehicleEditController {
     /**
      * Initialises the Vehicle editing
      */
-    public VehicleEditController() {
+    public VehicleUpdateController() {
     }
 
     /**

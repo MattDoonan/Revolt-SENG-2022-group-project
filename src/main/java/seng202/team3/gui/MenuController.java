@@ -106,7 +106,7 @@ public class MenuController {
     public void loadVehicleScreen() {
         try {
             FXMLLoader vehicleLoader = new FXMLLoader(getClass().getResource(
-                    "/fxml/vehicle.fxml"));
+                    "/fxml/garage.fxml"));
             AnchorPane root = vehicleLoader.load();
             VehicleController baseController = vehicleLoader.getController();
             baseController.init();

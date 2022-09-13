@@ -36,7 +36,7 @@ import seng202.team3.logic.VehicleManager;
 //TODO: seperate out VehicleController to VehicleEditController
 
 /**
- * Controller for the vehicle.fxml window
+ * Controller for the garage.fxml window
  * 
  * @author Team 3
  * @version 1.0.3, Aug 22
@@ -185,7 +185,7 @@ public class VehicleController {
      */
     public void displayPopup() {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/fxml/new_vehicle.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/fxml/vehicle_update.fxml"));
             popup.initModality(Modality.APPLICATION_MODAL);
             popup.setResizable(false);
             popup.setTitle("Add Vehicle");
@@ -320,7 +320,7 @@ public class VehicleController {
         try {
             // editVehicleStage.setAlwaysOnTop(false);
             FXMLLoader vehicleEdit = new FXMLLoader(getClass().getResource(
-                    "/fxml/new_vehicle.fxml"));
+                    "/fxml/vehicle_update.fxml"));
             AnchorPane root = vehicleEdit.load();
             Scene modalScene = new Scene(root);
             Stage modal = new Stage();
