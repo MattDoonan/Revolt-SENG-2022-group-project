@@ -76,6 +76,24 @@ public class VehicleController {
     private TextArea carDetailsThree;
 
     @FXML
+    private Button editCarOne;
+
+    @FXML
+    private Button editCarTwo;
+
+    @FXML
+    private Button editCarThree;
+
+    @FXML
+    private Button deleteCarOne;
+
+    @FXML
+    private Button deleteCarTwo;
+
+    @FXML
+    private Button deleteCarThree;
+
+    @FXML
     private Button addVehicle;
 
     @FXML
@@ -120,6 +138,8 @@ public class VehicleController {
 
     private ArrayList<String> connections = new ArrayList<String>();
 
+    private Vehicle selectedVehicle;
+
     private String[] imgNames = {"car_one.png", "car_two.png", "car_three.png",
         "truck_one.png", "truck_two.png"};
 
@@ -131,7 +151,12 @@ public class VehicleController {
 
     private Stage popupConnector = new Stage();
 
+    private Stage editVehicleStage;
+
     private VehicleManager manage = new VehicleManager();
+
+    private VehicleController controller;
+
 
 
     /**
@@ -139,31 +164,32 @@ public class VehicleController {
      *
      */
     public void init() {
-
-        
         manage.resetQuery();
         manage.getAllVehicles();
         vehicleData = manage.getData();
         setData();
-
-        addVehicle.setOnAction(e -> displayPopup());
-
+        addVehicle.setOnAction(e -> displayPopup(selectedVehicle));
     }
 
     /**
      * Displays pop-up window to add a new vehicle to the garage
      */
-    public void displayPopup() {
+    public void displayPopup(Vehicle selectedVehicle) {
         try {
-
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/new_vehicle.fxml"));
             popup.initModality(Modality.APPLICATION_MODAL);
             popup.setResizable(false);
             popup.setTitle("Add Vehicle");
             popup.setScene(new Scene(root, 600, 500));
             popup.showAndWait();
-
-
+            // if (selectedVehicle != null) {
+            //     this.licenseText.setText("null");
+            //     this.makeText.setText(selectedVehicle.getMake());
+            //     this.modelText.setText(selectedVehicle.getModel());
+            //     this.maxRangeText.setText(Integer.toString(selectedVehicle.getMaxRange()));
+            //     this.addedConnections.setText(selectedVehicle.getConnectors().toString());
+            //     this.imgName.setText(selectedVehicle.getImgPath());
+            // }
         } catch (IOException e) {
             Logger logger = Logger.getLogger(getClass().getName());
             logger.log(Level.SEVERE, "Failed to create new Window.", e);
@@ -177,11 +203,7 @@ public class VehicleController {
      */
     @FXML
     public void addConnection() {
-
-
         if (connectorType.getValue().equals("Other...")) {
-
-
             GridPane root = new GridPane();
 
             Button save = new Button("Save");
@@ -189,7 +211,6 @@ public class VehicleController {
             // root.getChildren().addAll(connector, save);
             root.addRow(0, connector);
             root.addRow(1, save);
-
             root.setStyle("-fx-padding: 20;");
 
             // root.getChildren().add(connector);
@@ -215,11 +236,6 @@ public class VehicleController {
             addedConnections.setText("Connection: "
                     + connectorType.getValue() + "\n" + addedConnections.getText());
         }
-
-
-
-
-        // connectionsText.setText(null);
     }
 
     /**
@@ -261,6 +277,106 @@ public class VehicleController {
         // setData();
         // System.out.println("finished");
 
+    }
+
+
+
+
+    /**
+     * Launches the editable portion
+     *
+     * @param vehicle the {@link Vehicle} for the vehicle info. Null if adding.
+     */
+    public void launchEditable(Vehicle vehicle) {
+        // editVehicleStage = (Stage) addVehicleBtn.getScene().getWindow();
+        try {
+            // editVehicleStage.setAlwaysOnTop(false);
+            FXMLLoader vehicleEdit = new FXMLLoader(getClass().getResource(
+                    "/fxml/new_vehicle.fxml"));
+            AnchorPane root = vehicleEdit.load();
+            Scene modalScene = new Scene(root);
+            Stage modal = new Stage();
+            modal.setScene(modalScene);
+            modal.setResizable(false);
+            modal.setTitle("Vehicle Information");
+            modal.initModality(Modality.WINDOW_MODAL);
+            VehicleController controller = vehicleEdit.getController();
+            controller.setController(this);
+            // controller.addConnector(connector);
+            controller.displayInfo(vehicle);
+            modal.setAlwaysOnTop(true);
+            modal.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            setData();
+        }
+    }
+
+    /**
+     * Allows a user to edit a vehicle
+     * @paramn event
+     */
+    @FXML
+    public void editVehicle(ActionEvent event) {
+        String source = ((Button) event.getSource()).getId();
+        System.out.println("source: " + source);
+
+        switch (source) {
+            case "editCarOne":
+                selectedVehicle = vehicleData.get(0);
+                break;
+            case "editCarTwo":
+                selectedVehicle = vehicleData.get(1);
+                break;
+            case "editCarThree":
+                selectedVehicle = vehicleData.get(2);  
+                break;
+            default:
+                break;
+        }
+        launchEditable(selectedVehicle);
+        // displayPopup(selectedVehicle);
+        // licenseText.setText("null");
+        // makeText.setText(selectedVehicle.getMake());
+        // modelText.setText(selectedVehicle.getModel());
+        // maxRangeText.setText(Integer.toString(selectedVehicle.getMaxRange()));
+        // addedConnections.setText(selectedVehicle.getConnectors().toString());
+        // imgName.setText(selectedVehicle.getImgPath());
+    }
+
+
+    /**
+     * Allows a user to delete a vehicle
+     * @paramn event
+     */
+    @FXML
+    public void deleteVehicle(ActionEvent event) {
+    }
+
+    /**
+     * Sets the ConnectorController holding all the controllers
+     *
+     * @param controller ConnectorController controller
+     */
+    public void setController(VehicleController controller) {
+        this.controller = controller;
+    }
+
+    /**
+     * Displays all the info of the connector, if there is a connector
+     */
+    public void displayInfo(Vehicle vehicle) {
+        System.out.println("vehicle: " + vehicle.toString());
+        System.out.println("vehicleID: " + Integer.toString(vehicle.getVehicleId()));
+        if (vehicle != null) {
+            licenseText.setText("null");
+            makeText.setText(vehicle.getMake());
+            modelText.setText(vehicle.getModel());
+            maxRangeText.setText(Integer.toString(vehicle.getMaxRange()));
+            addedConnections.setText(vehicle.getConnectors().toString());
+            imgName.setText(vehicle.getImgPath());
+        }
     }
 
 
