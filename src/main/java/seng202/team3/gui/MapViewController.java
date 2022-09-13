@@ -56,18 +56,6 @@ public class MapViewController {
         this.stage.sizeToScene();
     }
 
-    /**
-     * Function to load map html file
-     *
-     * @return String of html file
-     */
-    private String getHtml() {
-        InputStream is = getClass().getResourceAsStream("/html/map.html");
-        return new BufferedReader(
-                new InputStreamReader(is, StandardCharsets.UTF_8))
-                .lines()
-                .collect(Collectors.joining("\n"));
-    }
 
     /**
      * Initialises the map by loading the html into the webengine
@@ -75,7 +63,7 @@ public class MapViewController {
     private void initMap() {
         webEngine = webView.getEngine();
         webEngine.setJavaScriptEnabled(true);
-        webEngine.loadContent(getHtml());
+        webEngine.load(getClass().getClassLoader().getResource("html/map.html").toExternalForm());
 
         webEngine.getLoadWorker().stateProperty().addListener(
                 (ov, oldState, newState) -> {
@@ -215,6 +203,7 @@ public class MapViewController {
      */
     @FXML
     public void addCharger() {
+        javaScriptConnector.call("addCoordinateName");
         loadPromptScreens("Search an address or click on the map\n"
                 + "and confirm to add a charger: \n\n", "add");
     }
