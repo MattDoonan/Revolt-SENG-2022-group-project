@@ -27,7 +27,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.TextFlow;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import seng202.team3.data.database.SqlInterpreter;
@@ -48,15 +47,6 @@ public class VehicleController {
 
     @FXML
     private ListView<String> vehicleList;
-
-    @FXML
-    private TextArea vehicleDisplayOne;
-
-    @FXML
-    private TextArea vehicleDisplayTwo;
-
-    @FXML
-    private TextArea vehicleDisplayThree;
 
     @FXML
     private TextArea makeModelOne;
@@ -370,7 +360,7 @@ public class VehicleController {
             switch (display) {
                 case "one":
                     makeModelOne.setText(vehicleData.get(index).getMake() + " "
-                        + vehicleData.get(index).getModel() + "\n\n");
+                        + vehicleData.get(index).getModel());
                     carDetailsOne.setText(
                         "Current Charge: " + vehicleData.get(index).getBatteryPercent() + "\n"
                         + "Max. Range: " + vehicleData.get(index).getMaxRange() + "\n"
@@ -378,7 +368,7 @@ public class VehicleController {
                     break;
                 case "two":
                     makeModelTwo.setText(vehicleData.get(index).getMake() + " "
-                        + vehicleData.get(index).getModel() + "\n\n");
+                        + vehicleData.get(index).getModel());
                     carDetailsTwo.setText(
                         "Current Charge: " + vehicleData.get(index).getBatteryPercent() + "\n"
                         + "Max. Range: " + vehicleData.get(index).getMaxRange() + "\n"
@@ -386,7 +376,7 @@ public class VehicleController {
                     break;
                 case "three":
                     makeModelThree.setText(vehicleData.get(index).getMake() + " "
-                        + vehicleData.get(index).getModel() + "\n\n");
+                        + vehicleData.get(index).getModel());
                     carDetailsThree.setText(
                         "Current Charge: " + vehicleData.get(index).getBatteryPercent() + "\n"
                         + "Max. Range: " + vehicleData.get(index).getMaxRange() + "\n"
