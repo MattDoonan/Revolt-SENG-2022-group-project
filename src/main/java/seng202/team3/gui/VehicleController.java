@@ -169,13 +169,14 @@ public class VehicleController {
         manage.getAllVehicles();
         vehicleData = manage.getData();
         setData();
-        addVehicle.setOnAction(e -> displayPopup(selectedVehicle));
+        addVehicle.setOnAction(e -> displayPopup());
+        addVehicle.setOnAction(e -> selectedVehicle = null);
     }
 
     /**
      * Displays pop-up window to add a new vehicle to the garage
      */
-    public void displayPopup(Vehicle selectedVehicle) {
+    public void displayPopup() {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/new_vehicle.fxml"));
             popup.initModality(Modality.APPLICATION_MODAL);
@@ -244,10 +245,28 @@ public class VehicleController {
      */
     @FXML
     public void addVehicle() {
-        Vehicle vehicle = new Vehicle(makeText.getText(),
-                modelText.getText(),
-                Integer.parseInt(maxRangeText.getText()), connections);
-        vehicle.setImgPath("src/main/resources/images/" + selectedImg);
+        Vehicle vehicle;
+        System.out.println("selectedVehicle: " + selectedVehicle);
+        System.out.println("selectedVehicle null?: " + Boolean.toString(selectedVehicle == null));
+
+        if (selectedVehicle != null) {
+            selectedVehicle.setImgPath("src/main/resources/images/" + selectedImg);
+            selectedVehicle.setConnectors(connections);
+            selectedVehicle.setMaxRange(Integer.parseInt(maxRangeText.getText()));
+            selectedVehicle.setModel(modelText.getText());
+            selectedVehicle.setMake(makeText.getText());
+            vehicle = selectedVehicle;
+            System.out.println("VControl selectedVehicleID: " + selectedVehicle.getVehicleId());
+
+        } else {
+            vehicle = new Vehicle(makeText.getText(),
+            modelText.getText(),
+            Integer.parseInt(maxRangeText.getText()), connections);
+            vehicle.setImgPath("src/main/resources/images/" + selectedImg);
+            System.out.println("VControl vehicleid: " + vehicle.getVehicleId());
+        }
+
+        System.out.println("VControl VehicleID: " + vehicle.getVehicleId());
 
         try {
             SqlInterpreter.getInstance().writeVehicle(vehicle);
@@ -258,6 +277,7 @@ public class VehicleController {
         // vehicleData.add(vehicle);
 
         System.out.println(vehicle);
+        selectedVehicle = null;
 
         // manage = new VehicleManager();
 
@@ -370,13 +390,15 @@ public class VehicleController {
     public void displayInfo(Vehicle vehicle) {
         System.out.println("vehicle: " + vehicle.toString());
         System.out.println("vehicleID: " + Integer.toString(vehicle.getVehicleId()));
+        selectedVehicle = vehicle;
         if (vehicle != null) {
             licenseText.setText("null");
             makeText.setText(vehicle.getMake());
             modelText.setText(vehicle.getModel());
             maxRangeText.setText(Integer.toString(vehicle.getMaxRange()));
             addedConnections.setText(vehicle.getConnectors().toString());
-            imgName.setText(vehicle.getImgPath());
+            imgName.setText(vehicle.getImgPath().replace("src/main/resources/images/", ""));
+            connections = vehicle.getConnectors();
         }
     }
 
@@ -387,12 +409,9 @@ public class VehicleController {
     @FXML
     public void selectImg() {
         try {
-
             saveImg.setOnAction(e -> save());
-
             saveImg.setLayoutX(538);
             saveImg.setLayoutY(360);
-
 
             for (int i = 0; i < imgNames.length; i++) {
 
@@ -403,7 +422,6 @@ public class VehicleController {
                 button.setGraphic(view);
                 button.setId(imgNames[i]);
                 imgBtns.add(button);
-
                 button.setOnAction(e -> btnSelected(e));
             }
             VBox anchor = new VBox();
@@ -412,20 +430,15 @@ public class VehicleController {
             ScrollPane imgsDisplay = new ScrollPane();
             imgsDisplay.setPrefViewportWidth(570);
             imgsDisplay.setPrefViewportHeight(330);
-
             imgsDisplay.setContent(anchor);
             imgsDisplay.setPannable(true);
-
             AnchorPane root = new AnchorPane();
             root.getChildren().addAll(imgsDisplay, saveImg);
-
             popup.initModality(Modality.APPLICATION_MODAL);
             popup.setResizable(false);
             popup.setTitle("Select Image");
             popup.setScene(new Scene(root, 600, 400));
             popup.showAndWait();
-
-
         } catch (IOException e) {
             Logger logger = Logger.getLogger(getClass().getName());
             logger.log(Level.SEVERE, "Failed to create new Window.", e);

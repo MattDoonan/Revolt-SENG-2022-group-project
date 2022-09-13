@@ -668,8 +668,10 @@ public class SqlInterpreter implements DataManager {
                 PreparedStatement statement = connection.prepareStatement(toAdd)) {
             if (v.getVehicleId() == 0) {
                 statement.setNull(1, 0);
+                System.out.println("SQL0 vehicleID: " + v.getVehicleId());
             } else {
                 statement.setInt(1, v.getVehicleId());
+                System.out.println(" SQL vehicleID: " + v.getVehicleId());
             }
             statement.setString(2, v.getMake());
             statement.setString(3, v.getModel());
@@ -692,7 +694,9 @@ public class SqlInterpreter implements DataManager {
 
             statement.executeUpdate();
             if (v.getVehicleId() == 0) {
+                System.out.println("SQL vehicleID==0: " + v.getVehicleId());
                 v.setVehicleId(statement.getGeneratedKeys().getInt(1));
+                System.out.println("SQL vehicleID==0: " + v.getVehicleId());
             }
         } catch (SQLException | NullPointerException e) {
             throw new IOException(e.getMessage());
