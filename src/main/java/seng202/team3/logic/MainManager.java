@@ -5,12 +5,20 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.database.QueryBuilder;
 import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
+import seng202.team3.gui.MainController;
+import seng202.team3.gui.MenuController;
+import seng202.team3.gui.PromptPopUp;
 
 /**
  * Logic layer for the main Controller
@@ -20,7 +28,7 @@ import seng202.team3.data.entity.Coordinate;
  *
  */
 
-public class MainManager {
+public class MainManager implements ChargerInterface {
 
     private QueryBuilder mainDataQuery;
     private Coordinate position;
@@ -225,5 +233,17 @@ public class MainManager {
             }
         }
     }
+
+    /**
+     * Uses the JavaScript Bridge to load the charger edit functionality of the
+     * selected charger
+     */
+    public void editCharger() {
+        if (getSelectedCharger() != null) {
+            JavaScriptBridge bridge = new JavaScriptBridge();
+            bridge.loadMoreInfo(getSelectedCharger().getChargerId());
+        }
+    }
+
 
 }

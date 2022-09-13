@@ -127,10 +127,9 @@
                 }}).reverse(latlng, map.options.crs.scale(map.getZoom()), results => {
                 let r = results[0]
                 if (r) {
+                    removeCoordinate();
                     addCoordinate(r.name, latlng.lat, latlng.lng)
                     javaScriptBridge.addLocationName(r.name)
-                } else {
-                    addCoordinate("Selected Coordinate", latlng.lat, latlng.lng)
                 }
             })
         }

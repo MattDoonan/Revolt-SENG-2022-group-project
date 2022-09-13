@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+   <center>
+      <TableView prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <columns>
+          <TableColumn prefWidth="75.0" text="C1" />
+          <TableColumn prefWidth="75.0" text="C2" />
+        </columns>
+      </TableView>
+   </center>
+   <padding>
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+   </padding>
+   <top>
+      <MenuBar BorderPane.alignment="CENTER">
+        <menus>
+          <Menu mnemonicParsing="false" text="Select Columns">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Close" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Filter Chargers">
+            <items>
+                        <Menu fx:id="chargerTypes" mnemonicParsing="false" text="Charger Types">
+                            <items>
+                                <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="AC button">
+                                    <content>
+                                        <CheckBox fx:id="acButton" text="AC charging port" textFill="black" />
+                                    </content>
+                                </CustomMenuItem>
+                                <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="DC button">
+                                    <content>
+                                        <CheckBox fx:id="dcButton" text="DC charging port" textFill="black" />
+                                    </content>
+                                </CustomMenuItem>
+                            </items>
+                        </Menu>
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Has Attraction button">
+                            <content>
+                                <CheckBox fx:id="attractionButton" text="Nearby Attraction" />
+                            </content>
+                        </CustomMenuItem>
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="No Charging Cost">
+                            <content>
+                                <CheckBox fx:id="chargingCost" text="No Charging Cost" />
+                            </content>
+                        </CustomMenuItem>
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <Menu mnemonicParsing="false" text="Connector Types" />
+
+
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Modify Chargers">
+               <items>
+                  <MenuItem mnemonicParsing="false" text="Add Charger" />
+                  <MenuItem mnemonicParsing="false" text="Edit Charger" />
+                  <MenuItem mnemonicParsing="false" text="Delete Charger" />
+               </items>
+          </Menu>
+        </menus>
+         <BorderPane.margin>
+            <Insets bottom="20.0" />
+         </BorderPane.margin>
+      </MenuBar>
+   </top>
+</BorderPane>

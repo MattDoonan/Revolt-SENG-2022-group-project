@@ -104,7 +104,12 @@ public class MainController {
     public void viewChargers(Charger c) {
         displayInfo.clear();
         if (c == null) {
-            displayInfo.setText("No Charger Selected");
+            if (manage.getCloseChargerData().size() != 0) {
+                manage.setSelectedCharger(manage.getCloseChargerData().get(0));
+                viewChargers(manage.getCloseChargerData().get(0));
+            } else {
+                displayInfo.setText("No Charger Selected");
+            }
         } else {
             StringBuilder word = new StringBuilder();
             ArrayList<String> check = new ArrayList<>();
@@ -288,14 +293,10 @@ public class MainController {
     }
 
     /**
-     * Uses the JavaScript Bridge to load the charger edit functionality of the
-     * selected charger
+     * Gets the manager to edit the charger
      */
     public void editCharger() {
-        if (manage.getSelectedCharger() != null) {
-            JavaScriptBridge bridge = new JavaScriptBridge();
-            bridge.loadMoreInfo(manage.getSelectedCharger().getChargerId());
-        }
+        manage.editCharger();
     }
 
 

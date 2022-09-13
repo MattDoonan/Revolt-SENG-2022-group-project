@@ -47,7 +47,7 @@ public class PromptPopUp {
         MainController controller = new MenuController().getController();
         stage.setAlwaysOnTop(false);
         if (type.equals("edit")) {
-            controller.editCharger();
+            controller.getManager().editCharger();
             cancel();
         } else if (type.equals("delete")) {
             controller.getManager().deleteCharger();

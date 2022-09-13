@@ -203,7 +203,9 @@ public class MapViewController {
      */
     @FXML
     public void addCharger() {
-        javaScriptConnector.call("addCoordinateName");
+        if (new MenuController().getController().getManager().getPosition().getAddress() == null) {
+            javaScriptConnector.call("addCoordinateName");
+        }
         loadPromptScreens("Search an address or click on the map\n"
                 + "and confirm to add a charger: \n\n", "add");
     }
