@@ -97,7 +97,7 @@ public class VehicleController {
     private Button deleteCarThree;
 
     @FXML
-    private Button addVehicle;
+    private Button openVehicleUpdate;
 
     @FXML
     private Button nextBtn;
@@ -162,16 +162,36 @@ public class VehicleController {
         manage.getAllVehicles();
         vehicleData = manage.getData();
         setData();
-        addVehicle.setOnAction(e -> displayUpdate());
-        addVehicle.setOnAction(e -> selectedVehicle = null);
+        // openVehicleUpdate.setOnAction(e -> displayUpdate());
+        // openVehicleUpdate.setOnAction(e -> selectedVehicle = null);
     }
+
+    // /**
+    //  * Displays pop-up window to add a new vehicle to the garage
+    //  */
+    // @FXML
+    // public void displayUpdate() {
+    //     System.out.println("displayUpdate");
+    //     // try {
+    //     //     Parent root = FXMLLoader.load(getClass().getResource("/fxml/vehicle_update.fxml"));
+    //     //     updatePopup.initModality(Modality.APPLICATION_MODAL);
+    //     //     updatePopup.setResizable(false);
+    //     //     updatePopup.setTitle("Vehicle Information");
+    //     //     updatePopup.setScene(new Scene(root, 600, 500));
+    //     //     updatePopup.showAndWait();
+    //     // } catch (IOException e) {
+    //     //     Logger logger = Logger.getLogger(getClass().getName());
+    //     //     logger.log(Level.SEVERE, "Failed to create new Window.", e);
+    //     // }
+
+    // }
 
     /**
      * Displays pop-up window to add a new vehicle to the garage
      */
     @FXML
     public void displayUpdate() {
-        System.out.println("displayUpdate");
+        System.out.println("clickme");
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/vehicle_update.fxml"));
             updatePopup.initModality(Modality.APPLICATION_MODAL);
@@ -183,7 +203,6 @@ public class VehicleController {
             Logger logger = Logger.getLogger(getClass().getName());
             logger.log(Level.SEVERE, "Failed to create new Window.", e);
         }
-
     }
 
 
