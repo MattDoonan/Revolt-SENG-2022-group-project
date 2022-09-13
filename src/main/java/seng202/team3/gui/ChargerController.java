@@ -177,6 +177,7 @@ public class ChargerController {
             }
         } else {
             launchErrorPopUps();
+            errors.clear();
         }
     }
 

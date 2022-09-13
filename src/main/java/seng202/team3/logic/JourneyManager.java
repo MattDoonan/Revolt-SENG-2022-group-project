@@ -52,10 +52,11 @@ public class JourneyManager {
 
     /**
      * Starts new journey from selected start and end point
+     * TODO fix
      */
     public void startNewJourney() {
         if ((start != null) && (end != null)) {
-            selectedJourney = new Journey(start, end);
+            selectedJourney = new Journey();
         }
     }
 

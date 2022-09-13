@@ -1,7 +1,6 @@
 package seng202.team3.gui;
 
 import java.io.IOException;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -17,47 +16,47 @@ import seng202.team3.logic.MapManager;
  * @version 1.0.0, Aug 22
  */
 public class JourneyController {
-  
-  @FXML
-  private Button calculateRoute;
 
-  @FXML
-  private Button startMapFind;
+    @FXML
+    private Button calculateRoute;
 
-  @FXML
-  private Button destMapFind;
+    @FXML
+    private Button startMapFind;
 
-  @FXML
-  private TextField startTextField;
+    @FXML
+    private Button destMapFind;
 
-  @FXML
-  private TextField destTextField;
+    @FXML
+    private TextField startTextField;
 
-  private Stage stage;
+    @FXML
+    private TextField destTextField;
 
-  /**
+    private Stage stage;
+
+    /**
      * Initialize the window
      *
      * @param stage Top level container for this window
      */
-  public void init(Stage stage, MenuController menu) {
-      this.stage = stage;
-  }
-
-  private void loadMapView(Stage stage) {
-    try {
-        FXMLLoader webViewLoader = new FXMLLoader(getClass().getResource("/fxml/map.fxml"));
-        Parent mapViewParent = webViewLoader.load();
-
-        MapViewController mapController = webViewLoader.getController();
-        MapManager mapManager = new MapManager(manage);
-        mapController.init(stage, mapManager);
-
-        mainWindow.setCenter(mapViewParent);
-    } catch (IOException e) {
-        e.printStackTrace();
+    public void init(Stage stage, MenuController menu) {
+        this.stage = stage;
     }
-}
+
+    private void loadMapView(Stage stage) {
+        try {
+            FXMLLoader webViewLoader = new FXMLLoader(getClass().getResource("/fxml/map.fxml"));
+            Parent mapViewParent = webViewLoader.load();
+
+            //MapViewController mapController = webViewLoader.getController();
+            //MapManager mapManager = new MapManager(manage);
+            //mapController.init(stage, mapManager);
+
+            //mainWindow.setCenter(mapViewParent)
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
+    }
 }

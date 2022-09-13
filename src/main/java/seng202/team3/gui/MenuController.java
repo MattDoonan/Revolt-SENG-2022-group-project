@@ -105,7 +105,9 @@ public class MenuController {
         }
     }
 
-<<<<<<< HEAD
+    /**
+     * TODO docstring
+     */
     public void launchJourneyScreen() {
         try {
             FXMLLoader journeyLoader = new FXMLLoader(getClass().getResource("/fxml/journey.fxml"));
@@ -118,6 +120,4 @@ public class MenuController {
         }
     }
 
-=======
->>>>>>> ebb810a8f59faf2b09049b5093596ff908e48908
 }
