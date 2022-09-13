@@ -71,11 +71,9 @@ public class MiniMapController {
      */
     @FXML
     public void getCoordinateWithAddress() {
-        MainController main = new MenuController().getController();
-        if (main.getManager().getPosition() != null) {
-            System.out.println(main.getManager().getPosition().getAddress());
-        }
-        main.getManager().setPosition(null);
+        manager.setPosition(null);
+        javaScriptConnector.call("setCoordinate");
+
     }
 
 

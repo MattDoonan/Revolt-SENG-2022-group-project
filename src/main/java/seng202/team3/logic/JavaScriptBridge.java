@@ -141,6 +141,15 @@ public class JavaScriptBridge {
     }
 
     /**
+     * Sets the singleton ChargerManager Coordinate to the latlng
+     *
+     * @param latlng the string created with latitude and longitude
+     */
+    public void setCoordinate(String latlng, String name) {
+        GeoLocationHandler.getInstance().setCoordinate(parseCoordinate(latlng), name);
+    }
+
+    /**
      * Creates the charger adding/editing screen when necessary
      *
      * @param charger the {@link Charger} that is being selected

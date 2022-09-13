@@ -57,8 +57,12 @@ public class TableController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         manager.addCharger();
+        if (manager.getPosition() == null) {
+            System.out.println("not added");
+        } else {
+            System.out.println(manager.getPosition().getAddress());
+        }
     }
 
     /**

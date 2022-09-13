@@ -141,8 +141,10 @@
      */
     function setCoordinate() {
         if (coordinate != null) {
-            javaScriptBridge.addCoordinate("Coordinate", coordinate.latlng.lat, coordinate.latlng.lng)
-            javaScriptBridge.addLocationName(name)
+            let latlng = coordinate.getLatLng()
+            javaScriptBridge.setCoordinate(`{"lat": ${latlng.lat}, "lng": ${latlng.lng}}`, name)
+        } else {
+            javaScriptBridge.setCoordinate('{"lat": 0, "lng": 0}', "invalid")
         }
     }
 

@@ -24,6 +24,13 @@ public class GeoLocationHandler {
      * @return a GeoLocationHandler
      */
     public static GeoLocationHandler getInstance() {
+        if (instance == null) {
+            synchronized (GeoLocationHandler.class) {
+                if (instance == null) {
+                    instance = new GeoLocationHandler();
+                }
+            }
+        }
         return instance;
     }
 
@@ -41,8 +48,9 @@ public class GeoLocationHandler {
      *
      * @param coordinate the {@link Coordinate} to set the coordinate
      */
-    public void setCoordinate(Coordinate coordinate) {
+    public void setCoordinate(Coordinate coordinate, String name) {
         this.coordinate = coordinate;
+        coordinate.setAddress(name);
     }
 
 }

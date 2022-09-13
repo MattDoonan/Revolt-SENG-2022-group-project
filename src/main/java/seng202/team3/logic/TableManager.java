@@ -21,8 +21,6 @@ import seng202.team3.data.entity.Coordinate;
  */
 public class TableManager extends ChargerHandler {
 
-
-
     /**
      * Adds a charger at a specified coordinate
      */

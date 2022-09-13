@@ -122,6 +122,7 @@ public class MainManager extends ChargerHandler {
     /**
      * Adds a charger at the location of the coordinate.
      */
+    @Override
     public void addCharger() {
         new JavaScriptBridge().loadChargerEdit(null);
     }
@@ -130,6 +131,7 @@ public class MainManager extends ChargerHandler {
      * Removes the selected charger and replaces it with null
      *
      */
+    @Override
     public void deleteCharger() {
         if (selectedCharger != null) {
             try {
@@ -146,6 +148,7 @@ public class MainManager extends ChargerHandler {
      * Uses the JavaScript Bridge to load the charger edit functionality of the
      * selected charger
      */
+    @Override
     public void editCharger() {
         if (getSelectedCharger() != null) {
             JavaScriptBridge bridge = new JavaScriptBridge();
