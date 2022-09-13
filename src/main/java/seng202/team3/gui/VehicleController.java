@@ -245,12 +245,13 @@ public class VehicleController {
 
         Stage popupStage = (Stage) addVehicleBtn.getScene().getWindow();
         popupStage.close();
+        
+        // manage.resetQuery();
+        // manage.getAllVehicles();
+        // vehicleData = manage.getData();
+        // setData();
+        // System.out.println("finished");
 
-        manage.resetQuery();
-        manage.getAllVehicles();
-        vehicleData = manage.getData();
-        setData();
-        System.out.println("finished");
     }
 
 
@@ -357,8 +358,13 @@ public class VehicleController {
 
             try {
                 if (vehicleData.get(index).getImgPath() != null) {
+                    // Image image = new Image(new FileInputStream(
+                    //     vehicleData.get(index).getImgPath()));
+
                     Image image = new Image(new FileInputStream(
-                        vehicleData.get(index).getImgPath()));
+                        "src/main/resources/images/car_one.png"));
+                        
+                        
                     imageview.setImage(image);
                 } else {
                     imageview.setImage(null);
