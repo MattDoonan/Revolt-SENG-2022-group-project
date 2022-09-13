@@ -4,13 +4,14 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<SplitPane maxHeight="Infinity" maxWidth="Infinity" minWidth="200.0" prefHeight="437.0" prefWidth="572.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.JourneyController">
+<SplitPane dividerPositions="0.5" maxHeight="Infinity" maxWidth="Infinity" minWidth="200.0" prefHeight="437.0" prefWidth="572.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.JourneyController">
    <items>
-      <GridPane>
+      <GridPane prefWidth="212.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -35,5 +36,6 @@
             <TextField fx:id="destTextField" GridPane.rowIndex="3" />
          </children>
       </GridPane>
+      <BorderPane prefHeight="200.0" prefWidth="200.0" />
    </items>
 </SplitPane>
