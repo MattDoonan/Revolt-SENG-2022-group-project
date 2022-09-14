@@ -11,7 +11,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -23,30 +22,21 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Vehicle;
 import seng202.team3.logic.VehicleManager;
 
-//TODO: seperate out VehicleController to VehicleEditController
 
 /**
  * Controller for the garage.fxml window
  * 
- * @author Team 3
+ * @author Celia Allen
  * @version 1.0.3, Aug 22
  */
 public class VehicleController {
-
-    // private static final Logger log = LogManager.getLogger();
-
-    @FXML
-    private ListView<String> vehicleList;
 
     @FXML
     private TextArea makeModelOne;
@@ -94,9 +84,6 @@ public class VehicleController {
     private Button deleteCarThree;
 
     @FXML
-    private Button openVehicleUpdate;
-
-    @FXML
     private Button nextBtn;
 
     @FXML
@@ -106,16 +93,7 @@ public class VehicleController {
     private Button addConnection;
 
     @FXML
-    private Button saveChanges;
-
-    @FXML
-    private Button confirmDelete;
-
-    @FXML
     private Label addedConnections;
-
-    @FXML
-    private TextField licenseText;
 
     @FXML
     private TextField makeText;
@@ -137,8 +115,6 @@ public class VehicleController {
 
     private ObservableList<Vehicle> vehicleData = FXCollections.observableArrayList();
 
-    private ObservableList<Button> imgBtns = FXCollections.observableArrayList();
-
     private ArrayList<String> connections = new ArrayList<String>();
 
     private Vehicle selectedVehicle;
@@ -156,9 +132,8 @@ public class VehicleController {
      */
     public void init() {
         refresh();
-        // openVehicleUpdate.setOnAction(e -> displayUpdate());
-        // openVehicleUpdate.setOnAction(e -> selectedVehicle = null);
     }
+
 
     /**
      * Refresh the garage display with the user's up-to-date vehicles
@@ -170,26 +145,6 @@ public class VehicleController {
         setData();
     }
 
-    // /**
-    //  * Displays pop-up window to add a new vehicle to the garage
-    //  */
-    // @FXML
-    // public void displayUpdate() {
-    //     System.out.println("displayUpdate");
-    //     // try {
-    //     //     Parent root = FXMLLoader.load(getClass().getResource
-    //     //     ("/fxml/vehicle_update.fxml"));
-    //     //     updatePopup.initModality(Modality.APPLICATION_MODAL);
-    //     //     updatePopup.setResizable(false);
-    //     //     updatePopup.setTitle("Vehicle Information");
-    //     //     updatePopup.setScene(new Scene(root, 600, 500));
-    //     //     updatePopup.showAndWait();
-    //     // } catch (IOException e) {
-    //     //     Logger logger = Logger.getLogger(getClass().getName());
-    //     //     logger.log(Level.SEVERE, "Failed to create new Window.", e);
-    //     // }
-
-    // }
 
     /**
      * Displays pop-up window to add a new vehicle to the garage
@@ -213,7 +168,55 @@ public class VehicleController {
 
 
     /**
-     * Launches the editable portion
+     * Sets selectedVehicle to the vehicle to be edited
+     * @paramn event, the event that called the method
+     */
+    @FXML
+    public void setEdit(ActionEvent event) {
+        String source = ((Button) event.getSource()).getId();
+        switch (source) {
+            case "editCarOne":
+                selectedVehicle = vehicleData.get(0);
+                break;
+            case "editCarTwo":
+                selectedVehicle = vehicleData.get(1);
+                break;
+            case "editCarThree":
+                selectedVehicle = vehicleData.get(2);  
+                break;
+            default:
+                break;
+        }
+        launchEditable(selectedVehicle);
+    }
+
+
+    /**
+     * Sets selectedVehicle to the vehicle to be deleted
+     * @paramn event, the event that called the method
+     */
+    @FXML
+    public void setDelete(ActionEvent event) {
+        String source = ((Button) event.getSource()).getId();
+        switch (source) {
+            case "deleteCarOne":
+                selectedVehicle = vehicleData.get(0);
+                break;
+            case "deleteCarTwo":
+                selectedVehicle = vehicleData.get(1);
+                break;
+            case "deleteCarThree":
+                selectedVehicle = vehicleData.get(2);  
+                break;
+            default:
+                break;
+        }
+        launchDelete(selectedVehicle);
+    }
+
+
+    /**
+     * Launches the editable pop-up for vehicles
      *
      * @param vehicle the {@link Vehicle} for the vehicle info. Null if adding.
      */
@@ -240,67 +243,13 @@ public class VehicleController {
         }
     }
 
-    /**
-     * Allows a user to edit a vehicle
-     * @paramn event
-     */
-    @FXML
-    public void editVehicle(ActionEvent event) {
-        String source = ((Button) event.getSource()).getId();
-        System.out.println("edit source: " + source);
-        switch (source) {
-            case "editCarOne":
-                selectedVehicle = vehicleData.get(0);
-                break;
-            case "editCarTwo":
-                selectedVehicle = vehicleData.get(1);
-                break;
-            case "editCarThree":
-                selectedVehicle = vehicleData.get(2);  
-                break;
-            default:
-                break;
-        }
-        launchEditable(selectedVehicle);
-    }
-
-
-    /**
-     * Sets the vehicle to be deleted
-     * @paramn event
-     */
-    @FXML
-    public void setDelete(ActionEvent event) {
-        String source = ((Button) event.getSource()).getId();
-        System.out.println("delete source: " + source);
-
-        switch (source) {
-            case "deleteCarOne":
-                selectedVehicle = vehicleData.get(0);
-                break;
-            case "deleteCarTwo":
-                selectedVehicle = vehicleData.get(1);
-                break;
-            case "deleteCarThree":
-                selectedVehicle = vehicleData.get(2);  
-                break;
-            default:
-                break;
-        }
-
-        launchDelete(selectedVehicle);
-
-    }
-
-
+    
     /**
      * Launches the confirm delete popup
      *
      * @param vehicle the vehicle to be deleted
     */
     public void launchDelete(Vehicle vehicle) {
-
-        System.out.println("promptscreen1 selectedVehicle: " + selectedVehicle);
         try {
             FXMLLoader vehicleDelete = new FXMLLoader(getClass().getResource(
                     "/fxml/vehicle_prompt.fxml"));
@@ -316,64 +265,48 @@ public class VehicleController {
             controller.setSelectedVehicle(vehicle);
             modal.setAlwaysOnTop(true);
             modal.showAndWait();
-            System.out.println("promptscreen2 selectedVehicle: " + selectedVehicle);
-
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            System.out.println("promptscreen3 selectedVehicle: " + selectedVehicle);
             refresh();
         }
     }
 
 
     /**
-     * Sets the ConnectorController holding all the controllers
+     * Sets the VehicleController holding all the controllers
      *
-     * @param controller ConnectorController controller
+     * @param controller VehicleController controller
      */
     public void setController(VehicleController controller) {
         this.controller = controller;
     }
-
-    /**
-     * Displays all the info of the vehicle, if there is a vehicle
-     */
-    public void displayInfo(Vehicle vehicle) {
-        // System.out.println("vehicle: " + vehicle.toString());
-        // System.out.println("vehicleID: " + Integer.toString(vehicle.getVehicleId()));
-        selectedVehicle = vehicle;
-        if (vehicle != null) {
-            licenseText.setText("null");
-            makeText.setText(vehicle.getMake());
-            modelText.setText(vehicle.getModel());
-            maxRangeText.setText(Integer.toString(vehicle.getMaxRange()));
-            addedConnections.setText(vehicle.getConnectors().toString());
-            imgName.setText(vehicle.getImgPath().replace("src/main/resources/images/", ""));
-            connections = vehicle.getConnectors();
-        }
-    }
-
-
-
-
-
-
-
 
 
     /**
      * Adds vehicle data to each display if vehicleData size is large enough
      */
     public void setData() {
-        populateDisplays("one", vehicleImageOne, 0);
+        if (vehicleData.size() > 0) {
+            populateDisplays("one", vehicleImageOne, 0);
+        } else {
+            editCarOne.setVisible(false);
+            deleteCarOne.setVisible(false);
+        }
         if (vehicleData.size() > 1) {
             populateDisplays("two", vehicleImageTwo, 1);
+        } else {
+            editCarTwo.setVisible(false);
+            deleteCarTwo.setVisible(false);
         }
         if (vehicleData.size() > 2) {
             populateDisplays("three", vehicleImageThree, 2);
-        }
+        } else {
+            editCarThree.setVisible(false);
+            deleteCarThree.setVisible(false);
+        }        
     }
+
 
     /**
      * Populate the given display with the vehicle at the given index
@@ -384,7 +317,6 @@ public class VehicleController {
      */
     public void populateDisplays(String display, ImageView imageview, int index) {
         if (vehicleData.size() > 0) {
-
             switch (display) {
                 case "one":
                     makeModelOne.setText(vehicleData.get(index).getMake() + " "
@@ -413,11 +345,8 @@ public class VehicleController {
                 default:
                     break;
             }
-
             try {
                 if (vehicleData.get(index).getImgPath() != null) {
-                    // Image image = new Image(new FileInputStream(
-                    //     vehicleData.get(index).getImgPath()));
                     Image image = new Image(new FileInputStream(
                         "src/main/resources/images/car_one.png"));
                     imageview.setImage(image);
@@ -432,37 +361,6 @@ public class VehicleController {
 
     }
 
-    // /**
-    //  * Creates test vehicles
-    //  * TODO: Remove once data can be properly pulled from the database
-    //  */
-    // public void makeTestVehicles() {
-
-    //     vehicleData.add(
-    //             new Vehicle("Nissan", "Leaf", 270, new ArrayList<>()));
-    //     vehicleData.add(
-    //             new Vehicle("Nissan", "Leaf E+", 385, new ArrayList<>()));
-    //     vehicleData.add(
-    //             new Vehicle("Tesla", "X", 536, new ArrayList<>()));
-    //     vehicleData.add(
-    //             new Vehicle("Jaguar", "I-Pace", 470, new ArrayList<>()));
-    //     vehicleData.add(
-    //             new Vehicle("Audi", "E-Tron", 441, new ArrayList<>()));
-    //     vehicleData.add(
-    //             new Vehicle("Tesla", "5", 637, new ArrayList<>()));
-    //     vehicleData.add(
-    //             new Vehicle("Mercedes Benz", "EQC", 430, new ArrayList<>()));
-    //     vehicleData.add(
-    //             new Vehicle("Porsche", "Taycan", 480, new ArrayList<>()));
-    //     vehicleData.get(0).setImgPath("src/main/resources/images/car_one.png");
-    //     vehicleData.get(1).setImgPath("src/main/resources/images/car_three.png");
-    //     vehicleData.get(2).setImgPath("src/main/resources/images/car_two.png");
-    //     vehicleData.get(3).setImgPath("src/main/resources/images/car_one.png");
-    //     vehicleData.get(4).setImgPath("src/main/resources/images/truck_one.png");
-    //     vehicleData.get(5).setImgPath("src/main/resources/images/car_three.png");
-    //     vehicleData.get(6).setImgPath("src/main/resources/images/car_two.png");
-    //     vehicleData.get(7).setImgPath("src/main/resources/images/truck_two.png");
-    // }
 
     /**
      * Method to call when next button is clicked
@@ -485,7 +383,6 @@ public class VehicleController {
      */
     @FXML
     public void prevBtnClicked() {
-
         if (vehicleData.size() > 0) {
             Vehicle vehicle = vehicleData.get(vehicleData.size() - 1);
             vehicleData.remove(vehicle);
