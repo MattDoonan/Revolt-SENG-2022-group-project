@@ -322,7 +322,7 @@ public class VehicleController {
             e.printStackTrace();
         } finally {
             System.out.println("promptscreen3 selectedVehicle: " + selectedVehicle);
-            setData();
+            refresh();
         }
     }
 
