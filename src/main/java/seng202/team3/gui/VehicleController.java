@@ -283,26 +283,68 @@ public class VehicleController {
 
     /**
      * Adds vehicle data to each display if vehicleData size is large enough
+     * Disables next and prev buttons if less than three vehicles to display
      */
     public void setData() {
         if (vehicleData.size() > 0) {
             populateDisplays("one", vehicleImageOne, 0);
+            editCarOne.setVisible(true);
+            deleteCarOne.setVisible(true);
         } else {
             editCarOne.setVisible(false);
             deleteCarOne.setVisible(false);
+            clearDisplay("one", vehicleImageOne);
         }
         if (vehicleData.size() > 1) {
             populateDisplays("two", vehicleImageTwo, 1);
+            editCarTwo.setVisible(true);
+            deleteCarTwo.setVisible(true);
         } else {
             editCarTwo.setVisible(false);
             deleteCarTwo.setVisible(false);
+            clearDisplay("two", vehicleImageTwo);
         }
         if (vehicleData.size() > 2) {
             populateDisplays("three", vehicleImageThree, 2);
+            editCarThree.setVisible(true);
+            deleteCarThree.setVisible(true);
         } else {
             editCarThree.setVisible(false);
             deleteCarThree.setVisible(false);
+            clearDisplay("three", vehicleImageThree);
         }        
+        if (vehicleData.size() <= 3) {
+            nextBtn.setDisable(true);
+            prevBtn.setDisable(true);
+        } else {
+            nextBtn.setDisable(false);
+            prevBtn.setDisable(false);
+        }
+    }
+
+    /**
+     * Clears the given display of text and image(s)
+     * @param display a string to represent the display to be cleared
+     * @param imageview the ImageView to clear
+     */
+    public void clearDisplay(String display, ImageView imageview) {
+        switch (display) {
+            case "one":
+                makeModelOne.setText("");
+                carDetailsOne.setText("");
+                break;
+            case "two":
+                makeModelTwo.setText("");
+                carDetailsTwo.setText("");
+                break;
+            case "three":
+                makeModelThree.setText("");
+                carDetailsThree.setText("");
+                break;
+            default:
+                break;
+        }
+        imageview.setImage(null);
     }
 
 
@@ -357,7 +399,6 @@ public class VehicleController {
                 e.printStackTrace();
             }
         }
-
     }
 
 
