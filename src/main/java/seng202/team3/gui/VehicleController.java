@@ -156,7 +156,7 @@ public class VehicleController {
             updatePopup.initModality(Modality.APPLICATION_MODAL);
             updatePopup.setResizable(false);
             updatePopup.setTitle("Vehicle Information");
-            updatePopup.setScene(new Scene(root, 600, 500));
+            updatePopup.setScene(new Scene(root, 337, 497));
             updatePopup.showAndWait();
         } catch (IOException e) {
             Logger logger = Logger.getLogger(getClass().getName());

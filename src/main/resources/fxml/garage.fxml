@@ -17,7 +17,6 @@
             <Font size="24.0" />
          </font>
       </Label>
-      <Button fx:id="fake" layoutX="506.0" layoutY="584.0" mnemonicParsing="false" onAction="#displayUpdate" text="FAKE" />
       <Button fx:id="nextBtn" layoutX="907.0" layoutY="320.0" mnemonicParsing="false" onAction="#nextBtnClicked" prefHeight="40.0" prefWidth="42.0" text="&gt;&gt;" />
       <Button fx:id="prevBtn" layoutX="130.0" layoutY="320.0" mnemonicParsing="false" onAction="#prevBtnClicked" prefHeight="40.0" prefWidth="42.0" text="&lt;&lt;" />
       <!-- <ImageView fx:id="vehicleImageThree" fitHeight="130.0" fitWidth="200.0" layoutX="713.0" layoutY="396.0" pickOnBounds="true" preserveRatio="true" />
@@ -50,6 +49,6 @@
             <TextArea fx:id="carDetailsThree" editable="false" layoutX="1.0" layoutY="188.0" prefHeight="116.0" prefWidth="214.0" stylesheets="@textarea.css" />
          </children>
       </AnchorPane>
-      <Button fx:id="openUpdate" layoutX="308.0" layoutY="597.0" mnemonicParsing="false" onAction="#displayUpdate" text="Add New" />
+      <Button fx:id="openUpdate" layoutX="503.0" layoutY="585.0" mnemonicParsing="false" onAction="#displayUpdate" text="Add New" />
    </children>
 </AnchorPane>
