@@ -39,6 +39,7 @@ public class MiniMapController {
      */
     public void init(Stage stage) {
         this.stage = stage;
+        javaScriptBridge = new JavaScriptBridge();
         this.stage.sizeToScene();
         initMap();
     }
@@ -73,7 +74,7 @@ public class MiniMapController {
     public void getCoordinateWithAddress() {
         manager.setPosition(null);
         javaScriptConnector.call("setCoordinate");
-
+        stage.close();
     }
 
 

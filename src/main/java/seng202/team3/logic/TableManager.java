@@ -1,16 +1,6 @@
 package seng202.team3.logic;
 
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import seng202.team3.data.database.ComparisonType;
-import seng202.team3.data.database.QueryBuilder;
-import seng202.team3.data.database.QueryBuilderImpl;
-import seng202.team3.data.database.SqlInterpreter;
-import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
 
 /**
@@ -25,7 +15,11 @@ public class TableManager extends ChargerHandler {
      * Adds a charger at a specified coordinate
      */
     public void addCharger() {
-
+        Coordinate coordinate = GeoLocationHandler.getInstance().getCoordinate();
+        if (coordinate != null) {
+            setPosition(coordinate);
+        }
+        GeoLocationHandler.getInstance().clearCoordinate();
     }
 
     /**

@@ -39,6 +39,7 @@ public class TableController {
      */
     @FXML
     public void addCharger() {
+
         try {
             FXMLLoader miniMap = new FXMLLoader(getClass().getResource(
                     "/fxml/mini_map.fxml"));

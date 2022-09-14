@@ -53,4 +53,10 @@ public class GeoLocationHandler {
         coordinate.setAddress(name);
     }
 
+    /**
+     * Clears the coordinate
+     */
+    public void clearCoordinate() {
+        coordinate = null;
+    }
 }
