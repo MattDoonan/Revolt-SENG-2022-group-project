@@ -36,9 +36,6 @@ import seng202.team3.data.entity.Vehicle;
 public class VehicleUpdateController {
 
     @FXML
-    private TextField licenseText;
-
-    @FXML
     private TextField makeText;
 
     @FXML
@@ -75,8 +72,6 @@ public class VehicleUpdateController {
     private String[] imgNames = {"car_one.png", "car_two.png", "car_three.png",
         "truck_one.png", "truck_two.png"};
 
-    private VehicleController controller;
-
     private Stage updatePopup = new Stage();
 
     private Stage connectorPopup = new Stage();
@@ -87,6 +82,10 @@ public class VehicleUpdateController {
     public VehicleUpdateController() {
     }
 
+    /**
+     * Set selectedVehicle
+     * @param vehicle the vehicle to set selectedVehicle to
+     */
     public void setSelectedVehicle(Vehicle vehicle) {
         this.selectedVehicle = vehicle;
     }
@@ -97,7 +96,6 @@ public class VehicleUpdateController {
      */
     @FXML
     public void saveChanges() {
-        // TODO: Vehicles are re-pulled from database, and displayed
         Vehicle vehicle;
         System.out.println("selectedVehicle: " + selectedVehicle);
         if (selectedVehicle != null) {
@@ -168,9 +166,7 @@ public class VehicleUpdateController {
             saveImg.setOnAction(e -> save());
             saveImg.setLayoutX(538);
             saveImg.setLayoutY(360);
-
             for (int i = 0; i < imgNames.length; i++) {
-
                 Image img = new Image(new FileInputStream("src/main/resources/images/"
                     + imgNames[i]));
                 ImageView view = new ImageView(img);
@@ -182,7 +178,6 @@ public class VehicleUpdateController {
             }
             VBox anchor = new VBox();
             anchor.getChildren().addAll(imgBtns);
-
             ScrollPane imgsDisplay = new ScrollPane();
             imgsDisplay.setPrefViewportWidth(570);
             imgsDisplay.setPrefViewportHeight(330);
@@ -221,15 +216,13 @@ public class VehicleUpdateController {
         popupStage.close();
     }
 
+
     /**
      * Displays all the info of the vehicle, if there is a vehicle
      */
     public void displayInfo(Vehicle vehicle) {
-        // System.out.println("vehicle: " + vehicle.toString());
-        // System.out.println("vehicleID: " + Integer.toString(vehicle.getVehicleId()));
         selectedVehicle = vehicle;
         if (vehicle != null) {
-            licenseText.setText("null");
             makeText.setText(vehicle.getMake());
             modelText.setText(vehicle.getModel());
             maxRangeText.setText(Integer.toString(vehicle.getMaxRange()));
@@ -241,15 +234,6 @@ public class VehicleUpdateController {
 
 
     /**
-     * Sets the ConnectorController holding all the controllers
-     *
-     * @param controller ConnectorController controller
-     */
-    public void setController(VehicleController controller) {
-        this.controller = controller;
-    }
-
-    /**
      * Deletes the selected vehicle
      */
     @FXML
@@ -259,7 +243,6 @@ public class VehicleUpdateController {
                 SqlInterpreter.getInstance().deleteData("vehicle", 
                     selectedVehicle.getVehicleId());
                 selectedVehicle = null;
-                // getAllVehicles();
             } catch (IOException e) {
                 e.printStackTrace();
             }

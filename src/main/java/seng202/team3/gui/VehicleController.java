@@ -232,7 +232,6 @@ public class VehicleController {
             modal.setTitle("Vehicle Information");
             modal.initModality(Modality.WINDOW_MODAL);
             VehicleUpdateController controller = vehicleEdit.getController();
-            controller.setController(this);
             controller.displayInfo(vehicle);
             modal.setAlwaysOnTop(true);
             modal.showAndWait();
@@ -261,7 +260,6 @@ public class VehicleController {
             modal.setTitle("Delete Vehicle:");
             modal.initModality(Modality.WINDOW_MODAL);
             VehicleUpdateController controller = vehicleDelete.getController();
-            controller.setController(this);
             controller.setSelectedVehicle(vehicle);
             modal.setAlwaysOnTop(true);
             modal.showAndWait();
