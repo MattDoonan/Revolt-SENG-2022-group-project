@@ -99,7 +99,9 @@ public class VehicleUpdateController {
         Vehicle vehicle;
         System.out.println("selectedVehicle: " + selectedVehicle);
         if (selectedVehicle != null) {
-            selectedVehicle.setImgPath("src/main/resources/images/" + selectedImg);
+            if (selectedImg != null) {
+                selectedVehicle.setImgPath("src/main/resources/images/" + selectedImg);
+            }
             selectedVehicle.setConnectors(connections);
             selectedVehicle.setMaxRange(Integer.parseInt(maxRangeText.getText()));
             selectedVehicle.setModel(modelText.getText());

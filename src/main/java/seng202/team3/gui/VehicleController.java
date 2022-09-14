@@ -345,8 +345,9 @@ public class VehicleController {
             }
             try {
                 if (vehicleData.get(index).getImgPath() != null) {
+                    System.out.println(vehicleData.get(index).getImgPath());
                     Image image = new Image(new FileInputStream(
-                        "src/main/resources/images/car_one.png"));
+                        vehicleData.get(index).getImgPath()));
                     imageview.setImage(image);
                 } else {
                     imageview.setImage(null);
