@@ -58,10 +58,11 @@ public class VehicleUpdateController {
 
     @FXML
     private Button saveChanges;
+    
+    @FXML
+    private Label inputBox;
 
     private Button saveImg = new Button("Select");
-
-    private Vehicle vehicle;
 
     private Vehicle selectedVehicle;
 
@@ -84,6 +85,10 @@ public class VehicleUpdateController {
      * Initialises the Vehicle editing
      */
     public VehicleUpdateController() {
+    }
+
+    public void setSelectedVehicle(Vehicle vehicle) {
+        this.selectedVehicle = vehicle;
     }
 
 
@@ -244,39 +249,32 @@ public class VehicleUpdateController {
         this.controller = controller;
     }
 
-    // /**
-    //  * Saves the changes and closes this window if necessary
-    //  */
-    // @FXML
-    // public void saveChanges() {
-    //     Vehicle changedVehicle;
-    //     String typeString = type.getText();
-    //     String powerString = wattage.getText();
-    //     String statusString = status.getText();
-    //     String currentString = current.getText();
-    //     int points = Integer.parseInt(chargingPoints.getText());
+    /**
+     * Deletes the selected vehicle
+     */
+    @FXML
+    public void confirmDelete() {
+        if (selectedVehicle != null) {
+            try {
+                SqlInterpreter.getInstance().deleteData("vehicle", 
+                    selectedVehicle.getVehicleId());
+                selectedVehicle = null;
+                // getAllVehicles();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        cancel();
+    }
 
-    //     if (vehicle == null) {
+    /**
+     * Cancels and closes the window
+     */
+    @FXML
+    public void cancel() {
+        Stage stage = (Stage) inputBox.getScene().getWindow();
+        stage.close();
+    }
 
-    //         Vehicle vehicle = new Vehicle(makeText.getText(),
-    //             modelText.getText(),
-    //             Integer.parseInt(maxRangeText.getText()), connections);
-    //         vehicle.setImgPath("src/main/resources/images/" + selectedImg);
-
-    //         changedVehicle = new Vehicle(typeString, powerString,
-    //                 statusString, currentString, points);
-    //         controller.getVehicleList().add(changedVehicle);
-    //     } else {
-    //         changedvehicle = new vehicle(typeString,
-    //                 powerString, statusString, currentString, points, vehicle.getId());
-    //     }
-    //     for (int i = 0; i < controller.getvehicleList().size(); i++) {
-    //         if (controller.getvehicleList().get(i) == vehicle) {
-    //             controller.getvehicleList().set(i, changedvehicle);
-    //         }
-    //     }
-    //     Stage stage = (Stage) status.getScene().getWindow();
-    //     stage.close();
-    // }
 
 }

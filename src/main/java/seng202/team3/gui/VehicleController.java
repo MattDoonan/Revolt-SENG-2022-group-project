@@ -46,9 +46,6 @@ public class VehicleController {
     // private static final Logger log = LogManager.getLogger();
 
     @FXML
-    private Label inputBox;
-
-    @FXML
     private ListView<String> vehicleList;
 
     @FXML
@@ -180,7 +177,8 @@ public class VehicleController {
     // public void displayUpdate() {
     //     System.out.println("displayUpdate");
     //     // try {
-    //     //     Parent root = FXMLLoader.load(getClass().getResource("/fxml/vehicle_update.fxml"));
+    //     //     Parent root = FXMLLoader.load(getClass().getResource
+    //     //     ("/fxml/vehicle_update.fxml"));
     //     //     updatePopup.initModality(Modality.APPLICATION_MODAL);
     //     //     updatePopup.setResizable(false);
     //     //     updatePopup.setTitle("Vehicle Information");
@@ -313,8 +311,9 @@ public class VehicleController {
             modal.setResizable(false);
             modal.setTitle("Delete Vehicle:");
             modal.initModality(Modality.WINDOW_MODAL);
-            VehicleController controller = vehicleDelete.getController();
+            VehicleUpdateController controller = vehicleDelete.getController();
             controller.setController(this);
+            controller.setSelectedVehicle(vehicle);
             modal.setAlwaysOnTop(true);
             modal.showAndWait();
             System.out.println("promptscreen2 selectedVehicle: " + selectedVehicle);
@@ -326,50 +325,6 @@ public class VehicleController {
             setData();
         }
     }
-
-
-
-    /**
-     * Deletes the selected vehicle
-     */
-    public void confirmDelete() {
-        System.out.println("selectedVehicle: " + selectedVehicle);
-        if (selectedVehicle != null) {
-            try {
-                SqlInterpreter.getInstance().deleteData("vehicle", 
-                    selectedVehicle.getVehicleId());
-                selectedVehicle = null;
-                // getAllVehicles();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                cancel();
-            }
-        }
-
-    }
-
-
-    /**
-     * Deletes the selected vehicle
-     */
-    @FXML
-    public void confirm() {
-        System.out.println("selectedVehicleDelete: " + selectedVehicle);
-        cancel();
-        confirmDelete();
-    }
-
-    /**
-     * Cancels and closes the window
-     */
-    @FXML
-    public void cancel() {
-        Stage stage = (Stage) inputBox.getScene().getWindow();
-        stage.close();
-    }
-
-
 
 
     /**
