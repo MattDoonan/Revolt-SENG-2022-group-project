@@ -63,6 +63,8 @@ public class VehicleUpdateController {
 
     private Button saveImg = new Button("Select");
 
+    private Button cancelImg = new Button("Cancel");
+
     private Vehicle selectedVehicle;
 
     private String selectedImg = "car_one.png";
@@ -115,9 +117,13 @@ public class VehicleUpdateController {
 
             if (makeText.getText().equals("")) {
                 errors.add("Vehicle make required.");
+            } else {
+                vehicle.setMake(makeText.getText());
             }
             if (modelText.getText().equals("")) {
                 errors.add("Vehicle model required.");
+            } else {
+                vehicle.setModel(modelText.getText());
             }
             try {
                 vehicle.setMaxRange(Integer.parseInt(maxRangeText.getText()));
@@ -126,9 +132,12 @@ public class VehicleUpdateController {
             }
             if (connections.size() == 0) {
                 errors.add("A vehicle must have at least one connector.");
+            } else {
+                vehicle.setConnectors(connections);
             }
             vehicle.setImgPath("src/main/resources/images/" + selectedImg);
-    
+            vehicle.setBatteryPercent(100.0);
+            
             if (errors.size() == 0) {
                 try {
                     SqlInterpreter.getInstance().writeVehicle(vehicle);
@@ -192,9 +201,14 @@ public class VehicleUpdateController {
     @FXML
     public void selectImg() {
         try {
-            saveImg.setOnAction(e -> save());
-            saveImg.setLayoutX(280);
+            saveImg.setOnAction(e -> setImg());
+            saveImg.setLayoutX(225);
             saveImg.setLayoutY(360);
+            cancelImg.setOnAction(e -> cancelImg());
+            cancelImg.setLayoutX(280);
+            cancelImg.setLayoutY(360);
+
+
             for (int i = 0; i < imgNames.length; i++) {
                 Image img = new Image(new FileInputStream("src/main/resources/images/"
                     + imgNames[i]));
@@ -233,7 +247,7 @@ public class VehicleUpdateController {
         imgsDisplay.setPrefViewportWidth(322);
         imgsDisplay.setPrefViewportHeight(320);
         AnchorPane root = new AnchorPane();
-        root.getChildren().addAll(imgsDisplay, saveImg);
+        root.getChildren().addAll(imgsDisplay, saveImg, cancelImg);
         imagePopup.initModality(Modality.APPLICATION_MODAL);
         imagePopup.setResizable(false);
         imagePopup.setTitle("Select Image");
@@ -265,11 +279,19 @@ public class VehicleUpdateController {
     /**
      * Saves the currently selected image for the user's vehicle
      */
-    public void save() {
-        System.out.println(selectedImg);
+    public void setImg() {
         imgName.setText(selectedImg);
         Stage popupStage = (Stage) saveImg.getScene().getWindow();
         popupStage.close();
+    }
+
+    /**
+     * Cancels the user's currently-selected image and closes the pop-up
+     */
+    public void cancelImg() {
+        selectedImg = null;
+        Stage stage = (Stage) saveImg.getScene().getWindow();
+        stage.close();
     }
 
 

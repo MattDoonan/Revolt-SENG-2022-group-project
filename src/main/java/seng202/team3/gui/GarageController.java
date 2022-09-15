@@ -429,12 +429,13 @@ public class GarageController {
                     break;
             }
             try {
-                if (vehicleData.get(index).getImgPath() != null) {
+                if (vehicleData.get(index).getImgPath().equals(
+                        "src/main/resources/images/null")) {
+                    imageview.setImage(null);
+                } else {
                     Image image = new Image(new FileInputStream(
                         vehicleData.get(index).getImgPath()));
                     imageview.setImage(image);
-                } else {
-                    imageview.setImage(null);
                 }
 
             } catch (FileNotFoundException e) {
