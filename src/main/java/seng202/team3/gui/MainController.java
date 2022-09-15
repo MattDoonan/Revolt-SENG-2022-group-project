@@ -71,7 +71,38 @@ public class MainController {
     private CheckBox chargingCost;
 
     @FXML
+    private CheckBox hasChargingCost;
+
+    @FXML
     private BorderPane mainWindow;
+
+    @FXML
+    private CheckBox toggleTimeLimit;
+
+    @FXML
+    private Slider timeLimit;
+
+    @FXML
+    private CheckBox onParkingFiler;
+
+    @FXML
+    private Slider parkingLot;
+
+    @FXML
+    private CheckBox withoutCarparkCost;
+
+    @FXML
+    private CheckBox withCarparkCost;
+
+    @FXML
+    private CheckBox openAllButton;
+
+    @FXML
+    private CheckBox notOpenAllButton;
+
+    @FXML
+    private CheckBox noNearbyAttraction;
+
 
     private BorderPane menuWindow;
 
@@ -227,10 +258,28 @@ public class MainController {
      */
     public void change() {
         distanceDisplay.textProperty()
-                .setValue("Distance (" + Math.round(changeDistance.getValue()) + " km)");
+                .setValue("Minimum distance (" + Math.round(changeDistance.getValue()) + " km)");
+        onParkingFiler.textProperty()
+                .setValue("Minimum number of spaces ("
+                        + Math.round(changeDistance.getValue()) + ")");
+        toggleTimeLimit.textProperty()
+                .setValue("Minimum time limit of ("
+                        + Math.round(changeDistance.getValue()) + " minutes)");
+
         changeDistance.valueProperty().addListener((observableValue, number, t1) -> {
             distanceDisplay.textProperty()
-                    .setValue("Distance (" + Math.round(changeDistance.getValue()) + " km)");
+                    .setValue("Minimum distance ("
+                            + Math.round(changeDistance.getValue()) + " km)");
+        });
+        parkingLot.valueProperty().addListener((observableValue, number, t1) -> {
+            onParkingFiler.textProperty()
+                    .setValue("Minimum number of spaces ("
+                            + Math.round(parkingLot.getValue()) + ")");
+        });
+        timeLimit.valueProperty().addListener((observableValue, number, t1) -> {
+            toggleTimeLimit.textProperty()
+                    .setValue("Minimum time limit of ("
+                            + Math.round(timeLimit.getValue()) + " minutes)");
         });
     }
 
@@ -239,23 +288,48 @@ public class MainController {
      */
     public void executeSearch() {
         manage.resetQuery();
+        if (toggleTimeLimit.isSelected()) {
+            manage.adjustQuery("maxtimelimit",
+                    Double.toString(timeLimit.getValue()), ComparisonType.GREATER_THAN_EQUAL);
+        }
+        if (onParkingFiler.isSelected()) {
+            manage.adjustQuery("carparkcount",
+                    Double.toString(parkingLot.getValue()), ComparisonType.GREATER_THAN_EQUAL);
+        }
+        if (withoutCarparkCost.isSelected()) {
+            manage.adjustQuery("hascarparkcost", "False", ComparisonType.EQUAL);
+        }
+        if (withCarparkCost.isSelected()) {
+            manage.adjustQuery("hascarparkcost", "True", ComparisonType.EQUAL);
+        }
         if (acButton.isSelected()) {
             manage.adjustQuery("currenttype", "AC", ComparisonType.CONTAINS);
         }
-
         if (dcButton.isSelected()) {
             manage.adjustQuery("currenttype", "DC", ComparisonType.CONTAINS);
         }
-
+        if (openAllButton.isSelected()) {
+            manage.adjustQuery("is24hours", "True", ComparisonType.EQUAL);
+        }
+        if (notOpenAllButton.isSelected()) {
+            manage.adjustQuery("is24hours", "False", ComparisonType.EQUAL);
+        }
         if (attractionButton.isSelected()) {
             manage.adjustQuery("hastouristattraction", "True", ComparisonType.EQUAL);
+        }
+        if (noNearbyAttraction.isSelected()) {
+            manage.adjustQuery("hastouristattraction", "False", ComparisonType.EQUAL);
         }
         if (chargingCost.isSelected()) {
             manage.adjustQuery("haschargingcost", "False", ComparisonType.EQUAL);
         }
+        if (hasChargingCost.isSelected()) {
+            manage.adjustQuery("haschargingcost", "True", ComparisonType.EQUAL);
+        }
         if (searchCharger.getText().length() != 0) {
             manage.adjustQuery("address", searchCharger.getText(), ComparisonType.CONTAINS);
         }
+
         manage.makeAllChargers();
         if (distanceDisplay.isSelected()) {
             manage.setDistance(changeDistance.getValue());
