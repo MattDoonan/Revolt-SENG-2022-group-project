@@ -16,7 +16,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -121,6 +120,8 @@ public class VehicleController {
 
     private Stage updatePopup = new Stage();
 
+    private Stage editPopup = new Stage();
+
     private VehicleManager manage = new VehicleManager();
 
     private VehicleController controller;
@@ -147,23 +148,40 @@ public class VehicleController {
 
 
     /**
-     * Displays pop-up window to add a new vehicle to the garage
+     * Initialises the pop-up window that allows a user to add or edit a 
+     * vehicle to/in the garage
      */
-    @FXML
-    public void displayUpdate() {
+    public void initializeUpdate() {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/vehicle_update.fxml"));
             updatePopup.initModality(Modality.APPLICATION_MODAL);
             updatePopup.setResizable(false);
             updatePopup.setTitle("Vehicle Information");
             updatePopup.setScene(new Scene(root, 337, 497));
-            updatePopup.showAndWait();
         } catch (IOException e) {
             Logger logger = Logger.getLogger(getClass().getName());
             logger.log(Level.SEVERE, "Failed to create new Window.", e);
         } finally {
             refresh();
         }
+    }
+
+
+    /**
+     * Displays pop-up window that allows a user to add a 
+     * vehicle to/in the garage
+     */
+    @FXML
+    public void displayUpdate() {
+        try {
+            if (updatePopup.getTitle() == null) {
+                initializeUpdate();
+            }
+            updatePopup.showAndWait();
+        } finally {
+            refresh();
+        }
+        
     }
 
 
@@ -220,26 +238,42 @@ public class VehicleController {
      *
      * @param vehicle the {@link Vehicle} for the vehicle info. Null if adding.
      */
-    public void launchEditable(Vehicle vehicle) {
+    public void initializeEditable(Vehicle vehicle) {
         try {
             FXMLLoader vehicleEdit = new FXMLLoader(getClass().getResource(
                     "/fxml/vehicle_update.fxml"));
             AnchorPane root = vehicleEdit.load();
             Scene modalScene = new Scene(root);
-            Stage modal = new Stage();
-            modal.setScene(modalScene);
-            modal.setResizable(false);
-            modal.setTitle("Vehicle Information");
-            modal.initModality(Modality.WINDOW_MODAL);
+            editPopup.setScene(modalScene);
+            editPopup.setResizable(false);
+            editPopup.setTitle("Vehicle Information");
+            editPopup.initModality(Modality.WINDOW_MODAL);
             VehicleUpdateController controller = vehicleEdit.getController();
             controller.displayInfo(vehicle);
-            modal.setAlwaysOnTop(true);
-            modal.showAndWait();
+            editPopup.setAlwaysOnTop(true);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            setData();
+            // setData();
+            refresh();
         }
+    }
+
+
+    /**
+     * Displays pop-up window that allows a user to edit a 
+     * vehicle to/in the garage
+     */
+    public void launchEditable(Vehicle vehicle) {
+        try {
+            if (editPopup.getTitle() == null) {
+                initializeEditable(vehicle);
+            }
+            editPopup.showAndWait();
+        } finally {
+            refresh();
+        }
+        
     }
 
     
@@ -387,7 +421,6 @@ public class VehicleController {
             }
             try {
                 if (vehicleData.get(index).getImgPath() != null) {
-                    System.out.println(vehicleData.get(index).getImgPath());
                     Image image = new Image(new FileInputStream(
                         vehicleData.get(index).getImgPath()));
                     imageview.setImage(image);

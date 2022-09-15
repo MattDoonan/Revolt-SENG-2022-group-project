@@ -9,18 +9,25 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Labeled;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -63,7 +70,7 @@ public class VehicleUpdateController {
 
     private Vehicle selectedVehicle;
 
-    private String selectedImg;
+    private String selectedImg = "car_one.png";
 
     private ArrayList<String> connections = new ArrayList<String>();
 
@@ -72,7 +79,7 @@ public class VehicleUpdateController {
     private String[] imgNames = {"car_one.png", "car_two.png", "car_three.png",
         "truck_one.png", "truck_two.png"};
 
-    private Stage updatePopup = new Stage();
+    private Stage imagePopup = new Stage();
 
     private Stage connectorPopup = new Stage();
 
@@ -97,7 +104,7 @@ public class VehicleUpdateController {
     @FXML
     public void saveChanges() {
         Vehicle vehicle;
-        System.out.println("selectedVehicle: " + selectedVehicle);
+        // System.out.println("selectedVehicle: " + selectedVehicle);
         if (selectedVehicle != null) {
             if (selectedImg != null) {
                 selectedVehicle.setImgPath("src/main/resources/images/" + selectedImg);
@@ -107,19 +114,27 @@ public class VehicleUpdateController {
             selectedVehicle.setModel(modelText.getText());
             selectedVehicle.setMake(makeText.getText());
             vehicle = selectedVehicle;
-            System.out.println("VControl selectedVehicleID: " + selectedVehicle.getVehicleId());
+            // System.out.println("VControl selectedVehicleID: " + selectedVehicle.getVehicleId());
         } else {
             vehicle = new Vehicle(makeText.getText(),
             modelText.getText(),
             Integer.parseInt(maxRangeText.getText()), connections);
             vehicle.setImgPath("src/main/resources/images/" + selectedImg);
-            System.out.println("VControl vehicleid: " + vehicle.getVehicleId());
+            // System.out.println("VControl vehicleid: " + vehicle.getVehicleId());
         }
-        System.out.println("VControl VehicleID: " + vehicle.getVehicleId());
+        // System.out.println("VControl VehicleID: " + vehicle.getVehicleId());
         try {
             SqlInterpreter.getInstance().writeVehicle(vehicle);
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            makeText.setText(null);
+            modelText.setText(null);
+            maxRangeText.setText(null);
+            addedConnections.setText(null);
+            imgName.setText(null);
+            connections = new ArrayList<>();
+            connectorType.setPromptText("Connector Type");
         }
         selectedVehicle = null;
         Stage popupStage = (Stage) saveChanges.getScene().getWindow();
@@ -166,7 +181,7 @@ public class VehicleUpdateController {
     public void selectImg() {
         try {
             saveImg.setOnAction(e -> save());
-            saveImg.setLayoutX(538);
+            saveImg.setLayoutX(280);
             saveImg.setLayoutY(360);
             for (int i = 0; i < imgNames.length; i++) {
                 Image img = new Image(new FileInputStream("src/main/resources/images/"
@@ -178,25 +193,82 @@ public class VehicleUpdateController {
                 imgBtns.add(button);
                 button.setOnAction(e -> imgSelected(e));
             }
-            VBox anchor = new VBox();
-            anchor.getChildren().addAll(imgBtns);
-            ScrollPane imgsDisplay = new ScrollPane();
-            imgsDisplay.setPrefViewportWidth(570);
-            imgsDisplay.setPrefViewportHeight(330);
-            imgsDisplay.setContent(anchor);
-            imgsDisplay.setPannable(true);
-            AnchorPane root = new AnchorPane();
-            root.getChildren().addAll(imgsDisplay, saveImg);
-            updatePopup.initModality(Modality.APPLICATION_MODAL);
-            updatePopup.setResizable(false);
-            updatePopup.setTitle("Select Image");
-            updatePopup.setScene(new Scene(root, 600, 400));
-            updatePopup.showAndWait();
+            displayImgSelect();
         } catch (IOException e) {
             Logger logger = Logger.getLogger(getClass().getName());
-            logger.log(Level.SEVERE, "Failed to create new Window.", e);
+            logger.log(Level.SEVERE, "File not found.", e);
         }
     }
+
+
+    /**
+     * Initialises the pop-up window that allows a user to select
+     * a vehicle image.
+     */
+    public void initializeImgSelect() {
+        TilePane anchor = new TilePane();
+        anchor.setPadding(new Insets(5));
+        anchor.setVgap(5);
+        anchor.setHgap(5);
+        anchor.setPrefColumns(2);
+
+        for (int i = 0; i < imgBtns.size(); i++) {
+            Button curr = imgBtns.get(i);
+            curr.setPadding(new Insets(30));
+            anchor.getChildren().add(curr);
+        }
+        
+        ScrollPane imgsDisplay = new ScrollPane();
+        imgsDisplay.setContent(anchor); 
+        imgsDisplay.setPrefViewportWidth(322);
+        imgsDisplay.setPrefViewportHeight(320);
+        imgsDisplay.setStyle("-fx-background-color: white;");
+
+        // imagePopup.setScene(new Scene(imgsDisplay, 337, 450));
+        // imagePopup.show();
+        AnchorPane root = new AnchorPane();
+        root.getChildren().addAll(imgsDisplay, saveImg);
+        imagePopup.initModality(Modality.APPLICATION_MODAL);
+        imagePopup.setResizable(false);
+        imagePopup.setTitle("Select Image");
+        imagePopup.setScene(new Scene(root, 337, 400));
+
+
+        // TilePane anchor = new TilePane();
+
+        // for (int i = 0; i < imgBtns.size(); i++) {
+        //     anchor.getChildren().add(imgBtns.get(i));
+        // }
+
+        // anchor.setTileAlignment(Pos.TOP_LEFT);
+
+        // // anchor.getChildren().addAll(imgBtns);
+        // ScrollPane imgsDisplay = new ScrollPane();
+        // imgsDisplay.setPrefViewportWidth(230);
+        // imgsDisplay.setPrefViewportHeight(450);
+        // imgsDisplay.setContent(anchor);
+        // imgsDisplay.setHbarPolicy(ScrollBarPolicy.NEVER);
+        // imgsDisplay.setVbarPolicy(ScrollBarPolicy.ALWAYS);
+        // // imgsDisplay.setPannable(true);
+        // // AnchorPane root = new AnchorPane();
+        // // root.getChildren().addAll(anchor, saveImg);
+        // imagePopup.initModality(Modality.APPLICATION_MODAL);
+        // imagePopup.setResizable(false);
+        // imagePopup.setTitle("Select Image");
+        // imagePopup.setScene(new Scene(imgsDisplay, 337, 450));
+    }
+
+    /**
+     * Displays pop-up window that allows a user to select a 
+     * vehicle image
+     */
+    public void displayImgSelect() {
+        if (imagePopup.getTitle() == null) {
+            initializeImgSelect();
+        }
+        imagePopup.showAndWait();
+    }
+
 
 
     /**
