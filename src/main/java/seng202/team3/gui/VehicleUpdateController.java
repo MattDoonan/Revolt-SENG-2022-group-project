@@ -9,6 +9,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -79,6 +80,8 @@ public class VehicleUpdateController {
     private String[] imgNames = {"car_one.png", "car_two.png", "car_three.png",
         "truck_one.png", "truck_two.png"};
 
+    private ArrayList<String> errors = new ArrayList<>();
+
     private Stage imagePopup = new Stage();
 
     private Stage connectorPopup = new Stage();
@@ -104,7 +107,6 @@ public class VehicleUpdateController {
     @FXML
     public void saveChanges() {
         Vehicle vehicle;
-        // System.out.println("selectedVehicle: " + selectedVehicle);
         if (selectedVehicle != null) {
             if (selectedImg != null) {
                 selectedVehicle.setImgPath("src/main/resources/images/" + selectedImg);
@@ -114,27 +116,43 @@ public class VehicleUpdateController {
             selectedVehicle.setModel(modelText.getText());
             selectedVehicle.setMake(makeText.getText());
             vehicle = selectedVehicle;
-            // System.out.println("VControl selectedVehicleID: " + selectedVehicle.getVehicleId());
         } else {
-            vehicle = new Vehicle(makeText.getText(),
-            modelText.getText(),
-            Integer.parseInt(maxRangeText.getText()), connections);
+            vehicle = new Vehicle();
+
+            if (makeText.getText().equals("")) {
+                errors.add("Vehicle make required.");
+            }
+            if (modelText.getText().equals("")) {
+                errors.add("Vehicle model required.");
+            }
+            try {
+                vehicle.setMaxRange(Integer.parseInt(maxRangeText.getText()));
+            } catch (NumberFormatException e) {
+                errors.add("A vehicle's maximum range must be a whole number.");
+            }
+            if (connections.size() == 0) {
+                errors.add("A vehicle must have at least one connector.");
+            }
             vehicle.setImgPath("src/main/resources/images/" + selectedImg);
-            // System.out.println("VControl vehicleid: " + vehicle.getVehicleId());
-        }
-        // System.out.println("VControl VehicleID: " + vehicle.getVehicleId());
-        try {
-            SqlInterpreter.getInstance().writeVehicle(vehicle);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            makeText.setText(null);
-            modelText.setText(null);
-            maxRangeText.setText(null);
-            addedConnections.setText(null);
-            imgName.setText(null);
-            connections = new ArrayList<>();
-            connectorType.setPromptText("Connector Type");
+    
+            if (errors.size() == 0) {
+                try {
+                    SqlInterpreter.getInstance().writeVehicle(vehicle);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    makeText.setText(null);
+                    modelText.setText(null);
+                    maxRangeText.setText(null);
+                    addedConnections.setText(null);
+                    imgName.setText(null);
+                    connections = new ArrayList<>();
+                    connectorType.setPromptText("Connector Type");
+                }
+            } else {
+                launchErrorPopUps();
+                errors.clear();
+            }
         }
         selectedVehicle = null;
         Stage popupStage = (Stage) saveChanges.getScene().getWindow();
@@ -211,52 +229,23 @@ public class VehicleUpdateController {
         anchor.setVgap(5);
         anchor.setHgap(5);
         anchor.setPrefColumns(2);
-
         for (int i = 0; i < imgBtns.size(); i++) {
             Button curr = imgBtns.get(i);
             curr.setPadding(new Insets(30));
             anchor.getChildren().add(curr);
         }
-        
         ScrollPane imgsDisplay = new ScrollPane();
         imgsDisplay.setContent(anchor); 
         imgsDisplay.setPrefViewportWidth(322);
         imgsDisplay.setPrefViewportHeight(320);
-        imgsDisplay.setStyle("-fx-background-color: white;");
-
-        // imagePopup.setScene(new Scene(imgsDisplay, 337, 450));
-        // imagePopup.show();
         AnchorPane root = new AnchorPane();
         root.getChildren().addAll(imgsDisplay, saveImg);
         imagePopup.initModality(Modality.APPLICATION_MODAL);
         imagePopup.setResizable(false);
         imagePopup.setTitle("Select Image");
         imagePopup.setScene(new Scene(root, 337, 400));
-
-
-        // TilePane anchor = new TilePane();
-
-        // for (int i = 0; i < imgBtns.size(); i++) {
-        //     anchor.getChildren().add(imgBtns.get(i));
-        // }
-
-        // anchor.setTileAlignment(Pos.TOP_LEFT);
-
-        // // anchor.getChildren().addAll(imgBtns);
-        // ScrollPane imgsDisplay = new ScrollPane();
-        // imgsDisplay.setPrefViewportWidth(230);
-        // imgsDisplay.setPrefViewportHeight(450);
-        // imgsDisplay.setContent(anchor);
-        // imgsDisplay.setHbarPolicy(ScrollBarPolicy.NEVER);
-        // imgsDisplay.setVbarPolicy(ScrollBarPolicy.ALWAYS);
-        // // imgsDisplay.setPannable(true);
-        // // AnchorPane root = new AnchorPane();
-        // // root.getChildren().addAll(anchor, saveImg);
-        // imagePopup.initModality(Modality.APPLICATION_MODAL);
-        // imagePopup.setResizable(false);
-        // imagePopup.setTitle("Select Image");
-        // imagePopup.setScene(new Scene(imgsDisplay, 337, 450));
     }
+
 
     /**
      * Displays pop-up window that allows a user to select a 
@@ -268,7 +257,6 @@ public class VehicleUpdateController {
         }
         imagePopup.showAndWait();
     }
-
 
 
     /**
@@ -303,6 +291,32 @@ public class VehicleUpdateController {
             addedConnections.setText(vehicle.getConnectors().toString());
             imgName.setText(vehicle.getImgPath().replace("src/main/resources/images/", ""));
             connections = vehicle.getConnectors();
+        }
+    }
+
+    /**
+     * Launches an error popup when trying to do illegal things
+     */
+    public void launchErrorPopUps() {
+        try {
+            FXMLLoader error = new FXMLLoader(getClass().getResource(
+                    "/fxml/error_popup.fxml"));
+            AnchorPane base = error.load();
+            Scene modalScene = new Scene(base);
+            Stage errorPopup = new Stage();
+            errorPopup.setScene(modalScene);
+            errorPopup.setResizable(false);
+            errorPopup.setTitle("Error With Vehicle:");
+            errorPopup.initModality(Modality.WINDOW_MODAL);
+            ErrorController controller = error.getController();
+            controller.init();
+            controller.setErrors(errors);
+            controller.setPromptType("error");
+            controller.displayErrors();
+            errorPopup.setAlwaysOnTop(true);
+            errorPopup.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
