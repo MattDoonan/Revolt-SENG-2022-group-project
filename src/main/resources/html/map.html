@@ -172,7 +172,7 @@
             let m = new L.Marker([lat, lng])
             m.id = id
             m.bindPopup("Address: " + title + "<br><button type='button' onclick='javaScriptBridge.loadMoreInfo("+
-                id + ")'>More Info</button>")
+                id + ")'>Edit Charger</button>")
             m.on("mouseover", function(ev) {m.openPopup();})
             m.addTo(map).on("click", e => javaScriptBridge.chargerHandler(id),
             )

@@ -1,5 +1,8 @@
 package seng202.team3.gui;
 
+import java.beans.EventHandler;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import javafx.beans.property.ReadOnlyDoubleWrapper;
@@ -7,14 +10,23 @@ import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.entity.Charger;
@@ -45,28 +57,19 @@ public class MainController {
     private CheckBox dcButton;
 
     @FXML
-    private TextArea displayInfo;
+    private HBox displayInfo;
 
     @FXML
     private CheckBox distanceDisplay;
 
     @FXML
-    private TableView<Charger> chargerTable;
+    private VBox chargerTable;
 
     @FXML
     private CheckBox attractionButton;
 
     @FXML
     private CheckBox chargingCost;
-
-    @FXML
-    private final TableColumn<Charger, String> addressCol = new TableColumn<>("Address");
-
-    @FXML
-    private final TableColumn<Charger, String> operatorCol = new TableColumn<>("Operator");
-
-    @FXML
-    private final TableColumn<Charger, Double> distanceCol = new TableColumn<>("km");
 
     @FXML
     private BorderPane mainWindow;
@@ -86,12 +89,10 @@ public class MainController {
         this.stage = stage;
         manage = new MainManager();
         loadMapView(this.stage);
-        tableMaker();
         manage.resetQuery();
         manage.makeAllChargers();
         manage.setDistance(changeDistance.getValue());
         addChargersToDisplay(manage.getCloseChargerData());
-        selectToView();
         change();
 
     }
@@ -102,13 +103,14 @@ public class MainController {
      * @param c charger to display information about
      */
     public void viewChargers(Charger c) {
-        displayInfo.clear();
+        displayInfo.getChildren().removeAll(displayInfo.getChildren());
         if (c == null) {
             if (manage.getCloseChargerData().size() != 0) {
                 manage.setSelectedCharger(manage.getCloseChargerData().get(0));
                 viewChargers(manage.getCloseChargerData().get(0));
             } else {
-                displayInfo.setText("No Charger Selected");
+                displayInfo.getChildren().add(new Text("No Charger Selected"));
+                displayInfo.setAlignment(Pos.CENTER);
             }
         } else {
             StringBuilder word = new StringBuilder();
@@ -119,13 +121,44 @@ public class MainController {
                     check.add(c.getConnectors().get(i).getCurrent());
                 }
             }
-            displayInfo.appendText("Operator: " + c.getOperator() + "\n"
-                    + "Location: " + c.getLocation().getAddress()
-                    + "\n" + "Number of parks: " + c.getAvailableParks()
-                    + "\nTime Limit " + c.getTimeLimit()
-                    + "\nHas Attraction = " + c.getHasAttraction()
-                    + "\nHas cost " + c.getChargeCost() + "\nCharger Type:"
-                    + word + "");
+            try {
+                ImageView image = new ImageView(new Image(
+                        new FileInputStream("src/main/resources/images/charger.png")));
+                image.setFitHeight(150);
+                image.setFitWidth(150);
+                displayInfo.getChildren().add(image);
+            } catch (FileNotFoundException e) {
+                Label image = new Label("Image");
+                displayInfo.getChildren().add(image);
+            }
+            VBox display = new VBox();
+            display.getChildren().add(new Text("" + c.getName() + ""));
+            display.getChildren().add(new Text("" + c.getLocation().getAddress() + "\n"));
+            display.getChildren().add(new Text("Current types " + word + ""));
+            if (c.getOperator() != null) {
+                display.getChildren().add(new Text("Operator is: " + c.getOperator() + ""));
+            }
+            display.getChildren().add(new Text("Owner is: " + c.getOwner() + ""));
+            if (c.getChargeCost()) {
+                display.getChildren().add(new Text("Charger has a cost"));
+            } else {
+                display.getChildren().add(new Text("Charger has no cost"));
+            }
+            if (c.getAvailable24Hrs()) {
+                display.getChildren().add(new Text("Open 24"));
+            } else {
+                display.getChildren().add(new Text("Open 24 hours"));
+            }
+            display.getChildren().add(new Text("Has " + c.getAvailableParks() + " parking spaces"));
+            if (c.getTimeLimit() == 0) {
+                display.getChildren().add(new Text("Has no time limit"));
+            } else {
+                display.getChildren().add(new Text("Has " + c.getTimeLimit() + " minute limit"));
+            }
+            if (c.getHasAttraction()) {
+                display.getChildren().add(new Text("Has near by attraction"));
+            }
+            displayInfo.getChildren().add(display);
             getManager().setSelectedCharger(c);
         }
     }
@@ -133,70 +166,65 @@ public class MainController {
     /**
      * Changes active charger on selected and moves the map
      */
-    public void selectToView() {
-        chargerTable.getSelectionModel().selectedItemProperty()
-                .addListener((observable, oldValue, newValue) -> {
-                    Charger selectedCharger = chargerTable.getSelectionModel()
-                            .getSelectedItem();
-                    if (selectedCharger != null) {
-                        viewChargers(selectedCharger);
-                        manage.setSelectedCharger(selectedCharger);
-                        // Added functionality to move screen to charger
-                        if (mapController != null) {
-                            mapController.changePosition(selectedCharger.getLocation());
-                        }
-                    }
-
-                });
-    }
-
-    /**
-     * Create charger table
-     */
-    public void tableMaker() {
-        chargerTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        addressCol.setMaxWidth(1f * Integer.MAX_VALUE * 30);
-        operatorCol.setMaxWidth(1f * Integer.MAX_VALUE * 15);
-        distanceCol.setMaxWidth(1f * Integer.MAX_VALUE * 5);
-
-        chargerTable.getColumns().add(addressCol);
-        chargerTable.getColumns().add(operatorCol);
-        chargerTable.getColumns().add(distanceCol);
-        chargerTable.requestFocus();
-        chargerTable.getSelectionModel().select(0);
+    public void selectToView(int number) {
+        Charger selectedCharger = manage.getCloseChargerData().get(number);
+        manage.setSelectedCharger(selectedCharger);
+        viewChargers(selectedCharger);
+        if (mapController != null) {
+            mapController.changePosition(selectedCharger.getLocation());
+        }
     }
 
     /**
      * Adds every charger in charger list to the table
      */
     public void addChargersToDisplay(ObservableList<Charger> chargersToAdd) {
-        chargerTable.getItems().clear();
-        chargerTable.setItems(chargersToAdd);
 
-        addressCol.setCellValueFactory(
-                charger -> new ReadOnlyStringWrapper(
-                        charger.getValue().getLocation().getAddress()));
-
-        operatorCol.setCellValueFactory(
-                charger -> new ReadOnlyStringWrapper(charger.getValue().getOperator()));
-
-        distanceCol.setCellValueFactory(
-                charger -> new ReadOnlyDoubleWrapper(
-                        Math.round((Calculations.calculateDistance(manage.getPosition(),
-                                charger.getValue().getLocation())) * 10.0) / 10.0)
-                        .asObject());
-
-        chargerTable.getSelectionModel().select(0);
-        chargerTable.getSortOrder().add(distanceCol);
-        chargerTable.sort();
-
+        chargerTable.getChildren().removeAll(chargerTable.getChildren());
+        for (int i = 0; i < chargersToAdd.size(); i++) {
+            HBox add = new HBox();
+            try {
+                ImageView image = new ImageView(new Image(
+                        new FileInputStream("src/main/resources/images/charger.png")));
+                add.getChildren().add(image);
+            } catch (FileNotFoundException e) {
+                Label image = new Label("Image");
+                add.getChildren().add(image);
+            }
+            VBox content = new VBox(new Text(chargersToAdd.get(i).getName()),
+                    new Text(chargersToAdd.get(i).getLocation().getAddress()),
+                    new Text(chargersToAdd.get(i).getOperator()),
+                    new Text("" + Math.round(Calculations.calculateDistance(
+                            manage.getPosition(), chargersToAdd.get(i).getLocation()))
+                            * 10.0 / 10.0 + "km"));
+            add.getChildren().add(content);
+            add.setPadding(new Insets(10));
+            add.setSpacing(10);
+            int finalI = i;
+            add.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, event -> {
+                selectToView(finalI);
+            });
+            add.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, event -> {
+                add.setStyle("-fx-background-color:#FFF8EB;");
+            });
+            add.addEventHandler(MouseEvent.MOUSE_EXITED_TARGET, event -> {
+                add.setStyle("-fx-background-color:#FFFFFF;");
+            });
+            chargerTable.getChildren().add(add);
+            add.prefWidthProperty().bind(chargerTable.widthProperty());
+            add.prefHeightProperty().bind(chargerTable.heightProperty());
+        }
         if (getMapController().getConnectorStatus()) {
             getMapController().addChargersOnMap();
         }
-        if (!chargerTable.getItems().isEmpty()) {
-            viewChargers(chargerTable.getItems().get(0));
+        if (chargerTable.getChildren().size() != 0) {
+            viewChargers(chargersToAdd.get(0));
         }
-        refreshTable();
+    }
+
+
+    public void refreshTable() {
+        addChargersToDisplay(manage.getCloseChargerData());
     }
 
     /**
@@ -244,13 +272,6 @@ public class MainController {
         if (chargers.size() != 0) {
             mapController.changePosition(chargers.get(0).getLocation());
         }
-    }
-
-    /**
-     * Focuses the ChargerTable
-     */
-    public void refreshTable() {
-        chargerTable.refresh();
     }
 
     /**

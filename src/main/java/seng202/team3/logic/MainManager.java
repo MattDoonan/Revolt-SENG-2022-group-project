@@ -100,7 +100,6 @@ public class MainManager extends ChargerHandler {
                     arrayChargers, selectedCoordinate, distance);
         }
         ObservableList<Charger> closerChargers = FXCollections.observableList(arrayChargers);
-
         return closerChargers;
     }
 

@@ -1,5 +1,6 @@
 package seng202.team3.logic;
 
+import com.sun.tools.javac.Main;
 import java.io.IOException;
 import java.util.List;
 import javafx.fxml.FXMLLoader;
@@ -71,9 +72,6 @@ public class JavaScriptBridge {
         new MenuController().getController().getManager().getPosition().setAddress(address);
     }
 
-    /**
-     * Refreshes the table
-     */
     public void refreshTable() {
         MainController controller = new MenuController().getController();
         controller.refreshTable();
