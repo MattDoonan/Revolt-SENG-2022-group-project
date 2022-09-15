@@ -110,6 +110,23 @@ public abstract class ChargerHandler {
         mainDataQuery.withFilter(field, criteria, type);
     }
 
+    /**
+     * Returns a string of connectors names;
+     * @param c a charger object
+     * @return a String of connector names
+     */
+    public String getConnectors(Charger c) {
+        StringBuilder word = new StringBuilder();
+        ArrayList<String> check = new ArrayList<>();
+        for (int i = 0; i < c.getConnectors().size(); i++) {
+            if (!check.contains(c.getConnectors().get(i).getCurrent())) {
+                word.append(" ").append(c.getConnectors().get(i).getCurrent());
+                check.add(c.getConnectors().get(i).getCurrent());
+            }
+        }
+        return word.toString();
+    }
+
 
     /**
      * Adds a charger

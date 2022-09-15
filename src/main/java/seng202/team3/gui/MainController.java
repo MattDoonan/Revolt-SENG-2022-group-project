@@ -17,8 +17,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -74,6 +73,8 @@ public class MainController {
     @FXML
     private BorderPane mainWindow;
 
+    private BorderPane menuWindow;
+
     private Stage stage;
 
     private MapViewController mapController;
@@ -85,8 +86,9 @@ public class MainController {
      *
      * @param stage Top level container for this window
      */
-    public void init(Stage stage) {
+    public void init(Stage stage, BorderPane menuWindow) {
         this.stage = stage;
+        this.menuWindow = menuWindow;
         manage = new MainManager();
         loadMapView(this.stage);
         manage.resetQuery();
@@ -113,14 +115,6 @@ public class MainController {
                 displayInfo.setAlignment(Pos.CENTER);
             }
         } else {
-            StringBuilder word = new StringBuilder();
-            ArrayList<String> check = new ArrayList<>();
-            for (int i = 0; i < c.getConnectors().size(); i++) {
-                if (!check.contains(c.getConnectors().get(i).getCurrent())) {
-                    word.append(" ").append(c.getConnectors().get(i).getCurrent());
-                    check.add(c.getConnectors().get(i).getCurrent());
-                }
-            }
             try {
                 ImageView image = new ImageView(new Image(
                         new FileInputStream("src/main/resources/images/charger.png")));
@@ -134,6 +128,7 @@ public class MainController {
             VBox display = new VBox();
             display.getChildren().add(new Text("" + c.getName() + ""));
             display.getChildren().add(new Text("" + c.getLocation().getAddress() + "\n"));
+            String word = manage.getConnectors(c);
             display.getChildren().add(new Text("Current types " + word + ""));
             if (c.getOperator() != null) {
                 display.getChildren().add(new Text("Operator is: " + c.getOperator() + ""));
@@ -328,5 +323,19 @@ public class MainController {
         mapController.toggleRoute();
     }
 
-
+    /**
+     * Initialises the welcome page;
+     */
+    public void loadTableView() {
+        try {
+            FXMLLoader mainScene = new FXMLLoader(getClass()
+                    .getResource("/fxml/main_table.fxml"));
+            Parent mainNode = mainScene.load();
+            TableController controller = mainScene.getController();
+            controller.init(this.stage);
+            menuWindow.setCenter(mainNode);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.layout.BorderPane?>
 
-<SplitPane dividerPositions="0.10552763819095477" minHeight="100" minWidth="300" orientation="VERTICAL" prefHeight="461.0" prefWidth="701.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.MenuController">
+<SplitPane dividerPositions="0.10552763819095477" minHeight="100" minWidth="300" orientation="VERTICAL" prefHeight="461.0" prefWidth="701.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.MenuController">
     <items>
         <MenuBar fx:id="menu" layoutX="-1.0" maxHeight="60.00" minHeight="60.0" nodeOrientation="RIGHT_TO_LEFT" style="-fx-background-color: #e06666;">
             <menus>
@@ -26,10 +29,9 @@
                 </Menu>
                 <Menu fx:id="homeMenu" mnemonicParsing="false" style="-fx-font-size: 20;" text="Home">
                     <MenuItem fx:id="loadHome" mnemonicParsing="false" onAction="#loadHome" text="Main Page" />
-               <MenuItem mnemonicParsing="false" text="View Charger List" onAction="#loadTableView"/>
                 </Menu>
             </menus>
         </MenuBar>
-        <BorderPane fx:id="mainWindow" maxHeight="Infinity" maxWidth="Infinity" minHeight="0.0" />
+        <BorderPane fx:id="menuWindow" maxHeight="Infinity" maxWidth="Infinity" minHeight="0.0" />
     </items>
 </SplitPane>

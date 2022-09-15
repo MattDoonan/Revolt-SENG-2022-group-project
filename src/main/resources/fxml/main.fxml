@@ -87,7 +87,7 @@
                               </CustomMenuItem>
                           </items>
                       </MenuButton>
-        <Button minWidth="140.0" mnemonicParsing="false" onAction="#toggleRoute" prefHeight="40.0" prefWidth="55.0" text="Show Route">
+        <Button minWidth="140.0" mnemonicParsing="false" onAction="#loadTableView" prefHeight="40.0" prefWidth="55.0" text="Show Table">
            <font>
               <Font size="17.0" />
            </font>

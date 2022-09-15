@@ -24,7 +24,7 @@ public class MenuController {
     private static MainController controller;
 
     @FXML
-    private BorderPane mainWindow;
+    private BorderPane menuWindow;
 
     /**
      * Initialize the window
@@ -43,8 +43,8 @@ public class MenuController {
             FXMLLoader mainScene = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
             Parent mainNode = mainScene.load();
             controller = mainScene.getController();
-            controller.init(stage);
-            mainWindow.setCenter(mainNode);
+            controller.init(stage, menuWindow);
+            menuWindow.setCenter(mainNode);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -78,7 +78,7 @@ public class MenuController {
             Parent mainNode = mainScene.load();
             WelcomeController controller = mainScene.getController();
             controller.init(stage, this);
-            mainWindow.setCenter(mainNode);
+            menuWindow.setCenter(mainNode);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -93,7 +93,7 @@ public class MenuController {
             Parent journeyViewParent = journeyLoader.load();
             JourneyController controller = journeyLoader.getController();
             controller.init(stage, this);
-            mainWindow.setCenter(journeyViewParent);
+            menuWindow.setCenter(journeyViewParent);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -121,22 +121,6 @@ public class MenuController {
             e.printStackTrace();
         }
 
-    }
-
-    /**
-     * Initialises the welcome page;
-     */
-    public void loadTableView() {
-        try {
-            FXMLLoader mainScene = new FXMLLoader(getClass()
-                    .getResource("/fxml/main_table.fxml"));
-            Parent mainNode = mainScene.load();
-            TableController controller = mainScene.getController();
-            controller.init(stage);
-            mainWindow.setCenter(mainNode);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
 
