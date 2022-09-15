@@ -54,9 +54,12 @@
             <ComboBox fx:id="connectorType" prefHeight="26.0" prefWidth="150.0" promptText="Connector Type" GridPane.columnIndex="1" GridPane.rowIndex="5">
                <items>
                   <FXCollections fx:factory="observableArrayList">
-                     <String fx:id="Type_1" fx:value="Type 1" />
-                     <String fx:id="Type_2" fx:value="Type 2" />
-                     <String fx:id="CCS" fx:value="CCS" />
+                     <String fx:id="Type_1_Teth" fx:value="Type 1 Tethered" />
+                     <String fx:id="Type_2_Teth" fx:value="Type 2 Tethered" />
+                     <String fx:id="Type_1_Sock" fx:value="Type 1 Socketed" />
+                     <String fx:id="Type_2_Sock" fx:value="Type 2 Socketed" />
+                     <String fx:id="Type_1_CCS" fx:value="Type 1 CCS" />
+                     <String fx:id="Type_2_CCS" fx:value="Type 2 CCS" />
                      <String fx:id="CHAdeMO" fx:value="CHAdeMO" />
                      <String fx:id="other" fx:value="Other..." />
                   </FXCollections>
