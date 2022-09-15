@@ -18,7 +18,6 @@ import javafx.stage.Stage;
 import netscape.javascript.JSObject;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
-import seng202.team3.data.entity.Journey;
 import seng202.team3.logic.JavaScriptBridge;
 import seng202.team3.logic.MapManager;
 

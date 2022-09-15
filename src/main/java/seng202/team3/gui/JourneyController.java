@@ -7,7 +7,6 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import seng202.team3.logic.MapManager;
 
 /**
  * Controller for journeySidebar.fxml

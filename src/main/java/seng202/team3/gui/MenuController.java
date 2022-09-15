@@ -4,12 +4,7 @@ import java.io.IOException;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
@@ -105,22 +100,14 @@ public class MenuController {
      */
     public void loadVehicleScreen() {
         try {
-            FXMLLoader vehicleLoader = new FXMLLoader(getClass().getResource(
-                    "/fxml/garage.fxml"));
-            AnchorPane root = vehicleLoader.load();
-            VehicleController baseController = vehicleLoader.getController();
-            baseController.init();
-            Scene modalScene = new Scene(root);
-            Stage modal = new Stage();
-            modal.setScene(modalScene);
-            modal.setResizable(false);
-            modal.setTitle("Vehicle Screen");
-            modal.initModality(Modality.WINDOW_MODAL);
-            modal.showAndWait();
+            FXMLLoader garageLoader = new FXMLLoader(getClass().getResource("/fxml/garage.fxml"));
+            Parent garageViewParent = garageLoader.load();
+            GarageController controller = garageLoader.getController();
+            controller.init(stage, this);
+            mainWindow.setCenter(garageViewParent);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
 }

@@ -3,7 +3,6 @@ package seng202.team3.gui;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
@@ -35,7 +34,7 @@ import seng202.team3.logic.VehicleManager;
  * @author Celia Allen
  * @version 1.0.3, Aug 22
  */
-public class VehicleController {
+public class GarageController {
 
     @FXML
     private TextArea makeModelOne;
@@ -114,8 +113,6 @@ public class VehicleController {
 
     private ObservableList<Vehicle> vehicleData = FXCollections.observableArrayList();
 
-    private ArrayList<String> connections = new ArrayList<String>();
-
     private Vehicle selectedVehicle;
 
     private Stage updatePopup = new Stage();
@@ -124,7 +121,9 @@ public class VehicleController {
 
     private VehicleManager manage = new VehicleManager();
 
-    private VehicleController controller;
+    private GarageController controller;
+
+    private Stage stage;
 
 
     /**
@@ -132,6 +131,16 @@ public class VehicleController {
      *
      */
     public void init() {
+        refresh();
+    }
+
+    /**
+     * Initialize the window
+     *
+     * @param stage Top level container for this window
+     */
+    public void init(Stage stage, MenuController menu) {
+        this.stage = stage;
         refresh();
     }
 
@@ -306,11 +315,11 @@ public class VehicleController {
 
 
     /**
-     * Sets the VehicleController holding all the controllers
+     * Sets the GarageController holding all the controllers
      *
-     * @param controller VehicleController controller
+     * @param controller GarageController controller
      */
-    public void setController(VehicleController controller) {
+    public void setController(GarageController controller) {
         this.controller = controller;
     }
 
