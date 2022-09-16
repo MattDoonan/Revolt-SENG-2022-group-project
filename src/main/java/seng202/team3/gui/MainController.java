@@ -220,7 +220,7 @@ public class MainController {
             VBox content = new VBox(new Text(chargersToAdd.get(i).getName()),
                     new Text(chargersToAdd.get(i).getLocation().getAddress()),
                     new Text(chargersToAdd.get(i).getOperator()),
-                    new Text("" + Math.round(Calculations.calculateDistance(
+                    new Text("\n" + Math.round(Calculations.calculateDistance(
                             manage.getPosition(), chargersToAdd.get(i).getLocation()))
                             * 10.0 / 10.0 + "km"));
             add.getChildren().add(content);
@@ -237,14 +237,14 @@ public class MainController {
                 add.setStyle("-fx-background-color:#FFFFFF;");
             });
             chargerTable.getChildren().add(add);
-            add.prefWidthProperty().bind(chargerTable.widthProperty());
-            add.prefHeightProperty().bind(chargerTable.heightProperty());
         }
         if (getMapController().getConnectorStatus()) {
             getMapController().addChargersOnMap();
         }
         if (chargerTable.getChildren().size() != 0) {
             viewChargers(chargersToAdd.get(0));
+        } else {
+            viewChargers(null);
         }
     }
 

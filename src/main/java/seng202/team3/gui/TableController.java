@@ -10,13 +10,17 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.logic.TableManager;
+
 
 
 
@@ -31,6 +35,48 @@ public class TableController {
 
     private Stage stage;
     private TableManager manager;
+
+    @FXML
+    private CheckBox dcButton;
+
+    @FXML
+    private CheckBox acButton;
+
+    @FXML
+    private CheckBox attractionButton;
+
+    @FXML
+    private CheckBox chargingCost;
+
+    @FXML
+    private CheckBox hasChargingCost;
+
+    @FXML
+    private CheckBox toggleTimeLimit;
+
+    @FXML
+    private Slider timeLimit;
+
+    @FXML
+    private CheckBox onParkingFiler;
+
+    @FXML
+    private Slider parkingLot;
+
+    @FXML
+    private CheckBox withoutCarparkCost;
+
+    @FXML
+    private CheckBox withCarparkCost;
+
+    @FXML
+    private CheckBox openAllButton;
+
+    @FXML
+    private CheckBox notOpenAllButton;
+
+    @FXML
+    private CheckBox noNearbyAttraction;
 
     @FXML
     private TableView<Charger> mainTable;
@@ -63,7 +109,7 @@ public class TableController {
     private final TableColumn<Charger, Boolean> carparkCostCol =
             new TableColumn<>("Carpark Cost");
     @FXML
-    private final TableColumn<Charger, Double> timeLimit =
+    private final TableColumn<Charger, Double> timeLimitCol =
             new TableColumn<>("Time limit");
     @FXML
     private final TableColumn<Charger, Boolean> attractionCol =
@@ -129,7 +175,7 @@ public class TableController {
         mainTable.getColumns().add(hoursCol);
         mainTable.getColumns().add(carparkCol);
         mainTable.getColumns().add(carparkCostCol);
-        mainTable.getColumns().add(timeLimit);
+        mainTable.getColumns().add(timeLimitCol);
         mainTable.getColumns().add(attractionCol);
         mainTable.getColumns().add(latitudeCol);
         mainTable.getColumns().add(longitudeCol);
@@ -165,7 +211,7 @@ public class TableController {
                 new ReadOnlyIntegerWrapper(charger.getValue().getAvailableParks()).asObject());
         carparkCostCol.setCellValueFactory(charger ->
                 new ReadOnlyBooleanWrapper(charger.getValue().getParkingCost()));
-        timeLimit.setCellValueFactory(charger ->
+        timeLimitCol.setCellValueFactory(charger ->
                 new ReadOnlyDoubleWrapper(charger.getValue().getTimeLimit()).asObject());
         attractionCol.setCellValueFactory(charger ->
                 new ReadOnlyBooleanWrapper(charger.getValue().getHasAttraction()));

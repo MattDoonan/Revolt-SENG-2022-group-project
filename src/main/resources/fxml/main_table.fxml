@@ -7,6 +7,7 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.BorderPane?>
 
@@ -28,38 +29,104 @@
             </Menu>
           <Menu mnemonicParsing="false" style="-fx-font-size: 17" text="Select Columns" />
           <Menu mnemonicParsing="false" style="-fx-font-size: 17" text="Filter Chargers">
-            <items>
-                        <Menu fx:id="chargerTypes" mnemonicParsing="false" text="Charger Types">
-                            <items>
-                                <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="AC button">
-                                    <content>
-                                        <CheckBox fx:id="acButton" text="AC charging port" textFill="black" />
-                                    </content>
-                                </CustomMenuItem>
-                                <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="DC button">
-                                    <content>
-                                        <CheckBox fx:id="dcButton" text="DC charging port" textFill="black" />
-                                    </content>
-                                </CustomMenuItem>
-                            </items>
-                        </Menu>
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                        <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Has Attraction button">
-                            <content>
-                                <CheckBox fx:id="attractionButton" text="Nearby Attraction" />
-                            </content>
-                        </CustomMenuItem>
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                        <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="No Charging Cost">
-                            <content>
-                                <CheckBox fx:id="chargingCost" text="No Charging Cost" />
-                            </content>
-                        </CustomMenuItem>
+               <items>
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <Menu mnemonicParsing="false" text="Connector Types" />
-
-
-            </items>
+                  <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                     <content>
+                        <CheckBox fx:id="toggleTimeLimit" style="-fx-text-fill: black;" />
+                     </content>
+                  </CustomMenuItem>
+                  <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                     <content>
+                        <Slider fx:id="timeLimit" majorTickUnit="30.0" max="520.0" min="30.0" minorTickCount="10" showTickLabels="true" showTickMarks="true" value="60.0"/>
+                     </content>
+                  </CustomMenuItem>
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                     <content>
+                        <CheckBox fx:id="onParkingFiler" style="-fx-text-fill: black;" />
+                     </content>
+                  </CustomMenuItem>
+                  <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                     <content>
+                        <Slider fx:id="parkingLot" blockIncrement="5.0" majorTickUnit="5.0" max="20.0" min="1.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" snapToTicks="true" style="-fx-: black;" value="5.0" />
+                     </content>
+                  </CustomMenuItem>
+                  <Menu mnemonicParsing="false" text="Carpark Cost">
+                     <items>
+                        <CustomMenuItem mnemonicParsing="false">
+                           <content>
+                              <CheckBox fx:id="withoutCarparkCost" style="-fx-text-fill: black;" text="Without Cost" />
+                           </content>
+                        </CustomMenuItem>
+                        <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                           <content>
+                              <CheckBox fx:id="withCarparkCost" style="-fx-text-fill: black;" text="With Cost" />
+                           </content>
+                        </CustomMenuItem>
+                     </items>
+                  </Menu>
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <Menu fx:id="chargerTypes" mnemonicParsing="false" text="Charger Types">
+                     <items>
+                        <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="AC button">
+                           <content>
+                              <CheckBox fx:id="acButton" style="-fx-text-fill: black;" text="AC charging port" textFill="black" />
+                           </content>
+                        </CustomMenuItem>
+                        <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="DC button">
+                           <content>
+                              <CheckBox fx:id="dcButton" style="-fx-text-fill: black;" text="DC charging port" textFill="black" />
+                           </content>
+                        </CustomMenuItem>
+                     </items>
+                  </Menu>
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <Menu mnemonicParsing="false" text="Hours Open">
+                     <items>
+                        <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                           <content>
+                              <CheckBox fx:id="openAllButton" style="-fx-text-fill: black;" text="Open 24 hours" />
+                           </content>
+                        </CustomMenuItem>
+                        <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                           <content>
+                              <CheckBox fx:id="notOpenAllButton" style="-fx-text-fill: black;" text="Not Open 24 Hours" />
+                           </content>
+                        </CustomMenuItem>
+                     </items>
+                  </Menu>
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <Menu mnemonicParsing="false" text="Nearby Attractions">
+                     <items>
+                        <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Has Attraction button">
+                           <content>
+                              <CheckBox fx:id="attractionButton" style="-fx-text-fill: black;" text="Nearby Attraction" />
+                           </content>
+                        </CustomMenuItem>
+                        <CustomMenuItem mnemonicParsing="false">
+                           <content>
+                              <CheckBox fx:id="noNearbyAttraction" style="-fx-text-fill: black;" text="No Nearby Attraction" />
+                           </content>
+                        </CustomMenuItem>
+                     </items>
+                  </Menu>
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <Menu mnemonicParsing="false" text="Charging Cost">
+                     <items>
+                        <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="No Charging Cost">
+                           <content>
+                              <CheckBox fx:id="chargingCost" style="-fx-text-fill: black;" text="No Charging Cost" />
+                           </content>
+                        </CustomMenuItem>
+                        <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                           <content>
+                              <CheckBox fx:id="hasChargingCost" style="-fx-text-fill: black;" text="Charing Cost" />
+                           </content>
+                        </CustomMenuItem>
+                     </items>
+                  </Menu>
+               </items>
           </Menu>
           <Menu mnemonicParsing="false" style="-fx-font-size: 17" text="Modify Chargers">
                <items>
