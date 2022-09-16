@@ -33,6 +33,5 @@ public class JourneyMapController extends MapHandler {
      */
     @Override
     public void addChargersOnMap() {
-
     }
 }

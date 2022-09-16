@@ -39,16 +39,18 @@ public class JourneyController {
 
     private Stage stage;
     private JourneyMapController mapController;
+    private JourneyManager manager;
 
     /**
      * Initialize the window
      *
      * @param stage Top level container for this window
      */
-    public void init(Stage stage, MenuController menu) {
+    public void init(Stage stage) {
         this.stage = stage;
+        manager = new JourneyManager();
+        loadMapView(stage);
     }
-
 
 
     /**
@@ -58,13 +60,11 @@ public class JourneyController {
      */
     private void loadMapView(Stage stage) {
         try {
-            FXMLLoader webViewLoader = new FXMLLoader(getClass().getResource("/fxml/map.fxml"));
+            FXMLLoader webViewLoader = new FXMLLoader(getClass()
+                    .getResource("/fxml/map_journey.fxml"));
             Parent mapViewParent = webViewLoader.load();
-
             mapController = webViewLoader.getController();
-            JourneyManager mapManager = new JourneyManager();
-            mapController.init(stage, mapManager);
-
+            mapController.init(stage, manager);
             mainWindow.setCenter(mapViewParent);
         } catch (IOException e) {
             e.printStackTrace();

@@ -102,7 +102,7 @@ public class MenuController {
             FXMLLoader journeyLoader = new FXMLLoader(getClass().getResource("/fxml/journey.fxml"));
             Parent journeyViewParent = journeyLoader.load();
             journeyController = journeyLoader.getController();
-            journeyController.init(stage, this);
+            journeyController.init(stage);
             menuWindow.setCenter(journeyViewParent);
         } catch (IOException e) {
             e.printStackTrace();
