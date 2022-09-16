@@ -4,6 +4,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
@@ -59,8 +60,9 @@ public class SearchFilterTextFX extends TestFXBase {
      * @param stage the stage of the application
      */
     public void initState(FXMLLoader loader, Stage stage) {
+        BorderPane b = new BorderPane();
         controller = loader.getController();
-        controller.init(stage);
+        controller.init(stage, b);
     }
 
     /**
