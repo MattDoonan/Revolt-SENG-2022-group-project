@@ -36,6 +36,6 @@
             <TextField fx:id="destTextField" GridPane.rowIndex="3" />
          </children>
       </GridPane>
-      <BorderPane prefHeight="200.0" prefWidth="200.0" />
+       <BorderPane fx:id="mainWindow" maxHeight="Infinity" maxWidth="Infinity" />
    </items>
 </SplitPane>

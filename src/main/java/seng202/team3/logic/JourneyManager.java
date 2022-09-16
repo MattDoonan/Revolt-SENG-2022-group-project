@@ -2,6 +2,8 @@ package seng202.team3.logic;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
 import seng202.team3.data.entity.Journey;
@@ -13,7 +15,7 @@ import seng202.team3.data.entity.Vehicle;
  * @author Angus Kirtlan
  * @version 1.0.0, Aug 22
  */
-public class JourneyManager {
+public class JourneyManager extends ChargerHandler {
     /** {@link Journey Journey} which is the currently selected journey */
     private Journey selectedJourney;
 
@@ -22,6 +24,25 @@ public class JourneyManager {
 
     /** Ending {@link Coordinate coordinate} of journey */
     private Coordinate end;
+
+    private ObservableList<Charger> candidateChargers;
+
+
+    /**
+     * Initialises the JourneyManager Class
+     */
+    public JourneyManager() {
+        selectedJourney = new Journey();
+    }
+
+    /**
+     * Gets a list of candidate chargers
+     *
+     * @return an Observable list of all the candidate chargers
+     */
+    public ObservableList<Charger> getCandidateChargers() {
+        return candidateChargers;
+    }
 
     /**
      * Gets selected journey
@@ -51,8 +72,7 @@ public class JourneyManager {
     }
 
     /**
-     * Starts new journey from selected start and end point
-     * TODO fix
+     * Initialises a new Journey
      */
     public void startNewJourney() {
         if ((start != null) && (end != null)) {
@@ -91,11 +111,11 @@ public class JourneyManager {
      * Calculates all candidate chargers for the journey
      * Calculates ellipse where start and end are foci
      * Assumes full tank max range
-     * Perhaps doesnt return and just adds to candidate chargers
+     * Assigns the candidate chargers
      *
-     * @return Array of candidate chargers
+     * @param chargers an array of all chargers
      */
-    public ArrayList<Charger> callCalculations(ArrayList<Charger> chargers) {
+    public void makeCandidateChargers(ArrayList<Charger> chargers) {
         double distance = Calculations.calculateDistance(selectedJourney.getStartPosition(),
                 selectedJourney.getEndPosition()) * 1.1;
         ArrayList<Charger> validChargers = chargers.stream()
@@ -103,6 +123,8 @@ public class JourneyManager {
                         selectedJourney.getStartPosition(),
                         selectedJourney.getEndPosition(), distance)))
                 .collect(Collectors.toCollection(ArrayList::new));
-        return validChargers;
+        candidateChargers = FXCollections.observableList(validChargers);
     }
+
+
 }

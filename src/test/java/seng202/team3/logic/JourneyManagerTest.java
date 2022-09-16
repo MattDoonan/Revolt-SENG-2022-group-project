@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.ArrayList;
+
+import javafx.collections.FXCollections;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -121,7 +123,7 @@ public class JourneyManagerTest {
         correctTestChargers.add(charger2);
         correctTestChargers.add(charger3);
 
-        ArrayList<Charger> result = manager.callCalculations(allTestChargers);
-        assertEquals(result, correctTestChargers);
+        manager.makeCandidateChargers(allTestChargers);
+        assertEquals(manager.getCandidateChargers(), FXCollections.observableList(correctTestChargers));
     }
 }
