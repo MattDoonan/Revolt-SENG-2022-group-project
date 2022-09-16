@@ -11,13 +11,13 @@ import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Vehicle;
 
 /**
- * Logic layer for the vehicle Controller
+ * Logic layer for the garage Controller
  *
  * @author Celia Allen
  * @version 1.0.0, Aug 22
  *
 */
-public class VehicleManager {
+public class GarageManager {
     
 
     private QueryBuilder vehicleDataQuery;

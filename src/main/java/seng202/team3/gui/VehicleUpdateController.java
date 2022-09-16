@@ -47,6 +47,9 @@ public class VehicleUpdateController {
     private TextField maxRangeText;
 
     @FXML
+    private TextField currChargeText;
+
+    @FXML
     private Label imgName;
 
     @FXML
@@ -111,24 +114,40 @@ public class VehicleUpdateController {
             selectedVehicle.setMaxRange(Integer.parseInt(maxRangeText.getText()));
             selectedVehicle.setModel(modelText.getText());
             selectedVehicle.setMake(makeText.getText());
+            selectedVehicle.setBatteryPercent(Double.parseDouble(currChargeText.getText()));
             vehicle = selectedVehicle;
         } else {
             vehicle = new Vehicle();
 
-            if (makeText.getText().equals("")) {
-                errors.add("Vehicle make required.");
-            } else {
+            try {
                 vehicle.setMake(makeText.getText());
-            }
-            if (modelText.getText().equals("")) {
-                errors.add("Vehicle model required.");
-            } else {
-                vehicle.setModel(modelText.getText());
+            } catch (NullPointerException e) {
+                errors.add("Vehicle make required.");
             }
             try {
-                vehicle.setMaxRange(Integer.parseInt(maxRangeText.getText()));
+                vehicle.setModel(modelText.getText());
+            } catch (NullPointerException e) {
+                errors.add("Vehicle model required.");
+            }
+            try {
+                if (Integer.parseInt(maxRangeText.getText()) < 0) {
+                    errors.add("A vehicle's maximum range cannot be negative.");
+                } else {
+                    vehicle.setMaxRange(Integer.parseInt(maxRangeText.getText()));
+                }
             } catch (NumberFormatException e) {
                 errors.add("A vehicle's maximum range must be a whole number.");
+            }
+            try {
+                if (Double.parseDouble(currChargeText.getText()) < 0) {
+                    errors.add("A vehicle's current charge cannot be negative.");
+                } else {
+                    vehicle.setBatteryPercent(Double.parseDouble(currChargeText.getText()));
+                }
+            } catch (NumberFormatException e) {
+                if (!currChargeText.getText().equals("")) {
+                    errors.add("A vehicle's current charge must be a number.");
+                }
             }
             if (connections.size() == 0) {
                 errors.add("A vehicle must have at least one connector.");
@@ -136,7 +155,10 @@ public class VehicleUpdateController {
                 vehicle.setConnectors(connections);
             }
             vehicle.setImgPath("src/main/resources/images/" + selectedImg);
-            vehicle.setBatteryPercent(100.0);
+
+            if (vehicle.getBatteryPercent() == null) {
+                vehicle.setBatteryPercent(100.0);
+            }
             
             if (errors.size() == 0) {
                 try {

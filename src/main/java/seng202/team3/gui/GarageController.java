@@ -25,7 +25,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import seng202.team3.data.entity.Vehicle;
-import seng202.team3.logic.VehicleManager;
+import seng202.team3.logic.GarageManager;
 
 
 /**
@@ -119,7 +119,7 @@ public class GarageController {
 
     private Stage editPopup = new Stage();
 
-    private VehicleManager manage = new VehicleManager();
+    private GarageManager manage = new GarageManager();
 
     private GarageController controller;
 
