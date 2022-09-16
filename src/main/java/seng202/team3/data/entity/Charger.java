@@ -224,7 +224,11 @@ public class Charger {
      * @param timeLimit max time that can be spent at charger
      */
     public void setTimeLimit(Double timeLimit) {
-        this.timeLimit = timeLimit;
+        if (timeLimit == 0.0) {
+            this.timeLimit = Double.POSITIVE_INFINITY;
+        } else {
+            this.timeLimit = timeLimit;
+        }
     }
 
     /**

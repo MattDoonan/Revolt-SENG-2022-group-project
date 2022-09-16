@@ -531,6 +531,12 @@ public class SqlInterpreter implements DataManager {
             } else {
                 statement.setInt(1, c.getChargerId());
             }
+            double time;
+            if (c.getTimeLimit() == 0.0) {
+                time = Double.POSITIVE_INFINITY;
+            } else {
+                time = c.getTimeLimit();
+            }
             statement.setDouble(2, c.getLocation().getXpos());
             statement.setDouble(3, c.getLocation().getYpos());
             statement.setString(4, c.getName());
@@ -540,7 +546,7 @@ public class SqlInterpreter implements DataManager {
             statement.setBoolean(8, c.getAvailable24Hrs());
             statement.setInt(9, c.getAvailableParks());
             statement.setBoolean(10, c.getParkingCost());
-            statement.setDouble(11, c.getTimeLimit());
+            statement.setDouble(11, time);
             statement.setBoolean(12, c.getHasAttraction());
             statement.setDouble(13, c.getLocation().getLat());
             statement.setDouble(14, c.getLocation().getLon());
@@ -556,7 +562,7 @@ public class SqlInterpreter implements DataManager {
             statement.setBoolean(24, c.getAvailable24Hrs());
             statement.setInt(25, c.getAvailableParks());
             statement.setBoolean(26, c.getParkingCost());
-            statement.setDouble(27, c.getTimeLimit());
+            statement.setDouble(27, time);
             statement.setBoolean(28, c.getHasAttraction());
             statement.setDouble(29, c.getLocation().getLat());
             statement.setDouble(30, c.getLocation().getLon());

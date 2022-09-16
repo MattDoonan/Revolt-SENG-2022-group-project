@@ -176,7 +176,7 @@ public class MainController {
                 display.getChildren().add(new Text("Open 24 hours"));
             }
             display.getChildren().add(new Text("Has " + c.getAvailableParks() + " parking spaces"));
-            if (c.getTimeLimit() == 0) {
+            if (c.getTimeLimit() == Double.POSITIVE_INFINITY) {
                 display.getChildren().add(new Text("Has no time limit"));
             } else {
                 display.getChildren().add(new Text("Has " + c.getTimeLimit() + " minute limit"));
