@@ -327,6 +327,7 @@ public class VehicleUpdateController {
             modelText.setText(vehicle.getModel());
             maxRangeText.setText(Integer.toString(vehicle.getMaxRange()));
             addedConnections.setText(vehicle.getConnectors().toString());
+            currChargeText.setText(vehicle.getBatteryPercent().toString());
             imgName.setText(vehicle.getImgPath().replace("src/main/resources/images/", ""));
             connections = vehicle.getConnectors();
         }

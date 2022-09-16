@@ -1,27 +1,23 @@
 package seng202.team3.testFX;
 
+import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
+import org.testfx.matcher.control.TextInputControlMatchers;
 
-import seng202.team3.data.database.SqlInterpreter;
-import seng202.team3.data.entity.Vehicle;
-import seng202.team3.gui.GarageController;
 import seng202.team3.gui.MainWindow;
-import seng202.team3.logic.GarageManager;
+import seng202.team3.gui.VehicleUpdateController;
+
 
 
 /**
@@ -33,10 +29,19 @@ import seng202.team3.logic.GarageManager;
  */
 public class NewEditVehicleFX extends TestFXBase {
 
-    private GarageController controller;
-    private GarageManager manager = new GarageManager();
-    private ObservableList<Vehicle> vehicles;
-    private Vehicle vehicle;
+    private VehicleUpdateController controller;
+    
+    @FXML
+    private TextField makeText;
+
+    @FXML
+    private TextField modelText;
+
+    @FXML
+    private TextField maxRangeText;
+
+    @FXML
+    private TextField currChargeText;
 
     /**
      * Implements the abstract method for this window
@@ -56,7 +61,7 @@ public class NewEditVehicleFX extends TestFXBase {
      */
     @Override
     public void start(Stage stage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/garage.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/vehicle_update.fxml"));
         Parent page = loader.load();
         initState(loader, stage);
         Scene scene = new Scene(page);
@@ -64,71 +69,37 @@ public class NewEditVehicleFX extends TestFXBase {
         stage.show();
     }
 
+    
     /**
      * Initialises the state of the current application
-     *
      * @param loader the FXML loader after loading
      * @param stage the stage of the application
      */
     public void initState(FXMLLoader loader, Stage stage) {
         controller = loader.getController();
-        controller.init();
     }
+
 
     /**
-     * Test the creating vehicle functionality
+     * Tests textfields in update_vehicle.
      */
     @Test
-    public void makeVehicle() {
-        try {
-            SqlInterpreter.getInstance().writeVehicle(new Vehicle(
-                "TestMake", "TestModel", 10, new ArrayList<String>(
-                    Arrays.asList("Type 2 Socketed"))));
-        } catch (IOException e) {
-            e.printStackTrace();
-        } 
-        vehicles = manager.getData();
-        vehicle = vehicles.get(vehicles.size() - 1);
-        assertTrue(vehicle.getMake().equals("TestMake"));
-        assertTrue(vehicle.getModel().equals("TestModel"));
-        assertTrue(vehicle.getMaxRange() == 1234);
-        assertTrue(vehicle.getConnectors().get(0).equals("Type 2 Socket"));
-        assertTrue(vehicle.getBatteryPercent() == 100.0);
-    }
-
-    @Test
-    public void editVehicle() {
-        vehicles = manager.getData();
-        if (vehicles.size() == 1) {
-            clickOn("#editCarOne");
-        } else if (vehicles.size() == 2) {
-            clickOn("#editCarTwo");
-        } else if () {
-            clickOn("#editCarThree");
-        } else {
-            clickOn("#prevBtn");
-            clickOn("#editCarOne");
-        }
-        clickOn("#makeText");
-        write("Edit");
-        clickOn("#saveChanges");
-        
-        vehicle = vehicles.get(vehicles.size() - 1);
-        assertTrue(vehicle.getMake().equals("TestMakeEdit"));
-        assertTrue(vehicle.getModel().equals("TestModel"));
-        assertTrue(vehicle.getMaxRange() == 1234);
-        assertTrue(vehicle.getConnectors().get(0).equals("Type 2 Socket"));
-        assertTrue(vehicle.getBatteryPercent() == 100.0);
+    public void makeVehicle() { 
+        TextField makeText = find("#makeText");
+        makeText.setText("TestMake");
+        assertThat(makeText, TextInputControlMatchers.hasText("TestMake"));
+        TextField modelText = find("#modelText");
+        modelText.setText("TestModel");
+        assertThat(modelText, TextInputControlMatchers.hasText("TestModel"));
+        TextField maxRangeText = find("#maxRangeText");
+        maxRangeText.setText("1234");
+        assertThat(maxRangeText, TextInputControlMatchers.hasText("1234"));
+        TextField currChargeText = find("#currChargeText");
+        currChargeText.setText("87.6");
+        assertThat(currChargeText, TextInputControlMatchers.hasText("87.6"));
     }
 
 
-    @Test
-    public void deleteVehicle() {
-        clickOn("#deleteCarOne");
-        clickOn("#confirm");
-        vehicles = manager.getData();
-        assertTrue(vehicles.size() == 0);
-    }
 
 
 }
