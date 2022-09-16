@@ -261,10 +261,10 @@ public class MainController {
                 .setValue("Minimum distance (" + Math.round(changeDistance.getValue()) + " km)");
         onParkingFiler.textProperty()
                 .setValue("Minimum number of spaces ("
-                        + Math.round(changeDistance.getValue()) + ")");
+                        + Math.round(parkingLot.getValue()) + ")");
         toggleTimeLimit.textProperty()
                 .setValue("Minimum time limit of ("
-                        + Math.round(changeDistance.getValue()) + " minutes)");
+                        + Math.round(timeLimit.getValue()) + " minutes)");
 
         changeDistance.valueProperty().addListener((observableValue, number, t1) -> {
             distanceDisplay.textProperty()

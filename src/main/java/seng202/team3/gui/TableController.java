@@ -192,10 +192,11 @@ public class TableController {
         tableMaker();
         manage.makeAllChargers();
         addToDisplay(manage.getData());
+        change();
     }
 
     /**
-     * Initializes tha table
+     * Initializes tha table and columns
      */
     public void tableMaker() {
         mainTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -208,21 +209,13 @@ public class TableController {
         hoursCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
         carparkCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
         carparkCostCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
-        timeLimit.setMaxWidth(1f * Integer.MAX_VALUE * 10);
+        timeLimitCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
         attractionCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
         latitudeCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
         longitudeCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
         openCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
         chargcostCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
         currentsCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
-        addColumns();
-        mainTable.requestFocus();
-    }
-
-    /**
-     * Resets the columns and adds the selected ones
-     */
-    public void addColumns() {
         mainTable.getColumns().removeAll(mainTable.getColumns());
         if (showId.isSelected()) {
             mainTable.getColumns().add(idCol);
@@ -272,6 +265,7 @@ public class TableController {
         if (showCurrent.isSelected()) {
             mainTable.getColumns().add(currentsCol);
         }
+        mainTable.requestFocus();
     }
 
     /**
@@ -355,7 +349,7 @@ public class TableController {
      */
     public void updateTable() {
         manage.resetQuery();
-        addColumns();
+        tableMaker();
         if (toggleTimeLimit.isSelected()) {
             manage.adjustQuery("maxtimelimit",
                     Double.toString(timeLimit.getValue()), ComparisonType.GREATER_THAN_EQUAL);
@@ -396,6 +390,29 @@ public class TableController {
         }
         manage.makeAllChargers();
         addToDisplay(manage.getData());
+    }
+
+
+    /**
+     * Sets the Original text and updates distance filter for chargers on slider
+     */
+    public void change() {
+        onParkingFiler.textProperty()
+                .setValue("Minimum number of spaces ("
+                        + Math.round(parkingLot.getValue()) + ")");
+        toggleTimeLimit.textProperty()
+                .setValue("Minimum time limit of ("
+                        + Math.round(timeLimit.getValue()) + " minutes)");
+        parkingLot.valueProperty().addListener((observableValue, number, t1) -> {
+            onParkingFiler.textProperty()
+                    .setValue("Minimum number of spaces ("
+                            + Math.round(parkingLot.getValue()) + ")");
+        });
+        timeLimit.valueProperty().addListener((observableValue, number, t1) -> {
+            toggleTimeLimit.textProperty()
+                    .setValue("Minimum time limit of ("
+                            + Math.round(timeLimit.getValue()) + " minutes)");
+        });
     }
 
     /**
