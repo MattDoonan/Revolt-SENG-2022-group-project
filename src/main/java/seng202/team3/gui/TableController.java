@@ -18,6 +18,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.logic.TableManager;
 
@@ -34,7 +35,8 @@ import seng202.team3.logic.TableManager;
 public class TableController {
 
     private Stage stage;
-    private TableManager manager;
+
+    private TableManager manage;
 
     @FXML
     private CheckBox dcButton;
@@ -77,6 +79,54 @@ public class TableController {
 
     @FXML
     private CheckBox noNearbyAttraction;
+
+    @FXML
+    private CheckBox showId;
+
+    @FXML
+    private CheckBox showXpos;
+
+    @FXML
+    private CheckBox showYpos;
+
+    @FXML
+    private CheckBox showOperator;
+
+    @FXML
+    private CheckBox showAddress;
+
+    @FXML
+    private CheckBox showOwner;
+
+    @FXML
+    private CheckBox showHoursOpen;
+
+    @FXML
+    private CheckBox showCarparks;
+
+    @FXML
+    private CheckBox showCarparkCost;
+
+    @FXML
+    private CheckBox showTimeLimit;
+
+    @FXML
+    private CheckBox showAttraction;
+
+    @FXML
+    private CheckBox showLat;
+
+    @FXML
+    private CheckBox showLon;
+
+    @FXML
+    private CheckBox showOpening;
+
+    @FXML
+    private CheckBox showChargingCost;
+
+    @FXML
+    private CheckBox showCurrent;
 
     @FXML
     private TableView<Charger> mainTable;
@@ -137,11 +187,11 @@ public class TableController {
      */
     public void init(Stage stage) {
         this.stage = stage;
-        manager = new TableManager();
-        manager.resetQuery();
+        manage = new TableManager();
+        manage.resetQuery();
         tableMaker();
-        manager.makeAllChargers();
-        addToDisplay(manager.getData());
+        manage.makeAllChargers();
+        addToDisplay(manage.getData());
     }
 
     /**
@@ -149,41 +199,79 @@ public class TableController {
      */
     public void tableMaker() {
         mainTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        idCol.setMaxWidth(1f * Integer.MAX_VALUE * 30);
-        xposCol.setMaxWidth(1f * Integer.MAX_VALUE * 30);
-        yposCol.setMaxWidth(1f * Integer.MAX_VALUE * 30);
-        operatorCol.setMaxWidth(1f * Integer.MAX_VALUE * 30);
-        addressCol.setMaxWidth(1f * Integer.MAX_VALUE * 30);
-        ownerCol.setMaxWidth(1f * Integer.MAX_VALUE * 30);
-        hoursCol.setMaxWidth(1f * Integer.MAX_VALUE * 30);
-        carparkCol.setMaxWidth(1f * Integer.MAX_VALUE * 30);
-        carparkCostCol.setMaxWidth(1f * Integer.MAX_VALUE * 30);
-        timeLimit.setMaxWidth(1f * Integer.MAX_VALUE * 30);
-        attractionCol.setMaxWidth(1f * Integer.MAX_VALUE * 30);
-        latitudeCol.setMaxWidth(1f * Integer.MAX_VALUE * 30);
-        longitudeCol.setMaxWidth(1f * Integer.MAX_VALUE * 30);
-        openCol.setMaxWidth(1f * Integer.MAX_VALUE * 30);
-        chargcostCol.setMaxWidth(1f * Integer.MAX_VALUE * 30);
-        currentsCol.setMaxWidth(1f * Integer.MAX_VALUE * 30);
-
-        mainTable.getColumns().add(idCol);
-        mainTable.getColumns().add(xposCol);
-        mainTable.getColumns().add(yposCol);
-        mainTable.getColumns().add(operatorCol);
-        mainTable.getColumns().add(addressCol);
-        mainTable.getColumns().add(ownerCol);
-        mainTable.getColumns().add(hoursCol);
-        mainTable.getColumns().add(carparkCol);
-        mainTable.getColumns().add(carparkCostCol);
-        mainTable.getColumns().add(timeLimitCol);
-        mainTable.getColumns().add(attractionCol);
-        mainTable.getColumns().add(latitudeCol);
-        mainTable.getColumns().add(longitudeCol);
-        mainTable.getColumns().add(openCol);
-        mainTable.getColumns().add(chargcostCol);
-        mainTable.getColumns().add(currentsCol);
-
+        idCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
+        xposCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
+        yposCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
+        operatorCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
+        addressCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
+        ownerCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
+        hoursCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
+        carparkCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
+        carparkCostCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
+        timeLimit.setMaxWidth(1f * Integer.MAX_VALUE * 10);
+        attractionCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
+        latitudeCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
+        longitudeCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
+        openCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
+        chargcostCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
+        currentsCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
+        addColumns();
         mainTable.requestFocus();
+    }
+
+    /**
+     * Resets the columns and adds the selected ones
+     */
+    public void addColumns() {
+        mainTable.getColumns().removeAll(mainTable.getColumns());
+        if (showId.isSelected()) {
+            mainTable.getColumns().add(idCol);
+        }
+        if (showXpos.isSelected()) {
+            mainTable.getColumns().add(xposCol);
+        }
+        if (showYpos.isSelected()) {
+            mainTable.getColumns().add(yposCol);
+        }
+        if (showOperator.isSelected()) {
+            mainTable.getColumns().add(operatorCol);
+        }
+        if (showAddress.isSelected()) {
+            mainTable.getColumns().add(addressCol);
+        }
+        if (showOwner.isSelected()) {
+            mainTable.getColumns().add(ownerCol);
+        }
+        if (showHoursOpen.isSelected()) {
+            mainTable.getColumns().add(hoursCol);
+        }
+        if (showCarparks.isSelected()) {
+            mainTable.getColumns().add(carparkCol);
+        }
+        if (showCarparkCost.isSelected()) {
+            mainTable.getColumns().add(carparkCostCol);
+        }
+        if (showTimeLimit.isSelected()) {
+            mainTable.getColumns().add(timeLimitCol);
+        }
+        if (showAttraction.isSelected()) {
+            mainTable.getColumns().add(attractionCol);
+        }
+        if (showLat.isSelected()) {
+            mainTable.getColumns().add(latitudeCol);
+        }
+        if (showLon.isSelected()) {
+            mainTable.getColumns().add(longitudeCol);
+        }
+        if (showOpening.isSelected()) {
+            mainTable.getColumns().add(openCol);
+        }
+        if (showChargingCost.isSelected()) {
+            mainTable.getColumns().add(chargcostCol);
+        }
+        if (showCurrent.isSelected()) {
+            mainTable.getColumns().add(currentsCol);
+        }
     }
 
     /**
@@ -224,7 +312,7 @@ public class TableController {
         chargcostCol.setCellValueFactory(charger ->
                 new ReadOnlyBooleanWrapper(charger.getValue().getChargeCost()));
         currentsCol.setCellValueFactory(charger ->
-                new ReadOnlyStringWrapper(manager.getConnectors(charger.getValue())));
+                new ReadOnlyStringWrapper(manage.getConnectors(charger.getValue())));
         mainTable.getSelectionModel().select(0);
         mainTable.getSortOrder().add(idCol);
         mainTable.sort();
@@ -248,18 +336,66 @@ public class TableController {
             modal.initModality(Modality.WINDOW_MODAL);
             MiniMapController controller = miniMap.getController();
             controller.init(modal);
-            controller.setManager(manager);
+            controller.setManager(manage);
             modal.setAlwaysOnTop(true);
             modal.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        manager.addCharger();
-        if (manager.getPosition() == null) {
+        manage.addCharger();
+        if (manage.getPosition() == null) {
             System.out.println("not added");
         } else {
-            System.out.println(manager.getPosition().getAddress());
+            System.out.println(manage.getPosition().getAddress());
         }
+    }
+
+    /**
+     * Updates the table when a user clicks update table button
+     */
+    public void updateTable() {
+        manage.resetQuery();
+        addColumns();
+        if (toggleTimeLimit.isSelected()) {
+            manage.adjustQuery("maxtimelimit",
+                    Double.toString(timeLimit.getValue()), ComparisonType.GREATER_THAN_EQUAL);
+        }
+        if (onParkingFiler.isSelected()) {
+            manage.adjustQuery("carparkcount",
+                    Double.toString(parkingLot.getValue()), ComparisonType.GREATER_THAN_EQUAL);
+        }
+        if (withoutCarparkCost.isSelected()) {
+            manage.adjustQuery("hascarparkcost", "False", ComparisonType.EQUAL);
+        }
+        if (withCarparkCost.isSelected()) {
+            manage.adjustQuery("hascarparkcost", "True", ComparisonType.EQUAL);
+        }
+        if (acButton.isSelected()) {
+            manage.adjustQuery("currenttype", "AC", ComparisonType.CONTAINS);
+        }
+        if (dcButton.isSelected()) {
+            manage.adjustQuery("currenttype", "DC", ComparisonType.CONTAINS);
+        }
+        if (openAllButton.isSelected()) {
+            manage.adjustQuery("is24hours", "True", ComparisonType.EQUAL);
+        }
+        if (notOpenAllButton.isSelected()) {
+            manage.adjustQuery("is24hours", "False", ComparisonType.EQUAL);
+        }
+        if (attractionButton.isSelected()) {
+            manage.adjustQuery("hastouristattraction", "True", ComparisonType.EQUAL);
+        }
+        if (noNearbyAttraction.isSelected()) {
+            manage.adjustQuery("hastouristattraction", "False", ComparisonType.EQUAL);
+        }
+        if (chargingCost.isSelected()) {
+            manage.adjustQuery("haschargingcost", "False", ComparisonType.EQUAL);
+        }
+        if (hasChargingCost.isSelected()) {
+            manage.adjustQuery("haschargingcost", "True", ComparisonType.EQUAL);
+        }
+        manage.makeAllChargers();
+        addToDisplay(manage.getData());
     }
 
     /**
@@ -267,7 +403,7 @@ public class TableController {
      */
     @FXML
     public void editCharger() {
-        manager.editCharger();
+        manage.editCharger();
     }
 
     /**
@@ -275,7 +411,7 @@ public class TableController {
      */
     @FXML
     public void deleteCharger() {
-        manager.deleteCharger();
+        manage.deleteCharger();
 
     }
 
