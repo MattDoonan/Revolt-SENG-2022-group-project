@@ -6,7 +6,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import seng202.team3.logic.JourneyManager;
 import seng202.team3.logic.MapManager;
 
 /**
@@ -32,7 +34,11 @@ public class JourneyController {
     @FXML
     private TextField destTextField;
 
+    @FXML
+    private BorderPane mainWindow;
+
     private Stage stage;
+    private JourneyMapController mapController;
 
     /**
      * Initialize the window
@@ -43,20 +49,25 @@ public class JourneyController {
         this.stage = stage;
     }
 
+
+
+    /**
+     * Loads the map view into the main part of the main window
+     *
+     * @param stage stage to load with
+     */
     private void loadMapView(Stage stage) {
         try {
             FXMLLoader webViewLoader = new FXMLLoader(getClass().getResource("/fxml/map.fxml"));
             Parent mapViewParent = webViewLoader.load();
 
-            //MapViewController mapController = webViewLoader.getController();
-            //MapManager mapManager = new MapManager(manage);
-            //mapController.init(stage, mapManager);
+            mapController = webViewLoader.getController();
+            JourneyManager mapManager = new JourneyManager();
+            mapController.init(stage, mapManager);
 
-            //mainWindow.setCenter(mapViewParent)
+            mainWindow.setCenter(mapViewParent);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
 }

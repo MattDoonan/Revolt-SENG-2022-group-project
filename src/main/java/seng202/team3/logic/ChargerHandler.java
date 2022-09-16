@@ -13,12 +13,12 @@ import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
 
 /**
- * An abstract class that deals with querying charger data and managing data
+ * An abstract class that deals with querying charger data and positional data
  *
  * @author Michelle Hsieh
  * @version 1.0.0, Sep 22
  */
-public abstract class ChargerHandler {
+public class ChargerHandler {
 
     protected QueryBuilder mainDataQuery;
     protected ObservableList<Charger> chargerData;
@@ -127,20 +127,5 @@ public abstract class ChargerHandler {
         return word.toString();
     }
 
-
-    /**
-     * Adds a charger
-     */
-    public abstract void addCharger();
-
-    /**
-     * Removes the selected charger
-     */
-    public abstract void deleteCharger();
-
-    /**
-     * Edits the selected charger
-     */
-    public abstract void editCharger();
 
 }

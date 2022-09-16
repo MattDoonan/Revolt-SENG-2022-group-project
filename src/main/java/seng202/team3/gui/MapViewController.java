@@ -28,19 +28,9 @@ import seng202.team3.logic.MapManager;
  * @author Michelle Hsieh, based off code from Morgan English
  * @version 1.0.2, Aug 22
  */
-public class MapViewController {
+public class MapViewController extends MapHandler {
 
-    /**
-     * FXML components
-     */
-    @FXML
-    private WebView webView;
-
-    private WebEngine webEngine;
-    private Stage stage;
     private MapManager map;
-    private JavaScriptBridge javaScriptBridge;
-    private JSObject javaScriptConnector;
     private boolean routeDisplayed = false;
 
     /**
@@ -56,31 +46,10 @@ public class MapViewController {
         this.stage.sizeToScene();
     }
 
-
-    /**
-     * Initialises the map by loading the html into the webengine
-     */
-    private void initMap() {
-        webEngine = webView.getEngine();
-        webEngine.setJavaScriptEnabled(true);
-        webEngine.load(getClass().getClassLoader().getResource("html/map.html").toExternalForm());
-
-        webEngine.getLoadWorker().stateProperty().addListener(
-                (ov, oldState, newState) -> {
-                    if (newState == Worker.State.SUCCEEDED) {
-                        JSObject window = (JSObject) webEngine.executeScript("window");
-                        window.setMember("javaScriptBridge", javaScriptBridge);
-                        javaScriptConnector = (JSObject) webEngine.executeScript("jsConnector");
-                        javaScriptConnector.call("initMap");
-
-                        addChargersOnMap();
-                    }
-                });
-    }
-
     /**
      * Adds all chargers on the map
      */
+    @Override
     public void addChargersOnMap() {
         javaScriptConnector.call("clearMarkers");
         for (Charger charger : map.getController().getCloseChargerData()) {

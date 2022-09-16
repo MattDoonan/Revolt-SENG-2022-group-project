@@ -20,7 +20,7 @@ import seng202.team3.data.entity.Coordinate;
  *
  */
 
-public class MainManager extends ChargerHandler {
+public class MainManager extends ChargerHandler implements ChargerInterface {
 
     private double distance = 0;
     private final ChargerManager chargerManager = new ChargerManager();

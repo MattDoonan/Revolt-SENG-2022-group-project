@@ -9,7 +9,7 @@ import seng202.team3.data.entity.Coordinate;
  * @author Michelle Hsieh
  * @version 1.0.0, Sep 22
  */
-public class TableManager extends ChargerHandler {
+public class TableManager extends ChargerHandler implements ChargerInterface {
 
     /**
      * Adds a charger at a specified coordinate
