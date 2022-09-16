@@ -405,24 +405,24 @@ public class GarageController {
                     makeModelOne.setText(vehicleData.get(index).getMake() + " "
                         + vehicleData.get(index).getModel());
                     carDetailsOne.setText(
-                        "Current Charge: " + vehicleData.get(index).getBatteryPercent() + "\n"
-                        + "Max. Range: " + vehicleData.get(index).getMaxRange() + "\n"
+                        "Current Charge: " + vehicleData.get(index).getBatteryPercent() + "%\n"
+                        + "Max. Range: " + vehicleData.get(index).getMaxRange() + " km\n"
                         + "Connections: " + vehicleData.get(index).getConnectors().toString());
                     break;
                 case "two":
                     makeModelTwo.setText(vehicleData.get(index).getMake() + " "
                         + vehicleData.get(index).getModel());
                     carDetailsTwo.setText(
-                        "Current Charge: " + vehicleData.get(index).getBatteryPercent() + "\n"
-                        + "Max. Range: " + vehicleData.get(index).getMaxRange() + "\n"
+                        "Current Charge: " + vehicleData.get(index).getBatteryPercent() + "%\n"
+                        + "Max. Range: " + vehicleData.get(index).getMaxRange() + " km\n"
                         + "Connections: " + vehicleData.get(index).getConnectors().toString());
                     break;
                 case "three":
                     makeModelThree.setText(vehicleData.get(index).getMake() + " "
                         + vehicleData.get(index).getModel());
                     carDetailsThree.setText(
-                        "Current Charge: " + vehicleData.get(index).getBatteryPercent() + "\n"
-                        + "Max. Range: " + vehicleData.get(index).getMaxRange() + "\n"
+                        "Current Charge: " + vehicleData.get(index).getBatteryPercent() + "%\n"
+                        + "Max. Range: " + vehicleData.get(index).getMaxRange() + " km\n"
                         + "Connections: " + vehicleData.get(index).getConnectors().toString());
                     break;
                 default:

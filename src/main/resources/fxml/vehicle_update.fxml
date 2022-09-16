@@ -86,7 +86,7 @@
             <Label fx:id="imgName" prefHeight="26.0" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
             <TextField fx:id="makeText" promptText="Make" GridPane.columnIndex="1" />
             <TextField fx:id="modelText" prefHeight="26.0" prefWidth="150.0" promptText="Model" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <TextField fx:id="maxRangeText" promptText="Maximum range" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextField fx:id="maxRangeText" promptText="Maximum range (km)" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <Label text="*" textFill="RED">
                <font>
                   <Font size="14.0" />
@@ -115,7 +115,7 @@
                   <Insets left="7.0" />
                </padding>
             </Label>
-            <TextField fx:id="currChargeText" promptText="Current charge" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <TextField fx:id="currChargeText" promptText="Current charge (%)" GridPane.columnIndex="1" GridPane.rowIndex="3" />
          </children>
       </GridPane>
       <Label fx:id="addedConnections" layoutX="167.0" layoutY="326.0" prefHeight="88.0" prefWidth="150.0" />
