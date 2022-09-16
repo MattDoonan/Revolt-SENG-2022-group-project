@@ -72,11 +72,7 @@ public class SqlInterpreter implements DataManager {
      */
     public void addChargerCsvToData(String source) throws IOException {
         Query q = new QueryBuilderImpl().withSource(source).build();
-        ArrayList<Charger> chargerList = new ArrayList<>();
-        for (Object o : new CsvInterpreter().readData(q, Charger.class)) {
-            chargerList.add((Charger) o);
-        }
-        writeCharger(chargerList);
+        writeCharger(new ArrayList<>(new CsvInterpreter().readData(q, Charger.class)));
     }
 
     /**
@@ -585,9 +581,34 @@ public class SqlInterpreter implements DataManager {
      * 
      * @param chargers array list of charger objects
      */
-    public void writeCharger(ArrayList<Charger> chargers) throws IOException {
-        for (Charger charger : chargers) {
-            writeCharger(charger);
+    public void writeCharger(ArrayList<Object> chargers) throws IOException {
+        int sizePerThread = chargers.size() / WriteChargerThread.threadCount;
+        Thread[] activeThreads = new Thread[WriteChargerThread.threadCount];
+
+        // Split array into sub arrays per thread
+        for (int i = 0; i < WriteChargerThread.threadCount; i++) {
+            if (i == chargers.size() - 1) {
+                activeThreads[i] = new WriteChargerThread(new ArrayList<>(
+                        chargers.subList(
+                                i * sizePerThread, chargers.size() - 1)));
+            } else {
+                activeThreads[i] = new WriteChargerThread(new ArrayList<>(
+                        chargers.subList(i * sizePerThread,
+                                (i + 1) * sizePerThread)));
+            }
+
+        }
+
+        for (Thread t : activeThreads) { // Run threads
+            t.start();
+        }
+
+        for (Thread t : activeThreads) { // Wait for threads to finish
+            try {
+                t.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace(); // TODO: handle exception
+            }
         }
     }
 
@@ -802,4 +823,29 @@ public class SqlInterpreter implements DataManager {
         }
     }
 
+    /**
+     * Allows threading for writing chargers to db to improve performance
+     * 
+     * @author Harrison Tyson
+     * @version 1.0.0, Sep 22
+     */
+    private class WriteChargerThread extends Thread {
+        static int threadCount = 4;
+        ArrayList<Object> chargersToWrite;
+
+        public WriteChargerThread(ArrayList<Object> chargersToWrite) {
+            this.chargersToWrite = chargersToWrite;
+        }
+
+        public void run() {
+            try {
+                for (Object c : chargersToWrite) {
+                    writeCharger((Charger) c);
+                }
+            } catch (IOException e) {
+                e.printStackTrace(); // TODO: handle this exception
+            }
+
+        }
+    }
 }
