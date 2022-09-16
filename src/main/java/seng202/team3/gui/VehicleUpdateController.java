@@ -29,6 +29,7 @@ import javafx.stage.Stage;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Vehicle;
 
+
 /**
  * A vehicle editing controller
  *
@@ -179,6 +180,7 @@ public class VehicleUpdateController {
                 errors.clear();
             }
         }
+        
         selectedVehicle = null;
         Stage popupStage = (Stage) saveChanges.getScene().getWindow();
         popupStage.close();
