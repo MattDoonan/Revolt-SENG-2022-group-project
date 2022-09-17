@@ -2,7 +2,9 @@ package seng202.team3.gui;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -137,7 +139,8 @@ public class ChargerController {
             Coordinate location = prevCoordinate;
             coordinate.setLon(location.getLon());
             coordinate.setLat(location.getLat());
-            newCharger.setDateOpened(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").toString());
+            newCharger.setDateOpened(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss")
+                    .format(Date.from(Instant.now())));
         } else {
             Coordinate location = charger.getLocation();
             coordinate.setLat(location.getLat());
