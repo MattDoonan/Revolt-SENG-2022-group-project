@@ -10,6 +10,7 @@
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 
@@ -23,6 +24,7 @@
    <top>
       <HBox alignment="CENTER_LEFT" BorderPane.alignment="CENTER_LEFT">
          <children>
+            <TextField fx:id="searchCharger" prefHeight="40" prefWidth="420" promptText="Search Charger" style="-fx-font-size: 20;" />
             <MenuButton fx:id="filters" minHeight="30.0" mnemonicParsing="false" prefWidth="250.0" style="-fx-font-size: 20;" text="Filter Columns">
                <items>
                   <SeparatorMenuItem mnemonicParsing="false" />

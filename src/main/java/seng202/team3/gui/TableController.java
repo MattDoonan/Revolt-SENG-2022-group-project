@@ -14,6 +14,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
@@ -128,6 +129,9 @@ public class TableController {
 
     @FXML
     private CheckBox showCurrent;
+
+    @FXML
+    private TextField searchCharger;
 
     @FXML
     private TableView<Charger> mainTable;
@@ -385,6 +389,9 @@ public class TableController {
         }
         if (hasChargingCost.isSelected()) {
             manage.adjustQuery("haschargingcost", "True", ComparisonType.EQUAL);
+        }
+        if (searchCharger.getText().length() != 0) {
+            manage.adjustQuery("address", searchCharger.getText(), ComparisonType.CONTAINS);
         }
         manage.makeAllChargers();
         addToDisplay(manage.getData());
