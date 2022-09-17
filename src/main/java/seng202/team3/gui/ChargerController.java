@@ -31,6 +31,7 @@ public class ChargerController {
 
     private Charger charger;
     private Stage stage;
+    private Coordinate prevCoordinate;
     private ObservableList<Connector> connectors;
     private ArrayList<String> errors = new ArrayList<>();
 
@@ -62,6 +63,15 @@ public class ChargerController {
      * Initialises the ChargerController, loading in the charger info
      */
     public ChargerController() {
+    }
+
+    /**
+     * Sets the current coordinate
+     *
+     * @param coordinate the current coordinate selected
+     */
+    public void setCoordinate(Coordinate coordinate) {
+        prevCoordinate = coordinate;
     }
 
     /**
@@ -100,8 +110,7 @@ public class ChargerController {
                 costParks.setSelected(true);
             }
         } else {
-            address.setText(new MenuController().getController()
-                    .getManager().getPosition().getAddress());
+            address.setText(prevCoordinate.getAddress());
         }
     }
 
@@ -125,7 +134,7 @@ public class ChargerController {
         coordinate.setXpos(0.0);
         coordinate.setYpos(0.0);
         if (charger == null) {
-            Coordinate location = new MenuController().getController().getManager().getPosition();
+            Coordinate location = prevCoordinate;
             coordinate.setLon(location.getLon());
             coordinate.setLat(location.getLat());
             newCharger.setDateOpened(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").toString());

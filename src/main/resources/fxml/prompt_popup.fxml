@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
@@ -8,8 +9,14 @@
         <Label fx:id="inputBox" />
         <HBox alignment="TOP_CENTER" prefHeight="31.0" prefWidth="303.0">
             <children>
-                <Button mnemonicParsing="false" onAction="#confirm" text="Confirm" />
-                <Button mnemonicParsing="false" onAction="#cancel" text="Cancel" />
+                <Button mnemonicParsing="false" onAction="#confirm" text="Confirm">
+               <HBox.margin>
+                  <Insets right="30.0" />
+               </HBox.margin></Button>
+                <Button mnemonicParsing="false" onAction="#cancel" text="Cancel">
+               <HBox.margin>
+                  <Insets left="30.0" />
+               </HBox.margin></Button>
             </children>
         </HBox>
     </children>

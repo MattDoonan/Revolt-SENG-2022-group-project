@@ -123,7 +123,7 @@ public class MainManager extends ChargerHandler implements ChargerInterface {
      */
     @Override
     public void addCharger() {
-        new JavaScriptBridge().loadChargerEdit(null);
+        new JavaScriptBridge().loadChargerEdit(null, selectedCoordinate);
     }
 
     /**
