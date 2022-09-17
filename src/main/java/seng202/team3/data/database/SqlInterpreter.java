@@ -947,9 +947,11 @@ public class SqlInterpreter implements DataManager {
                 connectorSql += ";";
 
                 try {
+                    mutex.acquire();
                     conn.createStatement().executeUpdate(chargerSql);
                     conn.createStatement().executeUpdate(connectorSql);
-                } catch (SQLException e) {
+                    mutex.release();
+                } catch (InterruptedException | SQLException e) {
                     e.printStackTrace(); // TODO: handle exception
                 }
 
