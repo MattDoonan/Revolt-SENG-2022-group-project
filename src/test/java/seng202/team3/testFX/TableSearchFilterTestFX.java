@@ -47,6 +47,22 @@ public class TableSearchFilterTestFX extends TestFXBase{
     }
 
     @Test
+    public void containsAddress() {
+        boolean isValid = true;
+        clickOn("#searchCharger");
+        write("christ");
+        clickOn("#update");
+        ObservableList<Charger> chargers = controller.getManager().getData();
+        for (Charger charger : chargers) {
+            String lowerAddress = charger.getLocation().getAddress().toLowerCase();
+            if (!lowerAddress.contains("christ")) {
+                isValid = false;
+            }
+        }
+        assertTrue(isValid);
+    }
+
+    @Test
     public void timeLimitFilterWorks() {
         boolean isValid = true;
         clickOn("#filters");
@@ -99,6 +115,7 @@ public class TableSearchFilterTestFX extends TestFXBase{
         boolean isValid = true;
         clickOn("#columnEdit");
         clickOn("#showId");
+        clickOn("#searchCharger");
         clickOn("#update");
         try {
             clickOn("#idCol");
@@ -127,6 +144,7 @@ public class TableSearchFilterTestFX extends TestFXBase{
         clickOn("#showYpos");
         clickOn("#showAttraction");
         clickOn("#showLon");
+        clickOn("#searchCharger");
         clickOn("#update");
         try {
             clickOn("#attractionCol");
