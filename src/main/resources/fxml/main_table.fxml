@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.CustomMenuItem?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.TableController">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.TableController">
    <center>
       <TableView fx:id="mainTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
    </center>
@@ -30,7 +39,7 @@
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                      <content>
-                        <CheckBox fx:id="onParkingFiler" style="-fx-text-fill: black;" />
+                        <CheckBox fx:id="onParkingFilter" style="-fx-text-fill: black;" />
                      </content>
                   </CustomMenuItem>
                   <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
@@ -38,7 +47,7 @@
                         <Slider fx:id="parkingLot" blockIncrement="5.0" majorTickUnit="5.0" max="20.0" min="1.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" snapToTicks="true" style="-fx-: black;" value="5.0" />
                      </content>
                   </CustomMenuItem>
-                  <Menu mnemonicParsing="false" text="Carpark Cost">
+                  <Menu fx:id="cpMenu" mnemonicParsing="false" text="Carpark Cost">
                      <items>
                         <CustomMenuItem hideOnClick="false" mnemonicParsing="false">
                            <content>
@@ -68,7 +77,7 @@
                      </items>
                   </Menu>
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <Menu mnemonicParsing="false" text="Hours Open">
+                  <Menu fx:id="openMenu" mnemonicParsing="false" text="Hours Open">
                      <items>
                         <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                            <content>
@@ -83,7 +92,7 @@
                      </items>
                   </Menu>
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <Menu mnemonicParsing="false" text="Nearby Attractions">
+                  <Menu fx:id="attractMenu" mnemonicParsing="false" text="Nearby Attractions">
                      <items>
                         <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Has Attraction button">
                            <content>
@@ -98,7 +107,7 @@
                      </items>
                   </Menu>
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <Menu mnemonicParsing="false" text="Charging Cost">
+                  <Menu fx:id="cCostsMenu" mnemonicParsing="false" text="Charging Cost">
                      <items>
                         <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="No Charging Cost">
                            <content>

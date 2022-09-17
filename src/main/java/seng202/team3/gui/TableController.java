@@ -61,7 +61,7 @@ public class TableController {
     private Slider timeLimit;
 
     @FXML
-    private CheckBox onParkingFiler;
+    private CheckBox onParkingFilter;
 
     @FXML
     private Slider parkingLot;
@@ -352,7 +352,7 @@ public class TableController {
             manage.adjustQuery("maxtimelimit",
                     Double.toString(timeLimit.getValue()), ComparisonType.GREATER_THAN_EQUAL);
         }
-        if (onParkingFiler.isSelected()) {
+        if (onParkingFilter.isSelected()) {
             manage.adjustQuery("carparkcount",
                     Double.toString(parkingLot.getValue()), ComparisonType.GREATER_THAN_EQUAL);
         }
@@ -395,14 +395,14 @@ public class TableController {
      * Sets the Original text and updates distance filter for chargers on slider
      */
     public void change() {
-        onParkingFiler.textProperty()
+        onParkingFilter.textProperty()
                 .setValue("Minimum number of spaces ("
                         + Math.round(parkingLot.getValue()) + ")");
         toggleTimeLimit.textProperty()
                 .setValue("Minimum time limit of ("
                         + Math.round(timeLimit.getValue()) + " minutes)");
         parkingLot.valueProperty().addListener((observableValue, number, t1) -> {
-            onParkingFiler.textProperty()
+            onParkingFilter.textProperty()
                     .setValue("Minimum number of spaces ("
                             + Math.round(parkingLot.getValue()) + ")");
         });
