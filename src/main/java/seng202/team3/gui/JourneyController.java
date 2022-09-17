@@ -69,4 +69,13 @@ public class JourneyController {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Gets the journeymanager
+     *
+     * @return the journeymanager
+     */
+    public JourneyManager getJourneyManager() {
+        return journeyManager;
+    }
 }

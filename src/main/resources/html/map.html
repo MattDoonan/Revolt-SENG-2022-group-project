@@ -127,8 +127,8 @@
                 let r = results[0]
                 if (r) {
                     removeCoordinate();
-                    javaScriptBridge.addLocationName(r.name)
                     addCoordinate(r.name, latlng.lat, latlng.lng)
+                    javaScriptBridge.addLocationName(r.name)
                 }
             })
         }

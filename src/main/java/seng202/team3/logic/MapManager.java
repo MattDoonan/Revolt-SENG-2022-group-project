@@ -39,8 +39,10 @@ public class MapManager {
     /**
      * Associates this map with the geolocationcoordinate {@link Coordinate}
      *
+     * @param coordinate the coordinate associated
      */
-    public void makeCoordinate() {
+    public void makeCoordinate(Coordinate coordinate) {
+        GeoLocationHandler.getInstance().setCoordinate(coordinate, coordinate.getAddress());
         manager.setPosition();
         manager.getCloseChargerData();
     }

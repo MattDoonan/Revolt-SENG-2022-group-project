@@ -68,7 +68,7 @@ public class MapViewController extends MapHandler {
     public void makeCoordinate(Coordinate coordinate) {
         javaScriptConnector.call("addCoordinate", "Current Coordinate: ",
                 coordinate.getLat(), coordinate.getLon());
-        map.makeCoordinate();
+        map.makeCoordinate(coordinate);
     }
 
     /**
@@ -173,7 +173,8 @@ public class MapViewController extends MapHandler {
      */
     @FXML
     public void addCharger() {
-        if (new MenuController().getController().getManager().getPosition().getAddress() == null) {
+        if (new MenuController().getController().getManager()
+                .getPosition().getAddress() == "Coordinate") {
             javaScriptConnector.call("addCoordinateName");
         }
         loadPromptScreens("Search an address or click on the map\n"

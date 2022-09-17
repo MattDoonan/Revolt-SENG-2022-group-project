@@ -38,6 +38,20 @@ public class JavaScriptBridge {
      */
     public void addCoordinateFromClick(String latlng) {
         GeoLocationHandler.getInstance().setCoordinate(parseCoordinate(latlng), "Coordinate");
+        refreshCoordinates();
+    }
+
+    /**
+     * Refreshes the coordinates for journey manager and main manager
+     */
+    private void refreshCoordinates() {
+        MenuController menu = new MenuController();
+        if (menu.getController() != null) {
+            menu.getController().getManager().setPosition();
+        }
+        if (menu.getJourneyController() != null) {
+            menu.getJourneyController().getJourneyManager().setPosition();
+        }
     }
 
     /**
@@ -68,7 +82,9 @@ public class JavaScriptBridge {
      * @param address String of the address
      */
     public void addLocationName(String address) {
-        GeoLocationHandler.getInstance().getCoordinate().setAddress(address);
+        GeoLocationHandler.getInstance().setCoordinate(GeoLocationHandler
+                        .getInstance().getCoordinate(), address);
+        refreshCoordinates();
     }
 
     public void refreshTable() {
