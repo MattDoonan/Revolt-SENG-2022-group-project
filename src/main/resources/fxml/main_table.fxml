@@ -1,19 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.CustomMenuItem?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuButton?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.SeparatorMenuItem?>
-<?import javafx.scene.control.Slider?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.TableController">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.TableController">
    <center>
       <TableView fx:id="mainTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
    </center>
@@ -26,35 +17,35 @@
             <MenuButton minHeight="30.0" mnemonicParsing="false" prefWidth="250.0" style="-fx-font-size: 20;" text="Filter Columns">
                <items>
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                  <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                      <content>
                         <CheckBox fx:id="toggleTimeLimit" style="-fx-text-fill: black;" />
                      </content>
                   </CustomMenuItem>
-                  <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                  <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                      <content>
                         <Slider fx:id="timeLimit" majorTickUnit="30.0" max="520.0" min="30.0" minorTickCount="10" showTickLabels="true" showTickMarks="true" style="-fx-text-fill: black;" value="60.0" />
                      </content>
                   </CustomMenuItem>
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                  <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                      <content>
                         <CheckBox fx:id="onParkingFiler" style="-fx-text-fill: black;" />
                      </content>
                   </CustomMenuItem>
-                  <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                  <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                      <content>
                         <Slider fx:id="parkingLot" blockIncrement="5.0" majorTickUnit="5.0" max="20.0" min="1.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" snapToTicks="true" style="-fx-: black;" value="5.0" />
                      </content>
                   </CustomMenuItem>
                   <Menu mnemonicParsing="false" text="Carpark Cost">
                      <items>
-                        <CustomMenuItem mnemonicParsing="false">
+                        <CustomMenuItem hideOnClick="false" mnemonicParsing="false">
                            <content>
                               <CheckBox fx:id="withoutCarparkCost" style="-fx-text-fill: black;" text="Without Cost" />
                            </content>
                         </CustomMenuItem>
-                        <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                        <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                            <content>
                               <CheckBox fx:id="withCarparkCost" style="-fx-text-fill: black;" text="With Cost" />
                            </content>
@@ -79,12 +70,12 @@
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <Menu mnemonicParsing="false" text="Hours Open">
                      <items>
-                        <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                        <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                            <content>
                               <CheckBox fx:id="openAllButton" style="-fx-text-fill: black;" text="Open 24 hours" />
                            </content>
                         </CustomMenuItem>
-                        <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                        <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                            <content>
                               <CheckBox fx:id="notOpenAllButton" style="-fx-text-fill: black;" text="Not Open 24 Hours" />
                            </content>
@@ -99,7 +90,7 @@
                               <CheckBox fx:id="attractionButton" style="-fx-text-fill: black;" text="Nearby Attraction" />
                            </content>
                         </CustomMenuItem>
-                        <CustomMenuItem mnemonicParsing="false">
+                        <CustomMenuItem hideOnClick="false" mnemonicParsing="false">
                            <content>
                               <CheckBox fx:id="noNearbyAttraction" style="-fx-text-fill: black;" text="No Nearby Attraction" />
                            </content>
@@ -114,7 +105,7 @@
                               <CheckBox fx:id="chargingCost" style="-fx-text-fill: black;" text="No Charging Cost" />
                            </content>
                         </CustomMenuItem>
-                        <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                        <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                            <content>
                               <CheckBox fx:id="hasChargingCost" style="-fx-text-fill: black;" text="Charing Cost" />
                            </content>
@@ -125,82 +116,82 @@
             </MenuButton>
             <MenuButton minHeight="30.0" mnemonicParsing="false" prefWidth="250.0" style="-fx-font-size: 20;" text="Select Columns">
                <items>
-                  <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                  <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                     <content>
                       <CheckBox fx:id="showId" style="-fx-text-fill: black;" text="Show ID" />
                     </content>
                   </CustomMenuItem>
-                  <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                  <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                      <content>
                         <CheckBox fx:id="showXpos" style="-fx-text-fill: black;" text="Show Xpos" />
                      </content>
                   </CustomMenuItem>
-                  <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                  <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                      <content>
                         <CheckBox fx:id="showYpos" style="-fx-text-fill: black;" text="Show Ypos" />
                      </content>
                   </CustomMenuItem>
-                  <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                  <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                      <content>
                         <CheckBox fx:id="showOperator" selected="true" style="-fx-text-fill: black;" text="Show Operator" />
                      </content>
                   </CustomMenuItem>
-                  <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                  <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                      <content>
                         <CheckBox fx:id="showAddress" selected="true" style="-fx-text-fill: black;" text="Show Address" />
                      </content>
                   </CustomMenuItem>
-                  <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                  <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                      <content>
                         <CheckBox fx:id="showOwner" mnemonicParsing="false" selected="true" text="Show Owner" />
                      </content>
                   </CustomMenuItem>
-                  <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                  <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                      <content>
                         <CheckBox fx:id="showHoursOpen" selected="true" style="-fx-text-fill: black;" text="Show If 24/7" />
                      </content>
                   </CustomMenuItem>
-                  <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                  <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                      <content>
                         <CheckBox fx:id="showCarparks" selected="true" style="-fx-text-fill: black;" text="Show Carparks" />
                      </content>
                   </CustomMenuItem>
-                  <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                  <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                      <content>
                         <CheckBox fx:id="showCarparkCost" selected="true" style="-fx-text-fill: black;" text="Show Carpark Cost" />
                      </content>
                   </CustomMenuItem>
-                  <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                  <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                      <content>
                         <CheckBox fx:id="showTimeLimit" selected="true" style="-fx-text-fill: black;" text="Show Time Limit" />
                      </content>
                   </CustomMenuItem>
-                  <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                  <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                      <content>
                         <CheckBox fx:id="showAttraction" selected="true" style="-fx-text-fill: black;" text="Show Has Attractions" />
                      </content>
                   </CustomMenuItem>
-                  <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                  <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                      <content>
                         <CheckBox fx:id="showLat" selected="true" style="-fx-text-fill: black;" text="Show LatPos" />
                      </content>
                   </CustomMenuItem>
-                  <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                  <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                      <content>
                         <CheckBox fx:id="showLon" selected="true" style="-fx-text-fill: black;" text="Show LonPos" />
                      </content>
                   </CustomMenuItem>
-                  <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                  <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                      <content>
                         <CheckBox fx:id="showOpening" selected="true" style="-fx-text-fill: black;" text="Show Date Opened" />
                      </content>
                   </CustomMenuItem>
-                  <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                  <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                      <content>
                         <CheckBox fx:id="showChargingCost" selected="true" style="-fx-text-fill: black;" text="Show Charging Cost" />
                      </content>
                   </CustomMenuItem>
-                  <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                  <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                      <content>
                         <CheckBox fx:id="showCurrent" selected="true" style="-fx-text-fill: black;" text="Show Current Type" />
                      </content>

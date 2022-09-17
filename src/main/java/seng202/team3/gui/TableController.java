@@ -336,11 +336,8 @@ public class TableController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        manage.addCharger();
-        if (manage.getPosition() == null) {
-            System.out.println("not added");
-        } else {
-            System.out.println(manage.getPosition().getAddress());
+        if (manage.getPosition() != null) {
+            manage.addCharger();
         }
     }
 
