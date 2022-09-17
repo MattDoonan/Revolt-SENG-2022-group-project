@@ -194,6 +194,29 @@ public class TableController {
         manage.makeAllChargers();
         addToDisplay(manage.getData());
         change();
+        setIdForTesting();
+    }
+
+    /**
+     * Sets the id of each column so they can all be tested.
+     */
+    public void setIdForTesting() {
+        idCol.setId("idCol");
+        xposCol.setId("xposCol");
+        yposCol.setId("yposCol");
+        operatorCol.setId("operatorCol");
+        addressCol.setId("addressCol");
+        ownerCol.setId("ownerCol");
+        hoursCol.setId("hoursCol");
+        carparkCol.setId("carparkCol");
+        carparkCostCol.setId("carparkCostCol");
+        timeLimitCol.setId("timeLimitCol");
+        attractionCol.setId("attractionCol");
+        latitudeCol.setId("latitudeCol");
+        longitudeCol.setId("longitudeCol");
+        openCol.setId("openCol");
+        chargcostCol.setId("chargcostCol");
+        currentsCol.setId("currentsCol");
     }
 
     /**
