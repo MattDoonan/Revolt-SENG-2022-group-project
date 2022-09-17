@@ -11,59 +11,50 @@ import netscape.javascript.JSObject;
  * @author Michelle Hsieh
  * @version 1.0.0, Sep 22
  */
-public class PromptPopUp {
+public class PromptPopUp extends PopUpWindow {
 
-    @FXML
-    private Label inputBox;
-
-    private String prompt;
-    private String type;
-    private Stage stage;
+    protected String type;
 
     /**
      * The basic initialiser
      */
     public PromptPopUp() {
-
     }
 
     /**
-     * Initialise and display the prompt
+     * Sets the type for the switch
+     *
+     * @param type A String of the type for the popup
      */
-    public void addPrompt(String prompt, String type) {
+    public void setType(String type) {
         this.type = type;
-        this.prompt = prompt;
-        inputBox.setText(prompt);
-        stage = (Stage) inputBox.getScene().getWindow();
-        stage.setAlwaysOnTop(true);
     }
 
     /**
-     * Executes the correct action as needed
+     * Executes the correct action as needed as per controller
      *
      */
+    @Override
     @FXML
     public void confirm() {
         MainController controller = new MenuController().getController();
         stage.setAlwaysOnTop(false);
-        if (type.equals("edit")) {
-            controller.getManager().editCharger();
-            cancel();
-        } else if (type.equals("delete")) {
-            controller.getManager().deleteCharger();
-            cancel();
-        } else if (type.equals("add")) {
-            controller.getManager().addCharger();
-            cancel();
+        switch (type) {
+            case "edit" -> {
+                controller.getManager().editCharger();
+                cancel();
+            }
+            case "delete" -> {
+                controller.getManager().deleteCharger();
+                cancel();
+            }
+            case "add" -> {
+                controller.getManager().addCharger();
+                cancel();
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + type);
         }
     }
 
-    /**
-     * Cancels and closes the window
-     */
-    @FXML
-    public void cancel() {
-        stage.close();
-    }
 
 }
