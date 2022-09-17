@@ -1,4 +1,4 @@
-package seng202.team3.unitTest.data.database;
+package seng202.team3.unittest.data.database;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;

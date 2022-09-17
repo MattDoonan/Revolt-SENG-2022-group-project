@@ -1,4 +1,4 @@
-package seng202.team3.unitTest.logic;
+package seng202.team3.unittest.logic;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -91,11 +91,7 @@ public class ChargerManagerTest {
         chargers.add(charge3);
         chargers.add(charge4);
 
-        try {
-            db.writeCharger(chargers);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        db.writeCharger(chargers);
 
         ArrayList<String> strings = new ArrayList<>();
         strings.add("Hosp");

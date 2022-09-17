@@ -9,7 +9,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import seng202.team3.logic.JourneyManager;
-import seng202.team3.logic.MapManager;
 
 /**
  * Controller for journeySidebar.fxml
@@ -49,9 +48,8 @@ public class JourneyController {
     public void init(Stage stage) {
         this.stage = stage;
         manager = new JourneyManager();
-        loadMapView(stage);
+        loadMapView(this.stage);
     }
-
 
     /**
      * Loads the map view into the main part of the main window

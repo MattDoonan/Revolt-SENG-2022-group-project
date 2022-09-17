@@ -1,23 +1,17 @@
 package seng202.team3.gui;
 
-import java.beans.EventHandler;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import javafx.beans.property.ReadOnlyDoubleWrapper;
-import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
-import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -30,7 +24,6 @@ import javafx.stage.Stage;
 import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.logic.Calculations;
-import seng202.team3.logic.JavaScriptBridge;
 import seng202.team3.logic.MainManager;
 import seng202.team3.logic.MapManager;
 
@@ -41,7 +34,6 @@ import seng202.team3.logic.MapManager;
  * @version 1.0.1, Aug 22
  */
 public class MainController {
-
 
     @FXML
     private CheckBox acButton;
@@ -102,7 +94,6 @@ public class MainController {
 
     @FXML
     private CheckBox noNearbyAttraction;
-
 
     private BorderPane menuWindow;
 
@@ -248,7 +239,6 @@ public class MainController {
         }
     }
 
-
     public void refreshTable() {
         addChargersToDisplay(manage.getCloseChargerData());
     }
@@ -372,7 +362,6 @@ public class MainController {
         }
     }
 
-
     /**
      * Gets the MainManager created by the MainController
      *
@@ -388,7 +377,6 @@ public class MainController {
     public void editCharger() {
         manage.editCharger();
     }
-
 
     /**
      * Toggles the route view on.

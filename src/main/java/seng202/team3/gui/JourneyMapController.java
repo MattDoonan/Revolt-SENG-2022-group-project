@@ -3,7 +3,6 @@ package seng202.team3.gui;
 import javafx.stage.Stage;
 import seng202.team3.logic.JavaScriptBridge;
 import seng202.team3.logic.JourneyManager;
-import seng202.team3.logic.MapManager;
 
 /**
  * A Journey Map Controller that extends the abstract MapHandler class

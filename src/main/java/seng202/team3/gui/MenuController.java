@@ -1,12 +1,11 @@
 package seng202.team3.gui;
 
 import java.io.IOException;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
@@ -77,7 +76,6 @@ public class MenuController {
         initHome();
     }
 
-
     /**
      * Initialises the welcome page;
      */
@@ -109,7 +107,6 @@ public class MenuController {
         }
     }
 
-
     /**
      * Loads the vehicle screen upon click
      */
@@ -132,6 +129,5 @@ public class MenuController {
         }
 
     }
-
 
 }

@@ -1,4 +1,6 @@
-package seng202.team3.testFX;
+package seng202.team3.testfx;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -14,8 +16,6 @@ import seng202.team3.gui.MainController;
 import seng202.team3.gui.MainWindow;
 import seng202.team3.logic.Calculations;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 /**
  * Code designed to test the searching and filtering of the Main Window
  * Heavily inspired by Morgan English
@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author Michelle Hsieh
  * @version 1.0.0, Sep 22
  */
-public class SearchFilterTextFX extends TestFXBase {
+public class SearchFilterTextFx extends TestFXBase {
 
     private MainController controller;
 
@@ -57,7 +57,7 @@ public class SearchFilterTextFX extends TestFXBase {
      * Initialises the state of the current application
      *
      * @param loader the FXML loader after loading
-     * @param stage the stage of the application
+     * @param stage  the stage of the application
      */
     public void initState(FXMLLoader loader, Stage stage) {
         BorderPane b = new BorderPane();

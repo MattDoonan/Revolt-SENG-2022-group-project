@@ -1,5 +1,7 @@
-package seng202.team3.cucumber.mainPageSteps;
+package seng202.team3.cucumber.mainpagesteps;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
@@ -9,10 +11,6 @@ import javafx.collections.ObservableList;
 import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.logic.MainManager;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.testfx.api.FxAssert.verifyThat;
 
 /**
  * Cucumber Tests designed to check acceptance tests of searching and filtering
@@ -37,7 +35,6 @@ public class SearchFilterStepDefs {
     public void setUpManager() {
         manager = new MainManager();
     }
-
 
     @Given("There is no current input given")
     public void noInputGiven() {
@@ -81,6 +78,5 @@ public class SearchFilterStepDefs {
     public void noChargers() {
         assertEquals(0, manager.getCloseChargerData().size());
     }
-
 
 }

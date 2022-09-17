@@ -1,7 +1,6 @@
 package seng202.team3.gui;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.ReadOnlyDoubleWrapper;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
@@ -15,16 +14,11 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.logic.TableManager;
-
-
-
-
 
 /**
  * A TableController class that deals with the display of the table objects
@@ -132,53 +126,45 @@ public class TableController {
     private TableView<Charger> mainTable;
 
     @FXML
-    private final TableColumn<Charger, Integer> idCol =
-            new TableColumn<>("Charger ID");
+    private final TableColumn<Charger, Integer> idCol = new TableColumn<>("Charger ID");
     @FXML
-    private final TableColumn<Charger, Double> xposCol =
-            new TableColumn<>("X coordinate");
+    private final TableColumn<Charger, Double> xposCol = new TableColumn<>("X coordinate");
     @FXML
-    private final TableColumn<Charger, Double> yposCol =
-            new TableColumn<>("Y coordinate");
+    private final TableColumn<Charger, Double> yposCol = new TableColumn<>("Y coordinate");
     @FXML
-    private final TableColumn<Charger, String> operatorCol =
-            new TableColumn<>("Operator");
+    private final TableColumn<Charger, String> operatorCol = new TableColumn<>("Operator");
     @FXML
-    private final TableColumn<Charger, String> addressCol =
-            new TableColumn<>("Address");
+    private final TableColumn<Charger, String> addressCol = new TableColumn<>("Address");
     @FXML
-    private final TableColumn<Charger, String> ownerCol =
-            new TableColumn<>("Owner");
+    private final TableColumn<Charger, String> ownerCol = new TableColumn<>("Owner");
     @FXML
-    private final TableColumn<Charger, Boolean> hoursCol =
-            new TableColumn<>("Hours Open");
+    private final TableColumn<Charger, Boolean> hoursCol = new TableColumn<>("Hours Open");
     @FXML
-    private final TableColumn<Charger, Integer> carparkCol =
-            new TableColumn<>("Carparks");
+    private final TableColumn<Charger, Integer> carparkCol = new TableColumn<>("Carparks");
     @FXML
-    private final TableColumn<Charger, Boolean> carparkCostCol =
-            new TableColumn<>("Carpark Cost");
+    private final TableColumn<Charger, Boolean> carparkCostCol = new TableColumn<>("Carpark Cost");
     @FXML
-    private final TableColumn<Charger, Double> timeLimitCol =
-            new TableColumn<>("Time limit");
+    private final TableColumn<Charger, Double> timeLimitCol = new TableColumn<>("Time limit");
     @FXML
-    private final TableColumn<Charger, Boolean> attractionCol =
-            new TableColumn<>("Has Attraction");
+    private final TableColumn<Charger, Boolean> attractionCol = new TableColumn<>("Has Attraction");
     @FXML
-    private final TableColumn<Charger, Double> latitudeCol =
-            new TableColumn<>("Latitude coordinate");
+    private final TableColumn<Charger, Double> latitudeCol = new TableColumn<>(
+            "Latitude coordinate");
     @FXML
-    private final TableColumn<Charger, Double> longitudeCol =
-            new TableColumn<>("Longitude coordinate");
+    private final TableColumn<Charger, Double> longitudeCol = new TableColumn<>(
+            "Longitude coordinate");
+
     @FXML
-    private final TableColumn<Charger, String> openCol =
-            new TableColumn<>("Date open");
+    private final TableColumn<Charger, String> openCol = new TableColumn<>(
+            "Date open");
+
     @FXML
-    private final TableColumn<Charger, Boolean> chargcostCol =
-            new TableColumn<>("Charging cost");
+    private final TableColumn<Charger, Boolean> chargcostCol = new TableColumn<>(
+            "Charging cost");
+
     @FXML
-    private final TableColumn<Charger, String> currentsCol =
-            new TableColumn<>("Current types");
+    private final TableColumn<Charger, String> currentsCol = new TableColumn<>(
+            "Current types");
 
     /**
      * Initialize the window
@@ -270,43 +256,50 @@ public class TableController {
 
     /**
      * adds chargers to the display
+     * 
      * @param chargersToAdd Observable list of charger objects
      */
     public void addToDisplay(ObservableList<Charger> chargersToAdd) {
         mainTable.getItems().clear();
         mainTable.setItems(chargersToAdd);
-        idCol.setCellValueFactory(charger ->
-                new ReadOnlyIntegerWrapper(charger.getValue().getChargerId()).asObject());
-        xposCol.setCellValueFactory(charger ->
-                new ReadOnlyDoubleWrapper(charger.getValue().getLocation().getXpos()).asObject());
-        yposCol.setCellValueFactory(charger ->
-                new ReadOnlyDoubleWrapper(charger.getValue().getLocation().getYpos()).asObject());
-        operatorCol.setCellValueFactory(charger ->
-                new ReadOnlyStringWrapper(charger.getValue().getOperator()));
-        addressCol.setCellValueFactory(charger ->
-                new ReadOnlyStringWrapper(charger.getValue().getLocation().getAddress()));
-        ownerCol.setCellValueFactory(charger ->
-                new ReadOnlyStringWrapper(charger.getValue().getOwner()));
-        hoursCol.setCellValueFactory(charger ->
-                new ReadOnlyBooleanWrapper(charger.getValue().getAvailable24Hrs()));
-        carparkCol.setCellValueFactory(charger ->
-                new ReadOnlyIntegerWrapper(charger.getValue().getAvailableParks()).asObject());
-        carparkCostCol.setCellValueFactory(charger ->
-                new ReadOnlyBooleanWrapper(charger.getValue().getParkingCost()));
-        timeLimitCol.setCellValueFactory(charger ->
-                new ReadOnlyDoubleWrapper(charger.getValue().getTimeLimit()).asObject());
-        attractionCol.setCellValueFactory(charger ->
-                new ReadOnlyBooleanWrapper(charger.getValue().getHasAttraction()));
-        latitudeCol.setCellValueFactory(charger ->
-                new ReadOnlyDoubleWrapper(charger.getValue().getLocation().getLat()).asObject());
-        longitudeCol.setCellValueFactory(charger ->
-                new ReadOnlyDoubleWrapper(charger.getValue().getLocation().getLon()).asObject());
-        openCol.setCellValueFactory(charger ->
-                new ReadOnlyStringWrapper(charger.getValue().getDateOpened()));
-        chargcostCol.setCellValueFactory(charger ->
-                new ReadOnlyBooleanWrapper(charger.getValue().getChargeCost()));
-        currentsCol.setCellValueFactory(charger ->
-                new ReadOnlyStringWrapper(manage.getConnectors(charger.getValue())));
+        idCol.setCellValueFactory(charger -> new ReadOnlyIntegerWrapper(
+                charger.getValue().getChargerId()).asObject());
+        xposCol.setCellValueFactory(
+                charger -> new ReadOnlyDoubleWrapper(
+                        charger.getValue().getLocation().getXpos()).asObject());
+        yposCol.setCellValueFactory(
+                charger -> new ReadOnlyDoubleWrapper(
+                        charger.getValue().getLocation().getYpos()).asObject());
+        operatorCol.setCellValueFactory(
+                charger -> new ReadOnlyStringWrapper(charger.getValue().getOperator()));
+        addressCol.setCellValueFactory(
+                charger -> new ReadOnlyStringWrapper(
+                        charger.getValue().getLocation().getAddress()));
+        ownerCol.setCellValueFactory(
+                charger -> new ReadOnlyStringWrapper(charger.getValue().getOwner()));
+        hoursCol.setCellValueFactory(
+                charger -> new ReadOnlyBooleanWrapper(charger.getValue().getAvailable24Hrs()));
+        carparkCol.setCellValueFactory(
+                charger -> new ReadOnlyIntegerWrapper(
+                        charger.getValue().getAvailableParks()).asObject());
+        carparkCostCol.setCellValueFactory(
+                charger -> new ReadOnlyBooleanWrapper(charger.getValue().getParkingCost()));
+        timeLimitCol.setCellValueFactory(
+                charger -> new ReadOnlyDoubleWrapper(charger.getValue().getTimeLimit()).asObject());
+        attractionCol.setCellValueFactory(
+                charger -> new ReadOnlyBooleanWrapper(charger.getValue().getHasAttraction()));
+        latitudeCol.setCellValueFactory(
+                charger -> new ReadOnlyDoubleWrapper(
+                        charger.getValue().getLocation().getLat()).asObject());
+        longitudeCol.setCellValueFactory(
+                charger -> new ReadOnlyDoubleWrapper(
+                        charger.getValue().getLocation().getLon()).asObject());
+        openCol.setCellValueFactory(
+                charger -> new ReadOnlyStringWrapper(charger.getValue().getDateOpened()));
+        chargcostCol.setCellValueFactory(
+                charger -> new ReadOnlyBooleanWrapper(charger.getValue().getChargeCost()));
+        currentsCol.setCellValueFactory(
+                charger -> new ReadOnlyStringWrapper(manage.getConnectors(charger.getValue())));
         mainTable.getSelectionModel().select(0);
         mainTable.getSortOrder().add(idCol);
         mainTable.sort();
@@ -391,7 +384,6 @@ public class TableController {
         manage.makeAllChargers();
         addToDisplay(manage.getData());
     }
-
 
     /**
      * Sets the Original text and updates distance filter for chargers on slider

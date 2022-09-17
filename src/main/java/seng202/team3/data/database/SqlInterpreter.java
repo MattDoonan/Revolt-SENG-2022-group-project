@@ -75,7 +75,7 @@ public class SqlInterpreter implements DataManager {
      */
     public void addChargerCsvToData(String source) throws IOException {
         Query q = new QueryBuilderImpl().withSource(source).build();
-        writeCharger(new ArrayList<>(new CsvInterpreter().readData(q, Charger.class)), true);
+        writeCharger(new ArrayList<>(new CsvInterpreter().readData(q, Charger.class)));
     }
 
     /**
@@ -592,10 +592,9 @@ public class SqlInterpreter implements DataManager {
     /**
      * Receives a list of chargers and sends them to writeCharger
      * 
-     * @param chargers     array list of charger objects
-     * @param ignoreUpdate indicate whether existing chargers should be updated
+     * @param chargers array list of charger objects
      */
-    public void writeCharger(ArrayList<Object> chargers, boolean ignoreUpdate) {
+    public void writeCharger(ArrayList<Object> chargers) {
         int sizePerThread = chargers.size() / WriteChargerThread.threadCount;
         WriteChargerThread[] activeThreads = new WriteChargerThread[WriteChargerThread.threadCount];
 
@@ -604,8 +603,7 @@ public class SqlInterpreter implements DataManager {
         for (; i < WriteChargerThread.threadCount; i++) {
             activeThreads[i] = new WriteChargerThread(new ArrayList<>(
                     chargers.subList(i * sizePerThread,
-                            (i + 1) * sizePerThread)),
-                    ignoreUpdate);
+                            (i + 1) * sizePerThread)));
         }
 
         // Distribute remaining chargers evenly
@@ -626,16 +624,6 @@ public class SqlInterpreter implements DataManager {
                 e.printStackTrace(); // TODO: handle exception
             }
         }
-    }
-
-    /**
-     * Writes chargers to db. Update by default
-     * 
-     * @param chargers
-     * @throws IOException
-     */
-    public void writeCharger(ArrayList<Object> chargers) throws IOException {
-        writeCharger(chargers, false);
     }
 
     /**
@@ -701,7 +689,8 @@ public class SqlInterpreter implements DataManager {
      * @param connectors an Array list of Connector objects
      * @param chargerId  Integer representing the associated charger
      */
-    public void writeConnector(Connection connection, ArrayList<Connector> connectors, int chargerId)
+    public void writeConnector(Connection connection, ArrayList<Connector> connectors,
+            int chargerId)
             throws IOException {
         for (Connector connector : connectors) {
             writeConnector(connection, connector, chargerId);
@@ -874,9 +863,8 @@ public class SqlInterpreter implements DataManager {
         static int threadCount = 4;
         ArrayList<Object> chargersToWrite;
         Connection conn;
-        boolean ignoreUpdate;
 
-        public WriteChargerThread(ArrayList<Object> chargersToWrite, boolean ignoreUpdate) {
+        public WriteChargerThread(ArrayList<Object> chargersToWrite) {
             this.chargersToWrite = chargersToWrite;
             this.conn = createConnection();
         }
@@ -886,75 +874,15 @@ public class SqlInterpreter implements DataManager {
         }
 
         public void run() {
-            if (!ignoreUpdate) {
-                for (Object c : chargersToWrite) {
-                    try {
-                        mutex.acquire();
-                        writeCharger(conn, (Charger) c);
-                        mutex.release();
-                    } catch (IOException | InterruptedException e) {
-                        e.printStackTrace(); // TODO: handle exception
-                    }
 
-                }
-            } else {
-                String chargerSql = "INSERT INTO charger "
-                        + "(chargerid, x, y, name, operator, owner, address, is24hours, "
-                        + "carparkcount, hascarparkcost, maxtimelimit, hastouristattraction, latitude, "
-                        + "longitude, datefirstoperational, haschargingcost, currenttype)"
-                        + " values ";
-                String connectorSql = "INSERT INTO connector (connectorid, connectorcurrent, connectorpowerdraw, "
-                        + "count, connectorstatus, chargerid, connectortype) "
-                        + "values";
-                for (Object o : chargersToWrite) {
-                    if (chargersToWrite.indexOf(o) != chargersToWrite.size() - 1) {
-                        chargerSql += ",";
-                    }
-                    Charger c = (Charger) o;
-                    chargerSql += String.format("(%d,%f,%f,%s,%s,%s,%s,%b,%d,%b,%f,%b,%f,%f,%b,%b,%s)",
-                            c.getChargerId(),
-                            c.getLocation().getXpos(),
-                            c.getLocation().getYpos(),
-                            c.getName(),
-                            c.getOperator(),
-                            c.getOwner(),
-                            c.getLocation().getAddress(),
-                            c.getAvailable24Hrs(),
-                            c.getAvailableParks(),
-                            c.getParkingCost(),
-                            c.getTimeLimit(),
-                            c.getHasAttraction(),
-                            c.getLocation().getLat(),
-                            c.getLocation().getLon(),
-                            c.getDateOpened(),
-                            c.getChargeCost(),
-                            c.getCurrentType());
-                    for (Connector con : c.getConnectors()) {
-                        if (c.getConnectors().indexOf(o) != c.getConnectors().size() - 1) {
-                            connectorSql += ",";
-                        }
-
-                        connectorSql += String.format("(%d,%s,%s,%d,%s,%d,%s)", con.getId(),
-                                con.getCurrent(),
-                                con.getPower(),
-                                con.getCount(),
-                                con.getStatus(),
-                                c.getChargerId(),
-                                con.getType());
-                    }
-                }
-                chargerSql += ";";
-                connectorSql += ";";
-
+            for (Object c : chargersToWrite) {
                 try {
                     mutex.acquire();
-                    conn.createStatement().executeUpdate(chargerSql);
-                    conn.createStatement().executeUpdate(connectorSql);
+                    writeCharger(conn, (Charger) c);
                     mutex.release();
-                } catch (InterruptedException | SQLException e) {
-                    e.printStackTrace(); // TODO: handle exception
+                } catch (IOException | InterruptedException e) {
+                    e.printStackTrace(); // TODO: handle this exception
                 }
-
             }
 
         }

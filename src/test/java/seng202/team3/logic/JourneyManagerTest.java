@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.ArrayList;
-
 import javafx.collections.FXCollections;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,19 +46,23 @@ public class JourneyManagerTest {
 
         // Christchurch Hospital
         Coordinate coord1 = new Coordinate(1.1, 2.3, -43.53418, 172.627572);
-        //charger1 = new Charger(connectorList, "Hosp", coord1, 2, 1.2, "operator", true);
+        // charger1 = new Charger(connectorList, "Hosp", coord1, 2, 1.2, "operator",
+        // true);
 
         // Christchurch Boys High School
         Coordinate coord2 = new Coordinate(3.5, 4.4, -43.52425, 172.60019);
-        //charger2 = new Charger(connectorList, "Boys", coord2, 2, 34.2, "operator", false);
+        // charger2 = new Charger(connectorList, "Boys", coord2, 2, 34.2, "operator",
+        // false);
 
         // Canterbury Uni
         Coordinate coord3 = new Coordinate(2.2, 2.2, -43.521764, 172.579985);
-        //charger3 = new Charger(connectorList, "Uni", coord3, 2, 61.3, "operator", false);
+        // charger3 = new Charger(connectorList, "Uni", coord3, 2, 61.3, "operator",
+        // false);
 
         // Otago Boys School
         Coordinate coord4 = new Coordinate(4.8, 7.7, -45.87135, 170.49551);
-        //charger4 = new Charger(connectorList, "Otago", coord4, 6, 12.2, "operator", false);
+        // charger4 = new Charger(connectorList, "Otago", coord4, 6, 12.2, "operator",
+        // false);
 
         manager = new JourneyManager();
         manager.setStart(coord1);
@@ -92,9 +95,10 @@ public class JourneyManagerTest {
     public void testSelectVehicle() {
         ArrayList<String> connectors = new ArrayList<>();
         connectors.add("temp");
-        //car = new Vehicle("CGN781", "temp", "temp", 100, 10000, connectors);
+        // car = new Vehicle("CGN781", "temp", "temp", 100, 10000, connectors);
         manager.selectVehicle(car);
-        //assertEquals("CGN781", manager.getSelectedJourney().getVehicle().getLicensePlate());
+        // assertEquals("CGN781",
+        // manager.getSelectedJourney().getVehicle().getLicensePlate());
     }
 
     @Test
@@ -124,6 +128,7 @@ public class JourneyManagerTest {
         correctTestChargers.add(charger3);
 
         manager.makeCandidateChargers(allTestChargers);
-        assertEquals(manager.getCandidateChargers(), FXCollections.observableList(correctTestChargers));
+        assertEquals(manager.getCandidateChargers(),
+                FXCollections.observableList(correctTestChargers));
     }
 }
