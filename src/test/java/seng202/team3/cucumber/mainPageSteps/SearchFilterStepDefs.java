@@ -1,6 +1,9 @@
 package seng202.team3.cucumber.mainPageSteps;
 
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -9,10 +12,6 @@ import javafx.collections.ObservableList;
 import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.logic.MainManager;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.testfx.api.FxAssert.verifyThat;
 
 /**
  * Cucumber Tests designed to check acceptance tests of searching and filtering
@@ -82,5 +81,45 @@ public class SearchFilterStepDefs {
         assertEquals(0, manager.getCloseChargerData().size());
     }
 
+    /**
+     * AT_3
+     */
+    @When("The user filters for no charging cost") 
+    public void filterChargerCost() {
+        manager.adjustQuery("haschargingcost", "False", ComparisonType.EQUAL);
+        manager.makeAllChargers();
+    }
 
+    @Then("The list of chargers found have no charging cost")
+    public void noPaidChargers() {
+        boolean isValid = true;
+        ObservableList<Charger> chargers = manager.getCloseChargerData();
+        for (Charger charger : chargers) {
+            if (charger.getChargeCost()) {
+                isValid = false;
+            }
+        }
+        assertTrue(isValid);
+    }
+
+    /**
+     * AT_4     no favourite implemented
+     */
+
+    /**
+     * AT_5     need testFX to sort as front end table handles the sorting
+     */
+
+    /**
+     * AT_6     need testFX unless you can test FXML if field is shown?
+     */
+
+    /**
+     * AT_7     need testFX 
+     */
+
+    /**
+     * AT_8     testFX
+     */
 }
+
