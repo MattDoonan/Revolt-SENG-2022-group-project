@@ -1,6 +1,7 @@
 package seng202.team3.logic;
 
 
+import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
 
 /**
@@ -14,6 +15,7 @@ public class TableManager extends ChargerHandler implements ChargerInterface {
     /**
      * Adds a charger at a specified coordinate
      */
+    @Override
     public void addCharger() {
         Coordinate coordinate = GeoLocationHandler.getInstance().getCoordinate();
         if (coordinate != null) {
@@ -26,7 +28,9 @@ public class TableManager extends ChargerHandler implements ChargerInterface {
      * Removes the selected charger and replaces it with null
      *
      */
+    @Override
     public void deleteCharger() {
+
     }
 
     /**
@@ -34,6 +38,7 @@ public class TableManager extends ChargerHandler implements ChargerInterface {
      * selected charger
      */
     public void editCharger() {
+
     }
 
 }

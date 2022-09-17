@@ -133,9 +133,8 @@ public class JavaScriptBridge {
      */
     public void loadMoreInfo(int id) {
         chargerHandler(id);
-        loadChargerEdit(new MenuController().getController()
-                .getManager().getSelectedCharger());
-
+        MainManager main = new MenuController().getController().getManager();
+        loadChargerEdit(main.getSelectedCharger(), main.getPosition());
     }
 
     /**
@@ -151,8 +150,9 @@ public class JavaScriptBridge {
      * Creates the charger adding/editing screen when necessary
      *
      * @param charger the {@link Charger} that is being selected
+     * @param coordinate the {@link Coordinate} that is being selected
      */
-    public void loadChargerEdit(Charger charger) {
+    public void loadChargerEdit(Charger charger, Coordinate coordinate) {
         try {
             FXMLLoader chargerCont = new FXMLLoader(getClass().getResource(
                     "/fxml/charger_info.fxml"));
@@ -166,6 +166,7 @@ public class JavaScriptBridge {
             modal.setTitle("Charger Information");
             modal.initModality(Modality.WINDOW_MODAL);
             ChargerController controller = chargerCont.getController();
+            controller.setCoordinate(coordinate);
             controller.setCharger(charger);
             controller.displayChargerInfo();
             controller.init(modal);

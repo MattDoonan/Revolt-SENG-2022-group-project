@@ -157,7 +157,8 @@ public class MapViewController extends MapHandler {
             modal.setTitle("Click or cancel:");
             modal.initModality(Modality.WINDOW_MODAL);
             PromptPopUp popController = popUp.getController();
-            popController.addPrompt(prompt, type);
+            popController.setType(type);
+            popController.addPrompt(prompt);
             modal.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();

@@ -40,7 +40,6 @@
         let isRoute;
         let routeToCharger;
         let pointCoordinates = []; // contains a list of all the coordinates in a route in order.
-        let isMini = false;
 
         /**
          * Creates a red icon
@@ -153,9 +152,6 @@
                 removeCoordinate()
                 addCoordinate(e.geocode.name, latlng.lat, latlng.lng)
                 javaScriptBridge.addLocationName(e.geocode.name)
-                if (!isMini) {
-                    javaScriptBridge.refreshTable()
-                }
             })
             return searchBar;
         }

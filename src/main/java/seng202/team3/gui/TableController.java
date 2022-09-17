@@ -16,11 +16,13 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.entity.Charger;
-import seng202.team3.logic.MainManager;
+import seng202.team3.logic.GeoLocationHandler;
+import seng202.team3.logic.JavaScriptBridge;
 import seng202.team3.logic.TableManager;
 
 
@@ -360,8 +362,9 @@ public class TableController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        manage.addCharger();
         if (manage.getPosition() != null) {
-            manage.addCharger();
+            new JavaScriptBridge().loadChargerEdit(null, manage.getPosition());
         }
     }
 
@@ -453,8 +456,44 @@ public class TableController {
      */
     @FXML
     public void deleteCharger() {
-        manage.deleteCharger();
+        loadPromptScreen("Are you sure you'd like to delete this charger?");
+    }
 
+    /**
+     * Loads a generic prompt screen pop-up {@link PopUpWindow}
+     *
+     * @param prompt a String of the instructions
+     */
+    public void loadPromptScreen(String prompt) {
+        try {
+            FXMLLoader popUp = new FXMLLoader(getClass().getResource(
+                    "/fxml/generic_popup.fxml"));
+            VBox root = popUp.load();
+            Scene modalScene = new Scene(root);
+            Stage modal = new Stage();
+            modal.setScene(modalScene);
+            modal.setResizable(false);
+            modal.setTitle("Are you sure? ");
+            modal.initModality(Modality.WINDOW_MODAL);
+            PopUpWindow popController = popUp.getController();
+            popController.addPrompt(prompt);
+            modal.showAndWait();
+            if (popController.getClicked()) {
+                manage.deleteCharger();
+                popController.cancel();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Sets the selected charger upon clicking
+     *
+     */
+    @FXML
+    public void setCharger() {
+        manage.setSelectedCharger(mainTable.getSelectionModel().getSelectedItem());
     }
 
 }
