@@ -38,6 +38,7 @@ public class PopUpWindow {
     @FXML
     public void confirm() {
         isClicked = true;
+        cancel();
     }
 
     /**

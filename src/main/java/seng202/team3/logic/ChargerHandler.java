@@ -45,12 +45,10 @@ public class ChargerHandler {
     }
 
     /**
-     * Sets the position using a {@link Coordinate}
-     *
-     * @param coordinate a Coordinate of the selected position
+     * Sets the position using a {@link Coordinate} from GeolocationHandler
      */
-    public void setPosition(Coordinate coordinate) {
-        selectedCoordinate = coordinate;
+    public void setPosition() {
+        selectedCoordinate = GeoLocationHandler.getInstance().getCoordinate();
     }
 
     /**

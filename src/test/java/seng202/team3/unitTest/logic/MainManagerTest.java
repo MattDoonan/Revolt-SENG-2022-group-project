@@ -21,6 +21,7 @@ import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
 import seng202.team3.logic.ChargerManager;
+import seng202.team3.logic.GeoLocationHandler;
 import seng202.team3.logic.MainManager;
 
 /**
@@ -67,7 +68,8 @@ public class MainManagerTest {
     @Test
     public void positionTest1() {
         Coordinate coordinate = new Coordinate(1.1, 2.3, -43.53418, 172.627572);
-        manage.setPosition(coordinate);
+        GeoLocationHandler.getInstance().setCoordinate(coordinate, "empty");
+        manage.setPosition();
         assertEquals(coordinate, manage.getPosition());
 
     }
@@ -75,7 +77,8 @@ public class MainManagerTest {
     @Test
     public void positionTest2() {
         Coordinate coordinate = new Coordinate(4.4, 6.1, 23.2334, 32.3242);
-        manage.setPosition(coordinate);
+        GeoLocationHandler.getInstance().setCoordinate(coordinate, "empty");
+        manage.setPosition();
         assertEquals(coordinate, manage.getPosition());
     }
 
@@ -137,7 +140,8 @@ public class MainManagerTest {
 
         Coordinate coordinate = new Coordinate(1.1, 2.3, -43.53418, 172.627572);
         ArrayList<Charger> cc = charge.getNearbyChargers(chargerList, coordinate, 50.0);
-        manage.setPosition(coordinate);
+        GeoLocationHandler.getInstance().setCoordinate(coordinate, "empty");
+        manage.setPosition();
         manage.setDistance(50.0);
         manage.resetQuery();
         manage.makeAllChargers();
@@ -167,7 +171,8 @@ public class MainManagerTest {
 
         Coordinate coordinate = new Coordinate(1.1, 2.3, -43.53418, 172.627572);
         ArrayList<Charger> cc = charge.getNearbyChargers(chargerList, coordinate, 90.0);
-        manage.setPosition(coordinate);
+        GeoLocationHandler.getInstance().setCoordinate(coordinate, "empty");
+        manage.setPosition();
         manage.setDistance(90.0);
         manage.resetQuery();
         manage.makeAllChargers();

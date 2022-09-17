@@ -68,7 +68,7 @@ public class MapViewController extends MapHandler {
     public void makeCoordinate(Coordinate coordinate) {
         javaScriptConnector.call("addCoordinate", "Current Coordinate: ",
                 coordinate.getLat(), coordinate.getLon());
-        map.makeCoordinate(coordinate);
+        map.makeCoordinate();
     }
 
     /**

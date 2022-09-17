@@ -18,6 +18,7 @@ import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
 import seng202.team3.gui.ChargerController;
+import seng202.team3.gui.JourneyController;
 import seng202.team3.gui.MainController;
 import seng202.team3.gui.MenuController;
 
@@ -31,14 +32,12 @@ import seng202.team3.gui.MenuController;
 public class JavaScriptBridge {
 
     /**
-     * Makes a coordinate from a click and sends it to MapManager's MainController
+     * Makes a coordinate from a click and sets the GeoLocationHandler
      *
      * @param latlng the string created with latitude and longitude
      */
     public void addCoordinateFromClick(String latlng) {
-        MenuController menu = new MenuController();
-        MainController controller = menu.getController();
-        controller.getManager().setPosition(parseCoordinate(latlng));
+        GeoLocationHandler.getInstance().setCoordinate(parseCoordinate(latlng), "Coordinate");
     }
 
     /**
@@ -69,7 +68,7 @@ public class JavaScriptBridge {
      * @param address String of the address
      */
     public void addLocationName(String address) {
-        new MenuController().getController().getManager().getPosition().setAddress(address);
+        GeoLocationHandler.getInstance().getCoordinate().setAddress(address);
     }
 
     public void refreshTable() {

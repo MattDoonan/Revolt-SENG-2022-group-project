@@ -1,8 +1,10 @@
 package seng202.team3.logic;
 
-
+import java.io.IOException;
+import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
+
 
 /**
  * A Table Manager that implements the adding, deleting and editing functionality of a charger
@@ -19,7 +21,7 @@ public class TableManager extends ChargerHandler implements ChargerInterface {
     public void addCharger() {
         Coordinate coordinate = GeoLocationHandler.getInstance().getCoordinate();
         if (coordinate != null) {
-            setPosition(coordinate);
+            setPosition();
         }
         GeoLocationHandler.getInstance().clearCoordinate();
     }
@@ -30,6 +32,15 @@ public class TableManager extends ChargerHandler implements ChargerInterface {
      */
     @Override
     public void deleteCharger() {
+        if (getSelectedCharger() != null) {
+            try {
+                SqlInterpreter.getInstance().deleteData("charger",
+                        getSelectedCharger().getChargerId());
+                setSelectedCharger(null);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
     }
 
@@ -38,7 +49,10 @@ public class TableManager extends ChargerHandler implements ChargerInterface {
      * selected charger
      */
     public void editCharger() {
-
+        if (getSelectedCharger() != null) {
+            JavaScriptBridge bridge = new JavaScriptBridge();
+            bridge.loadChargerEdit(selectedCharger, selectedCoordinate);
+        }
     }
 
 }

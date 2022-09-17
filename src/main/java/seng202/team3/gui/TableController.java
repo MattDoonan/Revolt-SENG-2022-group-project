@@ -1,7 +1,6 @@
 package seng202.team3.gui;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.ReadOnlyDoubleWrapper;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
@@ -16,25 +15,21 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.entity.Charger;
-import seng202.team3.logic.GeoLocationHandler;
 import seng202.team3.logic.JavaScriptBridge;
 import seng202.team3.logic.TableManager;
-
-
 
 
 
 /**
  * A TableController class that deals with the display of the table objects
  *
- * @author Michelle Hsieh
- * @version 1.0.0, Sep 22
+ * @author Michelle Hsieh, Matthew Doonan
+ * @version 1.0.1, Sep 22
  */
 public class TableController {
 
@@ -343,36 +338,6 @@ public class TableController {
     }
 
     /**
-     * Executes an add, loading a small mapview screen
-     */
-    @FXML
-    public void addCharger() {
-
-        try {
-            FXMLLoader miniMap = new FXMLLoader(getClass().getResource(
-                    "/fxml/mini_map.fxml"));
-            BorderPane root = miniMap.load();
-            Scene modalScene = new Scene(root);
-            Stage modal = new Stage();
-            modal.setScene(modalScene);
-            modal.setResizable(false);
-            modal.setTitle("Charger Location");
-            modal.initModality(Modality.WINDOW_MODAL);
-            MiniMapController controller = miniMap.getController();
-            controller.init(modal);
-            controller.setManager(manage);
-            modal.setAlwaysOnTop(true);
-            modal.showAndWait();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        manage.addCharger();
-        if (manage.getPosition() != null) {
-            new JavaScriptBridge().loadChargerEdit(null, manage.getPosition());
-        }
-    }
-
-    /**
      * Updates the table when a user clicks update table button
      */
     public void updateTable() {
@@ -451,11 +416,44 @@ public class TableController {
     }
 
     /**
+     * Executes an add, loading a small mapview screen
+     */
+    @FXML
+    public void addCharger() {
+
+        try {
+            FXMLLoader miniMap = new FXMLLoader(getClass().getResource(
+                    "/fxml/mini_map.fxml"));
+            BorderPane root = miniMap.load();
+            Scene modalScene = new Scene(root);
+            Stage modal = new Stage();
+            modal.setScene(modalScene);
+            modal.setResizable(false);
+            modal.setTitle("Charger Location");
+            modal.initModality(Modality.WINDOW_MODAL);
+            MiniMapController controller = miniMap.getController();
+            controller.init(modal);
+            controller.setManager(manage);
+            modal.setAlwaysOnTop(true);
+            modal.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        manage.addCharger();
+        if (manage.getPosition() != null) {
+            new JavaScriptBridge().loadChargerEdit(null, manage.getPosition());
+            updateTable();
+        }
+    }
+
+
+    /**
      * Executes an edit on the selected charger
      */
     @FXML
     public void editCharger() {
         manage.editCharger();
+        updateTable();
     }
 
     /**
@@ -463,7 +461,9 @@ public class TableController {
      */
     @FXML
     public void deleteCharger() {
-        loadPromptScreen("Are you sure you'd like to delete this charger?");
+        loadPromptScreen("Are you sure you'd like to \n"
+                + "delete this charger?\n\n");
+        updateTable();
     }
 
     /**
@@ -487,7 +487,6 @@ public class TableController {
             modal.showAndWait();
             if (popController.getClicked()) {
                 manage.deleteCharger();
-                popController.cancel();
             }
         } catch (IOException e) {
             e.printStackTrace();

@@ -37,12 +37,11 @@ public class MapManager {
     }
 
     /**
-     * Associates this map with this coordinate {@link Coordinate}
+     * Associates this map with the geolocationcoordinate {@link Coordinate}
      *
-     * @param coordinate the coordinate which is selected
      */
-    public void makeCoordinate(Coordinate coordinate) {
-        manager.setPosition(coordinate);
+    public void makeCoordinate() {
+        manager.setPosition();
         manager.getCloseChargerData();
     }
 

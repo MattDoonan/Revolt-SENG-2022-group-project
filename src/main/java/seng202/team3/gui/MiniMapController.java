@@ -72,7 +72,7 @@ public class MiniMapController {
      */
     @FXML
     public void getCoordinateWithAddress() {
-        manager.setPosition(null);
+        manager.setPosition();
         javaScriptConnector.call("setCoordinate");
         stage.close();
     }
