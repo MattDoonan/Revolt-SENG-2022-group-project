@@ -9,7 +9,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import seng202.team3.logic.JourneyManager;
-import seng202.team3.logic.MapManager;
 
 /**
  * Controller for journeySidebar.fxml
@@ -39,7 +38,7 @@ public class JourneyController {
 
     private Stage stage;
     private JourneyMapController mapController;
-    private JourneyManager manager;
+    private JourneyManager journeyManager;
 
     /**
      * Initialize the window
@@ -48,7 +47,7 @@ public class JourneyController {
      */
     public void init(Stage stage) {
         this.stage = stage;
-        manager = new JourneyManager();
+        journeyManager = new JourneyManager();
         loadMapView(stage);
     }
 
@@ -64,7 +63,7 @@ public class JourneyController {
                     .getResource("/fxml/map_journey.fxml"));
             Parent mapViewParent = webViewLoader.load();
             mapController = webViewLoader.getController();
-            mapController.init(stage, manager);
+            mapController.init(stage, journeyManager);
             mainWindow.setCenter(mapViewParent);
         } catch (IOException e) {
             e.printStackTrace();

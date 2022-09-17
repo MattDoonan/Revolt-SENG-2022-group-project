@@ -1,6 +1,7 @@
 package seng202.team3.gui;
 
 import javafx.stage.Stage;
+import seng202.team3.data.entity.Charger;
 import seng202.team3.logic.JavaScriptBridge;
 import seng202.team3.logic.JourneyManager;
 import seng202.team3.logic.MapManager;
@@ -33,5 +34,13 @@ public class JourneyMapController extends MapHandler {
      */
     @Override
     public void addChargersOnMap() {
+        javaScriptConnector.call("clearMarkers");
+        map.resetQuery();
+        map.makeAllChargers();
+        for (Charger charger : map.getData()) {
+            javaScriptConnector.call("addMarker", charger.getLocation().getAddress(),
+                    charger.getLocation().getLat(), charger.getLocation().getLon(),
+                    charger.getChargerId());
+        }
     }
 }
