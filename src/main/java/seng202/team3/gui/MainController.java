@@ -68,7 +68,7 @@ public class MainController {
     private CheckBox attractionButton;
 
     @FXML
-    private CheckBox chargingCost;
+    private CheckBox noChargingCost;
 
     @FXML
     private CheckBox hasChargingCost;
@@ -320,7 +320,7 @@ public class MainController {
         if (noNearbyAttraction.isSelected()) {
             manage.adjustQuery("hastouristattraction", "False", ComparisonType.EQUAL);
         }
-        if (chargingCost.isSelected()) {
+        if (noChargingCost.isSelected()) {
             manage.adjustQuery("haschargingcost", "False", ComparisonType.EQUAL);
         }
         if (hasChargingCost.isSelected()) {
