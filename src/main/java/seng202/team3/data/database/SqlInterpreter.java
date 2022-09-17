@@ -41,6 +41,7 @@ public class SqlInterpreter implements DataManager {
     private static final Logger logManager = LogManager.getLogger();
 
     private static SqlInterpreter instance = null;
+    Connection conn;
 
     /**
      * Initializes the SqlInterpreter and checks if the url is null
@@ -507,9 +508,10 @@ public class SqlInterpreter implements DataManager {
     /**
      * Adds a new charger to the database from a charger object
      * 
-     * @param c charger object
+     * @param c          charger object
+     * @param connection db connection
      */
-    public void writeCharger(Charger c) throws IOException {
+    public void writeCharger(Connection connection, Charger c) throws IOException {
         String toAdd = "INSERT INTO charger "
                 + "(chargerid, x, y, name, operator, owner, address, is24hours, "
                 + "carparkcount, hascarparkcost, maxtimelimit, hastouristattraction, latitude, "
@@ -520,8 +522,7 @@ public class SqlInterpreter implements DataManager {
                 + ", latitude = ?, longitude = ?, datefirstoperational = ?, haschargingcost = ?, "
                 + "currenttype = ?";
 
-        try (Connection connection = createConnection();
-                PreparedStatement statement = connection.prepareStatement(toAdd)) {
+        try (PreparedStatement statement = connection.prepareStatement(toAdd)) {
             if (c.getChargerId() == 0) {
                 statement.setNull(1, 0);
             } else {
@@ -570,10 +571,20 @@ public class SqlInterpreter implements DataManager {
             if (c.getChargerId() == 0) {
                 c.setChargerId(statement.getGeneratedKeys().getInt(1));
             }
-            writeConnector(c.getConnectors(), c.getChargerId());
+            writeConnector(connection, c.getConnectors(), c.getChargerId());
         } catch (SQLException | NullPointerException e) {
             throw new IOException(e.getMessage());
         }
+    }
+
+    /**
+     * Write a charger using the default connection
+     * 
+     * @param c charger to write
+     * @throws IOException fails to write to db
+     */
+    public void writeCharger(Charger c) throws IOException {
+        writeCharger(createConnection(), c);
     }
 
     /**
@@ -583,20 +594,21 @@ public class SqlInterpreter implements DataManager {
      */
     public void writeCharger(ArrayList<Object> chargers) throws IOException {
         int sizePerThread = chargers.size() / WriteChargerThread.threadCount;
-        Thread[] activeThreads = new Thread[WriteChargerThread.threadCount];
+        WriteChargerThread[] activeThreads = new WriteChargerThread[WriteChargerThread.threadCount];
 
         // Split array into sub arrays per thread
-        for (int i = 0; i < WriteChargerThread.threadCount; i++) {
-            if (i == chargers.size() - 1) {
-                activeThreads[i] = new WriteChargerThread(new ArrayList<>(
-                        chargers.subList(
-                                i * sizePerThread, chargers.size() - 1)));
-            } else {
-                activeThreads[i] = new WriteChargerThread(new ArrayList<>(
-                        chargers.subList(i * sizePerThread,
-                                (i + 1) * sizePerThread)));
-            }
+        int i = 0;
+        for (; i < WriteChargerThread.threadCount; i++) {
+            activeThreads[i] = new WriteChargerThread(new ArrayList<>(
+                    chargers.subList(i * sizePerThread,
+                            (i + 1) * sizePerThread)));
+        }
 
+        // Distribute remaining chargers evenly
+        List<Object> remChargers = chargers.subList(i * sizePerThread, chargers.size());
+        for (int j = 0; j < remChargers.size(); j++) {
+            activeThreads[j % WriteChargerThread.threadCount]
+                    .addCharger((Charger) remChargers.get(j));
         }
 
         for (Thread t : activeThreads) { // Run threads
@@ -616,10 +628,12 @@ public class SqlInterpreter implements DataManager {
      * Adds connectors to the database
      * Defaults to the most recent charger if chargerId is null (0)
      * 
-     * @param c         a connector object
-     * @param chargerId an Integer with the specified charger id
+     * @param connection connection to db
+     * @param c          a connector object
+     * @param chargerId  an Integer with the specified charger id
      */
-    public void writeConnector(Connector c, int chargerId) throws IOException {
+    public void writeConnector(Connection connection, Connector c, int chargerId)
+            throws IOException {
         String toAdd = "INSERT INTO connector (connectorid, connectorcurrent, connectorpowerdraw, "
                 + "count, connectorstatus, chargerid, connectortype) "
                 + "values(?,?,?,?,?,?,?) ON CONFLICT(connectorid) DO UPDATE SET "
@@ -627,8 +641,7 @@ public class SqlInterpreter implements DataManager {
                 + "connectorstatus = ?, chargerid = ?, connectortype = ?";
 
         if (chargerId == 0) {
-            try (Connection conn = createConnection();
-                    Statement stmt = conn.createStatement();
+            try (Statement stmt = conn.createStatement();
                     ResultSet rs = stmt.executeQuery("SELECT chargerid "
                             + "FROM charger ORDER BY chargerid DESC LIMIT 0,1")) {
                 chargerId = rs.getInt("chargerid");
@@ -638,8 +651,7 @@ public class SqlInterpreter implements DataManager {
             }
         }
 
-        try (Connection connection = createConnection();
-                PreparedStatement statement = connection.prepareStatement(toAdd)) {
+        try (PreparedStatement statement = connection.prepareStatement(toAdd)) {
 
             if (c.getId() == 0) {
                 statement.setNull(1, 0);
@@ -675,10 +687,20 @@ public class SqlInterpreter implements DataManager {
      * @param connectors an Array list of Connector objects
      * @param chargerId  Integer representing the associated charger
      */
-    public void writeConnector(ArrayList<Connector> connectors, int chargerId) throws IOException {
+    public void writeConnector(Connection connection, ArrayList<Connector> connectors,
+            int chargerId)
+            throws IOException {
         for (Connector connector : connectors) {
-            writeConnector(connector, chargerId);
+            writeConnector(connection, connector, chargerId);
         }
+    }
+
+    public void writeConnector(ArrayList<Connector> connectors, int chargerId) throws IOException {
+        writeConnector(createConnection(), connectors, chargerId);
+    }
+
+    public void writeConnector(Connector connector, int chargerId) throws IOException {
+        writeConnector(createConnection(), connector, chargerId);
     }
 
     /**
@@ -832,15 +854,21 @@ public class SqlInterpreter implements DataManager {
     private class WriteChargerThread extends Thread {
         static int threadCount = 4;
         ArrayList<Object> chargersToWrite;
+        Connection conn;
 
         public WriteChargerThread(ArrayList<Object> chargersToWrite) {
             this.chargersToWrite = chargersToWrite;
+            this.conn = createConnection();
+        }
+
+        public void addCharger(Charger c) {
+            chargersToWrite.add(c);
         }
 
         public void run() {
             try {
                 for (Object c : chargersToWrite) {
-                    writeCharger((Charger) c);
+                    writeCharger(conn, (Charger) c);
                 }
             } catch (IOException e) {
                 e.printStackTrace(); // TODO: handle this exception

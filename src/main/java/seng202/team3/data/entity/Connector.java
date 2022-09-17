@@ -171,7 +171,6 @@ public class Connector {
         return c.getType().equals(this.getType())
                 && c.getPower().equals(this.getPower())
                 && c.getStatus().equals(this.getStatus())
-                && c.getCurrent().equals(this.getCurrent())
-                && c.getId() == this.getId();
+                && c.getCurrent().equals(this.getCurrent());
     }
 }
