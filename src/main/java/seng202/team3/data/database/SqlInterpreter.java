@@ -18,6 +18,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 import javax.management.InstanceAlreadyExistsException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,6 +43,7 @@ public class SqlInterpreter implements DataManager {
 
     private static SqlInterpreter instance = null;
     Connection conn;
+    static Semaphore mutex = new Semaphore(1);
 
     /**
      * Initializes the SqlInterpreter and checks if the url is null
@@ -868,9 +870,11 @@ public class SqlInterpreter implements DataManager {
         public void run() {
             try {
                 for (Object c : chargersToWrite) {
+                    mutex.acquire();
                     writeCharger(conn, (Charger) c);
+                    mutex.release();
                 }
-            } catch (IOException e) {
+            } catch (InterruptedException | IOException e) {
                 e.printStackTrace(); // TODO: handle this exception
             }
 
