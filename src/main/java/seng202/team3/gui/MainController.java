@@ -83,7 +83,7 @@ public class MainController {
     private Slider timeLimit;
 
     @FXML
-    private CheckBox onParkingFiler;
+    private CheckBox onParkingFilter;
 
     @FXML
     private Slider parkingLot;
@@ -259,7 +259,7 @@ public class MainController {
     public void change() {
         distanceDisplay.textProperty()
                 .setValue("Minimum distance (" + Math.round(changeDistance.getValue()) + " km)");
-        onParkingFiler.textProperty()
+        onParkingFilter.textProperty()
                 .setValue("Minimum number of spaces ("
                         + Math.round(parkingLot.getValue()) + ")");
         toggleTimeLimit.textProperty()
@@ -272,7 +272,7 @@ public class MainController {
                             + Math.round(changeDistance.getValue()) + " km)");
         });
         parkingLot.valueProperty().addListener((observableValue, number, t1) -> {
-            onParkingFiler.textProperty()
+            onParkingFilter.textProperty()
                     .setValue("Minimum number of spaces ("
                             + Math.round(parkingLot.getValue()) + ")");
         });
@@ -292,7 +292,7 @@ public class MainController {
             manage.adjustQuery("maxtimelimit",
                     Double.toString(timeLimit.getValue()), ComparisonType.GREATER_THAN_EQUAL);
         }
-        if (onParkingFiler.isSelected()) {
+        if (onParkingFilter.isSelected()) {
             manage.adjustQuery("carparkcount",
                     Double.toString(parkingLot.getValue()), ComparisonType.GREATER_THAN_EQUAL);
         }

@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author Michelle Hsieh
  * @version 1.0.0, Sep 22
  */
-public class SearchFilterTextFX extends TestFXBase {
+public class MainSearchFilterTextFX extends TestFXBase {
 
     private MainController controller;
 
@@ -102,10 +102,11 @@ public class SearchFilterTextFX extends TestFXBase {
         clickOn("#chargerTypes");
         clickOn("#acButton");
         clickOn("#chargingCost");
+        clickOn("#hasChargingCost");
         clickOn("#executeSearch");
         ObservableList<Charger> chargers = controller.getManager().getCloseChargerData();
         for (Charger charger : chargers) {
-            if (charger.getChargeCost()) {
+            if (!charger.getChargeCost()) {
                 boolean hasAC = false;
                 for (Connector connector : charger.getConnectors()) {
                     if (connector.getPower().equalsIgnoreCase("AC")) {
@@ -122,14 +123,62 @@ public class SearchFilterTextFX extends TestFXBase {
     }
 
     @Test
-    public void distanceFilterWorks() {
+    public void filtersMoreMultipleTicks() {
         boolean isValid = true;
+        clickOn("#filters");
+        clickOn("#carparkCost");
+        clickOn("#withoutCarparkCost");
+        clickOn("#hoursOpen");
+        clickOn("#openAllButton");
+        clickOn("#executeSearch");
+        ObservableList<Charger> chargers = controller.getManager().getCloseChargerData();
+        for (Charger charger : chargers) {
+            if (charger.getParkingCost()) {
+                isValid = false;
+            } else if (!charger.getAvailable24Hrs()) {
+                isValid = false;
+            }
+        }
+        assertTrue(isValid);
+    }
+
+    @Test
+    public void distanceFilterWorks() {
+        boolean isValid = false;
         clickOn("#filters");
         clickOn("#distanceDisplay");
         clickOn("#executeSearch");
         for (Charger charger : controller.getManager().getCloseChargerData()) {
             if (Calculations.calculateDistance(charger.getLocation(),
                     controller.getManager().getPosition()) > controller.getManager().getDistance()) {
+                isValid = true;
+            }
+        }
+        assertTrue(isValid);
+    }
+
+    @Test
+    public void timeLimitFilterWorks() {
+        boolean isValid = true;
+        clickOn("#filters");
+        clickOn("#toggleTimeLimit");
+        clickOn("#executeSearch");
+        for (Charger charger : controller.getManager().getCloseChargerData()) {
+            if (charger.getTimeLimit() < 60 ){
+                isValid = false;
+            }
+        }
+        assertTrue(isValid);
+    }
+
+    @Test
+    public void parkingFilterWorks() {
+        boolean isValid = true;
+        clickOn("#filters");
+        clickOn("#onParkingFilter");
+        clickOn("#executeSearch");
+        for (Charger charger : controller.getManager().getCloseChargerData()) {
+            if (charger.getAvailableParks() < 5 ){
                 isValid = false;
             }
         }

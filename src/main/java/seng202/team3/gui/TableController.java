@@ -20,6 +20,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.entity.Charger;
+import seng202.team3.logic.MainManager;
 import seng202.team3.logic.TableManager;
 
 
@@ -410,6 +411,10 @@ public class TableController {
                     .setValue("Minimum time limit of ("
                             + Math.round(timeLimit.getValue()) + " minutes)");
         });
+    }
+
+    public TableManager getManager() {
+        return manage;
     }
 
     /**

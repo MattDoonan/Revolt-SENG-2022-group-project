@@ -61,7 +61,7 @@
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                           <content>
-                            <CheckBox fx:id="onParkingFiler" style="-fx-text-fill: black;" />
+                            <CheckBox fx:id="onParkingFilter" style="-fx-text-fill: black;" />
                           </content>
                         </CustomMenuItem>
                         <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
