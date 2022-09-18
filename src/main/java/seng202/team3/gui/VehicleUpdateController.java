@@ -71,7 +71,7 @@ public class VehicleUpdateController {
 
     private Vehicle selectedVehicle;
 
-    private String selectedImg = "car_one.png";
+    private String selectedImg;
 
     private ArrayList<String> connections = new ArrayList<String>();
 
@@ -155,7 +155,11 @@ public class VehicleUpdateController {
             } else {
                 vehicle.setConnectors(connections);
             }
-            vehicle.setImgPath("src/main/resources/images/" + selectedImg);
+            if (selectedImg != null) {
+                vehicle.setImgPath("src/main/resources/images/" + selectedImg);
+            } else {
+                vehicle.setImgPath("src/main/resources/images/null");
+            }
 
             if (vehicle.getBatteryPercent() == null) {
                 vehicle.setBatteryPercent(100.0);
