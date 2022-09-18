@@ -1,7 +1,7 @@
 package seng202.team3.logic;
 
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,18 +15,20 @@ import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Vehicle;
 
 /**
- * Unit tests for {@link GarageManager GarageManager} class in Logic
+ * Unit tests for {@link UpdateVehicleManagerTest UpdateVehicleManagerTest} class in Logic
  *
  * @author Celia Allen
  * @version 1.0.0, Aug 22
  */
-public class GarageManagerTest {
+public class UpdateVehicleManagerTest {
+    
 
     /**
      * Creates a {@link GarageManager GarageManager} to test
      * and three vehicles.
      */
-    private GarageManager manager;
+    private GarageManager garageManager = new GarageManager();
+    private VehicleUpdateManager manager = new VehicleUpdateManager();
     private Vehicle testVehicle;
     private Vehicle testVehicleTwo;
     private Vehicle testVehicleDelete;
@@ -34,8 +36,9 @@ public class GarageManagerTest {
         new ArrayList<Vehicle>());
     private ObservableList<Vehicle> initialVehicleList;
 
+
     /**
-     * BeforeEach create a vehicle to add to garage
+     * BeforeEach create vehicles to add to garage
      *
      */
     @BeforeEach
@@ -51,10 +54,9 @@ public class GarageManagerTest {
         testVehicleDelete.setImgPath("null");
         vehicleList.add(testVehicle);
         vehicleList.add(testVehicleTwo);
-        manager = new GarageManager();
-        manager.resetQuery();
-        manager.getAllVehicles();
-        initialVehicleList = manager.getData();
+        garageManager.resetQuery();
+        garageManager.getAllVehicles();
+        initialVehicleList = garageManager.getData();
     }
 
     /**
@@ -71,15 +73,16 @@ public class GarageManagerTest {
                 e.printStackTrace();
             }
         }
-        manager.resetQuery();
-        manager.getAllVehicles();
-        ObservableList<Vehicle> vehicles = manager.getData();
+
+        ObservableList<Vehicle> vehicles = getVehicles();
         assertTrue(vehicles.equals(initialVehicleList));
+        garageManager = null;
         manager = null;
         testVehicle = null;
         testVehicleTwo = null;
         testVehicleDelete = null;
         vehicleList = null;
+        assertNull(garageManager);
         assertNull(manager);
         assertNull(testVehicle);
         assertNull(testVehicleTwo);
@@ -88,54 +91,55 @@ public class GarageManagerTest {
     }
 
     /**
-     * Test getting vehicles from database
+     * Test that vehicles are successfully added to database
      */
     @Test
-    public void testGetVehicles() {
+    public void testAddEditVehicles() {
+        // Test adding a vehicle
+        manager.saveVehicle(testVehicle);
+        manager.saveVehicle(testVehicleTwo);
+        ObservableList<Vehicle> vehicles = getVehicles();
+        assertTrue(testVehicleTwo.equals(vehicles.get(vehicles.size() - 1)));
+        assertTrue(testVehicle.equals(vehicles.get(vehicles.size() - 2)));
 
-        try {
-            SqlInterpreter.getInstance().writeVehicle(testVehicle);
-            SqlInterpreter.getInstance().writeVehicle(testVehicleTwo);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        manager.resetQuery();
-        manager.getAllVehicles();
-        ObservableList<Vehicle> vehicles = manager.getData();
+        // Test editing a vehicle
+        testVehicle.setMake("NewTestMake");
+        testVehicleTwo.setMake("NewTestMakeTwo");
+        manager.saveVehicle(testVehicle);
+        manager.saveVehicle(testVehicleTwo);
+        vehicles = getVehicles();
         assertTrue(testVehicleTwo.equals(vehicles.get(vehicles.size() - 1)));
         assertTrue(testVehicle.equals(vehicles.get(vehicles.size() - 2)));
     }
 
 
     /**
-     * Test getAllVehicles() works after deleting vehicles
+     * Test that vehicles are successfully deleted from database
      */
     @Test
     public void testGetVehicleAfterDelete() {
 
-        try {
-            SqlInterpreter.getInstance().writeVehicle(testVehicleDelete);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        manager.resetQuery();
-        manager.getAllVehicles();
-        ObservableList<Vehicle> vehicles = manager.getData();
+        manager.saveVehicle(testVehicleDelete);
+        ObservableList<Vehicle> vehicles = getVehicles();
         assertTrue(testVehicleDelete.equals(vehicles.get(vehicles.size() - 1)));
 
-        try {
-            SqlInterpreter.getInstance().deleteData("vehicle", 
-                testVehicleDelete.getVehicleId());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        manager.deleteVehicle(testVehicleDelete);
         
-        manager.resetQuery();
-        manager.getAllVehicles();
-        vehicles = manager.getData();
+        vehicles = getVehicles();
         assertTrue(!testVehicleDelete.equals(vehicles.get(vehicles.size() - 1)));
         
     }
 
+
+    /**
+     * Gets the vehicles in the database
+     * @return List of vehicles from database
+     */
+    public ObservableList<Vehicle> getVehicles() {
+        garageManager.resetQuery();
+        garageManager.getAllVehicles();
+        ObservableList<Vehicle> vehicles = garageManager.getData();
+        return vehicles;
+    }
 
 }

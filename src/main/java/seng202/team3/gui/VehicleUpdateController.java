@@ -28,6 +28,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Vehicle;
+import seng202.team3.logic.VehicleUpdateManager;
 
 
 /**
@@ -86,6 +87,8 @@ public class VehicleUpdateController {
 
     private Stage connectorPopup = new Stage();
 
+    private VehicleUpdateManager manage = new VehicleUpdateManager();
+
     /**
      * Initialises the Vehicle editing
      */
@@ -102,7 +105,8 @@ public class VehicleUpdateController {
 
 
     /**
-     * Saves the changes; if new, will use the coordinates to make an entry
+     * Checks the given vehicle details for errors.
+     * If no errors, calls manager to save vehicle to database
      */
     @FXML
     public void saveChanges() {
@@ -110,6 +114,8 @@ public class VehicleUpdateController {
         if (selectedVehicle != null) {
             if (selectedImg != null) {
                 selectedVehicle.setImgPath("src/main/resources/images/" + selectedImg);
+            } else {
+                selectedVehicle.setImgPath("src/main/resources/images/null");
             }
             selectedVehicle.setConnectors(connections);
             selectedVehicle.setMaxRange(Integer.parseInt(maxRangeText.getText()));
@@ -166,19 +172,14 @@ public class VehicleUpdateController {
             }
             
             if (errors.size() == 0) {
-                try {
-                    SqlInterpreter.getInstance().writeVehicle(vehicle);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    makeText.setText(null);
-                    modelText.setText(null);
-                    maxRangeText.setText(null);
-                    addedConnections.setText(null);
-                    imgName.setText(null);
-                    connections = new ArrayList<>();
-                    connectorType.setPromptText("Connector Type");
-                }
+                manage.saveVehicle(vehicle);
+                makeText.setText(null);
+                modelText.setText(null);
+                maxRangeText.setText(null);
+                addedConnections.setText(null);
+                imgName.setText(null);
+                connections = new ArrayList<>();
+                connectorType.setPromptText("Connector Type");
             } else {
                 launchErrorPopUps();
                 errors.clear();
@@ -372,13 +373,8 @@ public class VehicleUpdateController {
     @FXML
     public void confirmDelete() {
         if (selectedVehicle != null) {
-            try {
-                SqlInterpreter.getInstance().deleteData("vehicle", 
-                    selectedVehicle.getVehicleId());
-                selectedVehicle = null;
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            manage.deleteVehicle(selectedVehicle);
+            selectedVehicle = null;
         }
         cancel();
     }
