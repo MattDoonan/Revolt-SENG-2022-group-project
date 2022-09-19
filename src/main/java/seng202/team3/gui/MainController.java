@@ -136,7 +136,8 @@ public class MainController {
      * @param c charger to display information about
      */
     public void viewChargers(Charger c) {
-        displayInfo.getChildren().removeAll(displayInfo.getChildren()); // Clears the HBox of nodes (items)
+        // Clears the HBox of nodes (items)
+        displayInfo.getChildren().removeAll(displayInfo.getChildren());
         // Check if there is no charger
         if (c == null) {
             if (manage.getCloseChargerData().size() != 0) {
@@ -267,7 +268,8 @@ public class MainController {
     }
 
     /**
-     * Sets the Original text and updates value for the slider filter names so the user can see what they have input
+     * Sets the Original text and updates value for the slider filter
+     * names so the user can see what they have input
      */
     public void change() {
         distanceDisplay.textProperty()
