@@ -253,30 +253,33 @@ public class VehicleUpdateController {
      */
     @FXML
     public void addConnection() {
-        if (connectorType.getValue().equals("Other...")) {
-            GridPane root = new GridPane();
-            Button save = new Button("Save");
-            TextField connector = new TextField("Connector Type");
-            root.addRow(0, connector);
-            root.addRow(1, save);
-            root.setStyle("-fx-padding: 20;");
-            save.setOnMouseClicked((MouseEvent event) -> {
-                connections.add(connector.getText());
+        if (connectorType.getValue() != null) {
+            if (connectorType.getValue().equals("Other...")) {
+                GridPane root = new GridPane();
+                Button save = new Button("Save");
+                TextField connector = new TextField("Connector Type");
+                root.addRow(0, connector);
+                root.addRow(1, save);
+                root.setStyle("-fx-padding: 20;");
+                save.setOnMouseClicked((MouseEvent event) -> {
+                    connections.add(connector.getText());
+                    addedConnections.setText("Connection: "
+                            + connector.getText() + "\n" + addedConnections.getText());
+                    Stage connectorStage = (Stage) save.getScene().getWindow();
+                    connectorStage.close();
+                });
+                connectorPopup.initModality(Modality.APPLICATION_MODAL);
+                connectorPopup.setResizable(false);
+                connectorPopup.setTitle("Other Connector");
+                connectorPopup.setScene(new Scene(root, 300, 100));
+                connectorPopup.showAndWait();
+            } else {
+                connections.add(connectorType.getValue());
                 addedConnections.setText("Connection: "
-                        + connector.getText() + "\n" + addedConnections.getText());
-                Stage connectorStage = (Stage) save.getScene().getWindow();
-                connectorStage.close();
-            });
-            connectorPopup.initModality(Modality.APPLICATION_MODAL);
-            connectorPopup.setResizable(false);
-            connectorPopup.setTitle("Other Connector");
-            connectorPopup.setScene(new Scene(root, 300, 100));
-            connectorPopup.showAndWait();
-        } else {
-            connections.add(connectorType.getValue());
-            addedConnections.setText("Connection: "
-                    + connectorType.getValue() + "\n" + addedConnections.getText());
+                        + connectorType.getValue() + "\n" + addedConnections.getText());
+            }
         }
+        
     }
 
     /**
@@ -389,7 +392,7 @@ public class VehicleUpdateController {
             connections = vehicle.getConnectors();
             String strConns = "";
             for (String connection : connections) {
-                strConns += "Connection: " + connection;
+                strConns += "Connection: " + connection + "\n";
             }
             addedConnections.setText(strConns);
         }
