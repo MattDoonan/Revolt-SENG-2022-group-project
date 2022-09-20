@@ -83,8 +83,6 @@ public class GarageController {
 
     private Vehicle selectedVehicle;
 
-    private Stage updatePopup = new Stage();
-
     private Stage editPopup = new Stage();
 
     private GarageManager manage = new GarageManager();
@@ -178,7 +176,7 @@ public class GarageController {
                 VehicleUpdateController controller = vehicleEdit.getController();
                 controller.displayInfo(vehicle);
             }
-            editPopup.setAlwaysOnTop(true);
+            // editPopup.setAlwaysOnTop(true);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
