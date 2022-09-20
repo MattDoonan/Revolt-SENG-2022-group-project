@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" />
+    <link rel="stylesheet"
+          href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+<div id="map"></div>
+<script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
+<script
+        src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
+<script>
+    let map;
+    let coordinate = 0;
+    var javaScriptBridge;
+    let name;
+
+    /**
+     * Creates a red icon
+     */
+    let redIcon = L.icon({
+        iconUrl: 'icons/red_icon.png',
+        iconSize: [38, 38],
+        iconAnchor: [19, 38],
+        popupAnchor: [0, -38],
+    })
+
+    /**
+     * This object can be returned to our java code, where we can call the functions we define inside of it
+     */
+    let jsConnector = {
+        setCoordinate: setCoordinate,
+        initMap: initMap
+    };
+
+    /**
+     * creates and initialises the Mini map, also defines on click event that calls java code
+     *
+     */
+    function initMap() {
+
+        let mapOptions = {
+            center: [-43.5279, 172.5765],
+            zoom: 12
+        }
+        map = new L.map('map', mapOptions);
+        new L.TileLayer('https://tile.csse.canterbury.ac.nz/hot/{z}/{x}/{y}.png', { // UCs tilemap server
+            attribution: '© OpenStreetMap contributors<br>Served by University of Canterbury'
+        }).addTo(map)
+
+        createBar().addTo(map)
+
+        map.on("click", (map_event) => {
+            let latlng = map.mouseEventToLatLng(map_event.originalEvent)
+                removeCoordinate()
+                new L.Control.Geocoder.Nominatim({
+                    geocodingQueryParams: {
+                        countrycodes: 'nz'
+                    }}).reverse(latlng, map.options.crs.scale(map.getZoom()), results => {
+                    let r = results[0]
+                    if (r) {
+                        addCoordinate(r.name, latlng.lat, latlng.lng)
+                        name = r.name
+                    } else {
+                        addCoordinate("Coordinate", latlng.lat, latlng.lng)
+                        name = "Coordinate"
+                    }
+            })
+        })
+    }
+
+    /**
+     * Adds a coordinate to the map and stores it by itself
+     * @param title tooltip to display on hover
+     * @param lat latitude to place coordinate marker at
+     * @param lng longitude to place coordinate marker at
+     */
+    function addCoordinate(title, lat, lng) {
+        coordinate = new L.Marker([lat, lng], {icon: redIcon})
+        coordinate.bindPopup(title + ": " + lat.toFixed(4) + " " + lng.toFixed(4))
+        coordinate.on("click", function(ev) {coordinate.openPopup()})
+        coordinate.addTo(map)
+        movePosition(coordinate.getLatLng().lat, coordinate.getLatLng().lng)
+    }
+
+    /**
+     * Creates and sets a searchBar for basic geolocation needs and parsing
+     */
+    function createBar() {
+        let searchBar = L.Control.geocoder({
+            geocoder: new L.Control.Geocoder.Nominatim({
+                geocodingQueryParams: {
+                    countrycodes: 'nz'
+                }}),
+            defaultMarkGeocode: false,
+            position: "topright",
+            collapsed: false,
+            placeholder: "Search location",
+        }).on('markgeocode', function(e) {
+            let latlng = e.geocode.center
+            removeCoordinate()
+            addCoordinate(e.geocode.name, latlng.lat, latlng.lng)
+            name = e.geocode.name
+        })
+        return searchBar;
+    }
+
+    /**
+     * Remove coordinate
+     */
+    function removeCoordinate() {
+        if (coordinate) {
+            coordinate.remove()
+        }
+    }
+
+    /**
+     * Executes the JavaScriptBridge function which gets the coordinate
+     */
+    function setCoordinate() {
+        if (coordinate) {
+            let latlng = coordinate.getLatLng()
+            javaScriptBridge.setCoordinate(`{"lat": ${latlng.lat}, "lng": ${latlng.lng}}`, name)
+        }
+    }
+
+    /**
+     * Moves position of centre of map
+     */
+    function movePosition(lat, lon) {
+        map.panTo(new L.LatLng(lat, lon))
+    }
+
+
+
+
+</script>
+</body>
+</html>

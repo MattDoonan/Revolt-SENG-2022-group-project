@@ -2,12 +2,8 @@ package seng202.team3.logic;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import seng202.team3.data.database.ComparisonType;
-import seng202.team3.data.database.QueryBuilder;
-import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
@@ -20,40 +16,18 @@ import seng202.team3.data.entity.Coordinate;
  *
  */
 
-public class MainManager {
+public class MainManager extends ChargerHandler implements ChargerInterface {
 
-    private QueryBuilder mainDataQuery;
-    private Coordinate position;
     private double distance = 0;
     private final ChargerManager chargerManager = new ChargerManager();
-    private ObservableList<Charger> chargerData;
-    private Charger selectedCharger;
     private ArrayList<Coordinate> savedCoordinates;
 
     /**
      * Saves the MainController to call later
      */
     public MainManager() {
-        position = new Coordinate(null, null, -43.522518157958984, 172.5811767578125);
+        selectedCoordinate = new Coordinate(null, null, -43.522518157958984, 172.5811767578125);
         savedCoordinates = new ArrayList<>();
-    }
-
-    /**
-     * Sets the selected charger
-     *
-     * @param selectedCharger {@link Charger} which is being currently selected
-     */
-    public void setSelectedCharger(Charger selectedCharger) {
-        this.selectedCharger = selectedCharger;
-    }
-
-    /**
-     * Gets the selected charger
-     *
-     * @return {@link Charger} the charger which is currently selected
-     */
-    public Charger getSelectedCharger() {
-        return selectedCharger;
     }
 
     /**
@@ -73,7 +47,6 @@ public class MainManager {
     public double getDistance() {
         return distance;
     }
-
 
     /**
      * Adds a coordinate into the coordinate list
@@ -110,32 +83,6 @@ public class MainManager {
     }
 
     /**
-     * Load the initial query
-     */
-    public void resetQuery() {
-        mainDataQuery = new QueryBuilderImpl().withSource("charger");
-    }
-
-    /**
-     * Create the charger list from the main Query
-     *
-     */
-    public void makeAllChargers() {
-        try {
-            List<Charger> chargerList = new ArrayList<>();
-            for (Object o : SqlInterpreter.getInstance()
-                    .readData(mainDataQuery.build(), Charger.class)) {
-                chargerList.add((Charger) o);
-            }
-
-            chargerData = FXCollections
-                    .observableList(chargerList);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
      * Send chargers within range of the selected location to the table and temp
      * data.
      *
@@ -145,22 +92,10 @@ public class MainManager {
         ArrayList<Charger> arrayChargers = new ArrayList<>(chargerData);
         if (distance != 0) {
             arrayChargers = chargerManager.getNearbyChargers(
-                    arrayChargers, position, distance);
+                    arrayChargers, selectedCoordinate, distance);
         }
         ObservableList<Charger> closerChargers = FXCollections.observableList(arrayChargers);
-
         return closerChargers;
-    }
-
-    /**
-     * Takes an input of field, criteria and type to adjust the main data query.
-     * 
-     * @param field    a String of the field for the query
-     * @param criteria a String of the criteria for the query
-     * @param type     an enum of the comparison type of the query
-     */
-    public void adjustQuery(String field, String criteria, ComparisonType type) {
-        mainDataQuery.withFilter(field, criteria, type);
     }
 
     /**
@@ -170,42 +105,16 @@ public class MainManager {
      * @return an Observable list of chargers
      */
     public ObservableList<Charger> getCloseChargerData() {
-        if (position == null) {
+        if (selectedCoordinate == null) {
             return getData();
         }
         return compareDistance();
     }
 
     /**
-     * Returns the list of chargers
-     *
-     * @return chargerData of the required charger
-     */
-    public ObservableList<Charger> getData() {
-        return chargerData;
-    }
-
-    /**
-     * Sets the position using a {@link Coordinate}
-     *
-     * @param coordinate a Coordinate of the selected position
-     */
-    public void setPosition(Coordinate coordinate) {
-        position = coordinate;
-    }
-
-    /**
-     * Gets the position of the {@link Coordinate}
-     *
-     * @return Coordinate of position
-     */
-    public Coordinate getPosition() {
-        return position;
-    }
-
-    /**
      * Adds a charger at the location of the coordinate.
      */
+    @Override
     public void addCharger() {
         new JavaScriptBridge().loadChargerEdit(null);
     }
@@ -214,6 +123,7 @@ public class MainManager {
      * Removes the selected charger and replaces it with null
      *
      */
+    @Override
     public void deleteCharger() {
         if (selectedCharger != null) {
             try {
@@ -223,6 +133,18 @@ public class MainManager {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    /**
+     * Uses the JavaScript Bridge to load the charger edit functionality of the
+     * selected charger
+     */
+    @Override
+    public void editCharger() {
+        if (getSelectedCharger() != null) {
+            JavaScriptBridge bridge = new JavaScriptBridge();
+            bridge.loadMoreInfo(getSelectedCharger().getChargerId());
         }
     }
 

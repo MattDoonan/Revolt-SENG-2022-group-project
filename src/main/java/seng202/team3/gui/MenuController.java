@@ -19,7 +19,7 @@ public class MenuController {
     private static MainController controller;
 
     @FXML
-    private BorderPane mainWindow;
+    private BorderPane menuWindow;
 
     /**
      * Initialize the window
@@ -38,8 +38,8 @@ public class MenuController {
             FXMLLoader mainScene = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
             Parent mainNode = mainScene.load();
             controller = mainScene.getController();
-            controller.init(stage);
-            mainWindow.setCenter(mainNode);
+            controller.init(stage, menuWindow);
+            menuWindow.setCenter(mainNode);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -62,7 +62,6 @@ public class MenuController {
         initHome();
     }
 
-
     /**
      * Initialises the welcome page;
      */
@@ -73,27 +72,11 @@ public class MenuController {
             Parent mainNode = mainScene.load();
             WelcomeController controller = mainScene.getController();
             controller.init(stage, this);
-            mainWindow.setCenter(mainNode);
+            menuWindow.setCenter(mainNode);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
-    /**
-     * TODO docstring
-     */
-    public void launchJourneyScreen() {
-        try {
-            FXMLLoader journeyLoader = new FXMLLoader(getClass().getResource("/fxml/journey.fxml"));
-            Parent journeyViewParent = journeyLoader.load();
-            JourneyController controller = journeyLoader.getController();
-            controller.init(stage, this);
-            mainWindow.setCenter(journeyViewParent);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
 
     /**
      * Loads the vehicle screen upon click
@@ -104,7 +87,7 @@ public class MenuController {
             Parent garageViewParent = garageLoader.load();
             GarageController controller = garageLoader.getController();
             controller.init();
-            mainWindow.setCenter(garageViewParent);
+            menuWindow.setCenter(garageViewParent);
         } catch (IOException e) {
             e.printStackTrace();
         }

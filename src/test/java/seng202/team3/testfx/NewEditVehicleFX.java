@@ -1,24 +1,18 @@
-package seng202.team3.testFX;
+package seng202.team3.testfx;
 
 import static org.junit.Assert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.assertj.core.api.Assertions.assertThat;
 
-import javafx.collections.ObservableList;
+import org.junit.jupiter.api.Test;
+import org.testfx.framework.junit5.ApplicationTest;
+import org.testfx.matcher.control.TextInputControlMatchers;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import org.junit.jupiter.api.Test;
-import org.testfx.framework.junit5.ApplicationTest;
-import org.testfx.matcher.control.TextInputControlMatchers;
-
 import seng202.team3.gui.MainWindow;
 import seng202.team3.gui.VehicleUpdateController;
-
-
 
 /**
  * Code designed to test the searching and filtering of the Main Window
@@ -30,7 +24,7 @@ import seng202.team3.gui.VehicleUpdateController;
 public class NewEditVehicleFX extends TestFXBase {
 
     private VehicleUpdateController controller;
-    
+
     @FXML
     private TextField makeText;
 
@@ -69,22 +63,21 @@ public class NewEditVehicleFX extends TestFXBase {
         stage.show();
     }
 
-    
     /**
      * Initialises the state of the current application
+     * 
      * @param loader the FXML loader after loading
-     * @param stage the stage of the application
+     * @param stage  the stage of the application
      */
     public void initState(FXMLLoader loader, Stage stage) {
         controller = loader.getController();
     }
 
-
     /**
      * Tests textfields in update_vehicle.
      */
     @Test
-    public void makeVehicle() { 
+    public void makeVehicle() {
         TextField makeText = find("#makeText");
         makeText.setText("TestMake");
         assertThat(makeText, TextInputControlMatchers.hasText("TestMake"));
@@ -98,8 +91,5 @@ public class NewEditVehicleFX extends TestFXBase {
         currChargeText.setText("87.6");
         assertThat(currChargeText, TextInputControlMatchers.hasText("87.6"));
     }
-
-
-
 
 }

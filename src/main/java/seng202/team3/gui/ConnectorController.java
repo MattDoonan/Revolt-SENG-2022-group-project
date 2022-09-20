@@ -13,8 +13,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import seng202.team3.data.entity.Connector;
 
-
-
 /**
  * The connector controller class which operates the connector changes
  *
@@ -87,7 +85,6 @@ public class ConnectorController {
         return connectorList;
     }
 
-
     /**
      * Opens a new add window
      */
@@ -126,11 +123,11 @@ public class ConnectorController {
         }
     }
 
-
     /**
      * Launches the editable portion
      *
-     * @param connector the {@link Connector} for the connector info. Null if adding.
+     * @param connector the {@link Connector} for the connector info. Null if
+     *                  adding.
      */
     public void launchEditable(Connector connector) {
         stage = (Stage) connectorTable.getScene().getWindow();
@@ -158,6 +155,5 @@ public class ConnectorController {
             displayConnectorInfo();
         }
     }
-
 
 }

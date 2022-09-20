@@ -5,7 +5,8 @@ import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 /**
- * A prompt for clicking on the map or the charger list for information to happen.
+ * A prompt for clicking on the map or the charger list for information to
+ * happen.
  *
  * @author Michelle Hsieh
  * @version 1.0.0, Sep 22
@@ -32,7 +33,7 @@ public class PromptPopUp {
     public void addPrompt(String prompt, String type) {
         this.type = type;
         this.prompt = prompt;
-        inputBox.setText(prompt);
+        inputBox.setText(this.prompt);
         stage = (Stage) inputBox.getScene().getWindow();
         stage.setAlwaysOnTop(true);
     }
@@ -46,7 +47,7 @@ public class PromptPopUp {
         MainController controller = new MenuController().getController();
         stage.setAlwaysOnTop(false);
         if (type.equals("edit")) {
-            controller.editCharger();
+            controller.getManager().editCharger();
             cancel();
         } else if (type.equals("delete")) {
             controller.getManager().deleteCharger();

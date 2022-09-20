@@ -1,4 +1,4 @@
-package seng202.team3.testFX;
+package seng202.team3.testfx;
 
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
@@ -10,7 +10,6 @@ import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import java.util.concurrent.TimeoutException;
-
 
 /**
  * This is Morgan's Code designed to set up TestFX testing
@@ -34,12 +33,15 @@ public abstract class TestFXBase extends ApplicationTest {
             e.printStackTrace();
         }
         FxToolkit.hideStage();
-        release(new KeyCode[]{});
-        release(new MouseButton[]{});
+        release(new KeyCode[] {});
+        release(new MouseButton[] {});
     }
 
-    /* Helper method to retrieve Java FX GUI Components */
-    public <T extends Node> T find (final  String query){
+    /**
+     * Helper method to retrieve Java FX GUI Components
+     */
+    @SuppressWarnings("unchecked")
+    public <T extends Node> T find(final String query) {
         return (T) lookup(query).queryAll().iterator().next();
     }
 }

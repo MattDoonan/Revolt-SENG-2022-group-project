@@ -20,7 +20,6 @@ import seng202.team3.gui.ChargerController;
 import seng202.team3.gui.MainController;
 import seng202.team3.gui.MenuController;
 
-
 /**
  * Converts JavaScript to Objects by hocus pocus
  *
@@ -46,7 +45,7 @@ public class JavaScriptBridge {
      * @param latlng the string to be parsed
      * @return {@link Coordinate}, the coordinate end product
      */
-    private Coordinate parseCoordinate(String latlng) {
+    public Coordinate parseCoordinate(String latlng) {
         JSONParser parser = new JSONParser();
         Coordinate coord = new Coordinate();
         try {
@@ -62,7 +61,8 @@ public class JavaScriptBridge {
     }
 
     /**
-     * Takes a string with the name of the string and adds it to the current coordinate
+     * Takes a string with the name of the string and adds it to the current
+     * coordinate
      *
      * @param address String of the address
      */
@@ -70,9 +70,6 @@ public class JavaScriptBridge {
         new MenuController().getController().getManager().getPosition().setAddress(address);
     }
 
-    /**
-     * Refreshes the table
-     */
     public void refreshTable() {
         MainController controller = new MenuController().getController();
         controller.refreshTable();
@@ -87,7 +84,8 @@ public class JavaScriptBridge {
     }
 
     /**
-     * Displays the charger according to id and also zooms to it, if it is not a journey.
+     * Displays the charger according to id and also zooms to it, if it is not a
+     * journey.
      * Sets the charger as the selected charger
      *
      * @param id the charger id selected
@@ -128,7 +126,6 @@ public class JavaScriptBridge {
         controller.getMapController().addStopInRoute(parseCoordinate(latlng));
     }
 
-
     /**
      * Loads the charger information on a separate pop-up
      */
@@ -137,6 +134,15 @@ public class JavaScriptBridge {
         loadChargerEdit(new MenuController().getController()
                 .getManager().getSelectedCharger());
 
+    }
+
+    /**
+     * Sets the singleton ChargerManager Coordinate to the latlng
+     *
+     * @param latlng the string created with latitude and longitude
+     */
+    public void setCoordinate(String latlng, String name) {
+        GeoLocationHandler.getInstance().setCoordinate(parseCoordinate(latlng), name);
     }
 
     /**

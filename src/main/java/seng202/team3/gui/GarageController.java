@@ -3,21 +3,14 @@ package seng202.team3.gui;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -26,7 +19,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import seng202.team3.data.entity.Vehicle;
 import seng202.team3.logic.GarageManager;
-
 
 /**
  * Controller for the garage.fxml window
@@ -99,7 +91,6 @@ public class GarageController {
 
     private GarageController controller;
 
-
     /**
      * Initialize the window with data from the database
      *
@@ -107,7 +98,6 @@ public class GarageController {
     public void init() {
         refresh();
     }
-
 
     /**
      * Refresh the garage display with the user's up-to-date vehicles
@@ -119,7 +109,6 @@ public class GarageController {
         setData();
     }
 
-
     /**
      * Launches the vehicle update modal, with the given vehicle null,
      * to signify that there is no vehicle to be updated, but a new one is
@@ -127,13 +116,13 @@ public class GarageController {
      */
     @FXML
     public void launchUpdate() {
-        launchEditable(null);       
+        launchEditable(null);
     }
-
 
     /**
      * Sets selectedVehicle to the vehicle the user wants to edit,
      * then launches the edit popup with the selected vehicle's details pre-filled.
+     * 
      * @paramn event, the event that called the method
      */
     @FXML
@@ -147,7 +136,7 @@ public class GarageController {
                 selectedVehicle = vehicleData.get(1);
                 break;
             case "editCarThree":
-                selectedVehicle = vehicleData.get(2);  
+                selectedVehicle = vehicleData.get(2);
                 break;
             default:
                 break;
@@ -155,9 +144,8 @@ public class GarageController {
         launchEditable(selectedVehicle);
     }
 
-
     /**
-     * Displays pop-up window that allows a user to edit a 
+     * Displays pop-up window that allows a user to edit a
      * vehicle in the garage
      */
     public void launchEditable(Vehicle vehicle) {
@@ -168,9 +156,8 @@ public class GarageController {
             editPopup = new Stage();
             refresh();
         }
-        
-    }
 
+    }
 
     /**
      * Launches the editable pop-up for vehicles
@@ -199,10 +186,10 @@ public class GarageController {
         }
     }
 
-
     /**
      * Sets selectedVehicle to the vehicle the user wants to delete,
      * then launches the confirm delete popup.
+     * 
      * @paramn event, the event that called the method
      */
     @FXML
@@ -216,7 +203,7 @@ public class GarageController {
                 selectedVehicle = vehicleData.get(1);
                 break;
             case "deleteCarThree":
-                selectedVehicle = vehicleData.get(2);  
+                selectedVehicle = vehicleData.get(2);
                 break;
             default:
                 break;
@@ -224,12 +211,11 @@ public class GarageController {
         launchDelete(selectedVehicle);
     }
 
-
     /**
      * Launches the confirm delete popup
      *
      * @param vehicle the vehicle to be deleted
-    */
+     */
     public void launchDelete(Vehicle vehicle) {
         try {
             FXMLLoader vehicleDelete = new FXMLLoader(getClass().getResource(
@@ -251,8 +237,6 @@ public class GarageController {
             refresh();
         }
     }
-
-
 
     /**
      * Adds vehicle data to each display if vehicleData size is large enough
@@ -285,7 +269,7 @@ public class GarageController {
             editCarThree.setVisible(false);
             deleteCarThree.setVisible(false);
             clearDisplay("three", vehicleImageThree);
-        }        
+        }
         if (vehicleData.size() <= 3) {
             nextBtn.setDisable(true);
             prevBtn.setDisable(true);
@@ -295,10 +279,10 @@ public class GarageController {
         }
     }
 
-    
     /**
      * Clears the given display of text and image(s)
-     * @param display a string to represent the display to be cleared
+     * 
+     * @param display   a string to represent the display to be cleared
      * @param imageview the ImageView to clear
      */
     public void clearDisplay(String display, ImageView imageview) {
@@ -321,7 +305,6 @@ public class GarageController {
         imageview.setImage(null);
     }
 
-
     /**
      * Populate the given display with the vehicle at the given index of vehicleData
      *
@@ -334,27 +317,34 @@ public class GarageController {
             switch (display) {
                 case "one":
                     makeModelOne.setText(vehicleData.get(index).getMake() + " "
-                        + vehicleData.get(index).getModel());
+                            + vehicleData.get(index).getModel());
                     carDetailsOne.setText(
-                        "Current Charge: " + vehicleData.get(index).getBatteryPercent() + "%\n"
-                        + "Max. Range: " + vehicleData.get(index).getMaxRange() + " km\n"
-                        + "Connections: " + vehicleData.get(index).getConnectors().toString());
+                            "Current Charge: " + vehicleData.get(index).getBatteryPercent() + "%\n"
+                                    + "Max. Range: " + vehicleData.get(index).getMaxRange()
+                                    + " km\n"
+                                    + "Connections: "
+                                    + vehicleData.get(index).getConnectors().toString());
                     break;
                 case "two":
                     makeModelTwo.setText(vehicleData.get(index).getMake() + " "
-                        + vehicleData.get(index).getModel());
+                            + vehicleData.get(index).getModel());
                     carDetailsTwo.setText(
-                        "Current Charge: " + vehicleData.get(index).getBatteryPercent() + "%\n"
-                        + "Max. Range: " + vehicleData.get(index).getMaxRange() + " km\n"
-                        + "Connections: " + vehicleData.get(index).getConnectors().toString());
+                            "Current Charge: " + vehicleData.get(index).getBatteryPercent() + "%\n"
+                                    + "Max. Range: " + vehicleData.get(index).getMaxRange()
+                                    + " km\n"
+                                    + "Connections: "
+                                    + vehicleData.get(index).getConnectors().toString());
                     break;
                 case "three":
                     makeModelThree.setText(vehicleData.get(index).getMake() + " "
-                        + vehicleData.get(index).getModel());
+                            + vehicleData.get(index).getModel());
                     carDetailsThree.setText(
-                        "Current Charge: " + vehicleData.get(index).getBatteryPercent() + "%\n"
-                        + "Max. Range: " + vehicleData.get(index).getMaxRange() + " km\n"
-                        + "Connections: " + vehicleData.get(index).getConnectors().toString());
+                            "Current Charge: " + vehicleData.get(index).getBatteryPercent()
+                                    + "%\n"
+                                    + "Max. Range: " + vehicleData.get(index).getMaxRange()
+                                    + " km\n"
+                                    + "Connections: "
+                                    + vehicleData.get(index).getConnectors().toString());
                     break;
                 default:
                     break;
@@ -365,7 +355,7 @@ public class GarageController {
                     imageview.setImage(null);
                 } else {
                     Image image = new Image(new FileInputStream(
-                        vehicleData.get(index).getImgPath()));
+                            vehicleData.get(index).getImgPath()));
                     imageview.setImage(image);
                 }
 
@@ -375,10 +365,9 @@ public class GarageController {
         }
     }
 
-
     /**
      * Method to call when next button is clicked.
-     * Reshuffles vehicleData so the first three elements are the three to 
+     * Reshuffles vehicleData so the first three elements are the three to
      * be displayed in the user's garage.
      */
     @FXML
@@ -391,10 +380,9 @@ public class GarageController {
         }
     }
 
-
     /**
      * Method to call when prev button is clicked
-     * Reshuffles vehicleData so the first three elements are the three to 
+     * Reshuffles vehicleData so the first three elements are the three to
      * be displayed in the user's garage.
      */
     @FXML

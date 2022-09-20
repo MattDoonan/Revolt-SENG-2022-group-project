@@ -1,7 +1,8 @@
-package seng202.team3.logic;
+package seng202.team3.unittest.logic;
 
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,15 +14,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Vehicle;
+import seng202.team3.logic.GarageManager;
+import seng202.team3.logic.VehicleUpdateManager;
 
 /**
- * Unit tests for {@link UpdateVehicleManagerTest UpdateVehicleManagerTest} class in Logic
+ * Unit tests for {@link UpdateVehicleManagerTest UpdateVehicleManagerTest}
+ * class in Logic
  *
  * @author Celia Allen
  * @version 1.0.0, Aug 22
  */
 public class UpdateVehicleManagerTest {
-    
 
     /**
      * Creates a {@link GarageManager GarageManager} to test
@@ -33,9 +36,8 @@ public class UpdateVehicleManagerTest {
     private Vehicle testVehicleTwo;
     private Vehicle testVehicleDelete;
     private ObservableList<Vehicle> vehicleList = FXCollections.observableList(
-        new ArrayList<Vehicle>());
+            new ArrayList<Vehicle>());
     private ObservableList<Vehicle> initialVehicleList;
-
 
     /**
      * BeforeEach create vehicles to add to garage
@@ -43,14 +45,14 @@ public class UpdateVehicleManagerTest {
      */
     @BeforeEach
     public void setUp() {
-        testVehicle = new Vehicle("TestMake", "TestModel", 
-            1234, new ArrayList<String>(Arrays.asList("Type 2 Socketed")));
+        testVehicle = new Vehicle("TestMake", "TestModel",
+                1234, new ArrayList<String>(Arrays.asList("Type 2 Socketed")));
         testVehicle.setImgPath("null");
-        testVehicleTwo = new Vehicle("TestMakeTwo", "TestModelTwo", 
-            555, new ArrayList<String>(Arrays.asList("Type 1 Tethered")));
+        testVehicleTwo = new Vehicle("TestMakeTwo", "TestModelTwo",
+                555, new ArrayList<String>(Arrays.asList("Type 1 Tethered")));
         testVehicleTwo.setImgPath("null");
-        testVehicleDelete = new Vehicle("TestMakeDelete", "TestModelDelete", 
-            1000, new ArrayList<String>(Arrays.asList("Other")));
+        testVehicleDelete = new Vehicle("TestMakeDelete", "TestModelDelete",
+                1000, new ArrayList<String>(Arrays.asList("Other")));
         testVehicleDelete.setImgPath("null");
         vehicleList.add(testVehicle);
         vehicleList.add(testVehicleTwo);
@@ -66,8 +68,8 @@ public class UpdateVehicleManagerTest {
     public void tearDown() {
         for (Vehicle vehicle : vehicleList) {
             try {
-                SqlInterpreter.getInstance().deleteData("vehicle", 
-                    vehicle.getVehicleId());
+                SqlInterpreter.getInstance().deleteData("vehicle",
+                        vehicle.getVehicleId());
                 vehicle = null;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -112,7 +114,6 @@ public class UpdateVehicleManagerTest {
         assertTrue(testVehicle.equals(vehicles.get(vehicles.size() - 2)));
     }
 
-
     /**
      * Test that vehicles are successfully deleted from database
      */
@@ -124,15 +125,15 @@ public class UpdateVehicleManagerTest {
         assertTrue(testVehicleDelete.equals(vehicles.get(vehicles.size() - 1)));
 
         manager.deleteVehicle(testVehicleDelete);
-        
-        vehicles = getVehicles();
-        assertTrue(!testVehicleDelete.equals(vehicles.get(vehicles.size() - 1)));
-        
-    }
 
+        vehicles = getVehicles();
+        assertFalse(vehicles.contains(testVehicleDelete));
+
+    }
 
     /**
      * Gets the vehicles in the database
+     * 
      * @return List of vehicles from database
      */
     public ObservableList<Vehicle> getVehicles() {

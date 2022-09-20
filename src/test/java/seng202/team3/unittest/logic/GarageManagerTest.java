@@ -1,5 +1,6 @@
-package seng202.team3.logic;
+package seng202.team3.unittest.logic;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Vehicle;
+import seng202.team3.logic.GarageManager;
 
 /**
  * Unit tests for {@link GarageManager GarageManager} class in Logic
@@ -31,7 +33,7 @@ public class GarageManagerTest {
     private Vehicle testVehicleTwo;
     private Vehicle testVehicleDelete;
     private ObservableList<Vehicle> vehicleList = FXCollections.observableList(
-        new ArrayList<Vehicle>());
+            new ArrayList<Vehicle>());
     private ObservableList<Vehicle> initialVehicleList;
 
     /**
@@ -40,14 +42,14 @@ public class GarageManagerTest {
      */
     @BeforeEach
     public void setUp() {
-        testVehicle = new Vehicle("TestMake", "TestModel", 
-            1234, new ArrayList<String>(Arrays.asList("Type 2 Socketed")));
+        testVehicle = new Vehicle("TestMake", "TestModel",
+                1234, new ArrayList<String>(Arrays.asList("Type 2 Socketed")));
         testVehicle.setImgPath("null");
-        testVehicleTwo = new Vehicle("TestMakeTwo", "TestModelTwo", 
-            555, new ArrayList<String>(Arrays.asList("Type 1 Tethered")));
+        testVehicleTwo = new Vehicle("TestMakeTwo", "TestModelTwo",
+                555, new ArrayList<String>(Arrays.asList("Type 1 Tethered")));
         testVehicleTwo.setImgPath("null");
-        testVehicleDelete = new Vehicle("TestMakeDelete", "TestModelDelete", 
-            1000, new ArrayList<String>(Arrays.asList("Other")));
+        testVehicleDelete = new Vehicle("TestMakeDelete", "TestModelDelete",
+                1000, new ArrayList<String>(Arrays.asList("Other")));
         testVehicleDelete.setImgPath("null");
         vehicleList.add(testVehicle);
         vehicleList.add(testVehicleTwo);
@@ -64,8 +66,8 @@ public class GarageManagerTest {
     public void tearDown() {
         for (Vehicle vehicle : vehicleList) {
             try {
-                SqlInterpreter.getInstance().deleteData("vehicle", 
-                    vehicle.getVehicleId());
+                SqlInterpreter.getInstance().deleteData("vehicle",
+                        vehicle.getVehicleId());
                 vehicle = null;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -106,7 +108,6 @@ public class GarageManagerTest {
         assertTrue(testVehicle.equals(vehicles.get(vehicles.size() - 2)));
     }
 
-
     /**
      * Test getAllVehicles() works after deleting vehicles
      */
@@ -121,21 +122,20 @@ public class GarageManagerTest {
         manager.resetQuery();
         manager.getAllVehicles();
         ObservableList<Vehicle> vehicles = manager.getData();
-        assertTrue(testVehicleDelete.equals(vehicles.get(vehicles.size() - 1)));
+        assertTrue(vehicles.contains(testVehicleDelete));
 
         try {
-            SqlInterpreter.getInstance().deleteData("vehicle", 
-                testVehicleDelete.getVehicleId());
+            SqlInterpreter.getInstance().deleteData("vehicle",
+                    testVehicleDelete.getVehicleId());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        
+
         manager.resetQuery();
         manager.getAllVehicles();
         vehicles = manager.getData();
-        assertTrue(!testVehicleDelete.equals(vehicles.get(vehicles.size() - 1)));
-        
-    }
+        assertFalse(vehicles.contains(testVehicleDelete));
 
+    }
 
 }

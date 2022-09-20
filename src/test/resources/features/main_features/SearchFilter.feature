@@ -9,3 +9,8 @@ Feature: Searching and filtering chargers
     Given There is no current input given
     When The user inputs an invalid query "xyxwqzgrezw"
     Then No results are listed
+  
+  Scenario: User filters for only free charger stations
+    Given There is no current input given
+    When The user filters for no charging cost
+    Then The list of chargers found have no charging cost
