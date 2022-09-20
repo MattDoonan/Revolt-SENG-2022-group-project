@@ -21,7 +21,7 @@ import seng202.team3.gui.TableController;
  * @author Matthew Doonan
  * @version 1.0.0, Sep 22
  */
-public class TableSearchFilterTestFx extends seng202.team3.testfx.TestFxBase {
+public class TableSearchFilterTestFx extends TestFxBase {
 
     private TableController controller;
 
