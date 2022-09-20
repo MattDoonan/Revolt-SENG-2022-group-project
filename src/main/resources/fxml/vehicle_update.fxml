@@ -84,7 +84,7 @@
                   </FXCollections>
                </items>
             </ComboBox>
-            <Button fx:id="addConnectionBtn" mnemonicParsing="false" onAction="#addConnection" text="Add Connection" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+            <Button fx:id="addConnectionBtn" mnemonicParsing="false" onAction="#launchConnector" text="Add Connection" GridPane.columnIndex="1" GridPane.rowIndex="7" />
             <Label fx:id="imgName" prefHeight="26.0" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
             <TextField fx:id="makeText" promptText="Make" GridPane.columnIndex="1" />
             <TextField fx:id="modelText" prefHeight="26.0" prefWidth="150.0" promptText="Model" GridPane.columnIndex="1" GridPane.rowIndex="1" />
