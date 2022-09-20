@@ -5,11 +5,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.util.ArrayList;
+
 import javax.management.InstanceAlreadyExistsException;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
@@ -65,13 +68,12 @@ public class ChargerHandlerTest {
     /**
      * Tests the creation of a {@link Charger Charger} ArrayList using
      * makeAllChargers
-     * Tests edge case of size, makes sure greater than 344 elements
+     * Tests edge case of size, makes sure greater than 48 elements
      */
     @Test
     public void makeAllChargersTestSizeGreater() {
         mainManager.resetQuery();
         mainManager.makeAllChargers();
-        System.out.println(mainManager.getCloseChargerData().size());
         assertTrue(mainManager.getCloseChargerData().size() > 48);
     }
 
