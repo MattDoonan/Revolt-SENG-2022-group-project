@@ -1,4 +1,4 @@
-package seng202.team3.unitTest.logic;
+package seng202.team3.unittest.logic;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;

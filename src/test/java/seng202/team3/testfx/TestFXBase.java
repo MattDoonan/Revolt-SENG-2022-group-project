@@ -1,14 +1,16 @@
 package seng202.team3.testfx;
 
 import java.util.concurrent.TimeoutException;
-import javafx.scene.Node;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseButton;
-import javafx.stage.Stage;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit5.ApplicationTest;
+
+import javafx.scene.Node;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
+import javafx.stage.Stage;
 
 /**
  * This is Morgan's Code designed to set up TestFX testing
@@ -16,7 +18,7 @@ import org.testfx.framework.junit5.ApplicationTest;
  * @author Morgan English
  * @version 1.0.0, Sep 22
  */
-public abstract class TestFxBase extends ApplicationTest {
+public abstract class TestFXBase extends ApplicationTest {
 
     @BeforeEach
     public abstract void setUp() throws Exception;
