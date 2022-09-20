@@ -100,8 +100,6 @@
 
             createBar().addTo(map)
 
-            map.createPane("setCoord");
-            map.getPane("setCoord").style.zIndex = 999;
 
 
             map.on("click", (map_event) => {
@@ -173,6 +171,9 @@
             m.addTo(map).on("click", e => javaScriptBridge.chargerHandler(id),
             )
             markers.push(m)
+            if (coordinate) {
+                coordinate.addTo(map)
+            }
         }
 
         /**
@@ -192,7 +193,7 @@
          * @param lng longitude to place coordinate marker at
          */
         function addCoordinate(title, lat, lng) {
-            coordinate = new L.Marker([lat, lng], {icon: redIcon, pane: "setCoord"})
+            coordinate = new L.Marker([lat, lng], {icon: redIcon})
             coordinate.bindPopup(title + ": " + lat.toFixed(4) + " " + lng.toFixed(4))
             coordinate.on("click", function(ev) {coordinate.openPopup()})
             coordinate.addTo(map)
