@@ -918,7 +918,7 @@ public class SqlInterpreter implements DataReader {
          * 
          * @param chargersToWrite sublist of chargers for thread to write
          */
-        public WriteChargerThread(ArrayList<Object> chargersToWrite) {
+        private WriteChargerThread(ArrayList<Object> chargersToWrite) {
             this.chargersToWrite = chargersToWrite;
             this.conn = createConnection();
         }

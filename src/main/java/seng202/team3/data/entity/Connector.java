@@ -8,24 +8,24 @@ package seng202.team3.data.entity;
  */
 public class Connector {
     /** Unique identifier */
-    int connectorId;
+    private int connectorId;
 
     /** Plug style */
-    String type;
+    private String type;
 
     /** Type of current */
-    String current;
+    private String current;
 
     /** Power draw */
-    String powerDraw;
+    private String powerDraw;
 
     /** Operational Status */
-    String status;
+    private String status;
 
     /**
      * Number attached to {@link Charger charger}
      */
-    int count;
+    private int count;
 
     /**
      * Constructor for the connector
