@@ -112,6 +112,7 @@ public class VehicleUpdateController {
     public void saveChanges() {
         Vehicle vehicle;
         if (selectedVehicle != null) {
+            System.out.println("selectedVehicle: " + selectedVehicle.getVehicleId());
             if (selectedImg != null) {
                 selectedVehicle.setImgPath("src/main/resources/images/" + selectedImg);
             } else {
@@ -125,65 +126,67 @@ public class VehicleUpdateController {
             vehicle = selectedVehicle;
         } else {
             vehicle = new Vehicle();
+        }
 
-            try {
-                vehicle.setMake(makeText.getText());
-            } catch (NullPointerException e) {
-                errors.add("Vehicle make required.");
-            }
-            try {
-                vehicle.setModel(modelText.getText());
-            } catch (NullPointerException e) {
-                errors.add("Vehicle model required.");
-            }
-            try {
-                if (Integer.parseInt(maxRangeText.getText()) < 0) {
-                    errors.add("A vehicle's maximum range cannot be negative.");
-                } else {
-                    vehicle.setMaxRange(Integer.parseInt(maxRangeText.getText()));
-                }
-            } catch (NumberFormatException e) {
-                errors.add("A vehicle's maximum range must be a whole number.");
-            }
-            try {
-                if (Double.parseDouble(currChargeText.getText()) < 0) {
-                    errors.add("A vehicle's current charge cannot be negative.");
-                } else {
-                    vehicle.setBatteryPercent(Double.parseDouble(currChargeText.getText()));
-                }
-            } catch (NumberFormatException e) {
-                if (!currChargeText.getText().equals("")) {
-                    errors.add("A vehicle's current charge must be a number.");
-                }
-            }
-            if (connections.size() == 0) {
-                errors.add("A vehicle must have at least one connector.");
+        try {
+            vehicle.setMake(makeText.getText());
+        } catch (NullPointerException e) {
+            errors.add("Vehicle make required.");
+        }
+        try {
+            vehicle.setModel(modelText.getText());
+        } catch (NullPointerException e) {
+            errors.add("Vehicle model required.");
+        }
+        try {
+            if (Integer.parseInt(maxRangeText.getText()) < 0) {
+                errors.add("A vehicle's maximum range cannot be negative.");
             } else {
-                vehicle.setConnectors(connections);
+                vehicle.setMaxRange(Integer.parseInt(maxRangeText.getText()));
             }
-            if (selectedImg != null) {
-                vehicle.setImgPath("src/main/resources/images/" + selectedImg);
+        } catch (NumberFormatException e) {
+            errors.add("A vehicle's maximum range must be a whole number.");
+        }
+        try {
+            if (Double.parseDouble(currChargeText.getText()) < 0) {
+                errors.add("A vehicle's current charge cannot be negative.");
             } else {
-                vehicle.setImgPath("src/main/resources/images/null");
+                vehicle.setBatteryPercent(Double.parseDouble(currChargeText.getText()));
             }
+        } catch (NumberFormatException e) {
+            if (!currChargeText.getText().equals("")) {
+                errors.add("A vehicle's current charge must be a number.");
+            }
+        }
+        if (connections.size() == 0) {
+            errors.add("A vehicle must have at least one connector.");
+        } else {
+            vehicle.setConnectors(connections);
+        }
+        if (selectedImg != null) {
+            vehicle.setImgPath("src/main/resources/images/" + selectedImg);
+        } else {
+            vehicle.setImgPath("src/main/resources/images/null");
+        }
 
-            if (vehicle.getBatteryPercent() == null) {
-                vehicle.setBatteryPercent(100.0);
-            }
-            
-            if (errors.size() == 0) {
-                manage.saveVehicle(vehicle);
-                makeText.setText(null);
-                modelText.setText(null);
-                maxRangeText.setText(null);
-                addedConnections.setText(null);
-                imgName.setText(null);
-                connections = new ArrayList<>();
-                connectorType.setPromptText("Connector Type");
-            } else {
-                launchErrorPopUps();
-                errors.clear();
-            }
+        if (vehicle.getBatteryPercent() == null) {
+            vehicle.setBatteryPercent(100.0);
+        }
+
+        if (errors.size() == 0) {
+            System.out.println("HIIIIIIi: " + selectedVehicle.getVehicleId());
+
+            manage.saveVehicle(vehicle);
+            makeText.setText(null);
+            modelText.setText(null);
+            maxRangeText.setText(null);
+            addedConnections.setText(null);
+            imgName.setText(null);
+            connections = new ArrayList<>();
+            connectorType.setPromptText("Connector Type");
+        } else {
+            launchErrorPopUps();
+            errors.clear();
         }
         
         selectedVehicle = null;
