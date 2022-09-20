@@ -60,7 +60,7 @@ public class SqlInterpreter implements DataManager {
     private SqlInterpreter(String db) {
         if (db == null || db.isEmpty()) {
             url = getDatabasePath();
-            System.out.println(getDatabasePath());
+            logManager.info(getDatabasePath());
         } else {
             url = db;
         }
@@ -447,7 +447,7 @@ public class SqlInterpreter implements DataManager {
             v.setBatteryPercent(rs.getDouble("batteryPercent"));
             v.setMaxRange(rs.getInt("rangeKM"));
             if (rs.getString("imgPath") == null) {
-                v.setImgPath(Vehicle.defaultImgPath);
+                v.setImgPath(Vehicle.DEFAULTIMGPATH);
             } else {
                 v.setImgPath(rs.getString("imgPath"));
             }

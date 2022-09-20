@@ -21,7 +21,7 @@ import seng202.team3.gui.MainWindow;
  * @author Michelle Hsieh
  * @version 1.0.0, Sep 22
  */
-public class SearchFilterTextFx extends TestFXBase {
+public class SearchFilterTextFx extends TestFxBase {
 
     private MainController controller;
 
@@ -69,7 +69,8 @@ public class SearchFilterTextFx extends TestFXBase {
     @Test
     public void lessWhenSearchAddress() {
         clickOn("#executeSearch");
-        int total = controller.getManager().getCloseChargerData().size();
+        int total;
+        total = controller.getManager().getCloseChargerData().size();
         clickOn("#searchCharger");
         write("auck");
         clickOn("#executeSearch");

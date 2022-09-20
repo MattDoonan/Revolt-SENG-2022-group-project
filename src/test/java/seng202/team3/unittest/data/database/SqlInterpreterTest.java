@@ -40,7 +40,7 @@ import seng202.team3.data.entity.Vehicle;
 /**
  * Tests for SqlInterpreter {@link SqlInterpreter} Class
  *
- * @author Matthew Doonan
+ * @author Matthew Doonan, Harrison Tyson
  * @version 1.0.0, Sep 2
  */
 public class SqlInterpreterTest {

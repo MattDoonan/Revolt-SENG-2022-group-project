@@ -84,7 +84,7 @@ public class VehicleUpdateController {
      */
     @FXML
     private Button saveChanges;
-    
+
     /**
      * Used to get the current scene to close it
      */
@@ -124,8 +124,8 @@ public class VehicleUpdateController {
     /**
      * The images that the user can choose from (names)
      */
-    private String[] imgNames = {"car_one.png", "car_two.png", "car_three.png",
-        "truck_one.png", "truck_two.png"};
+    private String[] imgNames = { "car_one.png", "car_two.png", "car_three.png",
+        "truck_one.png", "truck_two.png" };
 
     /**
      * List of user input errors for adding/editing vehicles
@@ -138,7 +138,8 @@ public class VehicleUpdateController {
     private Stage imagePopup = new Stage();
 
     /**
-     * The popup for an 'Other...' connector, allowing user to write in a unique value
+     * The popup for an 'Other...' connector, allowing user to write in a unique
+     * value
      */
     private Stage connectorPopup = new Stage();
 
@@ -151,10 +152,12 @@ public class VehicleUpdateController {
      * Initialises the Vehicle editing
      */
     public VehicleUpdateController() {
+        // Unused
     }
 
     /**
      * Set selectedVehicle
+     * 
      * @param vehicle the vehicle to set selectedVehicle to
      */
     public void setSelectedVehicle(Vehicle vehicle) {
@@ -214,7 +217,7 @@ public class VehicleUpdateController {
                 errors.add("A vehicle's current charge must be a number.");
             }
         }
-        if (connections.size() == 0) {
+        if (connections.isEmpty()) {
             errors.add("A vehicle must have at least one connector.");
         } else {
             vehicle.setConnectors(connections);
@@ -229,7 +232,7 @@ public class VehicleUpdateController {
             vehicle.setBatteryPercent(100.0);
         }
 
-        if (errors.size() == 0) {
+        if (errors.isEmpty()) {
             manage.saveVehicle(vehicle);
             makeText.setText(null);
             modelText.setText(null);
@@ -242,7 +245,7 @@ public class VehicleUpdateController {
             launchErrorPopUps();
             errors.clear();
         }
-        
+
         selectedVehicle = null;
         Stage popupStage = (Stage) saveChanges.getScene().getWindow();
         popupStage.close();
@@ -279,7 +282,7 @@ public class VehicleUpdateController {
                         + connectorType.getValue() + "\n" + addedConnections.getText());
             }
         }
-        
+
     }
 
     /**
@@ -297,7 +300,7 @@ public class VehicleUpdateController {
 
             for (int i = 0; i < imgNames.length; i++) {
                 Image img = new Image(new FileInputStream("src/main/resources/images/"
-                    + imgNames[i]));
+                        + imgNames[i]));
                 ImageView view = new ImageView(img);
                 Button button = new Button();
                 button.setGraphic(view);
@@ -328,7 +331,7 @@ public class VehicleUpdateController {
             anchor.getChildren().add(curr);
         }
         ScrollPane imgsDisplay = new ScrollPane();
-        imgsDisplay.setContent(anchor); 
+        imgsDisplay.setContent(anchor);
         imgsDisplay.setPrefViewportWidth(322);
         imgsDisplay.setPrefViewportHeight(320);
         AnchorPane root = new AnchorPane();
@@ -340,7 +343,7 @@ public class VehicleUpdateController {
     }
 
     /**
-     * Displays pop-up window that allows a user to select a 
+     * Displays pop-up window that allows a user to select a
      * vehicle image
      */
     public void displayImgSelect() {
@@ -352,6 +355,7 @@ public class VehicleUpdateController {
 
     /**
      * Updates selectedImg to the ID of the currently-selected image
+     * 
      * @param e ActionEvent
      */
     public void imgSelected(ActionEvent e) {
@@ -446,5 +450,3 @@ public class VehicleUpdateController {
     }
 
 }
-
-

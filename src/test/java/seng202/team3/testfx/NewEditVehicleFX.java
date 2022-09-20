@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.TextInputControlMatchers;
 import seng202.team3.gui.MainWindow;
-import seng202.team3.gui.VehicleUpdateController;
 
 /**
  * Code designed to test the searching and filtering of the Main Window
@@ -21,9 +20,7 @@ import seng202.team3.gui.VehicleUpdateController;
  * @author Celia Allen
  * @version 1.0.0, Sep 22
  */
-public class NewEditVehicleFx extends TestFXBase {
-
-    private VehicleUpdateController controller;
+public class NewEditVehicleFx extends TestFxBase {
 
     @FXML
     private TextField makeText;
@@ -57,7 +54,7 @@ public class NewEditVehicleFx extends TestFXBase {
     public void start(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/vehicle_update.fxml"));
         Parent page = loader.load();
-        initState(loader, stage);
+        initState();
         Scene scene = new Scene(page);
         stage.setScene(scene);
         stage.show();
@@ -66,11 +63,9 @@ public class NewEditVehicleFx extends TestFXBase {
     /**
      * Initialises the state of the current application
      * 
-     * @param loader the FXML loader after loading
-     * @param stage  the stage of the application
      */
-    public void initState(FXMLLoader loader, Stage stage) {
-        controller = loader.getController();
+    public void initState() {
+        // Empty
     }
 
     /**
