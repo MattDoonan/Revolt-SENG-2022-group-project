@@ -171,6 +171,13 @@ public class MainController {
     private MainManager manage;
 
     /**
+     * unused constructor
+     */
+    public MainController() {
+        // unused
+    }
+
+    /**
      * Initialize the window
      *
      * @param stage      Top level container for this window

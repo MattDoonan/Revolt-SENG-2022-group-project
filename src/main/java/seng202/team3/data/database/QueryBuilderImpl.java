@@ -17,6 +17,13 @@ public class QueryBuilderImpl implements QueryBuilder {
     /** Filters of the query */
     private ArrayList<Triplet<String, String, ComparisonType>> filters = new ArrayList<>();
 
+    /**
+     * unused constructor
+     */
+    public QueryBuilderImpl() {
+        // unused
+    }
+
     /** {@inheritDoc} */
     @Override
     public QueryBuilder withSource(String source) {

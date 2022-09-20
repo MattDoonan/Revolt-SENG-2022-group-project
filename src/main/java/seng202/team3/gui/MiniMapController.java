@@ -49,6 +49,13 @@ public class MiniMapController {
     private Stage stage;
 
     /**
+     * unused constructor
+     */
+    public MiniMapController() {
+        // unused
+    }
+
+    /**
      * Initialise the map view
      *
      * @param stage the stage of this

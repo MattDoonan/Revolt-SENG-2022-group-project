@@ -16,6 +16,13 @@ import javafx.stage.Stage;
 public class MainWindow extends Application {
 
     /**
+     * unused constructor
+     */
+    public MainWindow() {
+        // unused
+    }
+
+    /**
      * {@inheritDoc}
      * Opens the gui with the fxml content specified in resources/fxml/main.fxml
      */

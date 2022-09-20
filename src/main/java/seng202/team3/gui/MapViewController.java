@@ -31,6 +31,13 @@ public class MapViewController extends MapHandler {
     private boolean routeDisplayed = false;
 
     /**
+     * unused constructor
+     */
+    public MapViewController() {
+        // unused
+    }
+
+    /**
      * Initialise the map view
      *
      * @param map   Map view to interact with

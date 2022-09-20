@@ -44,6 +44,13 @@ public abstract class MapHandler {
     protected JSObject javaScriptConnector;
 
     /**
+     * unused constructor
+     */
+    public MapHandler() {
+        // unused
+    }
+
+    /**
      * Initialises the map by loading the html into the webengine
      */
     public void initMap() {

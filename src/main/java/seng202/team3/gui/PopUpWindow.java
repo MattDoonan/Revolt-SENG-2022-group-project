@@ -1,6 +1,5 @@
 package seng202.team3.gui;
 
-
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
@@ -34,6 +33,12 @@ public class PopUpWindow {
      */
     protected Boolean isClicked = false;
 
+    /**
+     * unused constructor
+     */
+    public PopUpWindow() {
+        // unused
+    }
 
     /**
      * Initialise and display the prompt

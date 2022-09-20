@@ -115,8 +115,8 @@ public class SqlInterpreter implements DataManager {
      *            "jdbc:sqlite:./src/...")
      * @return current singleton instance
      * @throws javax.management.InstanceAlreadyExistsException if there is already a
-     *                                        singleton
-     *                                        instance
+     *                                                         singleton
+     *                                                         instance
      * @author Morgan English, Dec 21
      */
     public static SqlInterpreter initialiseInstanceWithUrl(String url)
@@ -371,6 +371,7 @@ public class SqlInterpreter implements DataManager {
      * @param rs ResultSet to read from
      * 
      * @return list of chargers
+     * @throws SQLException if sql interaction fails
      */
     private List<Object> asCharger(ResultSet rs) throws SQLException {
         List<Object> chargers = new ArrayList<>();
@@ -425,6 +426,7 @@ public class SqlInterpreter implements DataManager {
      * @param rs ResultSet to read from
      * 
      * @return list of connectors
+     * @throws SQLException if sql interaction fails
      */
     private List<Object> asConnector(ResultSet rs) throws SQLException {
         List<Object> connectors = new ArrayList<>();
@@ -446,6 +448,7 @@ public class SqlInterpreter implements DataManager {
      * @param rs ResultSet to read from
      * 
      * @return list of vehicles
+     * @throws SQLException if sql interaction fails
      */
     private List<Object> asVehicle(ResultSet rs) throws SQLException {
         List<Object> vehicles = new ArrayList<>();
@@ -476,6 +479,7 @@ public class SqlInterpreter implements DataManager {
      * @param rs ResultSet to read from
      * 
      * @return list of journeys
+     * @throws SQLException if sql interaction fails
      */
     private List<Object> asJourney(ResultSet rs) throws SQLException {
         List<Object> journeys = new ArrayList<>();
@@ -724,7 +728,7 @@ public class SqlInterpreter implements DataManager {
      *
      * @see #writeConnector(Connection, Connector, int)
      * @param connectors a {@link java.util.ArrayList} object
-     * @param chargerId a int
+     * @param chargerId  a int
      * @throws java.io.IOException if any.
      */
     public void writeConnector(ArrayList<Connector> connectors, int chargerId) throws IOException {

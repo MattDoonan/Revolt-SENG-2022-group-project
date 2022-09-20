@@ -46,7 +46,6 @@ public class MenuController {
     @FXML
     private Button accountButton;
 
-
     /**
      * The stage the application runs on
      */
@@ -58,6 +57,12 @@ public class MenuController {
      */
     private static MainController controller;
 
+    /**
+     * unused constructor
+     */
+    public MenuController() {
+        // unused
+    }
 
     /**
      * Initialize the window
@@ -78,7 +83,9 @@ public class MenuController {
     }
 
     /**
-     * <p>menuExit.</p>
+     * <p>
+     * menuExit.
+     * </p>
      */
     public void menuExit() {
         menuButton.setStyle("-fx-text-fill:#ffffff;-fx-font-size: 24px; "
@@ -86,7 +93,9 @@ public class MenuController {
     }
 
     /**
-     * <p>vehicleHover.</p>
+     * <p>
+     * vehicleHover.
+     * </p>
      */
     public void vehicleHover() {
         vehicleButton.setStyle("-fx-text-fill:#000000;-fx-font-size: 26px; "
@@ -94,7 +103,9 @@ public class MenuController {
     }
 
     /**
-     * <p>vehicleExit.</p>
+     * <p>
+     * vehicleExit.
+     * </p>
      */
     public void vehicleExit() {
         vehicleButton.setStyle("-fx-text-fill:#ffffff;-fx-font-size: 24px; "
@@ -102,7 +113,9 @@ public class MenuController {
     }
 
     /**
-     * <p>journeyHover.</p>
+     * <p>
+     * journeyHover.
+     * </p>
      */
     public void journeyHover() {
         journeyButton.setStyle("-fx-text-fill:#000000;-fx-font-size: 26px; "
@@ -110,7 +123,9 @@ public class MenuController {
     }
 
     /**
-     * <p>journeyExit.</p>
+     * <p>
+     * journeyExit.
+     * </p>
      */
     public void journeyExit() {
         journeyButton.setStyle("-fx-text-fill:#ffffff;-fx-font-size: 24px; "
@@ -118,7 +133,9 @@ public class MenuController {
     }
 
     /**
-     * <p>accountHover.</p>
+     * <p>
+     * accountHover.
+     * </p>
      */
     public void accountHover() {
         accountButton.setStyle("-fx-text-fill:#000000;-fx-font-size: 26px; "
@@ -126,7 +143,9 @@ public class MenuController {
     }
 
     /**
-     * <p>accountExit.</p>
+     * <p>
+     * accountExit.
+     * </p>
      */
     public void accountExit() {
         accountButton.setStyle("-fx-text-fill:#ffffff;-fx-font-size: 24px;"
@@ -151,7 +170,8 @@ public class MenuController {
     /**
      * Gets the static Main Controller
      *
-     * @return {@link seng202.team3.gui.MainController} the main controller of this run
+     * @return {@link seng202.team3.gui.MainController} the main controller of this
+     *         run
      */
     public MainController getController() {
         return controller;
