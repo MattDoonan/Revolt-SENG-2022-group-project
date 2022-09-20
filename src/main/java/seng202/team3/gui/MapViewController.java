@@ -20,7 +20,14 @@ import seng202.team3.logic.MapManager;
  */
 public class MapViewController extends MapHandler {
 
+    /**
+     * The MapManager of this controller
+     */
     private MapManager map;
+
+    /**
+     * Boolean; true if the route is displayed; false if not
+     */
     private boolean routeDisplayed = false;
 
     /**

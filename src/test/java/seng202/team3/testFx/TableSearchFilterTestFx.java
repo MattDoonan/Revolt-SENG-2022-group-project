@@ -1,4 +1,4 @@
-package seng202.team3.testfx;
+package seng202.team3.testFx;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -17,11 +17,11 @@ import seng202.team3.gui.TableController;
 
 /**
  * Tests for charger searching from table GUI view
- * 
+ *
  * @author Matthew Doonan
  * @version 1.0.0, Sep 22
  */
-public class TableSearchFilterTestFx extends TestFxBase {
+public class TableSearchFilterTestFx extends seng202.team3.testfx.TestFxBase {
 
     private TableController controller;
 

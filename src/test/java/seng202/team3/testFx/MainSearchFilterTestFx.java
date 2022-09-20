@@ -1,4 +1,4 @@
-package seng202.team3.testfx;
+package seng202.team3.testFx;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -23,7 +23,7 @@ import seng202.team3.logic.Calculations;
  * @author Michelle Hsieh
  * @version 1.0.0, Sep 22
  */
-public class MainSearchFilterTestFx extends TestFxBase {
+public class MainSearchFilterTestFx extends seng202.team3.testfx.TestFxBase {
 
     private MainController controller;
 

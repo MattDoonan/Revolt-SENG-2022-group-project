@@ -17,13 +17,35 @@ import seng202.team3.logic.TableManager;
  */
 public class MiniMapController {
 
+    /**
+     * WebView to host
+     */
     @FXML
     private WebView webView;
 
+    /**
+     * WebEngine to launch map
+     */
     private WebEngine webEngine;
+
+    /**
+     * TableManager manager class associated with controller
+     */
     private TableManager manager;
+
+    /**
+     * JavaScript object to run JavaScript
+     */
     private JSObject javaScriptConnector;
+
+    /**
+     * JavaScriptBridge of this map to communicate
+     */
     private JavaScriptBridge javaScriptBridge;
+
+    /**
+     * Stage of the application
+     */
     private Stage stage;
 
     /**
