@@ -46,6 +46,6 @@
             <TextArea fx:id="carDetailsThree" editable="false" layoutX="1.0" layoutY="188.0" prefHeight="116.0" prefWidth="214.0" stylesheets="@textarea.css" />
          </children>
       </AnchorPane>
-      <Button fx:id="openUpdate" layoutX="503.0" layoutY="585.0" mnemonicParsing="false" onAction="#displayUpdate" text="Add New" />
+      <Button fx:id="openUpdate" layoutX="503.0" layoutY="585.0" mnemonicParsing="false" onAction="#launchUpdate" text="Add New" />
    </children>
 </AnchorPane>

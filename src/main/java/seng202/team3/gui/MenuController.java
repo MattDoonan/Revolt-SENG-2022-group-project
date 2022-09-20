@@ -103,7 +103,7 @@ public class MenuController {
             FXMLLoader garageLoader = new FXMLLoader(getClass().getResource("/fxml/garage.fxml"));
             Parent garageViewParent = garageLoader.load();
             GarageController controller = garageLoader.getController();
-            controller.init(stage, this);
+            controller.init();
             mainWindow.setCenter(garageViewParent);
         } catch (IOException e) {
             e.printStackTrace();

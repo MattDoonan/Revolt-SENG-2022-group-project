@@ -32,7 +32,7 @@ import seng202.team3.logic.GarageManager;
  * Controller for the garage.fxml window
  * 
  * @author Celia Allen
- * @version 1.0.3, Aug 22
+ * @version 1.2.0, Aug 21
  */
 public class GarageController {
 
@@ -87,30 +87,6 @@ public class GarageController {
     @FXML
     private Button prevBtn;
 
-    @FXML
-    private Button addConnection;
-
-    @FXML
-    private Label addedConnections;
-
-    @FXML
-    private TextField makeText;
-
-    @FXML
-    private TextField modelText;
-
-    @FXML
-    private TextField maxRangeText;
-
-    @FXML
-    private ComboBox<String> connectorType;
-
-    @FXML
-    private Label imgName;
-
-    @FXML
-    private ScrollPane imgsDisplay;
-
     private ObservableList<Vehicle> vehicleData = FXCollections.observableArrayList();
 
     private Vehicle selectedVehicle;
@@ -123,24 +99,12 @@ public class GarageController {
 
     private GarageController controller;
 
-    private Stage stage;
-
 
     /**
-     * Initialize the window
+     * Initialize the window with data from the database
      *
      */
     public void init() {
-        refresh();
-    }
-
-    /**
-     * Initialize the window
-     *
-     * @param stage Top level container for this window
-     */
-    public void init(Stage stage, MenuController menu) {
-        this.stage = stage;
         refresh();
     }
 
@@ -157,45 +121,19 @@ public class GarageController {
 
 
     /**
-     * Initialises the pop-up window that allows a user to add or edit a 
-     * vehicle to/in the garage
-     */
-    public void initializeUpdate() {
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource("/fxml/vehicle_update.fxml"));
-            updatePopup.initModality(Modality.APPLICATION_MODAL);
-            updatePopup.setResizable(false);
-            updatePopup.setTitle("Vehicle Information");
-            updatePopup.setScene(new Scene(root, 337, 497));
-        } catch (IOException e) {
-            Logger logger = Logger.getLogger(getClass().getName());
-            logger.log(Level.SEVERE, "Failed to create new Window.", e);
-        } finally {
-            refresh();
-        }
-    }
-
-
-    /**
-     * Displays pop-up window that allows a user to add a 
-     * vehicle to/in the garage
+     * Launches the vehicle update modal, with the given vehicle null,
+     * to signify that there is no vehicle to be updated, but a new one is
+     * being added.
      */
     @FXML
-    public void displayUpdate() {
-        try {
-            if (updatePopup.getTitle() == null) {
-                initializeUpdate();
-            }
-            updatePopup.showAndWait();
-        } finally {
-            refresh();
-        }
-        
+    public void launchUpdate() {
+        launchEditable(null);       
     }
 
 
     /**
-     * Sets selectedVehicle to the vehicle to be edited
+     * Sets selectedVehicle to the vehicle the user wants to edit,
+     * then launches the edit popup with the selected vehicle's details pre-filled.
      * @paramn event, the event that called the method
      */
     @FXML
@@ -219,7 +157,52 @@ public class GarageController {
 
 
     /**
-     * Sets selectedVehicle to the vehicle to be deleted
+     * Displays pop-up window that allows a user to edit a 
+     * vehicle in the garage
+     */
+    public void launchEditable(Vehicle vehicle) {
+        try {
+            initializeEditable(vehicle);
+            editPopup.showAndWait();
+        } finally {
+            editPopup = new Stage();
+            refresh();
+        }
+        
+    }
+
+
+    /**
+     * Launches the editable pop-up for vehicles
+     *
+     * @param vehicle the {@link Vehicle} for the vehicle info. Null if adding.
+     */
+    public void initializeEditable(Vehicle vehicle) {
+        try {
+            FXMLLoader vehicleEdit = new FXMLLoader(getClass().getResource(
+                    "/fxml/vehicle_update.fxml"));
+            AnchorPane root = vehicleEdit.load();
+            Scene modalScene = new Scene(root);
+            editPopup.setScene(modalScene);
+            editPopup.setResizable(false);
+            editPopup.setTitle("Vehicle Information");
+            editPopup.initModality(Modality.WINDOW_MODAL);
+            if (vehicle != null) {
+                VehicleUpdateController controller = vehicleEdit.getController();
+                controller.displayInfo(vehicle);
+            }
+            editPopup.setAlwaysOnTop(true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            refresh();
+        }
+    }
+
+
+    /**
+     * Sets selectedVehicle to the vehicle the user wants to delete,
+     * then launches the confirm delete popup.
      * @paramn event, the event that called the method
      */
     @FXML
@@ -242,50 +225,6 @@ public class GarageController {
     }
 
 
-    /**
-     * Launches the editable pop-up for vehicles
-     *
-     * @param vehicle the {@link Vehicle} for the vehicle info. Null if adding.
-     */
-    public void initializeEditable(Vehicle vehicle) {
-        try {
-            FXMLLoader vehicleEdit = new FXMLLoader(getClass().getResource(
-                    "/fxml/vehicle_update.fxml"));
-            AnchorPane root = vehicleEdit.load();
-            Scene modalScene = new Scene(root);
-            editPopup.setScene(modalScene);
-            editPopup.setResizable(false);
-            editPopup.setTitle("Vehicle Information");
-            editPopup.initModality(Modality.WINDOW_MODAL);
-            VehicleUpdateController controller = vehicleEdit.getController();
-            controller.displayInfo(vehicle);
-            editPopup.setAlwaysOnTop(true);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            // setData();
-            refresh();
-        }
-    }
-
-
-    /**
-     * Displays pop-up window that allows a user to edit a 
-     * vehicle to/in the garage
-     */
-    public void launchEditable(Vehicle vehicle) {
-        try {
-            if (editPopup.getTitle() == null) {
-                initializeEditable(vehicle);
-            }
-            editPopup.showAndWait();
-        } finally {
-            refresh();
-        }
-        
-    }
-
-    
     /**
      * Launches the confirm delete popup
      *
@@ -313,15 +252,6 @@ public class GarageController {
         }
     }
 
-
-    /**
-     * Sets the GarageController holding all the controllers
-     *
-     * @param controller GarageController controller
-     */
-    public void setController(GarageController controller) {
-        this.controller = controller;
-    }
 
 
     /**
@@ -365,6 +295,7 @@ public class GarageController {
         }
     }
 
+    
     /**
      * Clears the given display of text and image(s)
      * @param display a string to represent the display to be cleared
@@ -392,7 +323,7 @@ public class GarageController {
 
 
     /**
-     * Populate the given display with the vehicle at the given index
+     * Populate the given display with the vehicle at the given index of vehicleData
      *
      * @param display   location to put the text
      * @param imageview path to vehicle image
@@ -446,8 +377,9 @@ public class GarageController {
 
 
     /**
-     * Method to call when next button is clicked
-     *
+     * Method to call when next button is clicked.
+     * Reshuffles vehicleData so the first three elements are the three to 
+     * be displayed in the user's garage.
      */
     @FXML
     public void nextBtnClicked() {
@@ -462,7 +394,8 @@ public class GarageController {
 
     /**
      * Method to call when prev button is clicked
-     *
+     * Reshuffles vehicleData so the first three elements are the three to 
+     * be displayed in the user's garage.
      */
     @FXML
     public void prevBtnClicked() {
