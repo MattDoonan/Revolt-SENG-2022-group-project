@@ -29,7 +29,6 @@ import javafx.stage.Stage;
 import seng202.team3.data.entity.Vehicle;
 import seng202.team3.logic.VehicleUpdateManager;
 
-
 /**
  * A vehicle editing controller
  *
@@ -38,54 +37,114 @@ import seng202.team3.logic.VehicleUpdateManager;
  */
 public class VehicleUpdateController {
 
+    /**
+     * The textfield for the vehicle's make
+     */
     @FXML
     private TextField makeText;
 
+    /**
+     * The textfield for the vehicle's model
+     */
     @FXML
     private TextField modelText;
 
+    /**
+     * The textfield for the vehicle's maximum range
+     */
     @FXML
     private TextField maxRangeText;
 
+    /**
+     * The textfield for the vehicle's current charge
+     */
     @FXML
     private TextField currChargeText;
 
+    /**
+     * Lable to display the name of the chosen vehicle image
+     */
     @FXML
     private Label imgName;
 
+    /**
+     * Lable to display the currently added connections
+     */
     @FXML
     private Label addedConnections;
 
+    /**
+     * Dropdown of the connector types
+     */
     @FXML
     private ComboBox<String> connectorType;
 
+    /**
+     * Button to save the changes to the database
+     */
     @FXML
     private Button saveChanges;
     
+    /**
+     * Used to get the current scene to close it
+     */
     @FXML
     private Label inputBox;
 
+    /**
+     * Save the selected image
+     */
     private Button saveImg = new Button("Select");
 
+    /**
+     * Cancel selecting an image
+     */
     private Button cancelImg = new Button("Cancel");
 
+    /**
+     * TActive vehicle
+     */
     private Vehicle selectedVehicle;
 
+    /**
+     * Active image
+     */
     private String selectedImg;
 
+    /**
+     * The vehicles connections
+     */
     private ArrayList<String> connections = new ArrayList<String>();
 
+    /**
+     * The images that the user can choose from (button form)
+     */
     private ObservableList<Button> imgBtns = FXCollections.observableArrayList();
 
+    /**
+     * The images that the user can choose from (names)
+     */
     private String[] imgNames = {"car_one.png", "car_two.png", "car_three.png",
         "truck_one.png", "truck_two.png"};
 
+    /**
+     * List of user input errors for adding/editing vehicles
+     */
     private ArrayList<String> errors = new ArrayList<>();
 
+    /**
+     * The popup for selecting an image
+     */
     private Stage imagePopup = new Stage();
 
+    /**
+     * The popup for an 'Other...' connector, allowing user to write in a unique value
+     */
     private Stage connectorPopup = new Stage();
 
+    /**
+     * The manager
+     */
     private VehicleUpdateManager manage = new VehicleUpdateManager();
 
     /**
@@ -101,7 +160,6 @@ public class VehicleUpdateController {
     public void setSelectedVehicle(Vehicle vehicle) {
         this.selectedVehicle = vehicle;
     }
-
 
     /**
      * Checks the given vehicle details for errors.
@@ -190,7 +248,6 @@ public class VehicleUpdateController {
         popupStage.close();
     }
 
-
     /**
      * Adds a new connection (for an EV) when the button is clicked
      */
@@ -222,7 +279,6 @@ public class VehicleUpdateController {
         }
     }
 
-
     /**
      * Lets the user select an image (from a list) to represent their vehicle
      */
@@ -235,7 +291,6 @@ public class VehicleUpdateController {
             cancelImg.setOnAction(e -> cancelImg());
             cancelImg.setLayoutX(280);
             cancelImg.setLayoutY(360);
-
 
             for (int i = 0; i < imgNames.length; i++) {
                 Image img = new Image(new FileInputStream("src/main/resources/images/"
@@ -253,7 +308,6 @@ public class VehicleUpdateController {
             logger.log(Level.SEVERE, "File not found.", e);
         }
     }
-
 
     /**
      * Initialises the pop-up window that allows a user to select
@@ -282,7 +336,6 @@ public class VehicleUpdateController {
         imagePopup.setScene(new Scene(root, 337, 400));
     }
 
-
     /**
      * Displays pop-up window that allows a user to select a 
      * vehicle image
@@ -294,7 +347,6 @@ public class VehicleUpdateController {
         imagePopup.showAndWait();
     }
 
-
     /**
      * Updates selectedImg to the ID of the currently-selected image
      * @param e ActionEvent
@@ -302,7 +354,6 @@ public class VehicleUpdateController {
     public void imgSelected(ActionEvent e) {
         selectedImg = ((Node) e.getSource()).getId();
     }
-
 
     /**
      * Saves the currently selected image for the user's vehicle
@@ -321,7 +372,6 @@ public class VehicleUpdateController {
         Stage stage = (Stage) saveImg.getScene().getWindow();
         stage.close();
     }
-
 
     /**
      * Displays all the info of the vehicle, if there is a vehicle
@@ -371,7 +421,6 @@ public class VehicleUpdateController {
         }
     }
 
-
     /**
      * Deletes the selected vehicle
      */
@@ -393,5 +442,6 @@ public class VehicleUpdateController {
         stage.close();
     }
 
-
 }
+
+
