@@ -164,7 +164,7 @@
             </ScrollPane>
             </items>
         </SplitPane>
-  <BorderPane fx:id="mainWindow" maxHeight="Infinity" maxWidth="Infinity" minWidth="0.0">
+  <BorderPane fx:id="mainWindow" maxHeight="Infinity" maxWidth="Infinity" minWidth="600.0" minHeight="400">
 <top>
 </top>
 </BorderPane>

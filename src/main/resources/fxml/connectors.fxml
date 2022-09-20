@@ -14,8 +14,8 @@
             <TableColumn fx:id="status" prefWidth="90.0" text="Status:" />
         </columns>
       </TableView>
-      <Button layoutX="33.0" layoutY="231.0" mnemonicParsing="false" onAction="#addConnector" text="Add Connector:" />
-      <Button layoutX="225.0" layoutY="231.0" mnemonicParsing="false" onAction="#editConnector" text="Edit Connector:" />
-      <Button layoutX="402.0" layoutY="231.0" mnemonicParsing="false" onAction="#deleteConnector" text="Delete Connector:" />
+      <Button layoutX="33.0" layoutY="231.0" mnemonicParsing="false" onAction="#addConnector" text="Add Connector" />
+      <Button layoutX="225.0" layoutY="231.0" mnemonicParsing="false" onAction="#editConnector" text="Edit Connector" />
+      <Button layoutX="402.0" layoutY="231.0" mnemonicParsing="false" onAction="#deleteConnector" text="Delete Connector" />
    </children>
 </AnchorPane>

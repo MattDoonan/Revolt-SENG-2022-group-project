@@ -113,9 +113,7 @@ public class ConnectorEditController {
     @FXML
     public void saveChanges() {
         Connector changedConnector;
-        String typeString = type.getText();
         String powerString = wattage.getText();
-        String statusString = status.getText();
         String currentString = current.getText();
         int points = 0;
         try {
@@ -123,32 +121,50 @@ public class ConnectorEditController {
         } catch (NumberFormatException e) {
             errors.add("Number of Charging Points needs to be an integer");
         }
-
-        if (connector == null) {
-            changedConnector = new Connector(typeString, powerString,
-                    statusString, currentString, points);
-            controller.getConnectorList().add(changedConnector);
-        } else {
-            changedConnector = new Connector(typeString,
-                    powerString, statusString, currentString, points, connector.getId());
+        if (currentString.length() == 0) {
+            errors.add("Must have a current, e.g. AC or DC");
         }
-        for (int i = 0; i < controller.getConnectorList().size(); i++) {
-            if (controller.getConnectorList().get(i) == connector) {
-                controller.getConnectorList().set(i, changedConnector);
+        if (powerString.length() == 0) {
+            errors.add("Must have a wattage, e.g. 24 kW");
+        }
+        String statusString = status.getText();
+        if (statusString.length() == 0) {
+            errors.add("Must have a status, e.g. Operative");
+        }
+        String typeString = type.getText();
+        if (typeString.length() == 0) {
+            errors.add("Must have a charger type e.g. CHAdeMO");
+        }
+        if (errors.isEmpty()) {
+            if (connector == null) {
+                changedConnector = new Connector(typeString, powerString,
+                        statusString, currentString, points);
+                controller.getConnectorList().add(changedConnector);
+            } else {
+                changedConnector = new Connector(typeString,
+                        powerString, statusString, currentString, points, connector.getId());
+            }
+
+            for (int i = 0; i < controller.getConnectorList().size(); i++) {
+                if (controller.getConnectorList().get(i) == connector) {
+                    controller.getConnectorList().set(i, changedConnector);
+                }
             }
         }
         if (errors.isEmpty()) {
             stage = (Stage) status.getScene().getWindow();
             stage.close();
+        } else {
+            launchErrorPopUps();
+            errors = new ArrayList<>();
         }
-        launchErrorPopUps();
     }
 
     /**
      * Launches an error popup when trying to do illegal things
      */
     public void launchErrorPopUps() {
-
+        stage = (Stage) status.getScene().getWindow();
         try {
             stage.setAlwaysOnTop(false);
             FXMLLoader error = new FXMLLoader(getClass().getResource(

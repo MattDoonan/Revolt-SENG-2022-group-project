@@ -34,8 +34,8 @@ public class MainWindow extends Application {
         MenuController baseController = baseLoader.getController();
         baseController.init(primaryStage);
         primaryStage.setTitle("Revolt App");
-        Scene scene = new Scene(root, 1080, 720);
-        baseController.launchWelcome();
+        Scene scene = new Scene(root, 1500, 820);
+        baseController.initHome();
         primaryStage.setScene(scene);
         primaryStage.show();
     }

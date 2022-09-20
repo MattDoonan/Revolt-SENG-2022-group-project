@@ -172,22 +172,6 @@ public class MenuController {
     }
 
     /**
-     * Initialises the welcome page;
-     */
-    public void launchWelcome() {
-        try {
-            FXMLLoader mainScene = new FXMLLoader(getClass()
-                    .getResource("/fxml/welcome_page.fxml"));
-            Parent mainNode = mainScene.load();
-            WelcomeController controller = mainScene.getController();
-            controller.init(stage, this);
-            menuWindow.setCenter(mainNode);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
      * Loads the vehicle screen upon click
      */
     public void loadVehicleScreen() {

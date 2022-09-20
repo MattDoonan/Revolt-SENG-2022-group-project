@@ -83,6 +83,14 @@ public class JavaScriptBridge {
      * @param address String of the address
      */
     public void addLocationName(String address) {
+        String[] splitAddress = address.split("[,]", 10);
+        if (splitAddress.length > 6) {
+            address = "";
+            address += splitAddress[0] + splitAddress[1] + ", "
+                    + splitAddress[2] + ", " + splitAddress[3] + ", "
+                    + splitAddress[splitAddress.length - 2] + ", "
+                    + splitAddress[splitAddress.length - 1];
+        }
         GeoLocationHandler.getInstance().setCoordinate(GeoLocationHandler
                 .getInstance().getCoordinate(), address);
         refreshCoordinates();
