@@ -1,4 +1,4 @@
-package seng202.team3.testFX;
+package seng202.team3.testFx;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -12,18 +12,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.junit.jupiter.api.Test;
+import org.testfx.api.FxRobotException;
+import org.testfx.framework.junit5.ApplicationTest;
+import seng202.team3.testF
 import seng202.team3.data.entity.Charger;
 import seng202.team3.gui.MainWindow;
-import seng202.team3.gui.TableController;
-import seng202.team3.testfx.TestFXBase;
-
-/**
- * Test the table searching GUI interface
- * 
- * @author Matthew Doonan
- * @version 1.0.0, Sep 22
- */
-public class TableSearchFilterTestFX extends TestFXBase {
+import seng202.team3.gui.TableController;tends TestFXBase {
 
     private TableController controller;
 
