@@ -35,7 +35,7 @@ import seng202.team3.data.entity.Vehicle;
  * @author Matthew Doonan, Harrison Tyson
  * @version 2.1.2
  */
-public class SqlInterpreter implements DataManager {
+public class SqlInterpreter implements DataReader {
 
     /**
      * URL of database path

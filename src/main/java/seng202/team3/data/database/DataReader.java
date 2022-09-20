@@ -9,7 +9,7 @@ import java.util.List;
  * @author Harrison Tyson
  * @version 1.0.0, Aug 22
  */
-public interface DataManager {
+public interface DataReader {
     /**
      * Queries data from the relevant data source
      *

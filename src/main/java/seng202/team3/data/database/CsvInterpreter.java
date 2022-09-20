@@ -17,7 +17,7 @@ import org.javatuples.Triplet;
  * @author Harrison Tyson
  * @version 1.2.0, Aug 22
  */
-public class CsvInterpreter implements DataManager {
+public class CsvInterpreter implements DataReader {
 
     /**
      * Default location to look for files
