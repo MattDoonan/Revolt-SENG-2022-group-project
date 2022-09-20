@@ -1,4 +1,4 @@
-package seng202.team3.logic;
+package seng202.team3.unitTest.logic;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -14,6 +14,7 @@ import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
 import seng202.team3.data.entity.Vehicle;
+import seng202.team3.logic.JourneyManager;
 
 /**
  * Unit tests for {@link JourneyManager JourneyManager} class in Logic
@@ -65,7 +66,6 @@ public class JourneyManagerTest {
         manager = new JourneyManager();
         manager.setStart(coord1);
         manager.setEnd(coord3);
-        // manager.startNewJourney();
     }
 
     /**
