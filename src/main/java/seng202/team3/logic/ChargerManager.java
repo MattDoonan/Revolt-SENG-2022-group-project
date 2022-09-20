@@ -67,7 +67,7 @@ public class ChargerManager {
      * @param location {@link Coordinate} A coordinate of the location to calculate
      *                 distance from
      * @param distance double, the maximum distance to filter chargers by
-     * @return ArrayList<> of the {@link Charger} chargers sorted from closest to
+     * @return ArrayList of the {@link Charger} chargers sorted from closest to
      *         furthest
      */
     public ArrayList<Charger> getNearbyChargers(ArrayList<Charger> chargers, Coordinate location,

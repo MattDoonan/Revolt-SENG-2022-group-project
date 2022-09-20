@@ -32,8 +32,8 @@ import seng202.team3.data.entity.Vehicle;
 /**
  * Class that interacts with the SQLite database
  * 
- * @author Matthew Doonan
- * @version 1.0.0
+ * @author Matthew Doonan, Harrison Tyson
+ * @version 2.1.2
  */
 public class SqlInterpreter implements DataManager {
 
@@ -41,8 +41,19 @@ public class SqlInterpreter implements DataManager {
 
     private static final Logger logManager = LogManager.getLogger();
 
+    /**
+     * Singleton instance
+     */
     private static SqlInterpreter instance = null;
+
+    /**
+     * Default db connection
+     */
     Connection conn;
+
+    /**
+     * Control db write access
+     */
     static Semaphore mutex = new Semaphore(1);
 
     /**
@@ -65,13 +76,15 @@ public class SqlInterpreter implements DataManager {
             try {
                 addChargerCsvToData("charger");
             } catch (IOException e) {
-                // Do Nothing
+                // Do Nothing TODO: send this to higher layer
             }
         }
     }
 
     /**
      * Adds all the charger data stored in the CSV file to the database
+     * 
+     * @param source the file location to get the data from
      */
     public void addChargerCsvToData(String source) throws IOException {
         Query q = new QueryBuilderImpl().withSource(source).build();
@@ -186,7 +199,7 @@ public class SqlInterpreter implements DataManager {
     /**
      * Creates connection to the database
      * 
-     * @return the connection
+     * @return the new connection
      */
     public Connection createConnection() {
         Connection connection = null;
@@ -276,7 +289,7 @@ public class SqlInterpreter implements DataManager {
         List<Object> objects = new ArrayList<>();
         String sql = "SELECT * FROM " + query.getSource();
 
-        if (objectToInterpretAs == Charger.class) {
+        if (objectToInterpretAs == Charger.class) { // Add connectors to charger reading
             sql += " INNER JOIN connector ON connector.chargerid = charger.chargerid";
         }
 
@@ -512,6 +525,7 @@ public class SqlInterpreter implements DataManager {
      * 
      * @param c          charger object
      * @param connection db connection
+     * @throws IOException if db writing fails
      */
     public void writeCharger(Connection connection, Charger c) throws IOException {
         String toAdd = "INSERT INTO charger "
@@ -590,7 +604,7 @@ public class SqlInterpreter implements DataManager {
     }
 
     /**
-     * Receives a list of chargers and sends them to writeCharger
+     * Receives a list of chargers writes them using threading
      * 
      * @param chargers array list of charger objects
      */
@@ -686,6 +700,7 @@ public class SqlInterpreter implements DataManager {
      * Recievies a list of connectors and calls writeConnector to add it to the
      * database
      * 
+     * @see #writeConnector(Connection, Connector, int)
      * @param connectors an Array list of Connector objects
      * @param chargerId  Integer representing the associated charger
      */
@@ -699,6 +714,8 @@ public class SqlInterpreter implements DataManager {
 
     /**
      * Write list of connectors with new connection
+     * 
+     * @see #writeConnector(Connection, Connector, int)
      */
     public void writeConnector(ArrayList<Connector> connectors, int chargerId) throws IOException {
         writeConnector(createConnection(), connectors, chargerId);
@@ -706,6 +723,8 @@ public class SqlInterpreter implements DataManager {
 
     /**
      * Write single connector with new connection
+     * 
+     * @see #writeConnector(Connection, Connector, int)
      */
     public void writeConnector(Connector connector, int chargerId) throws IOException {
         writeConnector(createConnection(), connector, chargerId);
@@ -857,37 +876,64 @@ public class SqlInterpreter implements DataManager {
      * Allows threading for writing chargers to db to improve performance
      * 
      * @author Harrison Tyson
-     * @version 1.0.0, Sep 22
+     * @version 1.2.0, Sep 22
      */
     private class WriteChargerThread extends Thread {
-        static int threadCount = 5;
+        /**
+         * Number of threads
+         */
+        static int threadCount = 4;
+
+        /**
+         * List of chargers to write
+         */
         ArrayList<Object> chargersToWrite;
+
+        /**
+         * Thread db connection
+         */
         Connection conn;
 
+        /**
+         * Initialize thread
+         * 
+         * @param chargersToWrite sublist of chargers for thread to write
+         */
         public WriteChargerThread(ArrayList<Object> chargersToWrite) {
             this.chargersToWrite = chargersToWrite;
             this.conn = createConnection();
+        }
+
+        /**
+         * Add a charger to the thread to write
+         * 
+         * @param c new charger to write
+         */
+        public void addCharger(Charger c) {
+            chargersToWrite.add(c);
+        }
+
+        /**
+         * Code to execute in the thread
+         */
+        @Override
+        public void run() {
+            // Disable auto commiting
             try {
                 this.conn.setAutoCommit(false);
             } catch (SQLException e) {
                 e.printStackTrace(); // TODO: handle exception
             }
-        }
 
-        public void addCharger(Charger c) {
-            chargersToWrite.add(c);
-        }
-
-        public void run() {
-
-            for (Object c : chargersToWrite) {
+            for (Object c : chargersToWrite) { // Create SQL write statements
                 try {
                     writeCharger(conn, (Charger) c);
                 } catch (IOException e) {
                     e.printStackTrace(); // TODO: handle this exception
                 }
             }
-            System.out.println("about to write");
+
+            // Pseudo-batch write all accumulated statements
             try {
                 mutex.acquire();
                 this.conn.commit();
