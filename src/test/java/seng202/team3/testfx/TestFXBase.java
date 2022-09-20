@@ -37,7 +37,10 @@ public abstract class TestFXBase extends ApplicationTest {
         release(new MouseButton[] {});
     }
 
-    /* Helper method to retrieve Java FX GUI Components */
+    /**
+     * Helper method to retrieve Java FX GUI Components
+     */
+    @SuppressWarnings("unchecked")
     public <T extends Node> T find(final String query) {
         return (T) lookup(query).queryAll().iterator().next();
     }

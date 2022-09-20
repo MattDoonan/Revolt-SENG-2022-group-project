@@ -23,7 +23,7 @@ import seng202.team3.logic.Calculations;
  * @author Michelle Hsieh
  * @version 1.0.0, Sep 22
  */
-public class SearchFilterTextFx extends TestFXBase {
+public class SearchFilterTextFX extends TestFXBase {
 
     private MainController controller;
 
