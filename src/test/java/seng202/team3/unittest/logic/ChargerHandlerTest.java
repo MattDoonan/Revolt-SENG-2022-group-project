@@ -3,10 +3,14 @@ package seng202.team3.unittest.logic;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import javax.management.InstanceAlreadyExistsException;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
@@ -28,13 +32,25 @@ public class ChargerHandlerTest {
     ChargerHandler manager;
     MainManager mainManager;
 
+    @BeforeAll
+    static void intialize() throws InstanceAlreadyExistsException {
+        SqlInterpreter.removeInstance();
+        SqlInterpreter.initialiseInstanceWithUrl(
+                "jdbc:sqlite:./src/test/resources/test_database.db");
+    }
+
     /**
      * BeforeEach managers setup
+     * 
+     * @throws IOException cannot import data into database
      */
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws IOException {
         manager = new ChargerHandler();
         mainManager = new MainManager();
+        SqlInterpreter.getInstance().defaultDatabase();
+        SqlInterpreter.getInstance()
+                .addChargerCsvToData("src/test/resources/csvtest/filtering.csv");
     }
 
     /**
@@ -55,7 +71,8 @@ public class ChargerHandlerTest {
     public void makeAllChargersTestSizeGreater() {
         mainManager.resetQuery();
         mainManager.makeAllChargers();
-        assertTrue(mainManager.getCloseChargerData().size() > 344);
+        System.out.println(mainManager.getCloseChargerData().size());
+        assertTrue(mainManager.getCloseChargerData().size() > 48);
     }
 
     /**
