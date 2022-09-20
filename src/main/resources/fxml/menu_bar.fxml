@@ -26,7 +26,7 @@
                   <Font name="FreeSans" size="24.0" />
                </font>
             </Button>
-            <Button maxHeight="60.0" minHeight="60.0" mnemonicParsing="false" onAction="#launchJourneyScreen" prefHeight="60.0" prefWidth="250.0" style="-fx-background-color: #e06666;" text="Plan Journey" textFill="WHITE">
+            <Button maxHeight="60.0" minHeight="60.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="250.0" style="-fx-background-color: #e06666;" text="Plan Journey" textFill="WHITE">
                <font>
                   <Font name="FreeSans" size="24.0" />
                </font>

@@ -28,8 +28,6 @@ import seng202.team3.logic.TableManager;
  */
 public class TableController {
 
-    private Stage stage;
-
     private TableManager manage;
 
     @FXML
@@ -169,10 +167,8 @@ public class TableController {
     /**
      * Initialize the window
      *
-     * @param stage Top level container for this window
      */
-    public void init(Stage stage) {
-        this.stage = stage;
+    public void init() {
         manage = new TableManager();
         manage.resetQuery();
         tableMaker();

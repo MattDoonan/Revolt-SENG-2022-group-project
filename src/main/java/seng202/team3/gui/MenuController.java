@@ -20,7 +20,6 @@ public class MenuController {
 
     private Stage stage;
     private static MainController controller;
-    private static JourneyController journeyController;
 
     @FXML
     private BorderPane menuWindow;
@@ -59,15 +58,6 @@ public class MenuController {
     }
 
     /**
-     * Gets the static Journey Controller
-     *
-     * @return {@link JourneyController} the journeycontroller of this run
-     */
-    public JourneyController getJourneyController() {
-        return journeyController;
-    }
-
-    /**
      * Loads the home upon clicking
      */
     @FXML
@@ -86,21 +76,6 @@ public class MenuController {
             WelcomeController controller = mainScene.getController();
             controller.init(stage, this);
             menuWindow.setCenter(mainNode);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Launches the Journey Screen
-     */
-    public void launchJourneyScreen() {
-        try {
-            FXMLLoader journeyLoader = new FXMLLoader(getClass().getResource("/fxml/journey.fxml"));
-            Parent journeyViewParent = journeyLoader.load();
-            journeyController = journeyLoader.getController();
-            journeyController.init(stage);
-            menuWindow.setCenter(journeyViewParent);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -17,7 +17,7 @@
             <Font size="17.0" />
          </font>
       </Button>
-      <Button onMouseClicked="#launchJourneys" layoutX="349.0" layoutY="218.0" mnemonicParsing="false" prefHeight="89.0" prefWidth="160.0" text="Plan Journey" textAlignment="CENTER" wrapText="true">
+      <Button layoutX="349.0" layoutY="218.0" mnemonicParsing="false" prefHeight="89.0" prefWidth="160.0" text="Plan Journey" textAlignment="CENTER" wrapText="true">
          <font>
             <Font size="17.0" />
          </font>

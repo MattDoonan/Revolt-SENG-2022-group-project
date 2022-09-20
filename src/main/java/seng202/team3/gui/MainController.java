@@ -394,7 +394,7 @@ public class MainController {
                     .getResource("/fxml/main_table.fxml"));
             Parent mainNode = mainScene.load();
             TableController controller = mainScene.getController();
-            controller.init(this.stage);
+            controller.init();
             menuWindow.setCenter(mainNode);
         } catch (IOException e) {
             e.printStackTrace();

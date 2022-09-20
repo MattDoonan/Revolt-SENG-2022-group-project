@@ -47,11 +47,6 @@ public class SqlInterpreter implements DataManager {
     private static SqlInterpreter instance = null;
 
     /**
-     * Default db connection
-     */
-    Connection conn;
-
-    /**
      * Control db write access
      */
     static Semaphore mutex = new Semaphore(1);
@@ -657,7 +652,7 @@ public class SqlInterpreter implements DataManager {
                 + "connectorstatus = ?, chargerid = ?, connectortype = ?";
 
         if (chargerId == 0) {
-            try (Statement stmt = conn.createStatement();
+            try (Statement stmt = connection.createStatement();
                     ResultSet rs = stmt.executeQuery("SELECT chargerid "
                             + "FROM charger ORDER BY chargerid DESC LIMIT 0,1")) {
                 chargerId = rs.getInt("chargerid");
