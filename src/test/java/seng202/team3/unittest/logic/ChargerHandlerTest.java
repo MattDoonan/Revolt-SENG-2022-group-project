@@ -4,11 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
@@ -24,7 +22,7 @@ import seng202.team3.logic.MainManager;
 public class ChargerHandlerTest {
 
     /**
-     * Creates new {@link ChargerHandler ChargerHandler} manager and 
+     * Creates new {@link ChargerHandler ChargerHandler} manager and
      * {@link MainManager MainManager} manager which extends ChargerHandler
      */
     ChargerHandler manager;
@@ -49,7 +47,8 @@ public class ChargerHandlerTest {
     }
 
     /**
-     * Tests the creation of a {@link Chargers Charger} ArrayList using makeAllChargers
+     * Tests the creation of a {@link Chargers Charger} ArrayList using
+     * makeAllChargers
      * Tests edge case of size, makes sure greater than 344 elements
      */
     @Test
@@ -60,7 +59,8 @@ public class ChargerHandlerTest {
     }
 
     /**
-     * Tests the creation of a {@link Chargers Charger} ArrayList using makeAllChargers
+     * Tests the creation of a {@link Chargers Charger} ArrayList using
+     * makeAllChargers
      * Tests edge case of size, makes sure less than 346 elements
      */
     @Test
@@ -69,11 +69,11 @@ public class ChargerHandlerTest {
         mainManager.makeAllChargers();
         assertTrue(mainManager.getCloseChargerData().size() < 346);
     }
-    
+
     /**
      * Tests the use of resetQuery
      */
-    @Test 
+    @Test
     public void resetQueryTest() {
 
     }
@@ -82,7 +82,7 @@ public class ChargerHandlerTest {
      * Test the use of getConnecters which gets {@link Connecter Connectors}
      * of a {@link Charger Charger}
      */
-    @Test 
+    @Test
     public void getConnectersTest() {
         Connector dummyConnector1 = new Connector("ChardaMo", "powerDraw", "Not in use", "AC", 2);
         Connector dummyConnector2 = new Connector("ChardaMo", "powerDraw", "Not in use", "DC", 4);
@@ -92,11 +92,10 @@ public class ChargerHandlerTest {
         connectorList.add(dummyConnector2);
 
         Coordinate testCoord = new Coordinate(1.1, 2.3, -43.53418, 172.627572, "CHHosp");
-        Charger testCharger = new Charger(connectorList, "Hosp", testCoord, 2, 1.2, "operator", "owner","01-01-2000", true,true,true,true);
+        Charger testCharger = new Charger(connectorList, "Hosp", testCoord, 2, 1.2,
+                "operator", "owner", "01-01-2000",
+                true, true, true, true);
         assertEquals(" AC DC", manager.getConnectors(testCharger));
     }
-
-
-
 
 }

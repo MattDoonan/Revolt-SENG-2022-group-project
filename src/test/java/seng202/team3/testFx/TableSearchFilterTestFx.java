@@ -1,11 +1,7 @@
-package seng202.team3.testFx;
+package seng202.team3.testfx;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
-
-import org.junit.jupiter.api.Test;
-import org.testfx.api.FxRobotException;
-import org.testfx.framework.junit5.ApplicationTest;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -15,10 +11,17 @@ import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.testfx.api.FxRobotException;
 import org.testfx.framework.junit5.ApplicationTest;
-import seng202.team3.testF
 import seng202.team3.data.entity.Charger;
 import seng202.team3.gui.MainWindow;
-import seng202.team3.gui.TableController;tends TestFXBase {
+import seng202.team3.gui.TableController;
+
+/**
+ * Tests for charger searching from table GUI view
+ * 
+ * @author Matthew Doonan
+ * @version 1.0.0, Sep 22
+ */
+public class TableSearchFilterTestFx extends TestFxBase {
 
     private TableController controller;
 
