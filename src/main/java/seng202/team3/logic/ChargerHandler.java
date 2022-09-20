@@ -3,6 +3,7 @@ package seng202.team3.logic;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seng202.team3.data.database.ComparisonType;
@@ -13,7 +14,7 @@ import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
 
 /**
- * An abstract class that deals with querying charger data and positional data
+ * A class that deals with querying charger data and positional data
  *
  * @author Michelle Hsieh
  * @version 1.0.0, Sep 22
