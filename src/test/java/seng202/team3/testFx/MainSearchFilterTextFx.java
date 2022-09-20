@@ -1,4 +1,4 @@
-package seng202.team3.testfx;
+package seng202.team3.testFx;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -10,6 +10,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
+import seng202.team3.testFx.TestFxBase;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.gui.MainController;

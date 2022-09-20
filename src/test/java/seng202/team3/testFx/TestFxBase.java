@@ -1,4 +1,4 @@
-package seng202.team3.testfx;
+package seng202.team3.testFx;
 
 import java.util.concurrent.TimeoutException;
 import javafx.scene.Node;
