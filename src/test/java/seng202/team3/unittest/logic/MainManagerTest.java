@@ -40,7 +40,7 @@ public class MainManagerTest {
     static void intialize() throws InstanceAlreadyExistsException {
         SqlInterpreter.removeInstance();
         db = SqlInterpreter.initialiseInstanceWithUrl(
-                "jdbc:sqlite:./src/test/resources/test_database.db");
+                "jdbc:sqlite:./target/test-classes/test_database.db");
     }
 
     /**

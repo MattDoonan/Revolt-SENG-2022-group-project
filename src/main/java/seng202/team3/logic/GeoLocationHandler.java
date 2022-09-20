@@ -54,7 +54,8 @@ public class GeoLocationHandler {
     /**
      * Sets the coordinate
      *
-     * @param coordinate the {@link seng202.team3.data.entity.Coordinate} to set the coordinate
+     * @param coordinate the {@link seng202.team3.data.entity.Coordinate} to set the
+     *                   coordinate
      * @param name       the address of the coordinate
      */
     public void setCoordinate(Coordinate coordinate, String name) {

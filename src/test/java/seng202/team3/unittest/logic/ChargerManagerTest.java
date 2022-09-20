@@ -46,7 +46,7 @@ public class ChargerManagerTest {
     static void intialize() throws InstanceAlreadyExistsException {
         SqlInterpreter.removeInstance();
         db = SqlInterpreter.initialiseInstanceWithUrl(
-                "jdbc:sqlite:./src/test/resources/test_database.db");
+                "jdbc:sqlite:./target/test-classes/test_database.db");
         db.defaultDatabase();
 
         Connector dummyConnector1 = new Connector("ChardaMo", "AC", "Available", "123", 3);
