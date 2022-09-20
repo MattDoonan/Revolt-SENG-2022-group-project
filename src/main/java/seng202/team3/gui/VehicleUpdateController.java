@@ -26,7 +26,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.TilePane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Vehicle;
 import seng202.team3.logic.VehicleUpdateManager;
 
@@ -336,7 +335,13 @@ public class VehicleUpdateController {
             addedConnections.setText(vehicle.getConnectors().toString());
             currChargeText.setText(vehicle.getBatteryPercent().toString());
             imgName.setText(vehicle.getImgPath().replace("src/main/resources/images/", ""));
+            selectedImg = vehicle.getImgPath().replace("src/main/resources/images/", "");
             connections = vehicle.getConnectors();
+            String strConns = "";
+            for (String connection : connections) {
+                strConns += "Connection: " + connection;
+            }
+            addedConnections.setText(strConns);
         }
     }
 
