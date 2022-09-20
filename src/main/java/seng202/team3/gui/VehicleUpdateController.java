@@ -26,9 +26,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.TilePane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Vehicle;
-import seng202.team3.logic.VehicleUpdateManager;
-
 
 /**
  * A vehicle editing controller
@@ -46,9 +45,6 @@ public class VehicleUpdateController {
 
     @FXML
     private TextField maxRangeText;
-
-    @FXML
-    private TextField currChargeText;
 
     @FXML
     private Label imgName;
@@ -71,7 +67,7 @@ public class VehicleUpdateController {
 
     private Vehicle selectedVehicle;
 
-    private String selectedImg;
+    private String selectedImg = "car_one.png";
 
     private ArrayList<String> connections = new ArrayList<String>();
 
@@ -86,15 +82,12 @@ public class VehicleUpdateController {
 
     private Stage connectorPopup = new Stage();
 
-    private VehicleUpdateManager manage = new VehicleUpdateManager();
-
     /**
      * Initialises the Vehicle editing
      */
     public VehicleUpdateController() {
     }
 
-    
     /**
      * Set selectedVehicle
      * @param vehicle the vehicle to set selectedVehicle to
@@ -105,8 +98,7 @@ public class VehicleUpdateController {
 
 
     /**
-     * Checks the given vehicle details for errors.
-     * If no errors, calls manager to save vehicle to database
+     * Saves the changes; if new, will use the coordinates to make an entry
      */
     @FXML
     public void saveChanges() {
@@ -114,78 +106,57 @@ public class VehicleUpdateController {
         if (selectedVehicle != null) {
             if (selectedImg != null) {
                 selectedVehicle.setImgPath("src/main/resources/images/" + selectedImg);
-            } else {
-                selectedVehicle.setImgPath("src/main/resources/images/null");
             }
             selectedVehicle.setConnectors(connections);
             selectedVehicle.setMaxRange(Integer.parseInt(maxRangeText.getText()));
             selectedVehicle.setModel(modelText.getText());
             selectedVehicle.setMake(makeText.getText());
-            selectedVehicle.setBatteryPercent(Double.parseDouble(currChargeText.getText()));
             vehicle = selectedVehicle;
         } else {
             vehicle = new Vehicle();
-        }
 
-        try {
-            vehicle.setMake(makeText.getText());
-        } catch (NullPointerException e) {
-            errors.add("Vehicle make required.");
-        }
-        try {
-            vehicle.setModel(modelText.getText());
-        } catch (NullPointerException e) {
-            errors.add("Vehicle model required.");
-        }
-        try {
-            if (Integer.parseInt(maxRangeText.getText()) < 0) {
-                errors.add("A vehicle's maximum range cannot be negative.");
+            if (makeText.getText().equals("")) {
+                errors.add("Vehicle make required.");
             } else {
+                vehicle.setMake(makeText.getText());
+            }
+            if (modelText.getText().equals("")) {
+                errors.add("Vehicle model required.");
+            } else {
+                vehicle.setModel(modelText.getText());
+            }
+            try {
                 vehicle.setMaxRange(Integer.parseInt(maxRangeText.getText()));
+            } catch (NumberFormatException e) {
+                errors.add("A vehicle's maximum range must be a whole number.");
             }
-        } catch (NumberFormatException e) {
-            errors.add("A vehicle's maximum range must be a whole number.");
-        }
-        try {
-            if (Double.parseDouble(currChargeText.getText()) < 0) {
-                errors.add("A vehicle's current charge cannot be negative.");
+            if (connections.size() == 0) {
+                errors.add("A vehicle must have at least one connector.");
             } else {
-                vehicle.setBatteryPercent(Double.parseDouble(currChargeText.getText()));
+                vehicle.setConnectors(connections);
             }
-        } catch (NumberFormatException e) {
-            if (!currChargeText.getText().equals("")) {
-                errors.add("A vehicle's current charge must be a number.");
-            }
-        }
-        if (connections.size() == 0) {
-            errors.add("A vehicle must have at least one connector.");
-        } else {
-            vehicle.setConnectors(connections);
-        }
-        if (selectedImg != null) {
             vehicle.setImgPath("src/main/resources/images/" + selectedImg);
-        } else {
-            vehicle.setImgPath("src/main/resources/images/null");
-        }
-
-        if (vehicle.getBatteryPercent() == null) {
             vehicle.setBatteryPercent(100.0);
+            
+            if (errors.size() == 0) {
+                try {
+                    SqlInterpreter.getInstance().writeVehicle(vehicle);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    makeText.setText(null);
+                    modelText.setText(null);
+                    maxRangeText.setText(null);
+                    addedConnections.setText(null);
+                    imgName.setText(null);
+                    connections = new ArrayList<>();
+                    connectorType.setPromptText("Connector Type");
+                }
+            } else {
+                launchErrorPopUps();
+                errors.clear();
+            }
         }
-
-        if (errors.size() == 0) {
-            manage.saveVehicle(vehicle);
-            makeText.setText(null);
-            modelText.setText(null);
-            maxRangeText.setText(null);
-            addedConnections.setText(null);
-            imgName.setText(null);
-            connections = new ArrayList<>();
-            connectorType.setPromptText("Connector Type");
-        } else {
-            launchErrorPopUps();
-            errors.clear();
-        }
-        
         selectedVehicle = null;
         Stage popupStage = (Stage) saveChanges.getScene().getWindow();
         popupStage.close();
@@ -225,7 +196,7 @@ public class VehicleUpdateController {
 
 
     /**
-     * Lets the user select an image (from a given list) to represent their vehicle
+     * Lets the user select an image (from a list) to represent their vehicle
      */
     @FXML
     public void selectImg() {
@@ -236,6 +207,8 @@ public class VehicleUpdateController {
             cancelImg.setOnAction(e -> cancelImg());
             cancelImg.setLayoutX(280);
             cancelImg.setLayoutY(360);
+
+
             for (int i = 0; i < imgNames.length; i++) {
                 Image img = new Image(new FileInputStream("src/main/resources/images/"
                     + imgNames[i]));
@@ -304,14 +277,13 @@ public class VehicleUpdateController {
 
 
     /**
-     * Sets the currently selected image for the user's vehicle
+     * Saves the currently selected image for the user's vehicle
      */
     public void setImg() {
         imgName.setText(selectedImg);
         Stage popupStage = (Stage) saveImg.getScene().getWindow();
         popupStage.close();
     }
-
 
     /**
      * Cancels the user's currently-selected image and closes the pop-up
@@ -333,21 +305,13 @@ public class VehicleUpdateController {
             modelText.setText(vehicle.getModel());
             maxRangeText.setText(Integer.toString(vehicle.getMaxRange()));
             addedConnections.setText(vehicle.getConnectors().toString());
-            currChargeText.setText(vehicle.getBatteryPercent().toString());
             imgName.setText(vehicle.getImgPath().replace("src/main/resources/images/", ""));
-            selectedImg = vehicle.getImgPath().replace("src/main/resources/images/", "");
             connections = vehicle.getConnectors();
-            String strConns = "";
-            for (String connection : connections) {
-                strConns += "Connection: " + connection;
-            }
-            addedConnections.setText(strConns);
         }
     }
 
-
     /**
-     * Launches an error popup when a user's input(s) are invalid 
+     * Launches an error popup when trying to do illegal things
      */
     public void launchErrorPopUps() {
         try {
@@ -374,18 +338,22 @@ public class VehicleUpdateController {
 
 
     /**
-     * Deletes the selected vehicle (selectedVehicle)
+     * Deletes the selected vehicle
      */
     @FXML
     public void confirmDelete() {
         if (selectedVehicle != null) {
-            manage.deleteVehicle(selectedVehicle);
-            selectedVehicle = null;
+            try {
+                SqlInterpreter.getInstance().deleteData("vehicle", 
+                    selectedVehicle.getVehicleId());
+                selectedVehicle = null;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         cancel();
     }
 
-    
     /**
      * Cancels and closes the window
      */
