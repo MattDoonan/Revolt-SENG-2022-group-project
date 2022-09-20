@@ -21,32 +21,57 @@ import seng202.team3.data.entity.Connector;
  */
 public class ConnectorController {
 
+    /**
+     * List of editable connectors
+     */
     private ObservableList<Connector> connectorList;
 
+    /**
+     * Column mapping connectors to their currents
+     */
     @FXML
     private TableColumn<Connector, String> current;
 
+    /**
+     * Column mapping connectors to their power draw
+     */
     @FXML
     private TableColumn<Connector, String> wattage;
 
+    /**
+     * Column mapping connectors to their charging points
+     */
     @FXML
     private TableColumn<Connector, Integer> chargingPoints;
 
+    /**
+     * Column mapping connectors to their types
+     */
     @FXML
     private TableColumn<Connector, String> connectorTypes;
 
+    /**
+     * Column mapping connectors to their operative status
+     */
     @FXML
     private TableColumn<Connector, String> status;
 
+    /**
+     * Table view of connectors
+     */
     @FXML
     private TableView<Connector> connectorTable;
 
+    /**
+     * Screen for displaying connector editing
+     */
     private Stage stage;
 
     /**
-     * Initialises the connectorcontroller
+     * Unused constructor
      */
     public ConnectorController() {
+        // Unused
     }
 
     /**
@@ -79,7 +104,7 @@ public class ConnectorController {
     /**
      * Gets the connectorlist
      *
-     * @return and observable list of {@link Connector}s
+     * @return and observable list of {@link seng202.team3.data.entity.Connector}s
      */
     public ObservableList<Connector> getConnectorList() {
         return connectorList;
@@ -126,7 +151,8 @@ public class ConnectorController {
     /**
      * Launches the editable portion
      *
-     * @param connector the {@link Connector} for the connector info. Null if
+     * @param connector the {@link seng202.team3.data.entity.Connector} for the
+     *                  connector info. Null if
      *                  adding.
      */
     public void launchEditable(Connector connector) {

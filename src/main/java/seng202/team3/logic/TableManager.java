@@ -14,6 +14,7 @@ import seng202.team3.data.entity.Coordinate;
 public class TableManager extends ChargerHandler implements ChargerInterface {
 
     /**
+     * {@inheritDoc}
      * Adds a charger at a specified coordinate
      */
     @Override
@@ -26,8 +27,8 @@ public class TableManager extends ChargerHandler implements ChargerInterface {
     }
 
     /**
+     * {@inheritDoc}
      * Removes the selected charger and replaces it with null
-     *
      */
     @Override
     public void deleteCharger() {

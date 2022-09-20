@@ -61,7 +61,6 @@ public class MiniMapController {
 
     /**
      * Updates the coordinate in the TableManager
-     *
      */
     @FXML
     public void getCoordinateWithAddress() {
@@ -73,7 +72,8 @@ public class MiniMapController {
     /**
      * Sets the table manager to associate the manager with the
      *
-     * @param tableManager the {@link TableManager} which will store the coordinate
+     * @param tableManager the {@link seng202.team3.logic.TableManager} which will
+     *                     store the coordinate
      */
     public void setManager(TableManager tableManager) {
         manager = tableManager;

@@ -18,15 +18,31 @@ import javafx.stage.Stage;
  */
 public class ErrorController {
 
+    /**
+     * Active screen
+     */
     private Stage stage;
+
+    /**
+     * List of errors to be displayed
+     */
     private ObservableList<String> errorList;
 
+    /**
+     * Table column mapping error names to messages
+     */
     @FXML
     private TableColumn<String, String> errors;
 
+    /**
+     * Prompt description of where error occured
+     */
     @FXML
     private Label prompt;
 
+    /**
+     * Table to display error messages
+     */
     @FXML
     private TableView<String> table;
 
@@ -34,6 +50,7 @@ public class ErrorController {
      * Blank initialiser
      */
     public ErrorController() {
+        // Unused
     }
 
     /**
@@ -45,7 +62,6 @@ public class ErrorController {
 
     /**
      * Displays the errors and solutions as an observable list
-     *
      */
     public void displayErrors() {
         stage.setAlwaysOnTop(true);

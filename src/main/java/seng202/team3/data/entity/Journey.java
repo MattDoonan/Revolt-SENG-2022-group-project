@@ -1,16 +1,17 @@
 package seng202.team3.data.entity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Representation of a past or current Journey
- * 
+ *
  * @author Angus Kirtlan
  * @version 1.0.0, Aug 22
  */
 public class Journey {
     /** {@link Charger Chargers} used on journey */
-    private ArrayList<Charger> chargers = new ArrayList<Charger>();
+    private ArrayList<Charger> chargers = new ArrayList<>();
 
     /** {@link Vehicle Vehicle} used for journey */
     private Vehicle vehicle;
@@ -32,6 +33,12 @@ public class Journey {
 
     /**
      * Constructor for the Journey
+     *
+     * @param vehicle       vehicle partaking in the journey
+     * @param startPosition start coordinate of the journey
+     * @param endPosition   end coordinate of the journey
+     * @param startDate     start date of the journey
+     * @param endDate       end date of the journey
      */
     public Journey(Vehicle vehicle, Coordinate startPosition,
             Coordinate endPosition, String startDate,
@@ -43,21 +50,25 @@ public class Journey {
         this.endDate = endDate;
     }
 
+    /**
+     * Unused constructor
+     */
     public Journey() {
+        // Unused
     }
 
     /**
      * Get array of chargers used on journey
-     * 
+     *
      * @return chargers in journey
      */
-    public ArrayList<Charger> getChargers() {
+    public List<Charger> getChargers() {
         return chargers;
     }
 
     /**
      * Add new {@link Charger charger} to journey
-     * 
+     *
      * @param charger charger to add
      */
     public void addCharger(Charger charger) {
@@ -66,7 +77,7 @@ public class Journey {
 
     /**
      * Remove a {@link Charger charger} from the journey
-     * 
+     *
      * @param charger charger to remove
      */
     public void removeCharger(Charger charger) {
@@ -75,7 +86,7 @@ public class Journey {
 
     /**
      * Gets the {@link Vehicle vehicle} used for the journey
-     * 
+     *
      * @return vehicle used for the journey
      */
     public Vehicle getVehicle() {
@@ -84,7 +95,7 @@ public class Journey {
 
     /**
      * Sets the {@link Vehicle vehicle} used for the journey
-     * 
+     *
      * @param vehicle vehicle used for the journey
      */
     public void setVehicle(Vehicle vehicle) {
@@ -93,7 +104,7 @@ public class Journey {
 
     /**
      * Gets the {@link Coordinate coordinate} of the start of the journey
-     * 
+     *
      * @return start position of journey
      */
     public Coordinate getStartPosition() {
@@ -102,7 +113,7 @@ public class Journey {
 
     /**
      * Sets the start position of the journey
-     * 
+     *
      * @param coord starting position
      */
     public void setStartPosition(Coordinate coord) {
@@ -111,7 +122,7 @@ public class Journey {
 
     /**
      * Gets the {@link Coordinate coordinate} of the end of the journey
-     * 
+     *
      * @return end position of journey
      */
     public Coordinate getEndPosition() {
@@ -120,7 +131,7 @@ public class Journey {
 
     /**
      * Sets the end position of the journey
-     * 
+     *
      * @param coord ending position
      */
     public void setEndPosition(Coordinate coord) {
@@ -129,7 +140,7 @@ public class Journey {
 
     /**
      * Get start date of journey
-     * 
+     *
      * @return start date of journey
      */
     public String getStartDate() {
@@ -138,7 +149,7 @@ public class Journey {
 
     /**
      * Set start date of journey
-     * 
+     *
      * @param startDate start date of journey
      */
     public void setStartDate(String startDate) {
@@ -147,7 +158,7 @@ public class Journey {
 
     /**
      * Get end date of journey
-     * 
+     *
      * @return end date of journey
      */
     public String getEndDate() {
@@ -156,7 +167,7 @@ public class Journey {
 
     /**
      * Set end date of journey
-     * 
+     *
      * @param endDate end date of journey
      */
     public void setEndDate(String endDate) {
@@ -165,7 +176,7 @@ public class Journey {
 
     /**
      * sets the ID number
-     * 
+     *
      * @param number integer for the id
      */
     public void setJourneyId(int number) {
@@ -181,9 +192,15 @@ public class Journey {
         return this.journeyId;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean equals(Object o) {
-        Journey j = (Journey) o;
+        Journey j;
+        if (o instanceof Journey) {
+            j = (Journey) o;
+        } else {
+            return false;
+        }
         return j.getChargers().equals(this.getChargers())
                 && j.getVehicle().equals(this.getVehicle())
                 && j.getStartPosition().equals(this.getStartPosition())

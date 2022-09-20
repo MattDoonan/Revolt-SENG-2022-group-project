@@ -4,7 +4,7 @@ import com.opencsv.bean.CsvBindByName;
 
 /**
  * Stores location information
- * 
+ *
  * @author Harrison Tyson
  * @version 1.0.0, Aug 22
  */
@@ -31,6 +31,12 @@ public class Coordinate {
 
     /**
      * Constructor for Coordinate
+     *
+     * @param xpos    x coordinate on waka kotahi map
+     * @param ypos    y coordinate on waka kotahi map
+     * @param lat     latitude
+     * @param lon     longitude
+     * @param address physical address
      */
     public Coordinate(Double xpos, Double ypos, Double lat, Double lon, String address) {
         setXpos(xpos);
@@ -49,6 +55,12 @@ public class Coordinate {
 
     /**
      * Constructor for coordinate without address
+     *
+     * @see #Coordinate(Double, Double, Double, Double, String)
+     * @param xpos a {@link java.lang.Double} object
+     * @param ypos a {@link java.lang.Double} object
+     * @param lat a {@link java.lang.Double} object
+     * @param lon a {@link java.lang.Double} object
      */
     public Coordinate(Double xpos, Double ypos, Double lat, Double lon) {
         this(xpos, ypos, lat, lon, "");
@@ -56,7 +68,7 @@ public class Coordinate {
 
     /**
      * Gets the Waka-Kotahi x coordinate
-     * 
+     *
      * @return X position on the Waka-Kotahi map
      */
     public Double getXpos() {
@@ -65,7 +77,7 @@ public class Coordinate {
 
     /**
      * Sets the Waka-Kotahi x coordinate
-     * 
+     *
      * @param xpos new x position
      */
     public void setXpos(Double xpos) {
@@ -74,7 +86,7 @@ public class Coordinate {
 
     /**
      * Gets the Waka-Kotahi y coordinate
-     * 
+     *
      * @return Y position on the Waka-Kotahi map
      */
     public Double getYpos() {
@@ -83,7 +95,7 @@ public class Coordinate {
 
     /**
      * Sets the Waka-Kotahi y coordinate
-     * 
+     *
      * @param ypos new y position
      */
     public void setYpos(Double ypos) {
@@ -92,7 +104,7 @@ public class Coordinate {
 
     /**
      * Gets the real world latitude
-     * 
+     *
      * @return latitude coordinate
      */
     public Double getLat() {
@@ -101,7 +113,7 @@ public class Coordinate {
 
     /**
      * Sets the real world latitude
-     * 
+     *
      * @param lat new latitude
      */
     public void setLat(Double lat) {
@@ -110,7 +122,7 @@ public class Coordinate {
 
     /**
      * Gets the real world longitude
-     * 
+     *
      * @return longitude coordinate
      */
     public Double getLon() {
@@ -119,7 +131,7 @@ public class Coordinate {
 
     /**
      * Sets the real world longitude
-     * 
+     *
      * @param lon new longitude
      */
     public void setLon(Double lon) {
@@ -128,7 +140,7 @@ public class Coordinate {
 
     /**
      * Gets the physical address
-     * 
+     *
      * @return physical address of the coordinate
      */
     public String getAddress() {
@@ -137,13 +149,14 @@ public class Coordinate {
 
     /**
      * Sets the physical address
-     * 
+     *
      * @param address new address
      */
     public void setAddress(String address) {
         this.address = address;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean equals(Object o) {
         Coordinate c;

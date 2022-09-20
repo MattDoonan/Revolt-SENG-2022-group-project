@@ -6,7 +6,7 @@ import org.javatuples.Triplet;
 /**
  * Implementation of the {@link QueryBuilder query builder}.
  * Used to build query objects
- * 
+ *
  * @author Harrison Tyson
  * @version 1.0.0, Aug 22
  */
@@ -17,12 +17,14 @@ public class QueryBuilderImpl implements QueryBuilder {
     /** Filters of the query */
     private ArrayList<Triplet<String, String, ComparisonType>> filters = new ArrayList<>();
 
+    /** {@inheritDoc} */
     @Override
     public QueryBuilder withSource(String source) {
         this.source = source;
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public QueryBuilder withFilter(String field, String criteria, ComparisonType compareMethod) {
         // Store each filter as a 3-tuple
@@ -30,6 +32,7 @@ public class QueryBuilderImpl implements QueryBuilder {
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Query build() {
         return new Query(source, filters);

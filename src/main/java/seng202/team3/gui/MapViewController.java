@@ -25,8 +25,9 @@ public class MapViewController extends MapHandler {
 
     /**
      * Initialise the map view
-     * 
-     * @param map Map view to interact with
+     *
+     * @param map   Map view to interact with
+     * @param stage a {@link javafx.stage.Stage} object
      */
     public void init(Stage stage, MapManager map) {
         this.stage = stage;
@@ -37,6 +38,7 @@ public class MapViewController extends MapHandler {
     }
 
     /**
+     * {@inheritDoc}
      * Adds all chargers on the map
      */
     @Override
@@ -50,7 +52,8 @@ public class MapViewController extends MapHandler {
     }
 
     /**
-     * Adds just one Coordinate {@link Coordinate} onto the map, and associates
+     * Adds just one Coordinate {@link seng202.team3.data.entity.Coordinate} onto
+     * the map, and associates
      * this map with this coordinate
      *
      * @param coordinate the coordinate which is clicked
@@ -62,10 +65,11 @@ public class MapViewController extends MapHandler {
     }
 
     /**
-     * Takes one Coordinate {@link Coordinate} onto the map, and moves
+     * Takes one Coordinate {@link seng202.team3.data.entity.Coordinate} onto the
+     * map, and moves
      * this map to this coordinate
      *
-     * @param coordinate , the coordinate which is selected
+     * @param coordinate a {@link seng202.team3.data.entity.Coordinate} object
      */
     public void changePosition(Coordinate coordinate) {
         javaScriptConnector.call("movePosition",
@@ -74,7 +78,7 @@ public class MapViewController extends MapHandler {
 
     /**
      * Check if map has access to javascript
-     * 
+     *
      * @return true if map has access to javascript
      */
     public boolean getConnectorStatus() {
@@ -130,9 +134,10 @@ public class MapViewController extends MapHandler {
     }
 
     /**
-     * Loads a generic prompt screen pop-up {@link PromptPopUp}
+     * Loads a generic prompt screen pop-up {@link seng202.team3.gui.PromptPopUp}
      *
      * @param prompt a String of the instructions
+     * @param type   a {@link java.lang.String} object
      */
     public void loadPromptScreens(String prompt, String type) {
         try {

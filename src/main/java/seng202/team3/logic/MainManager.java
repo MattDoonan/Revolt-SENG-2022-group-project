@@ -13,9 +13,7 @@ import seng202.team3.data.entity.Coordinate;
  *
  * @author Matthew Doonan, Michelle Hsieh
  * @version 1.0.1, Aug 22
- *
  */
-
 public class MainManager extends ChargerHandler implements ChargerInterface {
 
     private double distance = 0;
@@ -50,7 +48,8 @@ public class MainManager extends ChargerHandler implements ChargerInterface {
      * Send chargers within range of the selected location to the table and temp
      * data.
      *
-     * @return an ObservableList of {@link Charger}s which are nearby
+     * @return an ObservableList of {@link seng202.team3.data.entity.Charger}s which
+     *         are nearby
      */
     public ObservableList<Charger> compareDistance() {
         ArrayList<Charger> arrayChargers = new ArrayList<>(chargerData);
@@ -76,6 +75,7 @@ public class MainManager extends ChargerHandler implements ChargerInterface {
     }
 
     /**
+     * {@inheritDoc}
      * Adds a charger at the location of the coordinate.
      */
     @Override
@@ -84,8 +84,8 @@ public class MainManager extends ChargerHandler implements ChargerInterface {
     }
 
     /**
+     * {@inheritDoc}
      * Removes the selected charger and replaces it with null
-     *
      */
     @Override
     public void deleteCharger() {
@@ -101,6 +101,7 @@ public class MainManager extends ChargerHandler implements ChargerInterface {
     }
 
     /**
+     * {@inheritDoc}
      * Uses the JavaScript Bridge to load the charger edit functionality of the
      * selected charger
      */

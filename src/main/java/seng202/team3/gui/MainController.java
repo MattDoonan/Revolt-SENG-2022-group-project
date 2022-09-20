@@ -29,7 +29,7 @@ import seng202.team3.logic.MapManager;
 
 /**
  * Controller for the main.fxml window (the home)
- * 
+ *
  * @author Matthew Doonan, Michelle Hsieh
  * @version 1.0.1, Aug 22
  */
@@ -106,7 +106,8 @@ public class MainController {
     /**
      * Initialize the window
      *
-     * @param stage Top level container for this window
+     * @param stage      Top level container for this window
+     * @param menuWindow a {@link javafx.scene.layout.BorderPane} object
      */
     public void init(Stage stage, BorderPane menuWindow) {
         this.stage = stage;
@@ -123,7 +124,7 @@ public class MainController {
 
     /**
      * Display charger info on panel
-     * 
+     *
      * @param c charger to display information about
      */
     public void viewChargers(Charger c) {
@@ -188,6 +189,8 @@ public class MainController {
 
     /**
      * Changes active charger on selected and moves the map
+     *
+     * @param number a int
      */
     public void selectToView(int number) {
         Charger selectedCharger = manage.getCloseChargerData().get(number);
@@ -200,6 +203,8 @@ public class MainController {
 
     /**
      * Adds every charger in charger list to the vbox
+     *
+     * @param chargersToAdd a {@link javafx.collections.ObservableList} object
      */
     public void addChargersToDisplay(ObservableList<Charger> chargersToAdd) {
 
@@ -381,7 +386,8 @@ public class MainController {
     /**
      * Gets the MainManager created by the MainController
      *
-     * @return {@link MainManager} the manager of this controller
+     * @return {@link seng202.team3.logic.MainManager} the manager of this
+     *         controller
      */
     public MainManager getManager() {
         return manage;

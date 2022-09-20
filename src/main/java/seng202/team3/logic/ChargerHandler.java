@@ -20,16 +20,38 @@ import seng202.team3.data.entity.Coordinate;
  */
 public class ChargerHandler {
 
+    /**
+     * Main query to be modified to retrieve chargers
+     */
     protected QueryBuilder mainDataQuery;
+
+    /**
+     * List to store active chargers
+     */
     protected ObservableList<Charger> chargerData;
+
+    /**
+     * Actively selected charger
+     */
     protected Charger selectedCharger;
+
+    /**
+     * Coordinate of selected charger
+     */
     protected Coordinate selectedCoordinate;
 
+    /**
+     * Unused constructor
+     */
+    public ChargerHandler() {
+        // unused
+    }
 
     /**
      * Sets the selected charger
      *
-     * @param selectedCharger {@link Charger} which is being currently selected
+     * @param selectedCharger {@link seng202.team3.data.entity.Charger} which is
+     *                        being currently selected
      */
     public void setSelectedCharger(Charger selectedCharger) {
         this.selectedCharger = selectedCharger;
@@ -38,21 +60,23 @@ public class ChargerHandler {
     /**
      * Gets the selected charger
      *
-     * @return {@link Charger} the charger which is currently selected
+     * @return {@link seng202.team3.data.entity.Charger} the charger which is
+     *         currently selected
      */
     public Charger getSelectedCharger() {
         return selectedCharger;
     }
 
     /**
-     * Sets the position using a {@link Coordinate} from GeolocationHandler
+     * Sets the position using a {@link seng202.team3.data.entity.Coordinate} from
+     * GeolocationHandler
      */
     public void setPosition() {
         selectedCoordinate = GeoLocationHandler.getInstance().getCoordinate();
     }
 
     /**
-     * Gets the position of the {@link Coordinate}
+     * Gets the position of the {@link seng202.team3.data.entity.Coordinate}
      *
      * @return Coordinate of position
      */
@@ -69,8 +93,6 @@ public class ChargerHandler {
         return chargerData;
     }
 
-
-
     /**
      * Load the initial query
      */
@@ -80,7 +102,6 @@ public class ChargerHandler {
 
     /**
      * Create the charger list from the main Query
-     *
      */
     public void makeAllChargers() {
         try {
@@ -110,6 +131,7 @@ public class ChargerHandler {
 
     /**
      * Returns a string of connectors names;
+     *
      * @param c a charger object
      * @return a String of connector names
      */
@@ -124,6 +146,5 @@ public class ChargerHandler {
         }
         return word.toString();
     }
-
 
 }

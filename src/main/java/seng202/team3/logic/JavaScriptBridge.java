@@ -29,6 +29,13 @@ import seng202.team3.gui.MenuController;
 public class JavaScriptBridge {
 
     /**
+     * Unused constructor
+     */
+    public JavaScriptBridge() {
+        // Unused
+    }
+
+    /**
      * Makes a coordinate from a click and sets the GeoLocationHandler
      *
      * @param latlng the string created with latitude and longitude
@@ -52,7 +59,7 @@ public class JavaScriptBridge {
      * Parses a string into a series of coordinates
      *
      * @param latlng the string to be parsed
-     * @return {@link Coordinate}, the coordinate end product
+     * @return {@link seng202.team3.data.entity.Coordinate}, the coordinate end product
      */
     public Coordinate parseCoordinate(String latlng) {
         JSONParser parser = new JSONParser();
@@ -81,6 +88,9 @@ public class JavaScriptBridge {
         refreshCoordinates();
     }
 
+    /**
+     * Refresh the menu table
+     */
     public void refreshTable() {
         MainController controller = new MenuController().getController();
         controller.refreshTable();
@@ -121,6 +131,8 @@ public class JavaScriptBridge {
 
     /**
      * Zooms to a point
+     *
+     * @param latlng string representation of a physical coordinate
      */
     public void zoomToPoint(String latlng) {
         MainController controller = new MenuController().getController();
@@ -139,6 +151,8 @@ public class JavaScriptBridge {
 
     /**
      * Loads the charger information on a separate pop-up
+     *
+     * @param id id of the charger to get more information about
      */
     public void loadMoreInfo(int id) {
         chargerHandler(id);
@@ -150,6 +164,7 @@ public class JavaScriptBridge {
      * Sets the singleton ChargerManager Coordinate to the latlng
      *
      * @param latlng the string created with latitude and longitude
+     * @param name   the address of the coordinate to set
      */
     public void setCoordinate(String latlng, String name) {
         GeoLocationHandler.getInstance().setCoordinate(parseCoordinate(latlng), name);
@@ -158,8 +173,8 @@ public class JavaScriptBridge {
     /**
      * Creates the charger adding/editing screen when necessary
      *
-     * @param charger    the {@link Charger} that is being selected
-     * @param coordinate the {@link Coordinate} that is being selected
+     * @param charger    the {@link seng202.team3.data.entity.Charger} that is being selected
+     * @param coordinate the {@link seng202.team3.data.entity.Coordinate} that is being selected
      */
     public void loadChargerEdit(Charger charger, Coordinate coordinate) {
         try {

@@ -17,6 +17,7 @@ public class PromptPopUp extends PopUpWindow {
      * The basic initialiser
      */
     public PromptPopUp() {
+        // Unused
     }
 
     /**
@@ -29,8 +30,8 @@ public class PromptPopUp extends PopUpWindow {
     }
 
     /**
+     * {@inheritDoc}
      * Executes the correct action as needed as per controller
-     *
      */
     @Override
     @FXML

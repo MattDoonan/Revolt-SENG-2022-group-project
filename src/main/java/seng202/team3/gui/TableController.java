@@ -172,7 +172,6 @@ public class TableController {
 
     /**
      * Initialize the window
-     *
      */
     public void init() {
         manage = new TableManager();
@@ -283,7 +282,7 @@ public class TableController {
 
     /**
      * adds chargers to the display
-     * 
+     *
      * @param chargersToAdd Observable list of charger objects
      */
     public void addToDisplay(ObservableList<Charger> chargersToAdd) {
@@ -408,7 +407,7 @@ public class TableController {
 
     /**
      * Gets the manager of the table
-     * 
+     *
      * @return table manager class
      */
     public TableManager getManager() {
@@ -466,7 +465,7 @@ public class TableController {
     }
 
     /**
-     * Loads a generic prompt screen pop-up {@link PopUpWindow}
+     * Loads a generic prompt screen pop-up {@link seng202.team3.gui.PopUpWindow}
      *
      * @param prompt a String of the instructions
      */
@@ -494,7 +493,6 @@ public class TableController {
 
     /**
      * Sets the selected charger upon clicking
-     *
      */
     @FXML
     public void setCharger() {
