@@ -35,72 +35,139 @@ import seng202.team3.logic.MapManager;
  */
 public class MainController {
 
+    /**
+     * An AC button checkbox
+     */
     @FXML
     private CheckBox acButton;
 
+    /**
+     * A Slider for distance
+     */
     @FXML
     private Slider changeDistance;
 
+    /**
+     * A TextField to search charger by address
+     */
     @FXML
     private TextField searchCharger;
 
+    /**
+     * A CheckBox for DC
+     */
     @FXML
     private CheckBox dcButton;
 
+    /**
+     * An HBox to display info
+     */
     @FXML
     private HBox displayInfo;
 
+    /**
+     * A Checkbox for distance display
+     */
     @FXML
     private CheckBox distanceDisplay;
 
+    /**
+     * A VBox for charging table
+     */
     @FXML
     private VBox chargerTable;
 
+    /**
+     * A CheckBox for attraction
+     */
     @FXML
     private CheckBox attractionButton;
 
+    /**
+     * A CheckBox for no charging cost
+     */
     @FXML
     private CheckBox noChargingCost;
 
+    /**
+     * A CheckBox for charging cost
+     */
     @FXML
     private CheckBox hasChargingCost;
 
+    /**
+     * BorderPane for the main window
+     */
     @FXML
     private BorderPane mainWindow;
 
+    /**
+     * CheckBox for time limit on or off
+     */
     @FXML
     private CheckBox toggleTimeLimit;
 
+    /**
+     * Slider for time limit
+     */
     @FXML
     private Slider timeLimit;
 
+    /**
+     * CheckBox for on parking filter
+     */
     @FXML
     private CheckBox onParkingFilter;
 
+    /**
+     * Slider for number of parks
+     */
     @FXML
     private Slider parkingLot;
 
+    /**
+     * CheckBox for no carpark cost
+     */
     @FXML
     private CheckBox withoutCarparkCost;
 
+    /**
+     * CheckBox for carpark cost
+     */
     @FXML
     private CheckBox withCarparkCost;
 
+    /**
+     * CheckBox for open 24 hours
+     */
     @FXML
     private CheckBox openAllButton;
 
+    /**
+     * CheckBox for not open 24 hours
+     */
     @FXML
     private CheckBox notOpenAllButton;
 
+    /**
+     * CheckBox for no nearby attraction
+     */
     @FXML
     private CheckBox noNearbyAttraction;
 
+    /**
+     * The BorderPane containing entire application
+     */
     private BorderPane menuWindow;
 
-    private Stage stage;
-
+    /**
+     * The map controller
+     */
     private MapViewController mapController;
 
+    /**
+     * The map manager
+     */
     private MainManager manage;
 
     /**
@@ -110,10 +177,9 @@ public class MainController {
      * @param menuWindow a {@link javafx.scene.layout.BorderPane} object
      */
     public void init(Stage stage, BorderPane menuWindow) {
-        this.stage = stage;
         this.menuWindow = menuWindow;
         manage = new MainManager();
-        loadMapView(this.stage);
+        loadMapView(stage);
         manage.resetQuery();
         manage.makeAllChargers();
         manage.setDistance(changeDistance.getValue());
