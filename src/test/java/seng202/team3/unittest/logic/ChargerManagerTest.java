@@ -1,5 +1,4 @@
-package seng202.team3.unitTest.logic;
-
+package seng202.team3.unittest.logic;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -9,18 +8,19 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
+import javax.management.InstanceAlreadyExistsException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import seng202.team3.data.database.*;
+import seng202.team3.data.database.ComparisonType;
+import seng202.team3.data.database.QueryBuilder;
+import seng202.team3.data.database.QueryBuilderImpl;
+import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
 import seng202.team3.logic.ChargerManager;
-
-import javax.management.InstanceAlreadyExistsException;
 
 /**
  * Unit tests for {@link ChargerManager} ChargerManager Class in Logic
@@ -49,48 +49,49 @@ public class ChargerManagerTest {
                 "jdbc:sqlite:./src/test/resources/test_database.db");
         db.defaultDatabase();
 
-
         Connector dummyConnector1 = new Connector("ChardaMo", "AC", "Available", "123", 3);
-        Connector dummyConnector2 = new Connector("ChardaMo", "AC", "Available", "123", 3);
-        Connector dummyConnector3 = new Connector("ChardaMo", "AC", "Available", "123", 3);
-        Connector dummyConnector4 = new Connector("ChardaMo", "AC", "Available", "123", 3);
 
         // Christchurch Hospital
         Coordinate coord1 = new Coordinate(1.1, 2.3, -43.53418, 172.627572);
-        charge1 = new Charger(new ArrayList<>(List.of(dummyConnector1)), "Hosp", coord1, 1, 0.3, "Meridian",
+        charge1 = new Charger(
+                new ArrayList<>(List.of(dummyConnector1)), "Hosp", coord1, 1, 0.3, "Meridian",
                 "Meridian", "2020/1/1 00:00:00", true,
                 false, false, false);
 
+        Connector dummyConnector2 = new Connector("ChardaMo", "AC", "Available", "123", 3);
+
         // Christchurch Boys High School
         Coordinate coord2 = new Coordinate(3.5, 4.4, -43.52425, 172.60019);
-        charge2 = new Charger(new ArrayList<>(List.of(dummyConnector2)), "Boys", coord2, 2, 3.5, "Someone",
+        charge2 = new Charger(
+                new ArrayList<>(List.of(dummyConnector2)), "Boys", coord2, 2, 3.5, "Someone",
                 "Someone", "2020/1/1 00:00:00", true,
                 false, false, false);
+
+        Connector dummyConnector3 = new Connector("ChardaMo", "AC", "Available", "123", 3);
+
         // Auckland Grammar School
         Coordinate coord3 = new Coordinate(4.5, 5.7, -36.85918, 174.76602);
-        charge3 = new Charger(new ArrayList<>(List.of(dummyConnector3)), "Grammar", coord3, 5, 1.2, "Else",
+        charge3 = new Charger(
+                new ArrayList<>(List.of(dummyConnector3)), "Grammar", coord3, 5, 1.2, "Else",
                 "Else", "2020/1/1 00:00:00", true,
                 false, false, false);
 
+        Connector dummyConnector4 = new Connector("ChardaMo", "AC", "Available", "123", 3);
+
         // Otago Boys School
         Coordinate coord4 = new Coordinate(4.8, 7.7, -45.87135, 170.49551);
-        charge4 = new Charger(new ArrayList<>(List.of(dummyConnector4)), "Otago", coord4, 2, 35.1, "Us",
+        charge4 = new Charger(
+                new ArrayList<>(List.of(dummyConnector4)), "Otago", coord4, 2, 35.1, "Us",
                 "Us", "2020/1/1 00:00:00", true, false,
                 false, false);
 
-        ArrayList<Charger> chargers = new ArrayList<>();
+        ArrayList<Object> chargers = new ArrayList<>();
         chargers.add(charge1);
         chargers.add(charge2);
         chargers.add(charge3);
         chargers.add(charge4);
 
-
-        try {
-            db.writeCharger(chargers);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        db.writeCharger(chargers);
 
         ArrayList<String> strings = new ArrayList<>();
         strings.add("Hosp");
@@ -114,6 +115,9 @@ public class ChargerManagerTest {
                     }
                     case 3 -> {
                         charge4 = (Charger) db.readData(mainQuery.build(), Charger.class).get(0);
+                    }
+                    default -> {
+                        break;
                     }
                 }
             } catch (IOException e) {
@@ -139,7 +143,6 @@ public class ChargerManagerTest {
         manager = null;
         assertNull(manager);
     }
-
 
     /**
      * distanceBetweenChargers tests

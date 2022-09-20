@@ -13,3 +13,7 @@ checkstyle:
   stage: build
   script:
     - mvn -B clean validate
+generate_doc:
+  stage: build
+  script:
+    - mvn -B clean javadoc:jar

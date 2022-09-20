@@ -1,21 +1,12 @@
 package seng202.team3.gui;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.util.stream.Collectors;
-import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
-import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import netscape.javascript.JSObject;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
 import seng202.team3.logic.JavaScriptBridge;
@@ -27,19 +18,9 @@ import seng202.team3.logic.MapManager;
  * @author Michelle Hsieh, based off code from Morgan English
  * @version 1.0.2, Aug 22
  */
-public class MapViewController {
+public class MapViewController extends MapHandler {
 
-    /**
-     * FXML components
-     */
-    @FXML
-    private WebView webView;
-
-    private WebEngine webEngine;
-    private Stage stage;
     private MapManager map;
-    private JavaScriptBridge javaScriptBridge;
-    private JSObject javaScriptConnector;
     private boolean routeDisplayed = false;
 
     /**
@@ -56,42 +37,9 @@ public class MapViewController {
     }
 
     /**
-     * Function to load map html file
-     *
-     * @return String of html file
-     */
-    private String getHtml() {
-        InputStream is = getClass().getResourceAsStream("/html/map.html");
-        return new BufferedReader(
-                new InputStreamReader(is, StandardCharsets.UTF_8))
-                .lines()
-                .collect(Collectors.joining("\n"));
-    }
-
-    /**
-     * Initialises the map by loading the html into the webengine
-     */
-    private void initMap() {
-        webEngine = webView.getEngine();
-        webEngine.setJavaScriptEnabled(true);
-        webEngine.loadContent(getHtml());
-
-        webEngine.getLoadWorker().stateProperty().addListener(
-                (ov, oldState, newState) -> {
-                    if (newState == Worker.State.SUCCEEDED) {
-                        JSObject window = (JSObject) webEngine.executeScript("window");
-                        window.setMember("javaScriptBridge", javaScriptBridge);
-                        javaScriptConnector = (JSObject) webEngine.executeScript("jsConnector");
-                        javaScriptConnector.call("initMap");
-
-                        addChargersOnMap();
-                    }
-                });
-    }
-
-    /**
      * Adds all chargers on the map
      */
+    @Override
     public void addChargersOnMap() {
         javaScriptConnector.call("clearMarkers");
         for (Charger charger : map.getController().getCloseChargerData()) {
@@ -133,10 +81,10 @@ public class MapViewController {
         return javaScriptConnector != null;
     }
 
-
     /**
      * Adds route to map, calling the underlying js function, from the currently
-     * selected coordinate (as a coordinate) to the currently selected charger (as a coordinate).
+     * selected coordinate (as a coordinate) to the currently selected charger (as a
+     * coordinate).
      */
     public void addRouteToCharger() {
         routeDisplayed = true;
@@ -181,7 +129,6 @@ public class MapViewController {
         }
     }
 
-
     /**
      * Loads a generic prompt screen pop-up {@link PromptPopUp}
      *
@@ -214,6 +161,9 @@ public class MapViewController {
      */
     @FXML
     public void addCharger() {
+        if (new MenuController().getController().getManager().getPosition().getAddress() == null) {
+            javaScriptConnector.call("addCoordinateName");
+        }
         loadPromptScreens("Search an address or click on the map\n"
                 + "and confirm to add a charger: \n\n", "add");
     }
@@ -235,6 +185,5 @@ public class MapViewController {
         loadPromptScreens("Click on a charger on the map and\n"
                 + "confirm to DELETE a charger: \n\n", "delete");
     }
-
 
 }

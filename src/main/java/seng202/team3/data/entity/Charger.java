@@ -27,7 +27,7 @@ public class Charger {
     String name;
 
     /** {@link Connector Connectors} available on charger */
-    @CsvBindAndSplitByName(column = "connectorsList", elementType = Connector.class,
+    @CsvBindAndSplitByName(column = "connectorsList", elementType = Connector.class, 
                             splitOn = ",(?=( )*\\{)", converter = ConnectorConverter.class, 
                             required = true)
     ArrayList<Connector> connectors;
@@ -224,7 +224,11 @@ public class Charger {
      * @param timeLimit max time that can be spent at charger
      */
     public void setTimeLimit(Double timeLimit) {
-        this.timeLimit = timeLimit;
+        if (timeLimit == 0.0) {
+            this.timeLimit = Double.POSITIVE_INFINITY;
+        } else {
+            this.timeLimit = timeLimit;
+        }
     }
 
     /**

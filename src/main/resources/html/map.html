@@ -40,14 +40,16 @@
         let isRoute;
         let routeToCharger;
         let pointCoordinates = []; // contains a list of all the coordinates in a route in order.
+        let isMini = false;
 
         /**
-         * Creates a star icon
+         * Creates a red icon
          */
         let redIcon = L.icon({
             iconUrl: 'icons/red_icon.png',
-            iconSize: [24, 24],
-            iconAnchor: [12, 0],
+            iconSize: [38, 38],
+            iconAnchor: [19, 38],
+            popupAnchor: [0, -38],
         })
 
         /**
@@ -62,6 +64,7 @@
             initMap: initMap,
             clearMarkers: clearMarkers,
             addLocationToRoute: addLocationToRoute,
+            addCoordinateName: addCoordinateName,
         };
 
 
@@ -81,14 +84,13 @@
             this.type = type;
         }
 
-
         /**
          * creates and initialises the Google map, also defines on click event that calls java code
          *
          */
         function initMap() {
 
-            var mapOptions = {
+            let mapOptions = {
                 center: [lat, lon],
                 zoom: 12
             }
@@ -99,24 +101,35 @@
 
             createBar().addTo(map)
 
+            map.createPane("setCoord");
+            map.getPane("setCoord").style.zIndex = 999;
+
+
             map.on("click", (map_event) => {
-                var latlng = map.mouseEventToLatLng(map_event.originalEvent)
+                let latlng = map.mouseEventToLatLng(map_event.originalEvent)
                 if (!isRoute) {
                     javaScriptBridge.addCoordinateFromClick(`{"lat": ${latlng.lat}, "lng": ${latlng.lng}}`)
                     removeCoordinate()
-                    new L.Control.Geocoder.Nominatim({
-                        geocodingQueryParams: {
-                            countrycodes: 'nz'
-                        }}).reverse(latlng, map.options.crs.scale(map.getZoom()), results => {
-                        var r = results[0]
-                        if (r) {
-                            addCoordinate(r.name, latlng.lat, latlng.lng)
-                            javaScriptBridge.addLocationName(r.name)
-                        } else {
-                            addCoordinate("Selected Coordinate: ", latlng.lat, latlng.lng)
-                        }
-                    })
+                    addCoordinate("Selected Coordinate", latlng.lat, latlng.lng)
                     javaScriptBridge.refreshTable()
+                }
+            })
+        }
+
+        /**
+         * Adds the coordinate name
+         */
+        function addCoordinateName() {
+            let latlng = coordinate.getLatLng()
+            new L.Control.Geocoder.Nominatim({
+                geocodingQueryParams: {
+                    countrycodes: 'nz'
+                }}).reverse(latlng, map.options.crs.scale(map.getZoom()), results => {
+                let r = results[0]
+                if (r) {
+                    removeCoordinate();
+                    addCoordinate(r.name, latlng.lat, latlng.lng)
+                    javaScriptBridge.addLocationName(r.name)
                 }
             })
         }
@@ -125,7 +138,7 @@
          * Creates and sets a searchBar for basic geolocation needs and parsing
          */
         function createBar() {
-            var searchBar = L.Control.geocoder({
+            let searchBar = L.Control.geocoder({
                 geocoder: new L.Control.Geocoder.Nominatim({
                     geocodingQueryParams: {
                         countrycodes: 'nz'
@@ -135,12 +148,14 @@
                 collapsed: false,
                 placeholder: "Search location",
             }).on('markgeocode', function(e) {
-                var latlng = e.geocode.center
+                let latlng = e.geocode.center
                 javaScriptBridge.addCoordinateFromClick(`{"lat": ${latlng.lat}, "lng": ${latlng.lng}}`)
                 removeCoordinate()
                 addCoordinate(e.geocode.name, latlng.lat, latlng.lng)
                 javaScriptBridge.addLocationName(e.geocode.name)
-                javaScriptBridge.refreshTable()
+                if (!isMini) {
+                    javaScriptBridge.refreshTable()
+                }
             })
             return searchBar;
         }
@@ -154,10 +169,10 @@
          * @param lng longitude to place marker at
          */
         function addMarker(title, lat, lng, id) {
-            var m = new L.Marker([lat, lng])
+            let m = new L.Marker([lat, lng])
             m.id = id
             m.bindPopup("Address: " + title + "<br><button type='button' onclick='javaScriptBridge.loadMoreInfo("+
-                id + ")'>More Info</button>")
+                id + ")'>Edit Charger</button>")
             m.on("mouseover", function(ev) {m.openPopup();})
             m.addTo(map).on("click", e => javaScriptBridge.chargerHandler(id),
             )
@@ -181,7 +196,7 @@
          * @param lng longitude to place coordinate marker at
          */
         function addCoordinate(title, lat, lng) {
-            coordinate = new L.Marker([lat, lng])
+            coordinate = new L.Marker([lat, lng], {icon: redIcon, pane: "setCoord"})
             coordinate.bindPopup(title + ": " + lat.toFixed(4) + " " + lng.toFixed(4))
             coordinate.on("click", function(ev) {coordinate.openPopup()})
             coordinate.addTo(map)
@@ -214,7 +229,7 @@
          * @param index the index of the object for the list.
          */
         function addLocationToRoute(lat, lon, id, type, index) {
-            var location = new Location(lat, lon, id, type)
+            let location = new Location(lat, lon, id, type)
             pointCoordinates.splice(index, 0, location)
             refreshRoute()
         }

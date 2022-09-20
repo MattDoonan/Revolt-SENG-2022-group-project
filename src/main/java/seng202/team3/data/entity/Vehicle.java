@@ -34,7 +34,7 @@ public class Vehicle {
     /**
      * Default filepath for missing images
      */
-    public static final String defaultImgPath = "";
+    public static final String DEFAULTIMGPATH = "";
 
     /** Constructor for Vehicle */
     public Vehicle(String make, String model, int maxRange,
@@ -43,7 +43,7 @@ public class Vehicle {
         this.model = model;
         this.maxRange = maxRange;
         this.connectors = connectors;
-        this.imgPath = defaultImgPath;
+        this.imgPath = DEFAULTIMGPATH;
         this.batteryPercent = 100.0;
     }
 
@@ -185,6 +185,9 @@ public class Vehicle {
         return vehicleId;
     }
 
+    /**
+     * {@inheritDoc}}
+     */
     @Override
     public boolean equals(Object o) {
         Vehicle v;

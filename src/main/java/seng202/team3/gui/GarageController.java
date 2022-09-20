@@ -3,21 +3,14 @@ package seng202.team3.gui;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -25,125 +18,152 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import seng202.team3.data.entity.Vehicle;
-import seng202.team3.logic.VehicleManager;
-
+import seng202.team3.logic.GarageManager;
 
 /**
  * Controller for the garage.fxml window
  * 
  * @author Celia Allen
- * @version 1.0.3, Aug 22
+ * @version 1.2.0, Aug 21
  */
 public class GarageController {
 
+    /**
+     * Make and model for the first vehicle
+     */
     @FXML
     private TextArea makeModelOne;
 
+    /**
+     * Make and model for the second vehicle
+     */
     @FXML
     private TextArea makeModelTwo;
 
+    /**
+     * Make and model for the third vehicle
+     */
     @FXML
     private TextArea makeModelThree;
 
+    /**
+     * Image for the first vehicle
+     */
     @FXML
     private ImageView vehicleImageOne;
 
+    /**
+     * Image for the second vehicle
+     */
     @FXML
     private ImageView vehicleImageTwo;
 
+    /**
+     * Image for the third vehicle
+     */
     @FXML
     private ImageView vehicleImageThree;
 
+    /**
+     * Details for the first vehicle
+     */
     @FXML
     private TextArea carDetailsOne;
 
+    /**
+     * Details for the second vehicle
+     */
     @FXML
     private TextArea carDetailsTwo;
 
+    /**
+     * Details for the third vehicle
+     */
     @FXML
     private TextArea carDetailsThree;
 
+    /**
+     * Button to edit the first vehicle
+     */
     @FXML
     private Button editCarOne;
 
+    /**
+     * Button to edit the second vehicle
+     */
     @FXML
     private Button editCarTwo;
 
+    /**
+     * Button to edit the third vehicle
+     */
     @FXML
     private Button editCarThree;
 
+    /**
+     * Button to delete the first vehicle
+     */
     @FXML
     private Button deleteCarOne;
 
+    /**
+     * Button to delete the second vehicle
+     */
     @FXML
     private Button deleteCarTwo;
 
+    /**
+     * Button to delete the third vehicle
+     */
     @FXML
     private Button deleteCarThree;
 
+    /**
+     * Button to scroll the vehicle view forward
+     */
     @FXML
     private Button nextBtn;
 
+    /**
+     * Button to scroll the vehicle view backward
+     */
     @FXML
     private Button prevBtn;
 
-    @FXML
-    private Button addConnection;
-
-    @FXML
-    private Label addedConnections;
-
-    @FXML
-    private TextField makeText;
-
-    @FXML
-    private TextField modelText;
-
-    @FXML
-    private TextField maxRangeText;
-
-    @FXML
-    private ComboBox<String> connectorType;
-
-    @FXML
-    private Label imgName;
-
-    @FXML
-    private ScrollPane imgsDisplay;
-
+    /**
+     * All vehicles to be displayed
+     */
     private ObservableList<Vehicle> vehicleData = FXCollections.observableArrayList();
 
+    /**
+     * Active vehicle
+     */
     private Vehicle selectedVehicle;
 
-    private Stage updatePopup = new Stage();
-
+    /**
+     * Pop up window for editing vehicles
+     */
     private Stage editPopup = new Stage();
 
-    private VehicleManager manage = new VehicleManager();
-
-    private GarageController controller;
-
-    private Stage stage;
-
+    /**
+     * Logic controller
+     */
+    private GarageManager manage = new GarageManager();
 
     /**
-     * Initialize the window
+     * Initialize the GarageController
+     */
+    public GarageController() {
+        // init();
+    }
+
+    /**
+     * Initialize the window with data from the database
      *
      */
     public void init() {
         refresh();
     }
-
-    /**
-     * Initialize the window
-     *
-     * @param stage Top level container for this window
-     */
-    public void init(Stage stage, MenuController menu) {
-        this.stage = stage;
-        refresh();
-    }
-
 
     /**
      * Refresh the garage display with the user's up-to-date vehicles
@@ -155,48 +175,21 @@ public class GarageController {
         setData();
     }
 
-
     /**
-     * Initialises the pop-up window that allows a user to add or edit a 
-     * vehicle to/in the garage
-     */
-    public void initializeUpdate() {
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource("/fxml/vehicle_update.fxml"));
-            updatePopup.initModality(Modality.APPLICATION_MODAL);
-            updatePopup.setResizable(false);
-            updatePopup.setTitle("Vehicle Information");
-            updatePopup.setScene(new Scene(root, 337, 497));
-        } catch (IOException e) {
-            Logger logger = Logger.getLogger(getClass().getName());
-            logger.log(Level.SEVERE, "Failed to create new Window.", e);
-        } finally {
-            refresh();
-        }
-    }
-
-
-    /**
-     * Displays pop-up window that allows a user to add a 
-     * vehicle to/in the garage
+     * Launches the vehicle update modal, with the given vehicle null,
+     * to signify that there is no vehicle to be updated, but a new one is
+     * being added.
      */
     @FXML
-    public void displayUpdate() {
-        try {
-            if (updatePopup.getTitle() == null) {
-                initializeUpdate();
-            }
-            updatePopup.showAndWait();
-        } finally {
-            refresh();
-        }
-        
+    public void launchUpdate() {
+        launchEditable(null);
     }
 
-
     /**
-     * Sets selectedVehicle to the vehicle to be edited
-     * @paramn event, the event that called the method
+     * Sets selectedVehicle to the vehicle the user wants to edit,
+     * then launches the edit popup with the selected vehicle's details pre-filled.
+     * 
+     * @param event the event that called the method
      */
     @FXML
     public void setEdit(ActionEvent event) {
@@ -209,7 +202,7 @@ public class GarageController {
                 selectedVehicle = vehicleData.get(1);
                 break;
             case "editCarThree":
-                selectedVehicle = vehicleData.get(2);  
+                selectedVehicle = vehicleData.get(2);
                 break;
             default:
                 break;
@@ -217,30 +210,22 @@ public class GarageController {
         launchEditable(selectedVehicle);
     }
 
-
     /**
-     * Sets selectedVehicle to the vehicle to be deleted
-     * @paramn event, the event that called the method
+     * Displays pop-up window that allows a user to edit a
+     * vehicle in the garage
+     * 
+     * @param vehicle the vehicle to be edited
      */
-    @FXML
-    public void setDelete(ActionEvent event) {
-        String source = ((Button) event.getSource()).getId();
-        switch (source) {
-            case "deleteCarOne":
-                selectedVehicle = vehicleData.get(0);
-                break;
-            case "deleteCarTwo":
-                selectedVehicle = vehicleData.get(1);
-                break;
-            case "deleteCarThree":
-                selectedVehicle = vehicleData.get(2);  
-                break;
-            default:
-                break;
+    public void launchEditable(Vehicle vehicle) {
+        try {
+            initializeEditable(vehicle);
+            editPopup.showAndWait();
+        } finally {
+            editPopup = new Stage();
+            refresh();
         }
-        launchDelete(selectedVehicle);
-    }
 
+    }
 
     /**
      * Launches the editable pop-up for vehicles
@@ -257,40 +242,47 @@ public class GarageController {
             editPopup.setResizable(false);
             editPopup.setTitle("Vehicle Information");
             editPopup.initModality(Modality.WINDOW_MODAL);
-            VehicleUpdateController controller = vehicleEdit.getController();
-            controller.displayInfo(vehicle);
-            editPopup.setAlwaysOnTop(true);
+            if (vehicle != null) {
+                VehicleUpdateController controller = vehicleEdit.getController();
+                controller.displayInfo(vehicle);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            // setData();
             refresh();
         }
     }
-
 
     /**
-     * Displays pop-up window that allows a user to edit a 
-     * vehicle to/in the garage
+     * Sets selectedVehicle to the vehicle the user wants to delete,
+     * then launches the confirm delete popup.
+     * 
+     * @param event the event that called the method
      */
-    public void launchEditable(Vehicle vehicle) {
-        try {
-            if (editPopup.getTitle() == null) {
-                initializeEditable(vehicle);
-            }
-            editPopup.showAndWait();
-        } finally {
-            refresh();
+    @FXML
+    public void setDelete(ActionEvent event) {
+        String source = ((Button) event.getSource()).getId();
+        switch (source) {
+            case "deleteCarOne":
+                selectedVehicle = vehicleData.get(0);
+                break;
+            case "deleteCarTwo":
+                selectedVehicle = vehicleData.get(1);
+                break;
+            case "deleteCarThree":
+                selectedVehicle = vehicleData.get(2);
+                break;
+            default:
+                break;
         }
-        
+        launchDelete(selectedVehicle);
     }
 
-    
     /**
      * Launches the confirm delete popup
      *
      * @param vehicle the vehicle to be deleted
-    */
+     */
     public void launchDelete(Vehicle vehicle) {
         try {
             FXMLLoader vehicleDelete = new FXMLLoader(getClass().getResource(
@@ -312,17 +304,6 @@ public class GarageController {
             refresh();
         }
     }
-
-
-    /**
-     * Sets the GarageController holding all the controllers
-     *
-     * @param controller GarageController controller
-     */
-    public void setController(GarageController controller) {
-        this.controller = controller;
-    }
-
 
     /**
      * Adds vehicle data to each display if vehicleData size is large enough
@@ -355,7 +336,7 @@ public class GarageController {
             editCarThree.setVisible(false);
             deleteCarThree.setVisible(false);
             clearDisplay("three", vehicleImageThree);
-        }        
+        }
         if (vehicleData.size() <= 3) {
             nextBtn.setDisable(true);
             prevBtn.setDisable(true);
@@ -367,7 +348,8 @@ public class GarageController {
 
     /**
      * Clears the given display of text and image(s)
-     * @param display a string to represent the display to be cleared
+     * 
+     * @param display   a string to represent the display to be cleared
      * @param imageview the ImageView to clear
      */
     public void clearDisplay(String display, ImageView imageview) {
@@ -390,9 +372,8 @@ public class GarageController {
         imageview.setImage(null);
     }
 
-
     /**
-     * Populate the given display with the vehicle at the given index
+     * Populate the given display with the vehicle at the given index of vehicleData
      *
      * @param display   location to put the text
      * @param imageview path to vehicle image
@@ -403,27 +384,34 @@ public class GarageController {
             switch (display) {
                 case "one":
                     makeModelOne.setText(vehicleData.get(index).getMake() + " "
-                        + vehicleData.get(index).getModel());
+                            + vehicleData.get(index).getModel());
                     carDetailsOne.setText(
-                        "Current Charge: " + vehicleData.get(index).getBatteryPercent() + "\n"
-                        + "Max. Range: " + vehicleData.get(index).getMaxRange() + "\n"
-                        + "Connections: " + vehicleData.get(index).getConnectors().toString());
+                            "Current Charge: " + vehicleData.get(index).getBatteryPercent() + "%\n"
+                                    + "Max. Range: " + vehicleData.get(index).getMaxRange()
+                                    + " km\n"
+                                    + "Connections: "
+                                    + vehicleData.get(index).getConnectors().toString());
                     break;
                 case "two":
                     makeModelTwo.setText(vehicleData.get(index).getMake() + " "
-                        + vehicleData.get(index).getModel());
+                            + vehicleData.get(index).getModel());
                     carDetailsTwo.setText(
-                        "Current Charge: " + vehicleData.get(index).getBatteryPercent() + "\n"
-                        + "Max. Range: " + vehicleData.get(index).getMaxRange() + "\n"
-                        + "Connections: " + vehicleData.get(index).getConnectors().toString());
+                            "Current Charge: " + vehicleData.get(index).getBatteryPercent() + "%\n"
+                                    + "Max. Range: " + vehicleData.get(index).getMaxRange()
+                                    + " km\n"
+                                    + "Connections: "
+                                    + vehicleData.get(index).getConnectors().toString());
                     break;
                 case "three":
                     makeModelThree.setText(vehicleData.get(index).getMake() + " "
-                        + vehicleData.get(index).getModel());
+                            + vehicleData.get(index).getModel());
                     carDetailsThree.setText(
-                        "Current Charge: " + vehicleData.get(index).getBatteryPercent() + "\n"
-                        + "Max. Range: " + vehicleData.get(index).getMaxRange() + "\n"
-                        + "Connections: " + vehicleData.get(index).getConnectors().toString());
+                            "Current Charge: " + vehicleData.get(index).getBatteryPercent()
+                                    + "%\n"
+                                    + "Max. Range: " + vehicleData.get(index).getMaxRange()
+                                    + " km\n"
+                                    + "Connections: "
+                                    + vehicleData.get(index).getConnectors().toString());
                     break;
                 default:
                     break;
@@ -434,7 +422,7 @@ public class GarageController {
                     imageview.setImage(null);
                 } else {
                     Image image = new Image(new FileInputStream(
-                        vehicleData.get(index).getImgPath()));
+                            vehicleData.get(index).getImgPath()));
                     imageview.setImage(image);
                 }
 
@@ -444,10 +432,10 @@ public class GarageController {
         }
     }
 
-
     /**
-     * Method to call when next button is clicked
-     *
+     * Method to call when next button is clicked.
+     * Reshuffles vehicleData so the first three elements are the three to
+     * be displayed in the user's garage.
      */
     @FXML
     public void nextBtnClicked() {
@@ -459,10 +447,10 @@ public class GarageController {
         }
     }
 
-
     /**
      * Method to call when prev button is clicked
-     *
+     * Reshuffles vehicleData so the first three elements are the three to
+     * be displayed in the user's garage.
      */
     @FXML
     public void prevBtnClicked() {

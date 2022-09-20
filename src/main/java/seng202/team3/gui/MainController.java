@@ -1,25 +1,29 @@
 package seng202.team3.gui;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import javafx.beans.property.ReadOnlyDoubleWrapper;
-import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.logic.Calculations;
-import seng202.team3.logic.JavaScriptBridge;
 import seng202.team3.logic.MainManager;
 import seng202.team3.logic.MapManager;
 
@@ -30,7 +34,6 @@ import seng202.team3.logic.MapManager;
  * @version 1.0.1, Aug 22
  */
 public class MainController {
-
 
     @FXML
     private CheckBox acButton;
@@ -45,13 +48,13 @@ public class MainController {
     private CheckBox dcButton;
 
     @FXML
-    private TextArea displayInfo;
+    private HBox displayInfo;
 
     @FXML
     private CheckBox distanceDisplay;
 
     @FXML
-    private TableView<Charger> chargerTable;
+    private VBox chargerTable;
 
     @FXML
     private CheckBox attractionButton;
@@ -60,16 +63,39 @@ public class MainController {
     private CheckBox chargingCost;
 
     @FXML
-    private final TableColumn<Charger, String> addressCol = new TableColumn<>("Address");
-
-    @FXML
-    private final TableColumn<Charger, String> operatorCol = new TableColumn<>("Operator");
-
-    @FXML
-    private final TableColumn<Charger, Double> distanceCol = new TableColumn<>("km");
+    private CheckBox hasChargingCost;
 
     @FXML
     private BorderPane mainWindow;
+
+    @FXML
+    private CheckBox toggleTimeLimit;
+
+    @FXML
+    private Slider timeLimit;
+
+    @FXML
+    private CheckBox onParkingFiler;
+
+    @FXML
+    private Slider parkingLot;
+
+    @FXML
+    private CheckBox withoutCarparkCost;
+
+    @FXML
+    private CheckBox withCarparkCost;
+
+    @FXML
+    private CheckBox openAllButton;
+
+    @FXML
+    private CheckBox notOpenAllButton;
+
+    @FXML
+    private CheckBox noNearbyAttraction;
+
+    private BorderPane menuWindow;
 
     private Stage stage;
 
@@ -82,16 +108,15 @@ public class MainController {
      *
      * @param stage Top level container for this window
      */
-    public void init(Stage stage) {
+    public void init(Stage stage, BorderPane menuWindow) {
         this.stage = stage;
+        this.menuWindow = menuWindow;
         manage = new MainManager();
         loadMapView(this.stage);
-        tableMaker();
         manage.resetQuery();
         manage.makeAllChargers();
         manage.setDistance(changeDistance.getValue());
         addChargersToDisplay(manage.getCloseChargerData());
-        selectToView();
         change();
 
     }
@@ -102,25 +127,55 @@ public class MainController {
      * @param c charger to display information about
      */
     public void viewChargers(Charger c) {
-        displayInfo.clear();
+        displayInfo.getChildren().removeAll(displayInfo.getChildren());
         if (c == null) {
-            displayInfo.setText("No Charger Selected");
-        } else {
-            StringBuilder word = new StringBuilder();
-            ArrayList<String> check = new ArrayList<>();
-            for (int i = 0; i < c.getConnectors().size(); i++) {
-                if (!check.contains(c.getConnectors().get(i).getCurrent())) {
-                    word.append(" ").append(c.getConnectors().get(i).getCurrent());
-                    check.add(c.getConnectors().get(i).getCurrent());
-                }
+            if (manage.getCloseChargerData().size() != 0) {
+                manage.setSelectedCharger(manage.getCloseChargerData().get(0));
+                viewChargers(manage.getCloseChargerData().get(0));
+            } else {
+                displayInfo.getChildren().add(new Text("No Charger Selected"));
+                displayInfo.setAlignment(Pos.CENTER);
             }
-            displayInfo.appendText("Operator: " + c.getOperator() + "\n"
-                    + "Location: " + c.getLocation().getAddress()
-                    + "\n" + "Number of parks: " + c.getAvailableParks()
-                    + "\nTime Limit " + c.getTimeLimit()
-                    + "\nHas Attraction = " + c.getHasAttraction()
-                    + "\nHas cost " + c.getChargeCost() + "\nCharger Type:"
-                    + word + "");
+        } else {
+            try {
+                ImageView image = new ImageView(new Image(
+                        new FileInputStream("src/main/resources/images/charger.png")));
+                image.setFitHeight(150);
+                image.setFitWidth(150);
+                displayInfo.getChildren().add(image);
+            } catch (FileNotFoundException e) {
+                Label image = new Label("Image");
+                displayInfo.getChildren().add(image);
+            }
+            VBox display = new VBox();
+            display.getChildren().add(new Text("" + c.getName() + ""));
+            display.getChildren().add(new Text("" + c.getLocation().getAddress() + "\n"));
+            String word = manage.getConnectors(c);
+            display.getChildren().add(new Text("Current types " + word + ""));
+            if (c.getOperator() != null) {
+                display.getChildren().add(new Text("Operator is: " + c.getOperator() + ""));
+            }
+            display.getChildren().add(new Text("Owner is: " + c.getOwner() + ""));
+            if (c.getChargeCost()) {
+                display.getChildren().add(new Text("Charger has a cost"));
+            } else {
+                display.getChildren().add(new Text("Charger has no cost"));
+            }
+            if (c.getAvailable24Hrs()) {
+                display.getChildren().add(new Text("Open 24"));
+            } else {
+                display.getChildren().add(new Text("Open 24 hours"));
+            }
+            display.getChildren().add(new Text("Has " + c.getAvailableParks() + " parking spaces"));
+            if (c.getTimeLimit() == Double.POSITIVE_INFINITY) {
+                display.getChildren().add(new Text("Has no time limit"));
+            } else {
+                display.getChildren().add(new Text("Has " + c.getTimeLimit() + " minute limit"));
+            }
+            if (c.getHasAttraction()) {
+                display.getChildren().add(new Text("Has near by attraction"));
+            }
+            displayInfo.getChildren().add(display);
             getManager().setSelectedCharger(c);
         }
     }
@@ -128,70 +183,64 @@ public class MainController {
     /**
      * Changes active charger on selected and moves the map
      */
-    public void selectToView() {
-        chargerTable.getSelectionModel().selectedItemProperty()
-                .addListener((observable, oldValue, newValue) -> {
-                    Charger selectedCharger = chargerTable.getSelectionModel()
-                            .getSelectedItem();
-                    if (selectedCharger != null) {
-                        viewChargers(selectedCharger);
-                        manage.setSelectedCharger(selectedCharger);
-                        // Added functionality to move screen to charger
-                        if (mapController != null) {
-                            mapController.changePosition(selectedCharger.getLocation());
-                        }
-                    }
-
-                });
-    }
-
-    /**
-     * Create charger table
-     */
-    public void tableMaker() {
-        chargerTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        addressCol.setMaxWidth(1f * Integer.MAX_VALUE * 30);
-        operatorCol.setMaxWidth(1f * Integer.MAX_VALUE * 15);
-        distanceCol.setMaxWidth(1f * Integer.MAX_VALUE * 5);
-
-        chargerTable.getColumns().add(addressCol);
-        chargerTable.getColumns().add(operatorCol);
-        chargerTable.getColumns().add(distanceCol);
-        chargerTable.requestFocus();
-        chargerTable.getSelectionModel().select(0);
+    public void selectToView(int number) {
+        Charger selectedCharger = manage.getCloseChargerData().get(number);
+        manage.setSelectedCharger(selectedCharger);
+        viewChargers(selectedCharger);
+        if (mapController != null) {
+            mapController.changePosition(selectedCharger.getLocation());
+        }
     }
 
     /**
      * Adds every charger in charger list to the table
      */
     public void addChargersToDisplay(ObservableList<Charger> chargersToAdd) {
-        chargerTable.getItems().clear();
-        chargerTable.setItems(chargersToAdd);
 
-        addressCol.setCellValueFactory(
-                charger -> new ReadOnlyStringWrapper(
-                        charger.getValue().getLocation().getAddress()));
-
-        operatorCol.setCellValueFactory(
-                charger -> new ReadOnlyStringWrapper(charger.getValue().getOperator()));
-
-        distanceCol.setCellValueFactory(
-                charger -> new ReadOnlyDoubleWrapper(
-                        Math.round((Calculations.calculateDistance(manage.getPosition(),
-                                charger.getValue().getLocation())) * 10.0) / 10.0)
-                        .asObject());
-
-        chargerTable.getSelectionModel().select(0);
-        chargerTable.getSortOrder().add(distanceCol);
-        chargerTable.sort();
-
+        chargerTable.getChildren().removeAll(chargerTable.getChildren());
+        for (int i = 0; i < chargersToAdd.size(); i++) {
+            HBox add = new HBox();
+            try {
+                ImageView image = new ImageView(new Image(
+                        new FileInputStream("src/main/resources/images/charger.png")));
+                add.getChildren().add(image);
+            } catch (FileNotFoundException e) {
+                Label image = new Label("Image");
+                add.getChildren().add(image);
+            }
+            VBox content = new VBox(new Text(chargersToAdd.get(i).getName()),
+                    new Text(chargersToAdd.get(i).getLocation().getAddress()),
+                    new Text(chargersToAdd.get(i).getOperator()),
+                    new Text("\n" + Math.round(Calculations.calculateDistance(
+                            manage.getPosition(), chargersToAdd.get(i).getLocation()))
+                            * 10.0 / 10.0 + "km"));
+            add.getChildren().add(content);
+            add.setPadding(new Insets(10));
+            add.setSpacing(10);
+            int finalI = i;
+            add.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, event -> {
+                selectToView(finalI);
+            });
+            add.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, event -> {
+                add.setStyle("-fx-background-color:#FFF8EB;");
+            });
+            add.addEventHandler(MouseEvent.MOUSE_EXITED_TARGET, event -> {
+                add.setStyle("-fx-background-color:#FFFFFF;");
+            });
+            chargerTable.getChildren().add(add);
+        }
         if (getMapController().getConnectorStatus()) {
             getMapController().addChargersOnMap();
         }
-        if (!chargerTable.getItems().isEmpty()) {
-            viewChargers(chargerTable.getItems().get(0));
+        if (chargerTable.getChildren().size() != 0) {
+            viewChargers(chargersToAdd.get(0));
+        } else {
+            viewChargers(null);
         }
-        refreshTable();
+    }
+
+    public void refreshTable() {
+        addChargersToDisplay(manage.getCloseChargerData());
     }
 
     /**
@@ -199,10 +248,28 @@ public class MainController {
      */
     public void change() {
         distanceDisplay.textProperty()
-                .setValue("Distance (" + Math.round(changeDistance.getValue()) + " km)");
+                .setValue("Minimum distance (" + Math.round(changeDistance.getValue()) + " km)");
+        onParkingFiler.textProperty()
+                .setValue("Minimum number of spaces ("
+                        + Math.round(parkingLot.getValue()) + ")");
+        toggleTimeLimit.textProperty()
+                .setValue("Minimum time limit of ("
+                        + Math.round(timeLimit.getValue()) + " minutes)");
+
         changeDistance.valueProperty().addListener((observableValue, number, t1) -> {
             distanceDisplay.textProperty()
-                    .setValue("Distance (" + Math.round(changeDistance.getValue()) + " km)");
+                    .setValue("Minimum distance ("
+                            + Math.round(changeDistance.getValue()) + " km)");
+        });
+        parkingLot.valueProperty().addListener((observableValue, number, t1) -> {
+            onParkingFiler.textProperty()
+                    .setValue("Minimum number of spaces ("
+                            + Math.round(parkingLot.getValue()) + ")");
+        });
+        timeLimit.valueProperty().addListener((observableValue, number, t1) -> {
+            toggleTimeLimit.textProperty()
+                    .setValue("Minimum time limit of ("
+                            + Math.round(timeLimit.getValue()) + " minutes)");
         });
     }
 
@@ -211,23 +278,48 @@ public class MainController {
      */
     public void executeSearch() {
         manage.resetQuery();
+        if (toggleTimeLimit.isSelected()) {
+            manage.adjustQuery("maxtimelimit",
+                    Double.toString(timeLimit.getValue()), ComparisonType.GREATER_THAN_EQUAL);
+        }
+        if (onParkingFiler.isSelected()) {
+            manage.adjustQuery("carparkcount",
+                    Double.toString(parkingLot.getValue()), ComparisonType.GREATER_THAN_EQUAL);
+        }
+        if (withoutCarparkCost.isSelected()) {
+            manage.adjustQuery("hascarparkcost", "False", ComparisonType.EQUAL);
+        }
+        if (withCarparkCost.isSelected()) {
+            manage.adjustQuery("hascarparkcost", "True", ComparisonType.EQUAL);
+        }
         if (acButton.isSelected()) {
             manage.adjustQuery("currenttype", "AC", ComparisonType.CONTAINS);
         }
-
         if (dcButton.isSelected()) {
             manage.adjustQuery("currenttype", "DC", ComparisonType.CONTAINS);
         }
-
+        if (openAllButton.isSelected()) {
+            manage.adjustQuery("is24hours", "True", ComparisonType.EQUAL);
+        }
+        if (notOpenAllButton.isSelected()) {
+            manage.adjustQuery("is24hours", "False", ComparisonType.EQUAL);
+        }
         if (attractionButton.isSelected()) {
             manage.adjustQuery("hastouristattraction", "True", ComparisonType.EQUAL);
+        }
+        if (noNearbyAttraction.isSelected()) {
+            manage.adjustQuery("hastouristattraction", "False", ComparisonType.EQUAL);
         }
         if (chargingCost.isSelected()) {
             manage.adjustQuery("haschargingcost", "False", ComparisonType.EQUAL);
         }
+        if (hasChargingCost.isSelected()) {
+            manage.adjustQuery("haschargingcost", "True", ComparisonType.EQUAL);
+        }
         if (searchCharger.getText().length() != 0) {
             manage.adjustQuery("address", searchCharger.getText(), ComparisonType.CONTAINS);
         }
+
         manage.makeAllChargers();
         if (distanceDisplay.isSelected()) {
             manage.setDistance(changeDistance.getValue());
@@ -239,13 +331,6 @@ public class MainController {
         if (chargers.size() != 0) {
             mapController.changePosition(chargers.get(0).getLocation());
         }
-    }
-
-    /**
-     * Focuses the ChargerTable
-     */
-    public void refreshTable() {
-        chargerTable.refresh();
     }
 
     /**
@@ -277,7 +362,6 @@ public class MainController {
         }
     }
 
-
     /**
      * Gets the MainManager created by the MainController
      *
@@ -288,16 +372,11 @@ public class MainController {
     }
 
     /**
-     * Uses the JavaScript Bridge to load the charger edit functionality of the
-     * selected charger
+     * Gets the manager to edit the charger
      */
     public void editCharger() {
-        if (manage.getSelectedCharger() != null) {
-            JavaScriptBridge bridge = new JavaScriptBridge();
-            bridge.loadMoreInfo(manage.getSelectedCharger().getChargerId());
-        }
+        manage.editCharger();
     }
-
 
     /**
      * Toggles the route view on.
@@ -306,5 +385,19 @@ public class MainController {
         mapController.toggleRoute();
     }
 
-
+    /**
+     * Initialises the welcome page;
+     */
+    public void loadTableView() {
+        try {
+            FXMLLoader mainScene = new FXMLLoader(getClass()
+                    .getResource("/fxml/main_table.fxml"));
+            Parent mainNode = mainScene.load();
+            TableController controller = mainScene.getController();
+            controller.init();
+            menuWindow.setCenter(mainNode);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

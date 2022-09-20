@@ -11,20 +11,30 @@ import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Vehicle;
 
 /**
- * Logic layer for the vehicle Controller
+ * Logic layer for the garage Controller
  *
  * @author Celia Allen
  * @version 1.0.0, Aug 22
  *
-*/
-public class VehicleManager {
-    
+ */
+public class GarageManager {
 
+    /**
+     * Query object to retrieve vehicles
+     */
     private QueryBuilder vehicleDataQuery;
 
+    /**
+     * List of available vehicles
+     */
     private ObservableList<Vehicle> vehicleData;
 
-
+    /**
+     * Initialize GarageManager
+     */
+    public GarageManager() {
+        // resetQuery();
+    }
 
     /**
      * Load the initial query
@@ -41,7 +51,7 @@ public class VehicleManager {
         try {
             List<Vehicle> vehicleList = new ArrayList<>();
             for (Object o : SqlInterpreter.getInstance()
-                .readData(vehicleDataQuery.build(), Vehicle.class)) {
+                    .readData(vehicleDataQuery.build(), Vehicle.class)) {
                 vehicleList.add((Vehicle) o);
             }
 
@@ -51,7 +61,6 @@ public class VehicleManager {
             e.printStackTrace();
         }
     }
-
 
     /**
      * Returns the list of vehicles
