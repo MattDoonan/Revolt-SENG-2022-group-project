@@ -1,4 +1,4 @@
-package seng202.team3.testFx;
+package seng202.team3.testfx;
 
 import static org.junit.Assert.assertThat;
 
