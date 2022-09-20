@@ -2,6 +2,7 @@ package seng202.team3.logic;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seng202.team3.data.entity.Charger;
@@ -25,6 +26,7 @@ public class JourneyManager extends ChargerHandler {
     /** Ending {@link Coordinate coordinate} of journey */
     private Coordinate end;
 
+    /** List of {@link Charger chargers} that are candidates for journey*/
     private ObservableList<Charger> candidateChargers;
 
 
@@ -59,7 +61,7 @@ public class JourneyManager extends ChargerHandler {
      * @param start start of journey
      */
     public void setStart(Coordinate start) {
-        this.start = start;
+        selectedJourney.setStartPosition(start);
     }
 
     /**
@@ -68,7 +70,7 @@ public class JourneyManager extends ChargerHandler {
      * @param end end of journey
      */
     public void setEnd(Coordinate end) {
-        this.end = end;
+        selectedJourney.setEndPosition(end);
     }
 
     /**

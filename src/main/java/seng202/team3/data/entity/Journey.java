@@ -57,6 +57,8 @@ public class Journey {
 
     /**
      * Add new {@link Charger charger} to journey
+     * 
+     * @param charger charger to add
      */
     public void addCharger(Charger charger) {
         chargers.add(charger);
@@ -64,6 +66,8 @@ public class Journey {
 
     /**
      * Remove a {@link Charger charger} from the journey
+     * 
+     * @param charger charger to remove
      */
     public void removeCharger(Charger charger) {
         chargers.remove(charger);

@@ -21,6 +21,9 @@ public final class Calculations {
      * @return double; the distance (in km) between the two coordinates
      */
     public static double calculateDistance(Coordinate location1, Coordinate location2) {
+        if (location1 == location2){
+            return 0.0;
+        }
         double lat1 = location1.getLat() / (180 / Math.PI);
         double lon1 = location1.getLon() / (180 / Math.PI);
         double lat2 = location2.getLat() / (180 / Math.PI);
