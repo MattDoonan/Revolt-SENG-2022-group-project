@@ -199,7 +199,7 @@ public class TableController {
     }
 
     /**
-     * Sets the id of each column so they can all be tested.
+     * Sets the id of each column so they can all be fx tested
      */
     public void setIdForTesting() {
         idCol.setId("idCol");
@@ -242,6 +242,8 @@ public class TableController {
         chargcostCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
         currentsCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
         mainTable.getColumns().removeAll(mainTable.getColumns());
+
+        // Checks if the user wants to view the column
         if (showId.isSelected()) {
             mainTable.getColumns().add(idCol);
         }
@@ -339,6 +341,7 @@ public class TableController {
 
     /**
      * Updates the table when a user clicks update table button
+     * Checks filters and adds query accordingly and makes all chargers
      */
     public void updateTable() {
         manage.resetQuery();
@@ -411,6 +414,10 @@ public class TableController {
         });
     }
 
+    /**
+     * Gets the manager of the table
+     * @return table manager class
+     */
     public TableManager getManager() {
         return manage;
     }

@@ -136,7 +136,9 @@ public class MainController {
      * @param c charger to display information about
      */
     public void viewChargers(Charger c) {
+        // Clears the HBox of nodes (items)
         displayInfo.getChildren().removeAll(displayInfo.getChildren());
+        // Check if there is no charger
         if (c == null) {
             if (manage.getCloseChargerData().size() != 0) {
                 manage.setSelectedCharger(manage.getCloseChargerData().get(0));
@@ -147,20 +149,23 @@ public class MainController {
             }
         } else {
             try {
+                // Gets image for charger
                 ImageView image = new ImageView(new Image(
                         new FileInputStream("src/main/resources/images/charger.png")));
+                // Edits the width and height to 150px
                 image.setFitHeight(150);
                 image.setFitWidth(150);
-                displayInfo.getChildren().add(image);
+                displayInfo.getChildren().add(image); // adds to the HBox
             } catch (FileNotFoundException e) {
                 Label image = new Label("Image");
                 displayInfo.getChildren().add(image);
             }
-            VBox display = new VBox();
+            VBox display = new VBox(); // Creates Vbox to contain text
             display.getChildren().add(new Text("" + c.getName() + ""));
             display.getChildren().add(new Text("" + c.getLocation().getAddress() + "\n"));
             String word = manage.getConnectors(c);
             display.getChildren().add(new Text("Current types " + word + ""));
+            // If statements are there to make different text depending on the charger info
             if (c.getOperator() != null) {
                 display.getChildren().add(new Text("Operator is: " + c.getOperator() + ""));
             }
@@ -184,6 +189,7 @@ public class MainController {
             if (c.getHasAttraction()) {
                 display.getChildren().add(new Text("Has near by attraction"));
             }
+            // Adds the charger info to the HBox
             displayInfo.getChildren().add(display);
             getManager().setSelectedCharger(c);
         }
@@ -202,40 +208,46 @@ public class MainController {
     }
 
     /**
-     * Adds every charger in charger list to the table
+     * Adds every charger in charger list to the vbox
      */
     public void addChargersToDisplay(ObservableList<Charger> chargersToAdd) {
 
-        chargerTable.getChildren().removeAll(chargerTable.getChildren());
+        chargerTable.getChildren().removeAll(chargerTable.getChildren()); // clears vbox
         for (int i = 0; i < chargersToAdd.size(); i++) {
-            HBox add = new HBox();
+            HBox add = new HBox(); // creates HBox that will contain the changer info
             try {
+                // Gets image and adds it to an Image View
                 ImageView image = new ImageView(new Image(
                         new FileInputStream("src/main/resources/images/charger.png")));
                 add.getChildren().add(image);
             } catch (FileNotFoundException e) {
                 Label image = new Label("Image");
-                add.getChildren().add(image);
+                add.getChildren().add(image); // adds to the HBox
             }
+            // Create Vbox to contain the charger info
             VBox content = new VBox(new Text(chargersToAdd.get(i).getName()),
                     new Text(chargersToAdd.get(i).getLocation().getAddress()),
                     new Text(chargersToAdd.get(i).getOperator()),
                     new Text("\n" + Math.round(Calculations.calculateDistance(
                             manage.getPosition(), chargersToAdd.get(i).getLocation()))
                             * 10.0 / 10.0 + "km"));
-            add.getChildren().add(content);
+            add.getChildren().add(content); // Adds charger content to HBox
             add.setPadding(new Insets(10));
             add.setSpacing(10);
             int finalI = i;
+            // Sets on click functionally
             add.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, event -> {
                 selectToView(finalI);
             });
+            // Changes Hover style
             add.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, event -> {
                 add.setStyle("-fx-background-color:#FFF8EB;");
             });
+            // Changes off hover style
             add.addEventHandler(MouseEvent.MOUSE_EXITED_TARGET, event -> {
                 add.setStyle("-fx-background-color:#FFFFFF;");
             });
+            // Adds the HBox to the main VBox
             chargerTable.getChildren().add(add);
         }
         if (getMapController().getConnectorStatus()) {
@@ -248,13 +260,16 @@ public class MainController {
         }
     }
 
-
+    /**
+     * Refresh the vbox filled with chargers
+     */
     public void refreshTable() {
         addChargersToDisplay(manage.getCloseChargerData());
     }
 
     /**
-     * Sets the Original text and updates distance filter for chargers on slider
+     * Sets the Original text and updates value for the slider filter
+     * names so the user can see what they have input
      */
     public void change() {
         distanceDisplay.textProperty()
