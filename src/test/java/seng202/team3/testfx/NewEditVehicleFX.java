@@ -2,15 +2,15 @@ package seng202.team3.testfx;
 
 import static org.junit.Assert.assertThat;
 
-import org.junit.jupiter.api.Test;
-import org.testfx.framework.junit5.ApplicationTest;
-import org.testfx.matcher.control.TextInputControlMatchers;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import org.junit.jupiter.api.Test;
+import org.testfx.framework.junit5.ApplicationTest;
+import org.testfx.matcher.control.TextInputControlMatchers;
 import seng202.team3.gui.MainWindow;
 import seng202.team3.gui.VehicleUpdateController;
 
@@ -21,7 +21,7 @@ import seng202.team3.gui.VehicleUpdateController;
  * @author Celia Allen
  * @version 1.0.0, Sep 22
  */
-public class NewEditVehicleFX extends TestFXBase {
+public class NewEditVehicleFx extends TestFXBase {
 
     private VehicleUpdateController controller;
 

@@ -28,66 +28,134 @@ import seng202.team3.logic.GarageManager;
  */
 public class GarageController {
 
+    /**
+     * Make and model for the first vehicle
+     */
     @FXML
     private TextArea makeModelOne;
 
+    /**
+     * Make and model for the second vehicle
+     */
     @FXML
     private TextArea makeModelTwo;
 
+    /**
+     * Make and model for the third vehicle
+     */
     @FXML
     private TextArea makeModelThree;
 
+    /**
+     * Image for the first vehicle
+     */
     @FXML
     private ImageView vehicleImageOne;
 
+    /**
+     * Image for the second vehicle
+     */
     @FXML
     private ImageView vehicleImageTwo;
 
+    /**
+     * Image for the third vehicle
+     */
     @FXML
     private ImageView vehicleImageThree;
 
+    /**
+     * Details for the first vehicle
+     */
     @FXML
     private TextArea carDetailsOne;
 
+    /**
+     * Details for the second vehicle
+     */
     @FXML
     private TextArea carDetailsTwo;
 
+    /**
+     * Details for the third vehicle
+     */
     @FXML
     private TextArea carDetailsThree;
 
+    /**
+     * Button to edit the first vehicle
+     */
     @FXML
     private Button editCarOne;
 
+    /**
+     * Button to edit the second vehicle
+     */
     @FXML
     private Button editCarTwo;
 
+    /**
+     * Button to edit the third vehicle
+     */
     @FXML
     private Button editCarThree;
 
+    /**
+     * Button to delete the first vehicle
+     */
     @FXML
     private Button deleteCarOne;
 
+    /**
+     * Button to delete the second vehicle
+     */
     @FXML
     private Button deleteCarTwo;
 
+    /**
+     * Button to delete the third vehicle
+     */
     @FXML
     private Button deleteCarThree;
 
+    /**
+     * Button to scroll the vehicle view forward
+     */
     @FXML
     private Button nextBtn;
 
+    /**
+     * Button to scroll the vehicle view backward
+     */
     @FXML
     private Button prevBtn;
 
+    /**
+     * All vehicles to be displayed
+     */
     private ObservableList<Vehicle> vehicleData = FXCollections.observableArrayList();
 
+    /**
+     * Active vehicle
+     */
     private Vehicle selectedVehicle;
 
+    /**
+     * Pop up window for editing vehicles
+     */
     private Stage editPopup = new Stage();
 
+    /**
+     * Logic controller
+     */
     private GarageManager manage = new GarageManager();
 
-    private GarageController controller;
+    /**
+     * Initialize the GarageController
+     */
+    public GarageController() {
+        // init();
+    }
 
     /**
      * Initialize the window with data from the database
@@ -121,7 +189,7 @@ public class GarageController {
      * Sets selectedVehicle to the vehicle the user wants to edit,
      * then launches the edit popup with the selected vehicle's details pre-filled.
      * 
-     * @paramn event, the event that called the method
+     * @param event the event that called the method
      */
     @FXML
     public void setEdit(ActionEvent event) {
@@ -145,6 +213,8 @@ public class GarageController {
     /**
      * Displays pop-up window that allows a user to edit a
      * vehicle in the garage
+     * 
+     * @param vehicle the vehicle to be edited
      */
     public void launchEditable(Vehicle vehicle) {
         try {
@@ -188,7 +258,7 @@ public class GarageController {
      * Sets selectedVehicle to the vehicle the user wants to delete,
      * then launches the confirm delete popup.
      * 
-     * @paramn event, the event that called the method
+     * @param event the event that called the method
      */
     @FXML
     public void setDelete(ActionEvent event) {
