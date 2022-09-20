@@ -8,9 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-
 
 /**
  * A class that pops up error messages can be hijacked for warnings
@@ -20,23 +18,39 @@ import javafx.stage.Stage;
  */
 public class ErrorController {
 
+    /**
+     * Active screen
+     */
     private Stage stage;
+
+    /**
+     * List of errors to be displayed
+     */
     private ObservableList<String> errorList;
 
+    /**
+     * Table column mapping error names to messages
+     */
     @FXML
     private TableColumn<String, String> errors;
 
+    /**
+     * Prompt description of where error occured
+     */
     @FXML
     private Label prompt;
 
+    /**
+     * Table to display error messages
+     */
     @FXML
     private TableView<String> table;
-
 
     /**
      * Blank initialiser
      */
     public ErrorController() {
+        // Unused
     }
 
     /**
@@ -48,7 +62,6 @@ public class ErrorController {
 
     /**
      * Displays the errors and solutions as an observable list
-     *
      */
     public void displayErrors() {
         stage.setAlwaysOnTop(true);
@@ -68,7 +81,8 @@ public class ErrorController {
     /**
      * Sets the text label
      *
-     * @param type a String of either "error" or "warning" which will display the correct texts.
+     * @param type a String of either "error" or "warning" which will display the
+     *             correct texts.
      */
     public void setPromptType(String type) {
         switch (type) {
@@ -84,7 +98,6 @@ public class ErrorController {
         }
 
     }
-
 
     /**
      * Closes the stage

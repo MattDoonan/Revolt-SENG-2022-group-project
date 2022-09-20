@@ -2,12 +2,8 @@ package seng202.team3.logic;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import seng202.team3.data.database.ComparisonType;
-import seng202.team3.data.database.QueryBuilder;
-import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
@@ -17,9 +13,7 @@ import seng202.team3.data.entity.Coordinate;
  *
  * @author Matthew Doonan, Michelle Hsieh
  * @version 1.0.1, Aug 22
- *
  */
-
 public class MainManager extends ChargerHandler implements ChargerInterface {
 
     private double distance = 0;
@@ -50,12 +44,12 @@ public class MainManager extends ChargerHandler implements ChargerInterface {
         return distance;
     }
 
-
     /**
      * Send chargers within range of the selected location to the table and temp
      * data.
      *
-     * @return an ObservableList of {@link Charger}s which are nearby
+     * @return an ObservableList of {@link seng202.team3.data.entity.Charger}s which
+     *         are nearby
      */
     public ObservableList<Charger> compareDistance() {
         ArrayList<Charger> arrayChargers = new ArrayList<>(chargerData);
@@ -66,7 +60,6 @@ public class MainManager extends ChargerHandler implements ChargerInterface {
         ObservableList<Charger> closerChargers = FXCollections.observableList(arrayChargers);
         return closerChargers;
     }
-
 
     /**
      * Returns a list of the closest chargers according to set distance from
@@ -81,8 +74,8 @@ public class MainManager extends ChargerHandler implements ChargerInterface {
         return compareDistance();
     }
 
-
     /**
+     * {@inheritDoc}
      * Adds a charger at the location of the coordinate.
      */
     @Override
@@ -91,8 +84,8 @@ public class MainManager extends ChargerHandler implements ChargerInterface {
     }
 
     /**
+     * {@inheritDoc}
      * Removes the selected charger and replaces it with null
-     *
      */
     @Override
     public void deleteCharger() {
@@ -108,6 +101,7 @@ public class MainManager extends ChargerHandler implements ChargerInterface {
     }
 
     /**
+     * {@inheritDoc}
      * Uses the JavaScript Bridge to load the charger edit functionality of the
      * selected charger
      */
@@ -118,6 +112,5 @@ public class MainManager extends ChargerHandler implements ChargerInterface {
             bridge.loadMoreInfo(getSelectedCharger().getChargerId());
         }
     }
-
 
 }

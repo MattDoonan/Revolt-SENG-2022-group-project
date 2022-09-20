@@ -16,12 +16,18 @@ public class ChargerManager {
     /** {@link Charger Charger} Charger which is the currently selected charger */
     private Charger selectedCharger;
 
-    /** Constructor for ChargerManager */
+    /**
+     * Constructor for ChargerManager
+     */
     public ChargerManager() {
         setSelectedCharger(null);
     }
 
-    /** Constructor for ChargerManager */
+    /**
+     * Constructor for ChargerManager
+     *
+     * @param selectedCharger active charger to be managed
+     */
     public ChargerManager(Charger selectedCharger) {
         setSelectedCharger(selectedCharger);
     }
@@ -29,7 +35,8 @@ public class ChargerManager {
     /**
      * Sets selectedCharger
      *
-     * @param selectedCharger {@link Charger} the Charger which is being selected.
+     * @param selectedCharger {@link seng202.team3.data.entity.Charger} the Charger
+     *                        which is being selected.
      */
     public void setSelectedCharger(Charger selectedCharger) {
         this.selectedCharger = selectedCharger;
@@ -38,7 +45,8 @@ public class ChargerManager {
     /**
      * Gets the selectedCharger
      *
-     * @return {@link Charger} selectedCharger which is the currently selected
+     * @return {@link seng202.team3.data.entity.Charger} selectedCharger which is
+     *         the currently selected
      *         charger
      */
     public Charger getSelectedCharger() {
@@ -46,10 +54,12 @@ public class ChargerManager {
     }
 
     /**
-     * Calculates the distance between two {@link Charger} (selectedCharger, input
+     * Calculates the distance between two {@link seng202.team3.data.entity.Charger}
+     * (selectedCharger, input
      * charger).
      *
-     * @param toCharger {@link Charger} Charger which selectedCharger is calculating
+     * @param toCharger {@link seng202.team3.data.entity.Charger} Charger which
+     *                  selectedCharger is calculating
      *                  from.
      * @return double; the distance between chargers in kilometres.
      */
@@ -63,11 +73,14 @@ public class ChargerManager {
      * Returns the list of the closest chargers, in order from closest to furthest
      * away.
      *
-     * @param chargers {@link Charger} An ArrayList of Chargers
-     * @param location {@link Coordinate} A coordinate of the location to calculate
+     * @param chargers {@link seng202.team3.data.entity.Charger} An ArrayList of
+     *                 Chargers
+     * @param location {@link seng202.team3.data.entity.Coordinate} A coordinate of
+     *                 the location to calculate
      *                 distance from
      * @param distance double, the maximum distance to filter chargers by
-     * @return ArrayList<> of the {@link Charger} chargers sorted from closest to
+     * @return ArrayList of the {@link seng202.team3.data.entity.Charger} chargers
+     *         sorted from closest to
      *         furthest
      */
     public ArrayList<Charger> getNearbyChargers(ArrayList<Charger> chargers, Coordinate location,
@@ -85,7 +98,7 @@ public class ChargerManager {
 
     /**
      * Changes the warnings of the selected charger
-     * 
+     *
      * @param warning the warning to change the state of
      * @param state   boolean of state of warning to change to
      */

@@ -3,18 +3,9 @@ package seng202.team3.gui;
 import java.io.IOException;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
@@ -27,7 +18,6 @@ public class MenuController {
 
     private Stage stage;
     private static MainController controller;
-    private static JourneyController journeyController;
 
     @FXML
     private BorderPane menuWindow;
@@ -53,45 +43,66 @@ public class MenuController {
         this.stage = stage;
     }
 
-
     /**
-     * Following functions are the hover and hover exit effects for the nav bar buttons
+     * Following functions are the hover and hover exit effects for the nav bar
+     * buttons
      */
     public void menuHover() {
         menuButton.setStyle("-fx-text-fill:#000000; -fx-font-size: 26px; "
                 + "-fx-background-color: #e06666;");
     }
 
+    /**
+     * <p>menuExit.</p>
+     */
     public void menuExit() {
         menuButton.setStyle("-fx-text-fill:#ffffff;-fx-font-size: 24px; "
                 + "-fx-background-color: #e06666;");
     }
 
+    /**
+     * <p>vehicleHover.</p>
+     */
     public void vehicleHover() {
         vehicleButton.setStyle("-fx-text-fill:#000000;-fx-font-size: 26px; "
                 + "-fx-background-color: #e06666;");
     }
 
+    /**
+     * <p>vehicleExit.</p>
+     */
     public void vehicleExit() {
         vehicleButton.setStyle("-fx-text-fill:#ffffff;-fx-font-size: 24px; "
                 + "-fx-background-color: #e06666;");
     }
 
+    /**
+     * <p>journeyHover.</p>
+     */
     public void journeyHover() {
         journeyButton.setStyle("-fx-text-fill:#000000;-fx-font-size: 26px; "
                 + "-fx-background-color: #e06666;");
     }
 
+    /**
+     * <p>journeyExit.</p>
+     */
     public void journeyExit() {
         journeyButton.setStyle("-fx-text-fill:#ffffff;-fx-font-size: 24px; "
                 + "-fx-background-color: #e06666;");
     }
 
+    /**
+     * <p>accountHover.</p>
+     */
     public void accountHover() {
         accountButton.setStyle("-fx-text-fill:#000000;-fx-font-size: 26px; "
                 + "-fx-background-color: #e06666;");
     }
 
+    /**
+     * <p>accountExit.</p>
+     */
     public void accountExit() {
         accountButton.setStyle("-fx-text-fill:#ffffff;-fx-font-size: 24px;"
                 + " -fx-background-color: #e06666;");
@@ -115,19 +126,10 @@ public class MenuController {
     /**
      * Gets the static Main Controller
      *
-     * @return {@link MainController} the main controller of this run
+     * @return {@link seng202.team3.gui.MainController} the main controller of this run
      */
     public MainController getController() {
         return controller;
-    }
-
-    /**
-     * Gets the static Journey Controller
-     *
-     * @return {@link JourneyController} the journeycontroller of this run
-     */
-    public JourneyController getJourneyController() {
-        return journeyController;
     }
 
     /**
@@ -137,7 +139,6 @@ public class MenuController {
     public void loadHome() {
         initHome();
     }
-
 
     /**
      * Initialises the welcome page;
@@ -154,22 +155,6 @@ public class MenuController {
             e.printStackTrace();
         }
     }
-
-    /**
-     * Launches the Journey Screen
-     */
-    public void launchJourneyScreen() {
-        try {
-            FXMLLoader journeyLoader = new FXMLLoader(getClass().getResource("/fxml/journey.fxml"));
-            Parent journeyViewParent = journeyLoader.load();
-            journeyController = journeyLoader.getController();
-            journeyController.init(stage);
-            menuWindow.setCenter(journeyViewParent);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
 
     /**
      * Loads the vehicle screen upon click

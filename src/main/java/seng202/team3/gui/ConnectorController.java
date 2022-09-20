@@ -4,7 +4,6 @@ import java.io.IOException;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.PointLight;
 import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -14,8 +13,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import seng202.team3.data.entity.Connector;
 
-
-
 /**
  * The connector controller class which operates the connector changes
  *
@@ -24,32 +21,57 @@ import seng202.team3.data.entity.Connector;
  */
 public class ConnectorController {
 
+    /**
+     * List of editable connectors
+     */
     private ObservableList<Connector> connectorList;
 
+    /**
+     * Column mapping connectors to their currents
+     */
     @FXML
     private TableColumn<Connector, String> current;
 
+    /**
+     * Column mapping connectors to their power draw
+     */
     @FXML
     private TableColumn<Connector, String> wattage;
 
+    /**
+     * Column mapping connectors to their charging points
+     */
     @FXML
     private TableColumn<Connector, Integer> chargingPoints;
 
+    /**
+     * Column mapping connectors to their types
+     */
     @FXML
     private TableColumn<Connector, String> connectorTypes;
 
+    /**
+     * Column mapping connectors to their operative status
+     */
     @FXML
     private TableColumn<Connector, String> status;
 
+    /**
+     * Table view of connectors
+     */
     @FXML
     private TableView<Connector> connectorTable;
 
+    /**
+     * Screen for displaying connector editing
+     */
     private Stage stage;
 
     /**
-     * Initialises the connectorcontroller
+     * Unused constructor
      */
     public ConnectorController() {
+        // Unused
     }
 
     /**
@@ -82,12 +104,11 @@ public class ConnectorController {
     /**
      * Gets the connectorlist
      *
-     * @return and observable list of {@link Connector}s
+     * @return and observable list of {@link seng202.team3.data.entity.Connector}s
      */
     public ObservableList<Connector> getConnectorList() {
         return connectorList;
     }
-
 
     /**
      * Opens a new add window
@@ -127,11 +148,12 @@ public class ConnectorController {
         }
     }
 
-
     /**
      * Launches the editable portion
      *
-     * @param connector the {@link Connector} for the connector info. Null if adding.
+     * @param connector the {@link seng202.team3.data.entity.Connector} for the
+     *                  connector info. Null if
+     *                  adding.
      */
     public void launchEditable(Connector connector) {
         stage = (Stage) connectorTable.getScene().getWindow();
@@ -159,8 +181,5 @@ public class ConnectorController {
             displayConnectorInfo();
         }
     }
-
-
-
 
 }

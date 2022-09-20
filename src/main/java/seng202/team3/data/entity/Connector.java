@@ -2,7 +2,7 @@ package seng202.team3.data.entity;
 
 /**
  * Represents different connectors attached to {@link Charger chargers}
- * 
+ *
  * @author Harrison Tyson
  * @version 1.0.0, Aug 22
  */
@@ -29,6 +29,12 @@ public class Connector {
 
     /**
      * Constructor for the connector
+     *
+     * @param type    type of the connector
+     * @param power   power draw of the connector
+     * @param status  operative status of the connector
+     * @param current current type of the connector
+     * @param count   number of the connector attached
      */
     public Connector(String type, String power, String status, String current, int count) {
         setType(type);
@@ -40,19 +46,23 @@ public class Connector {
 
     /**
      * Constructor for the connector with id
+     *
+     * @see #Connector(String, String, String, String, int)
+     * @param type a {@link java.lang.String} object
+     * @param power a {@link java.lang.String} object
+     * @param status a {@link java.lang.String} object
+     * @param current a {@link java.lang.String} object
+     * @param count a int
+     * @param id a int
      */
     public Connector(String type, String power, String status, String current, int count, int id) {
+        new Connector(type, power, status, current, count);
         setId(id);
-        setType(type);
-        setPower(power);
-        setOperational(status);
-        setCurrent(current);
-        setCount(count);
     }
 
     /**
      * Gets the type of the connector
-     * 
+     *
      * @return the type of the connector
      */
     public String getType() {
@@ -61,7 +71,7 @@ public class Connector {
 
     /**
      * Sets the value of the type of the connector
-     * 
+     *
      * @param newType value for the type
      */
     public void setType(String newType) {
@@ -70,7 +80,7 @@ public class Connector {
 
     /**
      * Gets the power of the connector
-     * 
+     *
      * @return style of current the connector uses
      */
     public String getPower() {
@@ -79,7 +89,7 @@ public class Connector {
 
     /**
      * Sets the power of the connector *
-     * 
+     *
      * @param newPower value for the connector's power
      */
     public void setPower(String newPower) {
@@ -88,7 +98,7 @@ public class Connector {
 
     /**
      * Gets the operational status of the connector
-     * 
+     *
      * @return operational status
      */
     public String getStatus() {
@@ -97,7 +107,7 @@ public class Connector {
 
     /**
      * Sets the operational status of the connector
-     * 
+     *
      * @param newStatus new operational status
      */
     public void setOperational(String newStatus) {
@@ -106,7 +116,7 @@ public class Connector {
 
     /**
      * Gets the current of the connector
-     * 
+     *
      * @return current used by connector
      */
     public String getCurrent() {
@@ -115,7 +125,7 @@ public class Connector {
 
     /**
      * Sets the current of the connector
-     * 
+     *
      * @param newCurrent new current of the connector
      */
     public void setCurrent(String newCurrent) {
@@ -124,8 +134,7 @@ public class Connector {
 
     /**
      * Gets the number of the connector attached to a {@link Charger charger}
-     * 
-     * 
+     *
      * @return number of connectors
      */
     public int getCount() {
@@ -134,7 +143,7 @@ public class Connector {
 
     /**
      * Sets the number of connectors attached to a {@link Charger charger}
-     * 
+     *
      * @param newCount new number of connectors
      */
     public void setCount(int newCount) {
@@ -143,7 +152,7 @@ public class Connector {
 
     /**
      * Gets the id of the connector
-     * 
+     *
      * @return id of the connector
      */
     public int getId() {
@@ -152,13 +161,14 @@ public class Connector {
 
     /**
      * Sets the id of the connector
-     * 
+     *
      * @param connectorId id of the connector
      */
     public void setId(int connectorId) {
         this.connectorId = connectorId;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean equals(Object o) {
         Connector c;
@@ -171,7 +181,6 @@ public class Connector {
         return c.getType().equals(this.getType())
                 && c.getPower().equals(this.getPower())
                 && c.getStatus().equals(this.getStatus())
-                && c.getCurrent().equals(this.getCurrent())
-                && c.getId() == this.getId();
+                && c.getCurrent().equals(this.getCurrent());
     }
 }

@@ -19,36 +19,67 @@ import seng202.team3.data.entity.Connector;
  */
 public class ConnectorEditController {
 
+    /**
+     * Field to contain the current of the connector
+     */
     @FXML
     private TextField current;
 
+    /**
+     * Field to contain the power draw
+     */
     @FXML
     private TextField wattage;
 
+    /**
+     * Field to contain the number of connections
+     */
     @FXML
     private TextField chargingPoints;
 
+    /**
+     * Field to contain the type of connector
+     */
     @FXML
     private TextField type;
 
+    /**
+     * Field to contain the operative status
+     */
     @FXML
     private TextField status;
 
+    /**
+     * Active connector being edited
+     */
     private Connector connector;
+
+    /**
+     * Controller managing the connectors
+     */
     private ConnectorController controller;
+
+    /**
+     * List of errors to display
+     */
     private ArrayList<String> errors = new ArrayList<>();
+
+    /**
+     * Active screen
+     */
     private Stage stage;
 
     /**
      * Initialises the Controller editing
      */
     public ConnectorEditController() {
+        // unused
     }
 
     /**
      * Initialises the ConnectorEditController with the selected connector
      *
-     * @param connector a {@link Connector} if it's preexisting
+     * @param connector a {@link seng202.team3.data.entity.Connector} if it's preexisting
      */
     public void addConnector(Connector connector) {
         this.connector = connector;
@@ -113,7 +144,6 @@ public class ConnectorEditController {
         launchErrorPopUps();
     }
 
-
     /**
      * Launches an error popup when trying to do illegal things
      */
@@ -130,11 +160,11 @@ public class ConnectorEditController {
             modal.setResizable(false);
             modal.setTitle("Error With Connectors:");
             modal.initModality(Modality.WINDOW_MODAL);
-            ErrorController controller = error.getController();
-            controller.init();
-            controller.setErrors(errors);
-            controller.setPromptType("error");
-            controller.displayErrors();
+            ErrorController errController = error.getController();
+            errController.init();
+            errController.setErrors(errors);
+            errController.setPromptType("error");
+            errController.displayErrors();
             modal.setAlwaysOnTop(true);
             modal.showAndWait();
         } catch (IOException e) {

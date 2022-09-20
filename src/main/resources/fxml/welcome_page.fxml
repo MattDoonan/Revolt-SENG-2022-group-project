@@ -5,7 +5,7 @@
 <?import javafx.scene.text.*?>
 
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.WelcomeController" >
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.WelcomeController" >
    <children>
       <Label layoutX="34.0" layoutY="74.0" text="Welcome to REVOLT!" AnchorPane.bottomAnchor="265.0" AnchorPane.leftAnchor="34.0" AnchorPane.rightAnchor="34.0" AnchorPane.topAnchor="74.0">
          <font>
@@ -17,7 +17,7 @@
             <Font size="17.0" />
          </font>
       </Button>
-      <Button onMouseClicked="#launchJourneys" layoutX="349.0" layoutY="218.0" mnemonicParsing="false" prefHeight="89.0" prefWidth="160.0" text="Plan Journey" textAlignment="CENTER" wrapText="true">
+      <Button layoutX="349.0" layoutY="218.0" mnemonicParsing="false" prefHeight="89.0" prefWidth="160.0" text="Plan Journey" textAlignment="CENTER" wrapText="true">
          <font>
             <Font size="17.0" />
          </font>

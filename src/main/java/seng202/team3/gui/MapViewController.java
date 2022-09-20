@@ -1,24 +1,14 @@
 package seng202.team3.gui;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.util.stream.Collectors;
-import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
-import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import netscape.javascript.JSObject;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
-import seng202.team3.data.entity.Journey;
 import seng202.team3.logic.JavaScriptBridge;
 import seng202.team3.logic.MapManager;
 
@@ -35,8 +25,9 @@ public class MapViewController extends MapHandler {
 
     /**
      * Initialise the map view
-     * 
-     * @param map Map view to interact with
+     *
+     * @param map   Map view to interact with
+     * @param stage a {@link javafx.stage.Stage} object
      */
     public void init(Stage stage, MapManager map) {
         this.stage = stage;
@@ -47,6 +38,7 @@ public class MapViewController extends MapHandler {
     }
 
     /**
+     * {@inheritDoc}
      * Adds all chargers on the map
      */
     @Override
@@ -60,7 +52,8 @@ public class MapViewController extends MapHandler {
     }
 
     /**
-     * Adds just one Coordinate {@link Coordinate} onto the map, and associates
+     * Adds just one Coordinate {@link seng202.team3.data.entity.Coordinate} onto
+     * the map, and associates
      * this map with this coordinate
      *
      * @param coordinate the coordinate which is clicked
@@ -72,10 +65,11 @@ public class MapViewController extends MapHandler {
     }
 
     /**
-     * Takes one Coordinate {@link Coordinate} onto the map, and moves
+     * Takes one Coordinate {@link seng202.team3.data.entity.Coordinate} onto the
+     * map, and moves
      * this map to this coordinate
      *
-     * @param coordinate , the coordinate which is selected
+     * @param coordinate a {@link seng202.team3.data.entity.Coordinate} object
      */
     public void changePosition(Coordinate coordinate) {
         javaScriptConnector.call("movePosition",
@@ -84,17 +78,17 @@ public class MapViewController extends MapHandler {
 
     /**
      * Check if map has access to javascript
-     * 
+     *
      * @return true if map has access to javascript
      */
     public boolean getConnectorStatus() {
         return javaScriptConnector != null;
     }
 
-
     /**
      * Adds route to map, calling the underlying js function, from the currently
-     * selected coordinate (as a coordinate) to the currently selected charger (as a coordinate).
+     * selected coordinate (as a coordinate) to the currently selected charger (as a
+     * coordinate).
      */
     public void addRouteToCharger() {
         routeDisplayed = true;
@@ -139,11 +133,11 @@ public class MapViewController extends MapHandler {
         }
     }
 
-
     /**
-     * Loads a generic prompt screen pop-up {@link PromptPopUp}
+     * Loads a generic prompt screen pop-up {@link seng202.team3.gui.PromptPopUp}
      *
      * @param prompt a String of the instructions
+     * @param type   a {@link java.lang.String} object
      */
     public void loadPromptScreens(String prompt, String type) {
         try {
@@ -198,6 +192,5 @@ public class MapViewController extends MapHandler {
         loadPromptScreens("Click on a charger on the map and\n"
                 + "confirm to DELETE a charger: \n\n", "delete");
     }
-
 
 }

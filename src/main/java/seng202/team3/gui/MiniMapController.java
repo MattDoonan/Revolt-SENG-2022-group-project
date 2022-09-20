@@ -2,17 +2,11 @@ package seng202.team3.gui;
 
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import netscape.javascript.JSObject;
-import seng202.team3.data.entity.Coordinate;
 import seng202.team3.logic.JavaScriptBridge;
-import seng202.team3.logic.MapManager;
 import seng202.team3.logic.TableManager;
 
 /**
@@ -65,10 +59,8 @@ public class MiniMapController {
                 });
     }
 
-
     /**
      * Updates the coordinate in the TableManager
-     *
      */
     @FXML
     public void getCoordinateWithAddress() {
@@ -77,12 +69,11 @@ public class MiniMapController {
         stage.close();
     }
 
-
-
     /**
      * Sets the table manager to associate the manager with the
      *
-     * @param tableManager the {@link TableManager} which will store the coordinate
+     * @param tableManager the {@link seng202.team3.logic.TableManager} which will
+     *                     store the coordinate
      */
     public void setManager(TableManager tableManager) {
         manager = tableManager;

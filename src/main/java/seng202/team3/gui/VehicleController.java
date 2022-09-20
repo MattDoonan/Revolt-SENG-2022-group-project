@@ -34,7 +34,7 @@ import seng202.team3.data.entity.Vehicle;
 
 /**
  * Controller for the vehicle.fxml window
- * 
+ *
  * @author Team 3
  * @version 1.0.3, Aug 22
  */
@@ -123,7 +123,6 @@ public class VehicleController {
 
     /**
      * Initialize the window
-     *
      */
     public void init() {
         makeTestVehicles();
@@ -281,6 +280,7 @@ public class VehicleController {
 
     /**
      * Updates selectedImg to the ID of the currently-selected image
+     *
      * @param e ActionEvent
      */
     public void btnSelected(ActionEvent e) {
@@ -360,7 +360,6 @@ public class VehicleController {
 
     /**
      * Method to call when next button is clicked
-     *
      */
     @FXML
     public void nextBtnClicked() {
@@ -377,7 +376,6 @@ public class VehicleController {
 
     /**
      * Method to call when prev button is clicked
-     *
      */
     @FXML
     public void prevBtnClicked() {

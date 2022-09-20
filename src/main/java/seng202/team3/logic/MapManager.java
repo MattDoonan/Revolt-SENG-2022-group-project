@@ -1,9 +1,6 @@
 package seng202.team3.logic;
 
-// import netscape.javascript.JSObject;
 import seng202.team3.data.entity.Coordinate;
-import seng202.team3.data.entity.Journey;
-import seng202.team3.gui.MainController;
 
 /**
  * Manages Map-related functionality
@@ -19,7 +16,7 @@ public class MapManager {
     private final MainManager manager;
 
     /**
-     * Constructs the MapManager from the {@link MainManager}
+     * Constructs the MapManager from the {@link seng202.team3.logic.MainManager}
      *
      * @param manager the MainManager currently being used
      */
@@ -30,19 +27,21 @@ public class MapManager {
     /**
      * Returns the manager object
      *
-     * @return {@link MainManager}, the MainManager
+     * @return {@link seng202.team3.logic.MainManager}, the MainManager
      */
     public MainManager getController() {
         return manager;
     }
 
     /**
-     * Associates this map with the geolocationcoordinate {@link Coordinate}
-     *
+     * Associates this map with the geolocation coordinate
+     * {@link seng202.team3.data.entity.Coordinate}
+     * 
      * @param coordinate the coordinate associated
      */
     public void makeCoordinate(Coordinate coordinate) {
-        GeoLocationHandler.getInstance().setCoordinate(coordinate, coordinate.getAddress());
+        GeoLocationHandler.getInstance().setCoordinate(coordinate,
+                coordinate.getAddress());
         manager.setPosition();
         manager.getCloseChargerData();
     }

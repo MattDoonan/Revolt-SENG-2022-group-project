@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 /**
  * Stores information about vehicles
- * 
+ *
  * @author James Billows
  * @version 1.0.0, Aug 2022
  */
@@ -36,7 +36,14 @@ public class Vehicle {
      */
     public static final String defaultImgPath = "";
 
-    /** Constructor for Vehicle */
+    /**
+     * Constructor for Vehicle
+     *
+     * @param make a {@link java.lang.String} object
+     * @param model a {@link java.lang.String} object
+     * @param maxRange a int
+     * @param connectors a {@link java.util.ArrayList} object
+     */
     public Vehicle(String make, String model, int maxRange,
             ArrayList<String> connectors) {
         this.make = make;
@@ -47,12 +54,15 @@ public class Vehicle {
         this.batteryPercent = 100.0;
     }
 
+    /**
+     * <p>Constructor for Vehicle.</p>
+     */
     public Vehicle() {
     }
 
     /**
      * Get vehicle make
-     * 
+     *
      * @return make
      */
     public String getMake() {
@@ -61,7 +71,7 @@ public class Vehicle {
 
     /**
      * Set vehicle make
-     * 
+     *
      * @param make make of the vehicle
      */
     public void setMake(String make) {
@@ -70,7 +80,7 @@ public class Vehicle {
 
     /**
      * Get vehicle model
-     * 
+     *
      * @return model of the vehicle
      */
     public String getModel() {
@@ -79,7 +89,7 @@ public class Vehicle {
 
     /**
      * Set vehicle model
-     * 
+     *
      * @param model model of the vehicle
      */
     public void setModel(String model) {
@@ -88,7 +98,7 @@ public class Vehicle {
 
     /**
      * Get current battery percentage
-     * 
+     *
      * @return current battery percentage
      */
     public Double getBatteryPercent() {
@@ -97,7 +107,7 @@ public class Vehicle {
 
     /**
      * Set current battery percentage
-     * 
+     *
      * @param batteryPercent current battery percentage
      */
     public void setBatteryPercent(Double batteryPercent) {
@@ -106,7 +116,7 @@ public class Vehicle {
 
     /**
      * Get max range
-     * 
+     *
      * @return range on full capacity
      */
     public int getMaxRange() {
@@ -115,7 +125,7 @@ public class Vehicle {
 
     /**
      * Set max range
-     * 
+     *
      * @param maxRange range on full capacity
      */
     public void setMaxRange(int maxRange) {
@@ -124,7 +134,7 @@ public class Vehicle {
 
     /**
      * Get connectors
-     * 
+     *
      * @return list of connecter types
      */
     public ArrayList<String> getConnectors() {
@@ -133,7 +143,7 @@ public class Vehicle {
 
     /**
      * Set connectors
-     * 
+     *
      * @param connectors list of connecter types
      */
     public void setConnectors(ArrayList<String> connectors) {
@@ -142,7 +152,7 @@ public class Vehicle {
 
     /**
      * Calculates the range of the vehicle based on maxRange and batteryPercent
-     * 
+     *
      * @return current range of the vehicle
      */
     public Double getCurrentRange() {
@@ -151,7 +161,7 @@ public class Vehicle {
 
     /**
      * Get a vehicle's image path
-     * 
+     *
      * @return string of image path
      */
     public String getImgPath() {
@@ -160,7 +170,7 @@ public class Vehicle {
 
     /**
      * Set vehicle image path
-     * 
+     *
      * @param path string of image path
      */
     public void setImgPath(String path) {
@@ -185,6 +195,7 @@ public class Vehicle {
         return vehicleId;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean equals(Object o) {
         Vehicle v;

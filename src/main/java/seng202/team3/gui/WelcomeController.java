@@ -1,6 +1,5 @@
 package seng202.team3.gui;
 
-
 import javafx.fxml.FXML;
 import javafx.stage.Stage;
 
@@ -12,16 +11,18 @@ import javafx.stage.Stage;
  */
 public class WelcomeController {
 
-    private Stage stage;
+    /**
+     * Controller for the displayed menu
+     */
     private MenuController menu;
 
     /**
      * Initialize the window
      *
-     * @param stage Top level container for this window
+     * @param menu Controller for the menu to display
+     * @param stage a {@link javafx.stage.Stage} object
      */
     public void init(Stage stage, MenuController menu) {
-        this.stage = stage;
         this.menu = menu;
     }
 
@@ -32,12 +33,4 @@ public class WelcomeController {
     public void launchHome() {
         menu.initHome();
     }
-
-    /**
-     * TODO Add in the launch journeys component
-     */
-    public void launchJourneys() {
-
-    }
 }
-

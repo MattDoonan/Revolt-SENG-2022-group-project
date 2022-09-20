@@ -9,18 +9,15 @@ import javafx.stage.Stage;
 
 /**
  * Class starts the javaFX application window
- * 
+ *
  * @author Team 3
  * @version 1.0.1, Aug 22
  */
 public class MainWindow extends Application {
 
     /**
+     * {@inheritDoc}
      * Opens the gui with the fxml content specified in resources/fxml/main.fxml
-     * 
-     * @param primaryStage The current fxml stage, handled by javaFX Application
-     *                     class
-     * @throws IOException if there is an issue loading fxml file
      */
     @Override
     public void start(Stage primaryStage) throws IOException {
@@ -39,7 +36,7 @@ public class MainWindow extends Application {
      * Launches the FXML application, this must be called from another class
      * (in this cass App.java) otherwise JavaFX
      * errors out and does not run
-     * 
+     *
      * @param args command line arguments
      */
     public static void main(String[] args) {

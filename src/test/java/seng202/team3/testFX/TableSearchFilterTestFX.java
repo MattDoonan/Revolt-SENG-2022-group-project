@@ -1,4 +1,7 @@
-package seng202.team3.testFX;
+package seng202.team3.testfx;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -12,13 +15,15 @@ import seng202.team3.data.entity.Charger;
 import seng202.team3.gui.MainWindow;
 import seng202.team3.gui.TableController;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
-
-public class TableSearchFilterTestFX extends TestFXBase{
+/**
+ * Test the table searching GUI interface
+ * 
+ * @author Matthew Doonan
+ * @version 1.0.0, Sep 22
+ */
+public class TableSearchFilterTestFx extends TestFxBase {
 
     private TableController controller;
-
 
     @Override
     public void setUp() throws Exception {
@@ -39,11 +44,11 @@ public class TableSearchFilterTestFX extends TestFXBase{
      * Initialises the state of the current application
      *
      * @param loader the FXML loader after loading
-     * @param stage the stage of the application
+     * @param stage  the stage of the application
      */
     public void initState(FXMLLoader loader, Stage stage) {
         controller = loader.getController();
-        controller.init(stage);
+        controller.init();
     }
 
     @Test
@@ -69,7 +74,7 @@ public class TableSearchFilterTestFX extends TestFXBase{
         clickOn("#toggleTimeLimit");
         clickOn("#update");
         for (Charger charger : controller.getManager().getData()) {
-            if (charger.getTimeLimit() < 60 ){
+            if (charger.getTimeLimit() < 60) {
                 isValid = false;
             }
         }
@@ -83,7 +88,7 @@ public class TableSearchFilterTestFX extends TestFXBase{
         clickOn("#onParkingFilter");
         clickOn("#update");
         for (Charger charger : controller.getManager().getData()) {
-            if (charger.getAvailableParks() < 5 ){
+            if (charger.getAvailableParks() < 5) {
                 isValid = false;
             }
         }
@@ -111,7 +116,7 @@ public class TableSearchFilterTestFX extends TestFXBase{
     }
 
     @Test
-    public void columnShowID() {
+    public void columnShowId() {
         boolean isValid = true;
         clickOn("#columnEdit");
         clickOn("#showId");
@@ -150,7 +155,9 @@ public class TableSearchFilterTestFX extends TestFXBase{
             clickOn("#attractionCol");
             clickOn("#longitudeCol");
             isValid = false;
-        } catch (FxRobotException e) {}
+        } catch (FxRobotException e) {
+            // Do Nothing
+        }
         try {
             clickOn("#xposCol");
             clickOn("#yposCol");

@@ -31,35 +31,96 @@ import seng202.team3.data.entity.Coordinate;
  */
 public class ChargerController {
 
+    /**
+     * Active Charger
+     */
     private Charger charger;
+
+    /**
+     * Screen object
+     */
     private Stage stage;
+
+    /**
+     * Previous coordinate
+     */
     private Coordinate prevCoordinate;
+
+    /**
+     * Connectors attached to the charger
+     */
     private ObservableList<Connector> connectors;
+
+    /**
+     * String list of errors to display
+     */
     private ArrayList<String> errors = new ArrayList<>();
 
+    /**
+     * Field for the name of the charger
+     */
     @FXML
     private TextField name;
+
+    /**
+     * Field for the number of parks
+     */
     @FXML
     private TextField parks;
+
+    /**
+     * Field for the time limit of the charger
+     */
     @FXML
     private TextField time;
+
+    /**
+     * Field for the owner of the charger
+     */
     @FXML
     private TextField owner;
+
+    /**
+     * Field for the operator of the charger
+     */
     @FXML
     private TextField operator;
+
+    /**
+     * Field for the currents supported by the charger
+     */
     @FXML
     private TextField currents;
+
+    /**
+     * Field for the address of the charger
+     */
     @FXML
     private TextField address;
+
+    /**
+     * Field for the 24hr status of the charger
+     */
     @FXML
     private CheckBox open24;
+
+    /**
+     * Field for the parking cost of the charger
+     */
     @FXML
     private CheckBox costParks;
+
+    /**
+     * Field for the charger cost of the charger
+     */
     @FXML
     private CheckBox cost;
+
+    /**
+     * Field for the nearby tourist attractions of the charger
+     */
     @FXML
     private CheckBox attractions;
-
 
     /**
      * Initialises the ChargerController, loading in the charger info
@@ -79,7 +140,7 @@ public class ChargerController {
     /**
      * Sets the Charger being edited
      *
-     * @param charger {@link Charger} the charger being edited
+     * @param charger {@link seng202.team3.data.entity.Charger} the charger being edited
      */
     public void setCharger(Charger charger) {
         this.charger = charger;
@@ -196,10 +257,10 @@ public class ChargerController {
     /**
      * Gets the connectors from the charger
      *
-     * @return an ObservableList of {@link Connector}s
+     * @return an ObservableList of {@link seng202.team3.data.entity.Connector}s
      */
     public ObservableList<Connector> getConnectors() {
-        ArrayList<Connector> connectArray =  new ArrayList<>();
+        ArrayList<Connector> connectArray = new ArrayList<>();
         if (charger != null) {
             QueryBuilder query = new QueryBuilderImpl().withSource("connector")
                     .withFilter("chargerid", Integer.toString(charger.getChargerId()),
@@ -224,7 +285,6 @@ public class ChargerController {
     public void setConnectors(ObservableList<Connector> connectors) {
         this.connectors = connectors;
     }
-
 
     /**
      * Initialises the editConnectors screen

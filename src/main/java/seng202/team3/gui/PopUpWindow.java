@@ -23,6 +23,8 @@ public class PopUpWindow {
 
     /**
      * Initialise and display the prompt
+     *
+     * @param prompt a {@link java.lang.String} object
      */
     public void addPrompt(String prompt) {
         this.prompt = prompt;
@@ -33,7 +35,6 @@ public class PopUpWindow {
 
     /**
      * Executes the correct action and returns true if clicked
-     *
      */
     @FXML
     public void confirm() {

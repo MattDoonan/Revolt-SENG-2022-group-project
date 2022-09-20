@@ -1,12 +1,10 @@
 package seng202.team3.gui;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.stage.Stage;
-import netscape.javascript.JSObject;
 
 /**
- * A prompt for clicking on the map or the charger list for information to happen.
+ * A prompt for clicking on the map or the charger list for information to
+ * happen.
  *
  * @author Michelle Hsieh
  * @version 1.0.0, Sep 22
@@ -19,6 +17,7 @@ public class PromptPopUp extends PopUpWindow {
      * The basic initialiser
      */
     public PromptPopUp() {
+        // Unused
     }
 
     /**
@@ -31,8 +30,8 @@ public class PromptPopUp extends PopUpWindow {
     }
 
     /**
+     * {@inheritDoc}
      * Executes the correct action as needed as per controller
-     *
      */
     @Override
     @FXML
@@ -55,6 +54,5 @@ public class PromptPopUp extends PopUpWindow {
             default -> throw new IllegalStateException("Unexpected value: " + type);
         }
     }
-
 
 }

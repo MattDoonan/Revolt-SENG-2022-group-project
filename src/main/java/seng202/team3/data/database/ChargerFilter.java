@@ -7,7 +7,7 @@ import seng202.team3.data.entity.Charger;
 /**
  * Filter class for filtering charger objects from csv
  * Filters are executed on opencsv beans as they are generated
- * 
+ *
  * @author Harrison Tyson
  * @version 1.0.0, Aug 22
  */
@@ -40,6 +40,7 @@ public class ChargerFilter implements BeanVerifier<Object> {
         this.compareMethod = compareMethod;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean verifyBean(Object bean) throws CsvConstraintViolationException {
         Charger c = (Charger) bean; // Convert to charger object
@@ -118,7 +119,7 @@ public class ChargerFilter implements BeanVerifier<Object> {
     /**
      * Compare value of a {@link field field} against the {@link criteria criteria}
      * using the
-     * {@link comparisonMethod comparisonMethod}
+     * {@link ComparisonType ComparisonType}
      * 
      * @param fieldValue value to compare against
      * @return boolean indicating result of comparison
@@ -144,9 +145,11 @@ public class ChargerFilter implements BeanVerifier<Object> {
     /**
      * Compare value of a {@link field field} against the {@link criteria criteria}
      * using the
-     * {@link comparisonMethod comparisonMethod}
+     * {@link ComparisonType ComparisonType}
      * 
-     * @see ChargerFilter#compare(java.lang.Double, java.lang.Double)
+     * @see ChargerFilter#compare(Double)
+     * @param fieldValue the value to compare against
+     * @return boolean indicating result of comparison
      */
     private boolean compare(String fieldValue) {
         switch (compareMethod) {
@@ -163,10 +166,11 @@ public class ChargerFilter implements BeanVerifier<Object> {
 
     /**
      * Compare value of a {@link field field} against the {@link criteria criteria}
-     * using the
-     * {@link comparisonMethod comparisonMethod}
+     * using the {@link ComparisonType ComparisonType}
      * 
-     * @see ChargerFilter#compare(java.lang.Double, java.lang.Double)
+     * @see ChargerFilter#compare(Double)
+     * @param fieldValue the value to compare against
+     * @return boolean indicating result of comparison
      */
     private boolean compare(int fieldValue) {
         switch (compareMethod) {

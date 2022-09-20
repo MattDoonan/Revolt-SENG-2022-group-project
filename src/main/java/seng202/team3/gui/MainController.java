@@ -1,23 +1,17 @@
 package seng202.team3.gui;
 
-import java.beans.EventHandler;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import javafx.beans.property.ReadOnlyDoubleWrapper;
-import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
-import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -30,18 +24,16 @@ import javafx.stage.Stage;
 import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.logic.Calculations;
-import seng202.team3.logic.JavaScriptBridge;
 import seng202.team3.logic.MainManager;
 import seng202.team3.logic.MapManager;
 
 /**
  * Controller for the main.fxml window (the home)
- * 
+ *
  * @author Matthew Doonan, Michelle Hsieh
  * @version 1.0.1, Aug 22
  */
 public class MainController {
-
 
     @FXML
     private CheckBox acButton;
@@ -103,7 +95,6 @@ public class MainController {
     @FXML
     private CheckBox noNearbyAttraction;
 
-
     private BorderPane menuWindow;
 
     private Stage stage;
@@ -115,7 +106,8 @@ public class MainController {
     /**
      * Initialize the window
      *
-     * @param stage Top level container for this window
+     * @param stage      Top level container for this window
+     * @param menuWindow a {@link javafx.scene.layout.BorderPane} object
      */
     public void init(Stage stage, BorderPane menuWindow) {
         this.stage = stage;
@@ -132,7 +124,7 @@ public class MainController {
 
     /**
      * Display charger info on panel
-     * 
+     *
      * @param c charger to display information about
      */
     public void viewChargers(Charger c) {
@@ -197,6 +189,8 @@ public class MainController {
 
     /**
      * Changes active charger on selected and moves the map
+     *
+     * @param number a int
      */
     public void selectToView(int number) {
         Charger selectedCharger = manage.getCloseChargerData().get(number);
@@ -209,6 +203,8 @@ public class MainController {
 
     /**
      * Adds every charger in charger list to the vbox
+     *
+     * @param chargersToAdd a {@link javafx.collections.ObservableList} object
      */
     public void addChargersToDisplay(ObservableList<Charger> chargersToAdd) {
 
@@ -387,11 +383,11 @@ public class MainController {
         }
     }
 
-
     /**
      * Gets the MainManager created by the MainController
      *
-     * @return {@link MainManager} the manager of this controller
+     * @return {@link seng202.team3.logic.MainManager} the manager of this
+     *         controller
      */
     public MainManager getManager() {
         return manage;
@@ -403,7 +399,6 @@ public class MainController {
     public void editCharger() {
         manage.editCharger();
     }
-
 
     /**
      * Toggles the route view on.
@@ -421,7 +416,7 @@ public class MainController {
                     .getResource("/fxml/main_table.fxml"));
             Parent mainNode = mainScene.load();
             TableController controller = mainScene.getController();
-            controller.init(this.stage);
+            controller.init();
             menuWindow.setCenter(mainNode);
         } catch (IOException e) {
             e.printStackTrace();

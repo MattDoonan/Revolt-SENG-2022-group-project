@@ -1,5 +1,6 @@
-package seng202.team3.testFX;
+package seng202.team3.testfx;
 
+import java.util.concurrent.TimeoutException;
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
@@ -9,16 +10,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit5.ApplicationTest;
 
-import java.util.concurrent.TimeoutException;
-
-
 /**
  * This is Morgan's Code designed to set up TestFX testing
  *
  * @author Morgan English
  * @version 1.0.0, Sep 22
  */
-public abstract class TestFXBase extends ApplicationTest {
+public abstract class TestFxBase extends ApplicationTest {
 
     @BeforeEach
     public abstract void setUp() throws Exception;
@@ -26,6 +24,11 @@ public abstract class TestFXBase extends ApplicationTest {
     @Override
     public abstract void start(Stage stage) throws Exception;
 
+    /**
+     * Clean up resources after each test
+     * 
+     * @throws TimeoutException if doesn't respond within timeframe
+     */
     @AfterEach
     public void afterEachTest() throws TimeoutException {
         try {
@@ -34,12 +37,15 @@ public abstract class TestFXBase extends ApplicationTest {
             e.printStackTrace();
         }
         FxToolkit.hideStage();
-        release(new KeyCode[]{});
-        release(new MouseButton[]{});
+        release(new KeyCode[] {});
+        release(new MouseButton[] {});
     }
 
-    /* Helper method to retrieve Java FX GUI Components */
-    public <T extends Node> T find (final  String query){
+    /**
+     * Helper method to retrieve Java FX GUI Components
+     */
+    @SuppressWarnings("unchecked")
+    public <T extends Node> T find(final String query) {
         return (T) lookup(query).queryAll().iterator().next();
     }
 }
