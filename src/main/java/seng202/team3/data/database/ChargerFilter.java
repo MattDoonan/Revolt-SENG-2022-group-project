@@ -154,7 +154,7 @@ public class ChargerFilter implements BeanVerifier<Object> {
     private boolean compare(String fieldValue) {
         switch (compareMethod) {
             case EQUAL:
-                return fieldValue == criteria;
+                return fieldValue.equals(criteria);
             case CONTAINS:
                 return (fieldValue.toLowerCase()).contains(criteria.toLowerCase());
             default:

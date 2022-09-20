@@ -46,7 +46,7 @@ public abstract class MapHandler {
     /**
      * unused constructor
      */
-    public MapHandler() {
+    protected MapHandler() {
         // unused
     }
 

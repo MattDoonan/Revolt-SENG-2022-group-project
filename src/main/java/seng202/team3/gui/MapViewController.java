@@ -182,7 +182,7 @@ public class MapViewController extends MapHandler {
     @FXML
     public void addCharger() {
         if (new MenuController().getController().getManager()
-                .getPosition().getAddress() == "Coordinate") {
+                .getPosition().getAddress().equals("Coordinate")) {
             javaScriptConnector.call("addCoordinateName");
         }
         loadPromptScreens("Search an address or click on the map\n"

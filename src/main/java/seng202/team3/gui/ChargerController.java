@@ -126,6 +126,7 @@ public class ChargerController {
      * Initialises the ChargerController, loading in the charger info
      */
     public ChargerController() {
+        // unused
     }
 
     /**
@@ -140,7 +141,8 @@ public class ChargerController {
     /**
      * Sets the Charger being edited
      *
-     * @param charger {@link seng202.team3.data.entity.Charger} the charger being edited
+     * @param charger {@link seng202.team3.data.entity.Charger} the charger being
+     *                edited
      */
     public void setCharger(Charger charger) {
         this.charger = charger;
