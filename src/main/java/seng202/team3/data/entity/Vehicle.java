@@ -36,7 +36,14 @@ public class Vehicle {
      */
     public static final String DEFAULTIMGPATH = "";
 
-    /** Constructor for Vehicle */
+    /**
+     * Constructor for a vehicle
+     * 
+     * @param make       make of the vehicle
+     * @param model      model of the vehicle
+     * @param maxRange   maximum range of vehicle with full battery capacity, in kms
+     * @param connectors list of connectors supported by the vehicle
+     */
     public Vehicle(String make, String model, int maxRange,
             ArrayList<String> connectors) {
         this.make = make;
@@ -47,7 +54,11 @@ public class Vehicle {
         this.batteryPercent = 100.0;
     }
 
+    /**
+     * Default constructor to support future csv parsing
+     */
     public Vehicle() {
+        // Unused
     }
 
     /**

@@ -125,7 +125,7 @@ public class VehicleUpdateController {
      * The images that the user can choose from (names)
      */
     private String[] imgNames = { "car_one.png", "car_two.png", "car_three.png",
-        "truck_one.png", "truck_two.png" };
+            "truck_one.png", "truck_two.png" };
 
     /**
      * List of user input errors for adding/editing vehicles
@@ -382,6 +382,8 @@ public class VehicleUpdateController {
 
     /**
      * Displays all the info of the vehicle, if there is a vehicle
+     * 
+     * @param vehicle vehicle to display information for
      */
     public void displayInfo(Vehicle vehicle) {
         selectedVehicle = vehicle;

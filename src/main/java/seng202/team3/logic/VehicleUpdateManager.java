@@ -13,7 +13,15 @@ import seng202.team3.data.entity.Vehicle;
 public class VehicleUpdateManager {
 
     /**
+     * Unused constructor
+     */
+    public VehicleUpdateManager() {
+        // Unused
+    }
+
+    /**
      * Saves the given vehicle (or given vehicle changes) to the database
+     * 
      * @param vehicle the vehicle to be saved
      */
     public void saveVehicle(Vehicle vehicle) {
@@ -24,19 +32,18 @@ public class VehicleUpdateManager {
         }
     }
 
-
     /**
      * Deletes the given vehicle from the database
+     * 
      * @param vehicle the vehicle to be deleted
      */
     public void deleteVehicle(Vehicle vehicle) {
         try {
-            SqlInterpreter.getInstance().deleteData("vehicle", 
-                vehicle.getVehicleId());
+            SqlInterpreter.getInstance().deleteData("vehicle",
+                    vehicle.getVehicleId());
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    
 }
