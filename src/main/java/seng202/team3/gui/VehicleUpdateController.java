@@ -38,54 +38,114 @@ import seng202.team3.logic.VehicleUpdateManager;
  */
 public class VehicleUpdateController {
 
+    /**
+     * The textfield for the vehicle's make
+     */
     @FXML
     private TextField makeText;
 
+    /**
+     * The textfield for the vehicle's model
+     */
     @FXML
     private TextField modelText;
 
+    /**
+     * The textfield for the vehicle's maximum range
+     */
     @FXML
     private TextField maxRangeText;
 
+    /**
+     * The textfield for the vehicle's current charge
+     */
     @FXML
     private TextField currChargeText;
 
+    /**
+     * Lable to display the name of the chosen vehicle image
+     */
     @FXML
     private Label imgName;
 
+    /**
+     * Lable to display the currently added connections
+     */
     @FXML
     private Label addedConnections;
 
+    /**
+     * Dropdown of the connector types
+     */
     @FXML
     private ComboBox<String> connectorType;
 
+    /**
+     * Button to save the changes to the database
+     */
     @FXML
     private Button saveChanges;
     
+    /**
+     * Used to get the current scene to close it
+     */
     @FXML
     private Label inputBox;
 
+    /**
+     * Save the selected image
+     */
     private Button saveImg = new Button("Select");
 
+    /**
+     * Cancel selecting an image
+     */
     private Button cancelImg = new Button("Cancel");
 
+    /**
+     * TActive vehicle
+     */
     private Vehicle selectedVehicle;
 
+    /**
+     * Active image
+     */
     private String selectedImg;
 
+    /**
+     * The vehicles connections
+     */
     private ArrayList<String> connections = new ArrayList<String>();
 
+    /**
+     * The images that the user can choose from (button form)
+     */
     private ObservableList<Button> imgBtns = FXCollections.observableArrayList();
 
+    /**
+     * The images that the user can choose from (names)
+     */
     private String[] imgNames = {"car_one.png", "car_two.png", "car_three.png",
         "truck_one.png", "truck_two.png"};
 
+    /**
+     * List of user input errors for adding/editing vehicles
+     */
     private ArrayList<String> errors = new ArrayList<>();
 
+    /**
+     * The popup for selecting an image
+     */
     private Stage imagePopup = new Stage();
 
+    /**
+     * The popup for an 'Other...' connector, allowing user to write in a unique value
+     */
     private Stage connectorPopup = new Stage();
 
+    /**
+     * The manager
+     */
     private VehicleUpdateManager manage = new VehicleUpdateManager();
 
     /**
