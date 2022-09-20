@@ -171,18 +171,21 @@ public class VehicleUpdateController {
     @FXML
     public void saveChanges() {
         Vehicle vehicle;
+        int errorFlag = 0;
+
         if (selectedVehicle != null) {
             if (selectedImg != null) {
                 selectedVehicle.setImgPath("src/main/resources/images/" + selectedImg);
             } else {
                 selectedVehicle.setImgPath("src/main/resources/images/null");
             }
-            selectedVehicle.setConnectors(connections);
-            selectedVehicle.setMaxRange(Integer.parseInt(maxRangeText.getText()));
-            selectedVehicle.setModel(modelText.getText());
-            selectedVehicle.setMake(makeText.getText());
-            selectedVehicle.setBatteryPercent(Double.parseDouble(currChargeText.getText()));
             vehicle = selectedVehicle;
+            // selectedVehicle.setConnectors(connections);
+            // selectedVehicle.setMaxRange(Integer.parseInt(maxRangeText.getText()));
+            // selectedVehicle.setModel(modelText.getText());
+            // selectedVehicle.setMake(makeText.getText());
+            // selectedVehicle.setBatteryPercent(Double.parseDouble(currChargeText.getText()));
+            // vehicle = selectedVehicle;
         } else {
             vehicle = new Vehicle();
         }
@@ -192,9 +195,15 @@ public class VehicleUpdateController {
         } catch (NullPointerException e) {
             errors.add("Vehicle make required.");
         }
+        if (makeText.getText().equals("") && !errors.contains("Vehicle make required.")) {
+            errors.add("Vehicle make required.");
+        }
         try {
             vehicle.setModel(modelText.getText());
         } catch (NullPointerException e) {
+            errors.add("Vehicle model required.");
+        }
+        if (modelText.getText().equals("") && !errors.contains("Vehicle model required.")) {
             errors.add("Vehicle model required.");
         }
         try {
@@ -242,13 +251,18 @@ public class VehicleUpdateController {
             connections = new ArrayList<>();
             connectorType.setPromptText("Connector Type");
         } else {
+            errorFlag = 1;
             launchErrorPopUps();
             errors.clear();
+        } 
+
+        if (errorFlag == 0) {
+            selectedVehicle = null;
+            Stage popupStage = (Stage) saveChanges.getScene().getWindow();
+            popupStage.close();
         }
 
-        selectedVehicle = null;
-        Stage popupStage = (Stage) saveChanges.getScene().getWindow();
-        popupStage.close();
+        errorFlag = 0;
     }
 
     /**
