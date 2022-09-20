@@ -14,6 +14,13 @@ import seng202.team3.data.entity.Coordinate;
 public class TableManager extends ChargerHandler implements ChargerInterface {
 
     /**
+     * unused constructor
+     */
+    public TableManager() {
+        // unused
+    }
+
+    /**
      * {@inheritDoc}
      * Adds a charger at a specified coordinate
      */

@@ -13,6 +13,13 @@ import com.opencsv.exceptions.CsvDataTypeMismatchException;
  */
 public class TimeLimitConverter extends AbstractBeanField<Double, String> {
 
+    /**
+     * Unused constructor
+     */
+    public TimeLimitConverter() {
+        // unused
+    }
+
     /** {@inheritDoc} */
     @Override
     public Object convert(String value) throws CsvDataTypeMismatchException,
