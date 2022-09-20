@@ -156,7 +156,7 @@ public class ConnectorEditController {
             stage.close();
         } else {
             launchErrorPopUps();
-            errors = new ArrayList<>();
+            errors.clear();
         }
     }
 

@@ -207,6 +207,10 @@ public class JavaScriptBridge {
 
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            MenuController menu = new MenuController();
+            menu.getController().getManager().makeAllChargers();
+            menu.getController().refreshTable();
         }
 
     }

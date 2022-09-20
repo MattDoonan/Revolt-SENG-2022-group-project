@@ -64,8 +64,7 @@ public class GeoLocationHandler {
         if (splitAddress.length > 6) {
             name = "";
             name += splitAddress[0] + splitAddress[1] + ", "
-                    + splitAddress[2] + ", " + splitAddress[3] + ", "
-                    + splitAddress[splitAddress.length - 2] + ", "
+                    + splitAddress[3] + splitAddress[splitAddress.length - 2] + ", "
                     + splitAddress[splitAddress.length - 1];
         }
         coordinate.setAddress(name);
