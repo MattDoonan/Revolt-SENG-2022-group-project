@@ -25,6 +25,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.TilePane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -264,7 +266,6 @@ public class VehicleUpdateController {
     /**
      * Adds a new connection (for an EV) when the button is clicked
      */
-    @FXML
     public void addConnection() {
         if (connectorType.getValue() != null) {
             if (connectorType.getValue().equals("Other...")) {
@@ -280,7 +281,9 @@ public class VehicleUpdateController {
                     button.setOnAction(e -> deleteConnection(e));
                     Label label = new Label("Connection: " + connector.getText());
                     HBox hbox = new HBox();
-                    hbox.getChildren().addAll(label, button);
+                    Region filler = new Region(); 
+                    HBox.setHgrow(filler, Priority.ALWAYS);
+                    hbox.getChildren().addAll(label, filler, button);
                     connections.add(connector.getText());
                     addedConnections.getItems().add(hbox);
                     
@@ -291,7 +294,7 @@ public class VehicleUpdateController {
                 connectorPopup.setResizable(false);
                 connectorPopup.setTitle("Other Connector");
                 connectorPopup.setScene(new Scene(root, 300, 100));
-                connectorPopup.showAndWait();
+                // connectorPopup.showAndWait();
             } else {
                 
                 connections.add(connectorType.getValue());
@@ -300,12 +303,36 @@ public class VehicleUpdateController {
                 button.setOnAction(e -> deleteConnection(e));
                 Label label = new Label("Connection: " + connectorType.getValue());
                 HBox hbox = new HBox();
-                hbox.getChildren().addAll(label, button);
+                Region filler = new Region(); 
+                HBox.setHgrow(filler, Priority.ALWAYS);
+                hbox.getChildren().addAll(label, filler, button);
                 addedConnections.getItems().add(hbox);
 
             }
         }
 
+    }
+
+
+
+    /**
+     * Displays pop-up window that allows a user add a unique connector
+     * to a vehicle
+     * 
+     */
+    @FXML
+    public void launchConnector() {
+        if (!(connectorType.getValue().equals("Other..."))) {
+            addConnection();
+        } else {
+            try {
+                addConnection();
+                connectorPopup.showAndWait();
+            } finally {
+                connectorPopup = new Stage();
+                // refresh();
+            }
+        }
     }
 
     /**
@@ -436,7 +463,9 @@ public class VehicleUpdateController {
                 button.setOnAction(e -> deleteConnection(e));
                 Label label = new Label("Connection: " + connection);
                 HBox hbox = new HBox();
-                hbox.getChildren().addAll(label, button);
+                Region filler = new Region(); 
+                HBox.setHgrow(filler, Priority.ALWAYS);
+                hbox.getChildren().addAll(label, filler, button);
                 addedConnections.getItems().add(hbox);
             }
         }
