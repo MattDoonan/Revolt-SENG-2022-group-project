@@ -17,8 +17,6 @@ public class VehicleUpdateManager {
      * @param vehicle the vehicle to be saved
      */
     public void saveVehicle(Vehicle vehicle) {
-        System.out.println("vehicle: " + vehicle.getVehicleId());
-
         try {
             SqlInterpreter.getInstance().writeVehicle(vehicle);
         } catch (IOException e) {

@@ -112,7 +112,6 @@ public class VehicleUpdateController {
     public void saveChanges() {
         Vehicle vehicle;
         if (selectedVehicle != null) {
-            System.out.println("selectedVehicle: " + selectedVehicle.getVehicleId());
             if (selectedImg != null) {
                 selectedVehicle.setImgPath("src/main/resources/images/" + selectedImg);
             } else {
@@ -174,8 +173,6 @@ public class VehicleUpdateController {
         }
 
         if (errors.size() == 0) {
-            System.out.println("HIIIIIIi: " + selectedVehicle.getVehicleId());
-
             manage.saveVehicle(vehicle);
             makeText.setText(null);
             modelText.setText(null);
