@@ -48,15 +48,19 @@ public class Connector {
      * Constructor for the connector with id
      *
      * @see #Connector(String, String, String, String, int)
-     * @param type a {@link java.lang.String} object
-     * @param power a {@link java.lang.String} object
-     * @param status a {@link java.lang.String} object
+     * @param type    a {@link java.lang.String} object
+     * @param power   a {@link java.lang.String} object
+     * @param status  a {@link java.lang.String} object
      * @param current a {@link java.lang.String} object
-     * @param count a int
-     * @param id a int
+     * @param count   a int
+     * @param id      a int
      */
     public Connector(String type, String power, String status, String current, int count, int id) {
-        new Connector(type, power, status, current, count);
+        setType(type);
+        setPower(power);
+        setOperational(status);
+        setCurrent(current);
+        setCount(count);
         setId(id);
     }
 
