@@ -2,15 +2,14 @@ package seng202.team3.testfx;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.jupiter.api.Test;
-import org.testfx.framework.junit5.ApplicationTest;
-
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import org.junit.jupiter.api.Test;
+import org.testfx.framework.junit5.ApplicationTest;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.gui.MainController;
 import seng202.team3.gui.MainWindow;
@@ -22,7 +21,7 @@ import seng202.team3.gui.MainWindow;
  * @author Michelle Hsieh
  * @version 1.0.0, Sep 22
  */
-public class SearchFilterTextFX extends TestFXBase {
+public class SearchFilterTextFx extends TestFXBase {
 
     private MainController controller;
 
