@@ -1,10 +1,12 @@
 package seng202.team3.logic;
 
-
+import java.io.IOException;
+import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Coordinate;
 
 /**
- * A Table Manager that implements the adding, deleting and editing functionality of a charger
+ * A Table Manager that implements the adding, deleting and editing
+ * functionality of a charger
  *
  * @author Michelle Hsieh
  * @version 1.0.0, Sep 22
@@ -12,21 +14,41 @@ import seng202.team3.data.entity.Coordinate;
 public class TableManager extends ChargerHandler implements ChargerInterface {
 
     /**
+     * unused constructor
+     */
+    public TableManager() {
+        // unused
+    }
+
+    /**
+     * {@inheritDoc}
      * Adds a charger at a specified coordinate
      */
+    @Override
     public void addCharger() {
         Coordinate coordinate = GeoLocationHandler.getInstance().getCoordinate();
         if (coordinate != null) {
-            setPosition(coordinate);
+            setPosition();
         }
         GeoLocationHandler.getInstance().clearCoordinate();
     }
 
     /**
+     * {@inheritDoc}
      * Removes the selected charger and replaces it with null
-     *
      */
+    @Override
     public void deleteCharger() {
+        if (getSelectedCharger() != null) {
+            try {
+                SqlInterpreter.getInstance().deleteData("charger",
+                        getSelectedCharger().getChargerId());
+                setSelectedCharger(null);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     /**
@@ -34,6 +56,10 @@ public class TableManager extends ChargerHandler implements ChargerInterface {
      * selected charger
      */
     public void editCharger() {
+        if (getSelectedCharger() != null) {
+            JavaScriptBridge bridge = new JavaScriptBridge();
+            bridge.loadChargerEdit(selectedCharger, selectedCoordinate);
+        }
     }
 
 }

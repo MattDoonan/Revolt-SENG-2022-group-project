@@ -9,20 +9,18 @@ import org.junit.platform.suite.api.IncludeEngines;
 import org.junit.platform.suite.api.SelectClasspathResource;
 import org.junit.platform.suite.api.Suite;
 
-@Suite
-@IncludeEngines("cucumber")
-@SelectClasspathResource("features/main_features")
-@ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "pretty")
-@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "seng202.team3.cucumber.mainpagesteps")
-@ConfigurationParameter(key = SNIPPET_TYPE_PROPERTY_NAME, value = "camelcase")
-
-
 /**
  * Cucumber Main Page tests to run
  *
  * @author Michelle Hsieh (based off Morgan English's code)
  * @version 1.0.0, Sep 22
  */
+@Suite
+@IncludeEngines("cucumber")
+@SelectClasspathResource("features/main_features")
+@ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "pretty")
+@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "seng202.team3.cucumber.mainpagesteps")
+@ConfigurationParameter(key = SNIPPET_TYPE_PROPERTY_NAME, value = "camelcase")
 public class RunCucumberTestMainPage {
 
 }

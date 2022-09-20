@@ -8,12 +8,20 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * Converts a {@link Connector connectors} list field saved as a string into
  * connector objects
- * 
+ *
  * @author Harrison Tyson
  * @version 1.0.0, Aug 22
  */
 public class ConnectorConverter extends AbstractCsvConverter {
 
+    /**
+     * Unused constructor
+     */
+    public ConnectorConverter() {
+        // Unused
+    }
+
+    /** {@inheritDoc} */
     @Override
     public Object convertToRead(String value) throws CsvDataTypeMismatchException,
             CsvConstraintViolationException {

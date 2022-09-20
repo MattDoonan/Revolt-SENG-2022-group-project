@@ -20,13 +20,28 @@ import seng202.team3.logic.MapManager;
  */
 public class MapViewController extends MapHandler {
 
+    /**
+     * The MapManager of this controller
+     */
     private MapManager map;
+
+    /**
+     * Boolean; true if the route is displayed; false if not
+     */
     private boolean routeDisplayed = false;
 
     /**
+     * unused constructor
+     */
+    public MapViewController() {
+        // unused
+    }
+
+    /**
      * Initialise the map view
-     * 
-     * @param map Map view to interact with
+     *
+     * @param map   Map view to interact with
+     * @param stage a {@link javafx.stage.Stage} object
      */
     public void init(Stage stage, MapManager map) {
         this.stage = stage;
@@ -37,6 +52,7 @@ public class MapViewController extends MapHandler {
     }
 
     /**
+     * {@inheritDoc}
      * Adds all chargers on the map
      */
     @Override
@@ -50,7 +66,8 @@ public class MapViewController extends MapHandler {
     }
 
     /**
-     * Adds just one Coordinate {@link Coordinate} onto the map, and associates
+     * Adds just one Coordinate {@link seng202.team3.data.entity.Coordinate} onto
+     * the map, and associates
      * this map with this coordinate
      *
      * @param coordinate the coordinate which is clicked
@@ -62,10 +79,11 @@ public class MapViewController extends MapHandler {
     }
 
     /**
-     * Takes one Coordinate {@link Coordinate} onto the map, and moves
+     * Takes one Coordinate {@link seng202.team3.data.entity.Coordinate} onto the
+     * map, and moves
      * this map to this coordinate
      *
-     * @param coordinate , the coordinate which is selected
+     * @param coordinate a {@link seng202.team3.data.entity.Coordinate} object
      */
     public void changePosition(Coordinate coordinate) {
         javaScriptConnector.call("movePosition",
@@ -74,7 +92,7 @@ public class MapViewController extends MapHandler {
 
     /**
      * Check if map has access to javascript
-     * 
+     *
      * @return true if map has access to javascript
      */
     public boolean getConnectorStatus() {
@@ -130,9 +148,10 @@ public class MapViewController extends MapHandler {
     }
 
     /**
-     * Loads a generic prompt screen pop-up {@link PromptPopUp}
+     * Loads a generic prompt screen pop-up {@link seng202.team3.gui.PromptPopUp}
      *
      * @param prompt a String of the instructions
+     * @param type   a {@link java.lang.String} object
      */
     public void loadPromptScreens(String prompt, String type) {
         try {
@@ -146,7 +165,8 @@ public class MapViewController extends MapHandler {
             modal.setTitle("Click or cancel:");
             modal.initModality(Modality.WINDOW_MODAL);
             PromptPopUp popController = popUp.getController();
-            popController.addPrompt(prompt, type);
+            popController.setType(type);
+            popController.addPrompt(prompt);
             modal.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();
@@ -161,7 +181,8 @@ public class MapViewController extends MapHandler {
      */
     @FXML
     public void addCharger() {
-        if (new MenuController().getController().getManager().getPosition().getAddress() == null) {
+        if (new MenuController().getController().getManager()
+                .getPosition().getAddress().equals("Coordinate")) {
             javaScriptConnector.call("addCoordinateName");
         }
         loadPromptScreens("Search an address or click on the map\n"

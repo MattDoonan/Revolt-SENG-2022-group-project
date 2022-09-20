@@ -13,19 +13,31 @@ import org.javatuples.Triplet;
 
 /**
  * Manages data reading and parsing from CSV files
- * 
+ *
  * @author Harrison Tyson
  * @version 1.2.0, Aug 22
  */
 public class CsvInterpreter implements DataManager {
 
-    private final String defaultFilepath = "src/main/resources/";
+    /**
+     * Default location to look for files
+     */
+    private static final String DEFAULTFILEPATH = "src/main/resources/";
+
+    /**
+     * Unused constructor
+     */
+    public CsvInterpreter() {
+        // Unused constructor
+    }
 
     /**
      * Helper function to read in a csv file object
      * 
      * @param filename name of file to read
      * @return csv file object
+     * 
+     * @throws IOException if file cannot be read successfully
      */
     private FileReader readFile(String filename) throws IOException {
         // Initialize File
@@ -33,7 +45,7 @@ public class CsvInterpreter implements DataManager {
         if (filename.contains("\\") || filename.contains("/")) { // Allow full file path
             filepath = filename;
         } else { // Check default file path if only name is specified
-            filepath = defaultFilepath + filename + ".csv";
+            filepath = DEFAULTFILEPATH + filename + ".csv";
         }
         return new FileReader(filepath);
     }
@@ -43,11 +55,13 @@ public class CsvInterpreter implements DataManager {
      * 
      * @param filename   name of the file for feedback messages
      * @param exceptions list of exceptions to compile and throw
+     * 
+     * @throws IOException if an error occurs while parsing the file
      */
     private void checkForProcessingErrors(String filename, List<CsvException> exceptions)
             throws IOException {
 
-        if (exceptions.size() == 0) { // Exit if no exceptions
+        if (exceptions.isEmpty()) { // Exit if no exceptions
             return;
         }
 
@@ -61,6 +75,7 @@ public class CsvInterpreter implements DataManager {
             errorMessage += String.format("CSV error reading file %s.csv on line %d: ",
                     filename, e.getLineNumber());
 
+            // Switch is used here so other cases can be handled easily without refactor
             switch (e.getClass().getSimpleName()) { // Custom error lines for internal exceptions
                 case "CsvDataTypeMismatchException": // Field is incorrect data type
                     CsvDataTypeMismatchException exception = (CsvDataTypeMismatchException) e;
@@ -80,10 +95,11 @@ public class CsvInterpreter implements DataManager {
         throw new IOException(errorMessage);
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<Object> readData(Query query, Class<?> objectToInterpretAs)
             throws IOException {
-        List<Object> data = new ArrayList<>();
+        List<Object> data;
 
         // Initialize the raw data to object converter
         CsvToBean<Object> builder = new CsvToBeanBuilder<Object>(readFile(query.getSource()))
@@ -110,8 +126,10 @@ public class CsvInterpreter implements DataManager {
 
         // Convert the data
         try {
-            data = builder.parse();
-        } catch (Throwable e) { // Lethal errors - most likely missing headers
+            data = builder.parse(); // Throws a Throwable on error, not Exception
+        } catch (Throwable e) {
+            // Lethal errors - most likely missing headers. Convert all errors to
+            // IOException to be handled by higher layer/displayed to user
             e = e.getCause();
             throw new IOException(e.getMessage());
         }

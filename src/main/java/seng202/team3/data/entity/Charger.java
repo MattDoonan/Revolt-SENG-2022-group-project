@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 /**
  * Representation of chargers that users can find and connect vehicles to
- * 
+ *
  * @author Harrison Tyson
  * @version 1.0.1, Aug 22
  */
@@ -74,7 +74,9 @@ public class Charger {
     /** Stores the type of current used by connectors */
     private String currentType;
 
-    /** Empty constructor for CSV object builder */
+    /**
+     * Empty constructor for CSV object builder
+     */
     public Charger() {
         connectors = new ArrayList<>();
     }
@@ -88,7 +90,22 @@ public class Charger {
     /** Has warning for charger low availabilty */
     boolean warningLowAvailability;
 
-    /** Constructor for the Charger */
+    /**
+     * Constructor for a charger
+     *
+     * @param connectors     list of attached {@link Connector connectors}
+     * @param name           name of the charger
+     * @param location       {@link Coordinate Coordinate} of the charger
+     * @param availableParks number of available parks
+     * @param timeLimit      maximum time limit for charging
+     * @param operator       operator of the charger
+     * @param owner          owner of the charger
+     * @param dateOpened     date the charger was opened
+     * @param hasAttraction  bool indicating nearby tourist attraction
+     * @param is24Hrs        bool indicating open 24 hours
+     * @param hasChargeCost  bool indicating if it has a charge cost
+     * @param hasParkingCost bool indicating if it has a parking cost
+     */
     public Charger(ArrayList<Connector> connectors, String name, Coordinate location,
             int availableParks, Double timeLimit, String operator, String owner, String dateOpened,
             boolean hasAttraction, boolean is24Hrs, boolean hasChargeCost, boolean hasParkingCost) {
@@ -110,7 +127,7 @@ public class Charger {
 
     /**
      * Get unique identifier for the charger
-     * 
+     *
      * @return unique identification number
      */
     public int getChargerId() {
@@ -119,7 +136,7 @@ public class Charger {
 
     /**
      * Set unique identifier for the charger
-     * 
+     *
      * @param chargerId unique identifier for the charger
      */
     public void setChargerId(int chargerId) {
@@ -128,7 +145,7 @@ public class Charger {
 
     /**
      * Get the date the charger was first opened
-     * 
+     *
      * @return date first opened
      */
     public String getDateOpened() {
@@ -137,7 +154,7 @@ public class Charger {
 
     /**
      * Set the date the charger was first opened
-     * 
+     *
      * @param dateOpened date first opened
      */
     public void setDateOpened(String dateOpened) {
@@ -146,7 +163,7 @@ public class Charger {
 
     /**
      * Add a new {@link Connector connector} to the charger
-     * 
+     *
      * @param c Connector to add
      */
     public void addConnector(Connector c) {
@@ -156,7 +173,7 @@ public class Charger {
 
     /**
      * Remove a {@link Connector connector} from the charger
-     * 
+     *
      * @param connector Connector to remove
      */
     public void removeConnector(Connector connector) {
@@ -166,7 +183,7 @@ public class Charger {
 
     /**
      * Get all {@link Connector connectors} on charger
-     * 
+     *
      * @return list of attached connectors
      */
     public ArrayList<Connector> getConnectors() {
@@ -175,7 +192,7 @@ public class Charger {
 
     /**
      * Get location of the charger
-     * 
+     *
      * @return {@link Coordinate coordinates} of the charger
      */
     public Coordinate getLocation() {
@@ -184,7 +201,7 @@ public class Charger {
 
     /**
      * Set location of the charger
-     * 
+     *
      * @param location new location of charger
      */
     public void setLocation(Coordinate location) {
@@ -193,7 +210,7 @@ public class Charger {
 
     /**
      * Get number of parks available
-     * 
+     *
      * @return total number of parks available
      */
     public int getAvailableParks() {
@@ -202,7 +219,7 @@ public class Charger {
 
     /**
      * Set number of parks available
-     * 
+     *
      * @param availableParks new number of parks available
      */
     public void setAvailableParks(int availableParks) {
@@ -211,7 +228,7 @@ public class Charger {
 
     /**
      * Get the max time limit at the charger
-     * 
+     *
      * @return max time that can be spent at charger
      */
     public Double getTimeLimit() {
@@ -220,7 +237,7 @@ public class Charger {
 
     /**
      * Set the max time limit at the charger
-     * 
+     *
      * @param timeLimit max time that can be spent at charger
      */
     public void setTimeLimit(Double timeLimit) {
@@ -233,7 +250,7 @@ public class Charger {
 
     /**
      * Get the operator of the charger
-     * 
+     *
      * @return operator of the charger
      */
     public String getOperator() {
@@ -242,24 +259,34 @@ public class Charger {
 
     /**
      * Set the operator of the charger
-     * 
+     *
      * @param operator operator of the charger
      */
     public void setOperator(String operator) {
         this.operator = operator;
     }
 
+    /**
+     * Gets the owner of the charger
+     *
+     * @return the owner of the charger
+     */
     public String getOwner() {
         return owner;
     }
 
+    /**
+     * Sets the owner of the charger
+     *
+     * @param owner new owner of the charger
+     */
     public void setOwner(String owner) {
         this.owner = owner;
     }
 
     /**
      * Get the public availability of the charger
-     * 
+     *
      * @return public availability of the charger
      */
     public boolean getPublic() {
@@ -268,7 +295,7 @@ public class Charger {
 
     /**
      * Set the public availability of the charger
-     * 
+     *
      * @param isPublic public availability of the charger
      */
     public void setPublic(boolean isPublic) {
@@ -277,7 +304,7 @@ public class Charger {
 
     /**
      * Get has nearby tourist attractions
-     * 
+     *
      * @return bool indicating has nearby tourist attractions
      */
     public boolean getHasAttraction() {
@@ -286,7 +313,7 @@ public class Charger {
 
     /**
      * Set has nearby tourist attractions
-     * 
+     *
      * @param hasAttraction bool indicating has nearby tourist attractions
      */
     public void setHasAttraction(boolean hasAttraction) {
@@ -295,7 +322,7 @@ public class Charger {
 
     /**
      * Get all day availability
-     * 
+     *
      * @return bool indicating all day availability
      */
     public boolean getAvailable24Hrs() {
@@ -304,7 +331,7 @@ public class Charger {
 
     /**
      * Set all day availability
-     * 
+     *
      * @param available24Hrs bool indicating all day availability
      */
     public void setAvailable24Hrs(boolean available24Hrs) {
@@ -313,7 +340,7 @@ public class Charger {
 
     /**
      * Get has a parking cost
-     * 
+     *
      * @return bool indicating parking cost
      */
     public boolean getParkingCost() {
@@ -322,7 +349,7 @@ public class Charger {
 
     /**
      * Set has a parking cost
-     * 
+     *
      * @param parkingCost bool indicating parking cost
      */
     public void setParkingCost(boolean parkingCost) {
@@ -331,7 +358,7 @@ public class Charger {
 
     /**
      * Get has charge cost
-     * 
+     *
      * @return bool indicating charging cost
      */
     public boolean getChargeCost() {
@@ -340,7 +367,7 @@ public class Charger {
 
     /**
      * Set has charger cost
-     * 
+     *
      * @param chargeCost bool indicating charging cost
      */
     public void setChargeCost(boolean chargeCost) {
@@ -358,7 +385,7 @@ public class Charger {
 
     /**
      * Set warning high cost
-     * 
+     *
      * @param warningLongWait bool indicating long wait warning
      */
     public void setWarningLongWait(boolean warningLongWait) {
@@ -367,7 +394,7 @@ public class Charger {
 
     /**
      * Set warning high cost
-     * 
+     *
      * @param warningLowAvailability bool indicating low availability warning
      */
     public void setWarningLowAvailability(boolean warningLowAvailability) {
@@ -376,7 +403,7 @@ public class Charger {
 
     /**
      * Gets boolean warnings that are set to true
-     * 
+     *
      * @return ArrayList of boolean warnings
      */
     public ArrayList<String> getWarnings() {
@@ -438,7 +465,7 @@ public class Charger {
 
     /**
      * Get the current type of the charger
-     * 
+     *
      * @return the current type of the charger
      */
     public String getCurrentType() {
@@ -448,6 +475,7 @@ public class Charger {
         return currentType;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean equals(Object o) {
         Charger c;
@@ -469,7 +497,6 @@ public class Charger {
                 && c.getOwner().equals(this.getOwner())
                 && c.getPublic() == this.getPublic()
                 && c.getHasAttraction() == this.getHasAttraction()
-                && c.getAvailableParks() == this.getAvailableParks()
                 && c.getParkingCost() == this.getParkingCost()
                 && c.getChargeCost() == this.getChargeCost()
                 && c.getWarnings().equals(this.getWarnings())

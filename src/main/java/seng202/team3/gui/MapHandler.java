@@ -23,10 +23,32 @@ public abstract class MapHandler {
     @FXML
     protected WebView webView;
 
+    /**
+     * WebEngine to load the map
+     */
     protected WebEngine webEngine;
+
+    /**
+     * Stage for the application
+     */
     protected Stage stage;
+
+    /**
+     * The JavaScript bridge to Java
+     */
     protected JavaScriptBridge javaScriptBridge;
+
+    /**
+     * The JavaScript connector object
+     */
     protected JSObject javaScriptConnector;
+
+    /**
+     * unused constructor
+     */
+    protected MapHandler() {
+        // unused
+    }
 
     /**
      * Initialises the map by loading the html into the webengine

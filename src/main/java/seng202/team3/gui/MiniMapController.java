@@ -17,14 +17,43 @@ import seng202.team3.logic.TableManager;
  */
 public class MiniMapController {
 
+    /**
+     * WebView to host
+     */
     @FXML
     private WebView webView;
 
+    /**
+     * WebEngine to launch map
+     */
     private WebEngine webEngine;
+
+    /**
+     * TableManager manager class associated with controller
+     */
     private TableManager manager;
+
+    /**
+     * JavaScript object to run JavaScript
+     */
     private JSObject javaScriptConnector;
+
+    /**
+     * JavaScriptBridge of this map to communicate
+     */
     private JavaScriptBridge javaScriptBridge;
+
+    /**
+     * Stage of the application
+     */
     private Stage stage;
+
+    /**
+     * unused constructor
+     */
+    public MiniMapController() {
+        // unused
+    }
 
     /**
      * Initialise the map view
@@ -61,11 +90,10 @@ public class MiniMapController {
 
     /**
      * Updates the coordinate in the TableManager
-     *
      */
     @FXML
     public void getCoordinateWithAddress() {
-        manager.setPosition(null);
+        manager.setPosition();
         javaScriptConnector.call("setCoordinate");
         stage.close();
     }
@@ -73,7 +101,8 @@ public class MiniMapController {
     /**
      * Sets the table manager to associate the manager with the
      *
-     * @param tableManager the {@link TableManager} which will store the coordinate
+     * @param tableManager the {@link seng202.team3.logic.TableManager} which will
+     *                     store the coordinate
      */
     public void setManager(TableManager tableManager) {
         manager = tableManager;

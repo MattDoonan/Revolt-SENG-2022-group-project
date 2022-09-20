@@ -29,90 +29,164 @@ import seng202.team3.logic.MapManager;
 
 /**
  * Controller for the main.fxml window (the home)
- * 
+ *
  * @author Matthew Doonan, Michelle Hsieh
  * @version 1.0.1, Aug 22
  */
 public class MainController {
 
+    /**
+     * An AC button checkbox
+     */
     @FXML
     private CheckBox acButton;
 
+    /**
+     * A Slider for distance
+     */
     @FXML
     private Slider changeDistance;
 
+    /**
+     * A TextField to search charger by address
+     */
     @FXML
     private TextField searchCharger;
 
+    /**
+     * A CheckBox for DC
+     */
     @FXML
     private CheckBox dcButton;
 
+    /**
+     * An HBox to display info
+     */
     @FXML
     private HBox displayInfo;
 
+    /**
+     * A Checkbox for distance display
+     */
     @FXML
     private CheckBox distanceDisplay;
 
+    /**
+     * A VBox for charging table
+     */
     @FXML
     private VBox chargerTable;
 
+    /**
+     * A CheckBox for attraction
+     */
     @FXML
     private CheckBox attractionButton;
 
+    /**
+     * A CheckBox for no charging cost
+     */
     @FXML
-    private CheckBox chargingCost;
+    private CheckBox noChargingCost;
 
+    /**
+     * A CheckBox for charging cost
+     */
     @FXML
     private CheckBox hasChargingCost;
 
+    /**
+     * BorderPane for the main window
+     */
     @FXML
     private BorderPane mainWindow;
 
+    /**
+     * CheckBox for time limit on or off
+     */
     @FXML
     private CheckBox toggleTimeLimit;
 
+    /**
+     * Slider for time limit
+     */
     @FXML
     private Slider timeLimit;
 
+    /**
+     * CheckBox for on parking filter
+     */
     @FXML
-    private CheckBox onParkingFiler;
+    private CheckBox onParkingFilter;
 
+    /**
+     * Slider for number of parks
+     */
     @FXML
     private Slider parkingLot;
 
+    /**
+     * CheckBox for no carpark cost
+     */
     @FXML
     private CheckBox withoutCarparkCost;
 
+    /**
+     * CheckBox for carpark cost
+     */
     @FXML
     private CheckBox withCarparkCost;
 
+    /**
+     * CheckBox for open 24 hours
+     */
     @FXML
     private CheckBox openAllButton;
 
+    /**
+     * CheckBox for not open 24 hours
+     */
     @FXML
     private CheckBox notOpenAllButton;
 
+    /**
+     * CheckBox for no nearby attraction
+     */
     @FXML
     private CheckBox noNearbyAttraction;
 
+    /**
+     * The BorderPane containing entire application
+     */
     private BorderPane menuWindow;
 
-    private Stage stage;
-
+    /**
+     * The map controller
+     */
     private MapViewController mapController;
 
+    /**
+     * The map manager
+     */
     private MainManager manage;
+
+    /**
+     * unused constructor
+     */
+    public MainController() {
+        // unused
+    }
 
     /**
      * Initialize the window
      *
-     * @param stage Top level container for this window
+     * @param stage      Top level container for this window
+     * @param menuWindow a {@link javafx.scene.layout.BorderPane} object
      */
     public void init(Stage stage, BorderPane menuWindow) {
-        this.stage = stage;
         this.menuWindow = menuWindow;
         manage = new MainManager();
-        loadMapView(this.stage);
+        loadMapView(stage);
         manage.resetQuery();
         manage.makeAllChargers();
         manage.setDistance(changeDistance.getValue());
@@ -123,11 +197,13 @@ public class MainController {
 
     /**
      * Display charger info on panel
-     * 
+     *
      * @param c charger to display information about
      */
     public void viewChargers(Charger c) {
+        // Clears the HBox of nodes (items)
         displayInfo.getChildren().removeAll(displayInfo.getChildren());
+        // Check if there is no charger
         if (c == null) {
             if (manage.getCloseChargerData().size() != 0) {
                 manage.setSelectedCharger(manage.getCloseChargerData().get(0));
@@ -138,20 +214,23 @@ public class MainController {
             }
         } else {
             try {
+                // Gets image for charger
                 ImageView image = new ImageView(new Image(
                         new FileInputStream("src/main/resources/images/charger.png")));
+                // Edits the width and height to 150px
                 image.setFitHeight(150);
                 image.setFitWidth(150);
-                displayInfo.getChildren().add(image);
+                displayInfo.getChildren().add(image); // adds to the HBox
             } catch (FileNotFoundException e) {
                 Label image = new Label("Image");
                 displayInfo.getChildren().add(image);
             }
-            VBox display = new VBox();
+            VBox display = new VBox(); // Creates Vbox to contain text
             display.getChildren().add(new Text("" + c.getName() + ""));
             display.getChildren().add(new Text("" + c.getLocation().getAddress() + "\n"));
             String word = manage.getConnectors(c);
             display.getChildren().add(new Text("Current types " + word + ""));
+            // If statements are there to make different text depending on the charger info
             if (c.getOperator() != null) {
                 display.getChildren().add(new Text("Operator is: " + c.getOperator() + ""));
             }
@@ -175,6 +254,7 @@ public class MainController {
             if (c.getHasAttraction()) {
                 display.getChildren().add(new Text("Has near by attraction"));
             }
+            // Adds the charger info to the HBox
             displayInfo.getChildren().add(display);
             getManager().setSelectedCharger(c);
         }
@@ -182,6 +262,8 @@ public class MainController {
 
     /**
      * Changes active charger on selected and moves the map
+     *
+     * @param number a int
      */
     public void selectToView(int number) {
         Charger selectedCharger = manage.getCloseChargerData().get(number);
@@ -193,40 +275,48 @@ public class MainController {
     }
 
     /**
-     * Adds every charger in charger list to the table
+     * Adds every charger in charger list to the vbox
+     *
+     * @param chargersToAdd a {@link javafx.collections.ObservableList} object
      */
     public void addChargersToDisplay(ObservableList<Charger> chargersToAdd) {
 
-        chargerTable.getChildren().removeAll(chargerTable.getChildren());
+        chargerTable.getChildren().removeAll(chargerTable.getChildren()); // clears vbox
         for (int i = 0; i < chargersToAdd.size(); i++) {
-            HBox add = new HBox();
+            HBox add = new HBox(); // creates HBox that will contain the changer info
             try {
+                // Gets image and adds it to an Image View
                 ImageView image = new ImageView(new Image(
                         new FileInputStream("src/main/resources/images/charger.png")));
                 add.getChildren().add(image);
             } catch (FileNotFoundException e) {
                 Label image = new Label("Image");
-                add.getChildren().add(image);
+                add.getChildren().add(image); // adds to the HBox
             }
+            // Create Vbox to contain the charger info
             VBox content = new VBox(new Text(chargersToAdd.get(i).getName()),
                     new Text(chargersToAdd.get(i).getLocation().getAddress()),
                     new Text(chargersToAdd.get(i).getOperator()),
                     new Text("\n" + Math.round(Calculations.calculateDistance(
                             manage.getPosition(), chargersToAdd.get(i).getLocation()))
                             * 10.0 / 10.0 + "km"));
-            add.getChildren().add(content);
+            add.getChildren().add(content); // Adds charger content to HBox
             add.setPadding(new Insets(10));
             add.setSpacing(10);
             int finalI = i;
+            // Sets on click functionally
             add.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, event -> {
                 selectToView(finalI);
             });
+            // Changes Hover style
             add.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, event -> {
                 add.setStyle("-fx-background-color:#FFF8EB;");
             });
+            // Changes off hover style
             add.addEventHandler(MouseEvent.MOUSE_EXITED_TARGET, event -> {
                 add.setStyle("-fx-background-color:#FFFFFF;");
             });
+            // Adds the HBox to the main VBox
             chargerTable.getChildren().add(add);
         }
         if (getMapController().getConnectorStatus()) {
@@ -239,17 +329,21 @@ public class MainController {
         }
     }
 
+    /**
+     * Refresh the vbox filled with chargers
+     */
     public void refreshTable() {
         addChargersToDisplay(manage.getCloseChargerData());
     }
 
     /**
-     * Sets the Original text and updates distance filter for chargers on slider
+     * Sets the Original text and updates value for the slider filter
+     * names so the user can see what they have input
      */
     public void change() {
         distanceDisplay.textProperty()
                 .setValue("Minimum distance (" + Math.round(changeDistance.getValue()) + " km)");
-        onParkingFiler.textProperty()
+        onParkingFilter.textProperty()
                 .setValue("Minimum number of spaces ("
                         + Math.round(parkingLot.getValue()) + ")");
         toggleTimeLimit.textProperty()
@@ -262,7 +356,7 @@ public class MainController {
                             + Math.round(changeDistance.getValue()) + " km)");
         });
         parkingLot.valueProperty().addListener((observableValue, number, t1) -> {
-            onParkingFiler.textProperty()
+            onParkingFilter.textProperty()
                     .setValue("Minimum number of spaces ("
                             + Math.round(parkingLot.getValue()) + ")");
         });
@@ -282,7 +376,7 @@ public class MainController {
             manage.adjustQuery("maxtimelimit",
                     Double.toString(timeLimit.getValue()), ComparisonType.GREATER_THAN_EQUAL);
         }
-        if (onParkingFiler.isSelected()) {
+        if (onParkingFilter.isSelected()) {
             manage.adjustQuery("carparkcount",
                     Double.toString(parkingLot.getValue()), ComparisonType.GREATER_THAN_EQUAL);
         }
@@ -310,7 +404,7 @@ public class MainController {
         if (noNearbyAttraction.isSelected()) {
             manage.adjustQuery("hastouristattraction", "False", ComparisonType.EQUAL);
         }
-        if (chargingCost.isSelected()) {
+        if (noChargingCost.isSelected()) {
             manage.adjustQuery("haschargingcost", "False", ComparisonType.EQUAL);
         }
         if (hasChargingCost.isSelected()) {
@@ -365,7 +459,8 @@ public class MainController {
     /**
      * Gets the MainManager created by the MainController
      *
-     * @return {@link MainManager} the manager of this controller
+     * @return {@link seng202.team3.logic.MainManager} the manager of this
+     *         controller
      */
     public MainManager getManager() {
         return manage;

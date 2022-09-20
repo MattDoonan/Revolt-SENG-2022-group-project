@@ -18,7 +18,7 @@
 
 <SplitPane dividerPositions="0.3" minWidth="200.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.MainController">
     <items>
-        <SplitPane dividerPositions="0.10287081339712918, 0.21291866028708134, 0.5" orientation="VERTICAL" prefHeight="0.0" prefWidth="212.0">
+        <SplitPane dividerPositions="0.10287081339712918, 0.21291866028708134, 0.5" maxWidth="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefWidth="530.0">
             <items>
   <SplitPane dividerPositions="0.7294685990338164" maxHeight="40.0">
     <items>
@@ -48,35 +48,35 @@
                                   </content>
                               </CustomMenuItem>
                         <SeparatorMenuItem mnemonicParsing="false" />
-                        <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                        <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                           <content>
                             <CheckBox fx:id="toggleTimeLimit" style="-fx-text-fill: black;" />
                           </content>
                         </CustomMenuItem>
-                        <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                        <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                            <content>
                               <Slider fx:id="timeLimit" blockIncrement="30.0" majorTickUnit="30.0" max="520.0" min="30.0" minorTickCount="10" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="60.0" />
                            </content>
                         </CustomMenuItem>
                         <SeparatorMenuItem mnemonicParsing="false" />
-                        <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                        <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                           <content>
-                            <CheckBox fx:id="onParkingFiler" style="-fx-text-fill: black;" />
+                            <CheckBox fx:id="onParkingFilter" style="-fx-text-fill: black;" />
                           </content>
                         </CustomMenuItem>
-                        <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                        <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                            <content>
                               <Slider fx:id="parkingLot" blockIncrement="5.0" majorTickUnit="5.0" max="20.0" min="1.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="5.0" />
                            </content>
                         </CustomMenuItem>
-                        <Menu mnemonicParsing="false" text="Carpark Cost">
+                        <Menu fx:id="carparkCost" mnemonicParsing="false" text="Carpark Cost">
                            <items>
-                              <CustomMenuItem mnemonicParsing="false">
+                              <CustomMenuItem hideOnClick="false" mnemonicParsing="false">
                                 <content>
                                   <CheckBox fx:id="withoutCarparkCost" style="-fx-text-fill: black;" text="Without Cost" />
                                 </content>
                               </CustomMenuItem>
-                              <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                              <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                                 <content>
                                   <CheckBox fx:id="withCarparkCost" style="-fx-text-fill: black;" text="With Cost" />
                                 </content>
@@ -99,14 +99,14 @@
                                   </items>
                               </Menu>
                         <SeparatorMenuItem mnemonicParsing="false" />
-                        <Menu mnemonicParsing="false" text="Hours Open">
+                        <Menu fx:id="hoursOpen" mnemonicParsing="false" text="Hours Open">
                            <items>
-                              <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                              <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                                 <content>
                                   <CheckBox fx:id="openAllButton" style="-fx-text-fill: black;" text="Open 24 hours" />
                                 </content>
                               </CustomMenuItem>
-                              <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                              <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                                 <content>
                                   <CheckBox fx:id="notOpenAllButton" style="-fx-text-fill: black;" text="Not Open 24 Hours" />
                                 </content>
@@ -114,14 +114,14 @@
                            </items>
                         </Menu>
                               <SeparatorMenuItem mnemonicParsing="false" />
-                        <Menu mnemonicParsing="false" text="Nearby Attractions">
+                        <Menu fx:id="attraction" mnemonicParsing="false" text="Nearby Attractions">
                           <items>
                                     <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Has Attraction button">
                                         <content>
                                             <CheckBox fx:id="attractionButton" style="-fx-text-fill: black;" text="Nearby Attraction" />
                                         </content>
                                     </CustomMenuItem>
-                              <CustomMenuItem mnemonicParsing="false">
+                              <CustomMenuItem hideOnClick="false" mnemonicParsing="false">
                                 <content>
                                   <CheckBox fx:id="noNearbyAttraction" style="-fx-text-fill: black;" text="No Nearby Attraction" />
                                 </content>
@@ -129,16 +129,16 @@
                           </items>
                         </Menu>
                               <SeparatorMenuItem mnemonicParsing="false" />
-                        <Menu mnemonicParsing="false" text="Charging Cost">
+                        <Menu fx:id="chargingCost" mnemonicParsing="false" text="Charging Cost">
                           <items>
                                     <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="No Charging Cost">
                                         <content>
-                                            <CheckBox fx:id="chargingCost" style="-fx-text-fill: black;" text="No Charging Cost" />
+                                            <CheckBox fx:id="noChargingCost" style="-fx-text-fill: black;" text="No Charging Cost" />
                                         </content>
                                     </CustomMenuItem>
-                              <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                              <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                                 <content>
-                                  <CheckBox fx:id="hasChargingCost" style="-fx-text-fill: black;" text="Charing Cost" />
+                                  <CheckBox fx:id="hasChargingCost" style="-fx-text-fill: black;" text="Charging Cost" />
                                 </content>
                               </CustomMenuItem>
                           </items>
@@ -152,19 +152,19 @@
         </Button>
     </items>
   </SplitPane>
-            <HBox fx:id="displayInfo" maxHeight="50.0" prefWidth="200.0" spacing="20.0" style="-fx-background-color: #FFFFFF;">
+            <HBox fx:id="displayInfo" maxHeight="50.0" spacing="20.0" style="-fx-background-color: #FFFFFF;">
                <padding>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </padding>
             </HBox>
             <ScrollPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: white;">
                <content>
-                  <VBox fx:id="chargerTable" prefHeight="236.0" prefWidth="220.0" style="-fx-background-color: #FFFFFF; -fx-fill-width: true;" />
+                  <VBox fx:id="chargerTable" style="-fx-background-color: #FFFFFF; -fx-fill-width: true;" />
                </content>
             </ScrollPane>
             </items>
         </SplitPane>
-  <BorderPane fx:id="mainWindow" maxHeight="Infinity" maxWidth="Infinity">
+  <BorderPane fx:id="mainWindow" maxHeight="Infinity" maxWidth="Infinity" minWidth="0.0">
 <top>
 </top>
 </BorderPane>

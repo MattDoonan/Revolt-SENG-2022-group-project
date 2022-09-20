@@ -5,7 +5,7 @@ import org.javatuples.Triplet;
 
 /**
  * Represents a request to retrieve information from data storage
- * 
+ *
  * @author Harrison Tyson
  * @version 1.0.1, Aug 22
  */
@@ -21,7 +21,7 @@ public class Query {
 
     /**
      * Constructor for the query
-     * 
+     *
      * @param source  Location to get information from
      * @param filters Filter criteria for the query
      */
@@ -32,7 +32,7 @@ public class Query {
 
     /**
      * Get source location for the data
-     * 
+     *
      * @return source of the query
      */
     public String getSource() {
@@ -41,7 +41,7 @@ public class Query {
 
     /**
      * Get the list of filters for the query
-     * 
+     *
      * @return list of filters for the query
      */
     public ArrayList<Triplet<String, String, ComparisonType>> getFilters() {

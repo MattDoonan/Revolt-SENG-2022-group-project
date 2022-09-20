@@ -4,6 +4,7 @@ import java.io.IOException;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
@@ -15,11 +16,53 @@ import javafx.stage.Stage;
  */
 public class MenuController {
 
-    private Stage stage;
-    private static MainController controller;
-
+    /**
+     * BorderPane of the menu window
+     */
     @FXML
     private BorderPane menuWindow;
+
+    /**
+     * Button for the menu
+     */
+    @FXML
+    private Button menuButton;
+
+    /**
+     * Button for the vehicle
+     */
+    @FXML
+    private Button vehicleButton;
+
+    /**
+     * Button for the journey
+     */
+    @FXML
+    private Button journeyButton;
+
+    /**
+     * Button for the accounts
+     */
+    @FXML
+    private Button accountButton;
+
+    /**
+     * The stage the application runs on
+     */
+    private Stage stage;
+
+    /**
+     * The MainController of the application; static as there is only
+     * one instance at a time
+     */
+    private static MainController controller;
+
+    /**
+     * unused constructor
+     */
+    public MenuController() {
+        // unused
+    }
 
     /**
      * Initialize the window
@@ -28,6 +71,71 @@ public class MenuController {
      */
     public void init(Stage stage) {
         this.stage = stage;
+    }
+
+    /**
+     * Following functions are the hover and hover exit effects for the nav bar
+     * buttons
+     */
+    public void menuHover() {
+        menuButton.setStyle("-fx-text-fill:#000000; -fx-font-size: 26px; "
+                + "-fx-background-color: #e06666;");
+    }
+
+    /**
+     * menuExit.
+     */
+    public void menuExit() {
+        menuButton.setStyle("-fx-text-fill:#ffffff;-fx-font-size: 24px; "
+                + "-fx-background-color: #e06666;");
+    }
+
+    /**
+     * vehicleHover.
+     */
+    public void vehicleHover() {
+        vehicleButton.setStyle("-fx-text-fill:#000000;-fx-font-size: 26px; "
+                + "-fx-background-color: #e06666;");
+    }
+
+    /**
+     * vehicleExit.
+     */
+    public void vehicleExit() {
+        vehicleButton.setStyle("-fx-text-fill:#ffffff;-fx-font-size: 24px; "
+                + "-fx-background-color: #e06666;");
+    }
+
+    /**
+     * journeyHover.
+     */
+    public void journeyHover() {
+        journeyButton.setStyle("-fx-text-fill:#000000;-fx-font-size: 26px; "
+                + "-fx-background-color: #e06666;");
+    }
+
+    /**
+     * journeyExit.
+     */
+    public void journeyExit() {
+        journeyButton.setStyle("-fx-text-fill:#ffffff;-fx-font-size: 24px; "
+                + "-fx-background-color: #e06666;");
+    }
+
+    /**
+     * accountHover.
+     */
+    public void accountHover() {
+        accountButton.setStyle("-fx-text-fill:#000000;-fx-font-size: 26px; "
+                + "-fx-background-color: #e06666;");
+    }
+
+    /**
+     * accountExit.
+     */
+    public void accountExit() {
+        accountButton.setStyle("-fx-text-fill:#ffffff;-fx-font-size: 24px;"
+                + " -fx-background-color: #e06666;");
     }
 
     /**
@@ -48,7 +156,8 @@ public class MenuController {
     /**
      * Gets the static Main Controller
      *
-     * @return {@link MainController} the main controller of this run
+     * @return {@link seng202.team3.gui.MainController} the main controller of this
+     *         run
      */
     public MainController getController() {
         return controller;

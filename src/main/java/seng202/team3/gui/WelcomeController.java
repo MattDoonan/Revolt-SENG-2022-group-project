@@ -17,9 +17,17 @@ public class WelcomeController {
     private MenuController menu;
 
     /**
+     * Unused constructor
+     */
+    public WelcomeController() {
+        // unused
+    }
+
+    /**
      * Initialize the window
      *
-     * @param menu Controller for the menu to display
+     * @param menu  Controller for the menu to display
+     * @param stage a {@link javafx.stage.Stage} object
      */
     public void init(Stage stage, MenuController menu) {
         this.menu = menu;

@@ -31,14 +31,20 @@ import seng202.team3.data.entity.Vehicle;
 
 /**
  * Class that interacts with the SQLite database
- * 
+ *
  * @author Matthew Doonan, Harrison Tyson
  * @version 2.1.2
  */
 public class SqlInterpreter implements DataManager {
 
+    /**
+     * URL of database path
+     */
     private final String url;
 
+    /**
+     * Logger for SQL interpreter
+     */
     private static final Logger logManager = LogManager.getLogger();
 
     /**
@@ -78,8 +84,9 @@ public class SqlInterpreter implements DataManager {
 
     /**
      * Adds all the charger data stored in the CSV file to the database
-     * 
+     *
      * @param source the file location to get the data from
+     * @throws java.io.IOException if any.
      */
     public void addChargerCsvToData(String source) throws IOException {
         Query q = new QueryBuilderImpl().withSource(source).build();
@@ -88,7 +95,7 @@ public class SqlInterpreter implements DataManager {
 
     /**
      * Returns the instance of the class
-     * 
+     *
      * @return the instance
      */
     public static SqlInterpreter getInstance() {
@@ -103,13 +110,13 @@ public class SqlInterpreter implements DataManager {
      * test databases, but may be useful
      * in future) USE WITH CAUTION. This does not override the current singleton
      * instance so must be the first call.
-     * 
+     *
      * @param url string url of database to load (this needs to be full url e.g.
      *            "jdbc:sqlite:./src/...")
      * @return current singleton instance
-     * @throws InstanceAlreadyExistsException if there is already a
-     *                                        singleton
-     *                                        instance
+     * @throws javax.management.InstanceAlreadyExistsException if there is already a
+     *                                                         singleton
+     *                                                         instance
      * @author Morgan English, Dec 21
      */
     public static SqlInterpreter initialiseInstanceWithUrl(String url)
@@ -140,7 +147,7 @@ public class SqlInterpreter implements DataManager {
 
     /**
      * WARNING Sets the current singleton instance to null
-     * 
+     *
      * @author Morgan English, Dec 21
      */
     public static void removeInstance() {
@@ -193,7 +200,7 @@ public class SqlInterpreter implements DataManager {
 
     /**
      * Creates connection to the database
-     * 
+     *
      * @return the new connection
      */
     public Connection createConnection() {
@@ -237,9 +244,10 @@ public class SqlInterpreter implements DataManager {
 
     /**
      * Deletes data from the database
-     * 
+     *
      * @param type String of the name of the table
      * @param id   Integer of the id number of the entity
+     * @throws java.io.IOException if any.
      */
     public void deleteData(String type, int id) throws IOException {
         String idName = "" + type.toLowerCase() + "id";
@@ -279,6 +287,7 @@ public class SqlInterpreter implements DataManager {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<Object> readData(Query query, Class<?> objectToInterpretAs) throws IOException {
         List<Object> objects = new ArrayList<>();
@@ -362,6 +371,7 @@ public class SqlInterpreter implements DataManager {
      * @param rs ResultSet to read from
      * 
      * @return list of chargers
+     * @throws SQLException if sql interaction fails
      */
     private List<Object> asCharger(ResultSet rs) throws SQLException {
         List<Object> chargers = new ArrayList<>();
@@ -416,6 +426,7 @@ public class SqlInterpreter implements DataManager {
      * @param rs ResultSet to read from
      * 
      * @return list of connectors
+     * @throws SQLException if sql interaction fails
      */
     private List<Object> asConnector(ResultSet rs) throws SQLException {
         List<Object> connectors = new ArrayList<>();
@@ -437,6 +448,7 @@ public class SqlInterpreter implements DataManager {
      * @param rs ResultSet to read from
      * 
      * @return list of vehicles
+     * @throws SQLException if sql interaction fails
      */
     private List<Object> asVehicle(ResultSet rs) throws SQLException {
         List<Object> vehicles = new ArrayList<>();
@@ -467,6 +479,7 @@ public class SqlInterpreter implements DataManager {
      * @param rs ResultSet to read from
      * 
      * @return list of journeys
+     * @throws SQLException if sql interaction fails
      */
     private List<Object> asJourney(ResultSet rs) throws SQLException {
         List<Object> journeys = new ArrayList<>();
@@ -517,10 +530,10 @@ public class SqlInterpreter implements DataManager {
 
     /**
      * Adds a new charger to the database from a charger object
-     * 
+     *
      * @param c          charger object
      * @param connection db connection
-     * @throws IOException if db writing fails
+     * @throws java.io.IOException if db writing fails
      */
     public void writeCharger(Connection connection, Charger c) throws IOException {
         String toAdd = "INSERT INTO charger "
@@ -590,9 +603,9 @@ public class SqlInterpreter implements DataManager {
 
     /**
      * Write a charger using the default connection
-     * 
+     *
      * @param c charger to write
-     * @throws IOException fails to write to db
+     * @throws java.io.IOException fails to write to db
      */
     public void writeCharger(Charger c) throws IOException {
         writeCharger(createConnection(), c);
@@ -600,7 +613,7 @@ public class SqlInterpreter implements DataManager {
 
     /**
      * Receives a list of chargers writes them using threading
-     * 
+     *
      * @param chargers array list of charger objects
      */
     public void writeCharger(ArrayList<Object> chargers) {
@@ -638,10 +651,11 @@ public class SqlInterpreter implements DataManager {
     /**
      * Adds connectors to the database
      * Defaults to the most recent charger if chargerId is null (0)
-     * 
+     *
      * @param connection connection to db
      * @param c          a connector object
      * @param chargerId  an Integer with the specified charger id
+     * @throws java.io.IOException if any.
      */
     public void writeConnector(Connection connection, Connector c, int chargerId)
             throws IOException {
@@ -694,10 +708,12 @@ public class SqlInterpreter implements DataManager {
     /**
      * Recievies a list of connectors and calls writeConnector to add it to the
      * database
-     * 
+     *
      * @see #writeConnector(Connection, Connector, int)
      * @param connectors an Array list of Connector objects
      * @param chargerId  Integer representing the associated charger
+     * @param connection a Connection object
+     * @throws java.io.IOException if any.
      */
     public void writeConnector(Connection connection, ArrayList<Connector> connectors,
             int chargerId)
@@ -709,8 +725,11 @@ public class SqlInterpreter implements DataManager {
 
     /**
      * Write list of connectors with new connection
-     * 
+     *
      * @see #writeConnector(Connection, Connector, int)
+     * @param connectors a {@link java.util.ArrayList} object
+     * @param chargerId  a int
+     * @throws java.io.IOException if any.
      */
     public void writeConnector(ArrayList<Connector> connectors, int chargerId) throws IOException {
         writeConnector(createConnection(), connectors, chargerId);
@@ -718,8 +737,11 @@ public class SqlInterpreter implements DataManager {
 
     /**
      * Write single connector with new connection
-     * 
+     *
      * @see #writeConnector(Connection, Connector, int)
+     * @param connector a {@link seng202.team3.data.entity.Connector} object
+     * @param chargerId a int
+     * @throws java.io.IOException if any.
      */
     public void writeConnector(Connector connector, int chargerId) throws IOException {
         writeConnector(createConnection(), connector, chargerId);
@@ -727,8 +749,9 @@ public class SqlInterpreter implements DataManager {
 
     /**
      * Adds an object Vehicle to the database
-     * 
+     *
      * @param v the object Vehicle
+     * @throws java.io.IOException if any.
      */
     public void writeVehicle(Vehicle v) throws IOException {
         String toAdd = "INSERT INTO vehicle (vehicleid, make, model, rangekm, "
@@ -772,9 +795,9 @@ public class SqlInterpreter implements DataManager {
 
     /**
      * Adds list of vehicle objects to the database
-     * 
+     *
      * @param v the list of vehicle objects
-     * @throws IOException cannot write to database
+     * @throws java.io.IOException cannot write to database
      */
     public void writeVehicle(List<Vehicle> v) throws IOException {
         for (Vehicle vehicle : v) {
@@ -784,8 +807,9 @@ public class SqlInterpreter implements DataManager {
 
     /**
      * Adds an object Journey to the database
-     * 
+     *
      * @param j the object journey
+     * @throws java.io.IOException if any.
      */
     public void writeJourney(Journey j) throws IOException {
         String toAdd = "INSERT INTO journey (journeyid, vehicleid, startLat, "

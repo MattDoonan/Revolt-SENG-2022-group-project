@@ -10,13 +10,21 @@ import seng202.team3.data.entity.Coordinate;
  */
 public class GeoLocationHandler {
 
+    /**
+     * Singleton instance
+     */
     private static GeoLocationHandler instance = new GeoLocationHandler();
+
+    /**
+     * Coordinate to perform the geolocation with
+     */
     private Coordinate coordinate;
 
     /**
      * Private initaliser for the geolocation handler
      */
-    private GeoLocationHandler() {}
+    private GeoLocationHandler() {
+    }
 
     /**
      * The way to get the instance of the geolocation handler
@@ -37,7 +45,7 @@ public class GeoLocationHandler {
     /**
      * Gets the coordinate
      *
-     * @return {@link Coordinate} the selected coordinate
+     * @return {@link seng202.team3.data.entity.Coordinate} the selected coordinate
      */
     public Coordinate getCoordinate() {
         return coordinate;
@@ -46,7 +54,9 @@ public class GeoLocationHandler {
     /**
      * Sets the coordinate
      *
-     * @param coordinate the {@link Coordinate} to set the coordinate
+     * @param coordinate the {@link seng202.team3.data.entity.Coordinate} to set the
+     *                   coordinate
+     * @param name       the address of the coordinate
      */
     public void setCoordinate(Coordinate coordinate, String name) {
         this.coordinate = coordinate;

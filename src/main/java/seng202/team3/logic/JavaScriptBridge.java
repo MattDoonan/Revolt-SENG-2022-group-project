@@ -29,21 +29,37 @@ import seng202.team3.gui.MenuController;
 public class JavaScriptBridge {
 
     /**
-     * Makes a coordinate from a click and sends it to MapManager's MainController
+     * Unused constructor
+     */
+    public JavaScriptBridge() {
+        // Unused
+    }
+
+    /**
+     * Makes a coordinate from a click and sets the GeoLocationHandler
      *
      * @param latlng the string created with latitude and longitude
      */
     public void addCoordinateFromClick(String latlng) {
+        GeoLocationHandler.getInstance().setCoordinate(parseCoordinate(latlng), "Coordinate");
+        refreshCoordinates();
+    }
+
+    /**
+     * Refreshes the coordinates for journey manager and main manager
+     */
+    private void refreshCoordinates() {
         MenuController menu = new MenuController();
-        MainController controller = menu.getController();
-        controller.getManager().setPosition(parseCoordinate(latlng));
+        if (menu.getController() != null) {
+            menu.getController().getManager().setPosition();
+        }
     }
 
     /**
      * Parses a string into a series of coordinates
      *
      * @param latlng the string to be parsed
-     * @return {@link Coordinate}, the coordinate end product
+     * @return {@link seng202.team3.data.entity.Coordinate}, the coordinate end product
      */
     public Coordinate parseCoordinate(String latlng) {
         JSONParser parser = new JSONParser();
@@ -67,9 +83,14 @@ public class JavaScriptBridge {
      * @param address String of the address
      */
     public void addLocationName(String address) {
-        new MenuController().getController().getManager().getPosition().setAddress(address);
+        GeoLocationHandler.getInstance().setCoordinate(GeoLocationHandler
+                .getInstance().getCoordinate(), address);
+        refreshCoordinates();
     }
 
+    /**
+     * Refresh the menu table
+     */
     public void refreshTable() {
         MainController controller = new MenuController().getController();
         controller.refreshTable();
@@ -110,6 +131,8 @@ public class JavaScriptBridge {
 
     /**
      * Zooms to a point
+     *
+     * @param latlng string representation of a physical coordinate
      */
     public void zoomToPoint(String latlng) {
         MainController controller = new MenuController().getController();
@@ -128,18 +151,20 @@ public class JavaScriptBridge {
 
     /**
      * Loads the charger information on a separate pop-up
+     *
+     * @param id id of the charger to get more information about
      */
     public void loadMoreInfo(int id) {
         chargerHandler(id);
-        loadChargerEdit(new MenuController().getController()
-                .getManager().getSelectedCharger());
-
+        MainManager main = new MenuController().getController().getManager();
+        loadChargerEdit(main.getSelectedCharger(), main.getPosition());
     }
 
     /**
      * Sets the singleton ChargerManager Coordinate to the latlng
      *
      * @param latlng the string created with latitude and longitude
+     * @param name   the address of the coordinate to set
      */
     public void setCoordinate(String latlng, String name) {
         GeoLocationHandler.getInstance().setCoordinate(parseCoordinate(latlng), name);
@@ -148,9 +173,10 @@ public class JavaScriptBridge {
     /**
      * Creates the charger adding/editing screen when necessary
      *
-     * @param charger the {@link Charger} that is being selected
+     * @param charger    the {@link seng202.team3.data.entity.Charger} that is being selected
+     * @param coordinate the {@link seng202.team3.data.entity.Coordinate} that is being selected
      */
-    public void loadChargerEdit(Charger charger) {
+    public void loadChargerEdit(Charger charger, Coordinate coordinate) {
         try {
             FXMLLoader chargerCont = new FXMLLoader(getClass().getResource(
                     "/fxml/charger_info.fxml"));
@@ -164,6 +190,7 @@ public class JavaScriptBridge {
             modal.setTitle("Charger Information");
             modal.initModality(Modality.WINDOW_MODAL);
             ChargerController controller = chargerCont.getController();
+            controller.setCoordinate(coordinate);
             controller.setCharger(charger);
             controller.displayChargerInfo();
             controller.init(modal);

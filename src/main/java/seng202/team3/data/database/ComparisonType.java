@@ -2,7 +2,7 @@ package seng202.team3.data.database;
 
 /**
  * Enumeration representing comparison types used in filters
- * 
+ *
  * @author Harrison Tyson
  * @version 1.0.0, Aug 22
  */
