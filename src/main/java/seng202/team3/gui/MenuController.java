@@ -16,23 +16,48 @@ import javafx.stage.Stage;
  */
 public class MenuController {
 
-    private Stage stage;
-    private static MainController controller;
-
+    /**
+     * BorderPane of the menu window
+     */
     @FXML
     private BorderPane menuWindow;
 
+    /**
+     * Button for the menu
+     */
     @FXML
     private Button menuButton;
 
+    /**
+     * Button for the vehicle
+     */
     @FXML
     private Button vehicleButton;
 
+    /**
+     * Button for the journey
+     */
     @FXML
     private Button journeyButton;
 
+    /**
+     * Button for the accounts
+     */
     @FXML
     private Button accountButton;
+
+
+    /**
+     * The stage the application runs on
+     */
+    private Stage stage;
+
+    /**
+     * The MainController of the application; static as there is only
+     * one instance at a time
+     */
+    private static MainController controller;
+
 
     /**
      * Initialize the window

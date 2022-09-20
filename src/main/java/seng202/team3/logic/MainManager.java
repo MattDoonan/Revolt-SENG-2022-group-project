@@ -16,7 +16,14 @@ import seng202.team3.data.entity.Coordinate;
  */
 public class MainManager extends ChargerHandler implements ChargerInterface {
 
+    /**
+     * Distance between selected coordinate and specified charger
+     */
     private double distance = 0;
+
+    /**
+     * ChargerManager class to handle chargers
+     */
     private final ChargerManager chargerManager = new ChargerManager();
 
     /**
