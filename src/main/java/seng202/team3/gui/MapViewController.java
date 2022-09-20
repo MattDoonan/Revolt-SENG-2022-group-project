@@ -1,24 +1,14 @@
 package seng202.team3.gui;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.util.stream.Collectors;
-import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
-import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import netscape.javascript.JSObject;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
-import seng202.team3.data.entity.Journey;
 import seng202.team3.logic.JavaScriptBridge;
 import seng202.team3.logic.MapManager;
 
@@ -91,10 +81,10 @@ public class MapViewController extends MapHandler {
         return javaScriptConnector != null;
     }
 
-
     /**
      * Adds route to map, calling the underlying js function, from the currently
-     * selected coordinate (as a coordinate) to the currently selected charger (as a coordinate).
+     * selected coordinate (as a coordinate) to the currently selected charger (as a
+     * coordinate).
      */
     public void addRouteToCharger() {
         routeDisplayed = true;
@@ -138,7 +128,6 @@ public class MapViewController extends MapHandler {
             addRouteToCharger();
         }
     }
-
 
     /**
      * Loads a generic prompt screen pop-up {@link PromptPopUp}
@@ -198,6 +187,5 @@ public class MapViewController extends MapHandler {
         loadPromptScreens("Click on a charger on the map and\n"
                 + "confirm to DELETE a charger: \n\n", "delete");
     }
-
 
 }

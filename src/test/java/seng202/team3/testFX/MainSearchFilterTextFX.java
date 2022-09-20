@@ -1,4 +1,6 @@
-package seng202.team3.testFX;
+package seng202.team3.testfx;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -14,8 +16,6 @@ import seng202.team3.gui.MainController;
 import seng202.team3.gui.MainWindow;
 import seng202.team3.logic.Calculations;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 /**
  * Code designed to test the searching and filtering of the Main Window
  * Heavily inspired by Morgan English
@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author Michelle Hsieh
  * @version 1.0.0, Sep 22
  */
-public class MainSearchFilterTextFX extends TestFXBase {
+public class MainSearchFilterTextFx extends TestFxBase {
 
     private MainController controller;
 
@@ -57,7 +57,7 @@ public class MainSearchFilterTextFX extends TestFXBase {
      * Initialises the state of the current application
      *
      * @param loader the FXML loader after loading
-     * @param stage the stage of the application
+     * @param stage  the stage of the application
      */
     public void initState(FXMLLoader loader, Stage stage) {
         BorderPane b = new BorderPane();
@@ -70,8 +70,9 @@ public class MainSearchFilterTextFX extends TestFXBase {
      */
     @Test
     public void lessWhenSearchAddress() {
+        int total;
         clickOn("#executeSearch");
-        int total = controller.getManager().getCloseChargerData().size();
+        total = controller.getManager().getCloseChargerData().size();
         clickOn("#searchCharger");
         write("auck");
         clickOn("#executeSearch");
@@ -107,12 +108,12 @@ public class MainSearchFilterTextFX extends TestFXBase {
         ObservableList<Charger> chargers = controller.getManager().getCloseChargerData();
         for (Charger charger : chargers) {
             if (!charger.getChargeCost()) {
-                boolean hasAC = false;
+                boolean hasAc = false;
                 for (Connector connector : charger.getConnectors()) {
                     if (connector.getPower().equalsIgnoreCase("AC")) {
-                        hasAC = true;
+                        hasAc = true;
                     }
-                    if (!hasAC) {
+                    if (!hasAc) {
                         isValid = false;
                     }
                 }
@@ -149,8 +150,10 @@ public class MainSearchFilterTextFX extends TestFXBase {
         clickOn("#distanceDisplay");
         clickOn("#executeSearch");
         for (Charger charger : controller.getManager().getCloseChargerData()) {
-            if (Calculations.calculateDistance(charger.getLocation(),
-                    controller.getManager().getPosition()) > controller.getManager().getDistance()) {
+            if (Calculations.calculateDistance(
+                    charger.getLocation(),
+                    controller.getManager().getPosition()) > controller.getManager()
+                            .getDistance()) {
                 isValid = true;
             }
         }
@@ -164,7 +167,7 @@ public class MainSearchFilterTextFX extends TestFXBase {
         clickOn("#toggleTimeLimit");
         clickOn("#executeSearch");
         for (Charger charger : controller.getManager().getCloseChargerData()) {
-            if (charger.getTimeLimit() < 60 ){
+            if (charger.getTimeLimit() < 60) {
                 isValid = false;
             }
         }
@@ -178,7 +181,7 @@ public class MainSearchFilterTextFX extends TestFXBase {
         clickOn("#onParkingFilter");
         clickOn("#executeSearch");
         for (Charger charger : controller.getManager().getCloseChargerData()) {
-            if (charger.getAvailableParks() < 5 ){
+            if (charger.getAvailableParks() < 5) {
                 isValid = false;
             }
         }

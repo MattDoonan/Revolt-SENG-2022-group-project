@@ -1,4 +1,4 @@
-package seng202.team3.unitTest.logic;
+package seng202.team3.unittest.logic;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -139,7 +139,9 @@ public class MainManagerTest {
         }
 
         Coordinate coordinate = new Coordinate(1.1, 2.3, -43.53418, 172.627572);
-        ArrayList<Charger> cc = charge.getNearbyChargers(chargerList, coordinate, 50.0);
+        ArrayList<Charger> cc;
+
+        cc = charge.getNearbyChargers(chargerList, coordinate, 50.0);
         GeoLocationHandler.getInstance().setCoordinate(coordinate, "empty");
         manage.setPosition();
         manage.setDistance(50.0);
@@ -164,13 +166,14 @@ public class MainManagerTest {
 
         QueryBuilder q = new QueryBuilderImpl().withSource("charger");
         ArrayList<Charger> chargerList = new ArrayList<>();
+        ArrayList<Charger> cc;
 
         for (Object o : SqlInterpreter.getInstance().readData(q.build(), Charger.class)) {
             chargerList.add((Charger) o);
         }
 
         Coordinate coordinate = new Coordinate(1.1, 2.3, -43.53418, 172.627572);
-        ArrayList<Charger> cc = charge.getNearbyChargers(chargerList, coordinate, 90.0);
+        cc = charge.getNearbyChargers(chargerList, coordinate, 90.0);
         GeoLocationHandler.getInstance().setCoordinate(coordinate, "empty");
         manage.setPosition();
         manage.setDistance(90.0);

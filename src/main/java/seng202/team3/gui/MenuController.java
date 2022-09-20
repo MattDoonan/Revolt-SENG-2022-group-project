@@ -3,18 +3,9 @@ package seng202.team3.gui;
 import java.io.IOException;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
@@ -27,7 +18,6 @@ public class MenuController {
 
     private Stage stage;
     private static MainController controller;
-    private static JourneyController journeyController;
 
     @FXML
     private BorderPane menuWindow;
@@ -53,9 +43,9 @@ public class MenuController {
         this.stage = stage;
     }
 
-
     /**
-     * Following functions are the hover and hover exit effects for the nav bar buttons
+     * Following functions are the hover and hover exit effects for the nav bar
+     * buttons
      */
     public void menuHover() {
         menuButton.setStyle("-fx-text-fill:#000000; -fx-font-size: 26px; "
@@ -122,22 +112,12 @@ public class MenuController {
     }
 
     /**
-     * Gets the static Journey Controller
-     *
-     * @return {@link JourneyController} the journeycontroller of this run
-     */
-    public JourneyController getJourneyController() {
-        return journeyController;
-    }
-
-    /**
      * Loads the home upon clicking
      */
     @FXML
     public void loadHome() {
         initHome();
     }
-
 
     /**
      * Initialises the welcome page;
@@ -154,22 +134,6 @@ public class MenuController {
             e.printStackTrace();
         }
     }
-
-    /**
-     * Launches the Journey Screen
-     */
-    public void launchJourneyScreen() {
-        try {
-            FXMLLoader journeyLoader = new FXMLLoader(getClass().getResource("/fxml/journey.fxml"));
-            Parent journeyViewParent = journeyLoader.load();
-            journeyController = journeyLoader.getController();
-            journeyController.init(stage);
-            menuWindow.setCenter(journeyViewParent);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
 
     /**
      * Loads the vehicle screen upon click

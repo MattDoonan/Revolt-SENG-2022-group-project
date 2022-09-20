@@ -1,6 +1,5 @@
 package seng202.team3.logic;
 
-import com.sun.tools.javac.Main;
 import java.io.IOException;
 import java.util.List;
 import javafx.fxml.FXMLLoader;
@@ -18,10 +17,8 @@ import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
 import seng202.team3.gui.ChargerController;
-import seng202.team3.gui.JourneyController;
 import seng202.team3.gui.MainController;
 import seng202.team3.gui.MenuController;
-
 
 /**
  * Converts JavaScript to Objects by hocus pocus
@@ -49,9 +46,6 @@ public class JavaScriptBridge {
         if (menu.getController() != null) {
             menu.getController().getManager().setPosition();
         }
-        if (menu.getJourneyController() != null) {
-            menu.getJourneyController().getJourneyManager().setPosition();
-        }
     }
 
     /**
@@ -75,15 +69,15 @@ public class JavaScriptBridge {
         return coord;
     }
 
-
     /**
-     * Takes a string with the name of the string and adds it to the current coordinate
+     * Takes a string with the name of the string and adds it to the current
+     * coordinate
      *
      * @param address String of the address
      */
     public void addLocationName(String address) {
         GeoLocationHandler.getInstance().setCoordinate(GeoLocationHandler
-                        .getInstance().getCoordinate(), address);
+                .getInstance().getCoordinate(), address);
         refreshCoordinates();
     }
 
@@ -101,7 +95,8 @@ public class JavaScriptBridge {
     }
 
     /**
-     * Displays the charger according to id and also zooms to it, if it is not a journey.
+     * Displays the charger according to id and also zooms to it, if it is not a
+     * journey.
      * Sets the charger as the selected charger
      *
      * @param id the charger id selected
@@ -142,7 +137,6 @@ public class JavaScriptBridge {
         controller.getMapController().addStopInRoute(parseCoordinate(latlng));
     }
 
-
     /**
      * Loads the charger information on a separate pop-up
      */
@@ -164,7 +158,7 @@ public class JavaScriptBridge {
     /**
      * Creates the charger adding/editing screen when necessary
      *
-     * @param charger the {@link Charger} that is being selected
+     * @param charger    the {@link Charger} that is being selected
      * @param coordinate the {@link Coordinate} that is being selected
      */
     public void loadChargerEdit(Charger charger, Coordinate coordinate) {

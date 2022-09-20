@@ -6,9 +6,7 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import netscape.javascript.JSObject;
-import seng202.team3.data.entity.Charger;
 import seng202.team3.logic.JavaScriptBridge;
-import seng202.team3.logic.MapManager;
 
 /**
  * An abstract class that has basic JS initialisation for the MapView and
@@ -29,7 +27,6 @@ public abstract class MapHandler {
     protected Stage stage;
     protected JavaScriptBridge javaScriptBridge;
     protected JSObject javaScriptConnector;
-
 
     /**
      * Initialises the map by loading the html into the webengine

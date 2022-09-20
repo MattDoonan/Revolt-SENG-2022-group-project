@@ -1,4 +1,4 @@
-package seng202.team3.unitTest.data.database;
+package seng202.team3.unittest.data.database;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,7 +25,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import seng202.team3.data.database.*;
+import seng202.team3.data.database.ComparisonType;
+import seng202.team3.data.database.CsvInterpreter;
+import seng202.team3.data.database.Query;
+import seng202.team3.data.database.QueryBuilder;
+import seng202.team3.data.database.QueryBuilderImpl;
+import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
@@ -187,13 +192,9 @@ public class SqlInterpreterTest {
                 q.withSource("src/test/resources/csvtest/validChargers.csv").build(),
                 Charger.class);
 
-        int id = 1; // Add expected connector ids to expected connectors
         for (Object o : expected) {
-            for (Connector c : ((Charger) o).getConnectors()) {
-                c.setId(id++);
-            }
+            assertTrue(result.contains(o));
         }
-        assertArrayEquals(expected.toArray(), result.toArray());
     }
 
     /**
@@ -694,5 +695,18 @@ public class SqlInterpreterTest {
                             .build(),
                     Charger.class);
         });
+    }
+
+    @Test
+    public void allRecordsImported() throws IOException {
+        db.addChargerCsvToData("src/test/resources/csvtest/filtering.csv");
+
+        QueryBuilder q = new QueryBuilderImpl()
+                .withSource("src/test/resources/csvtest/filtering.csv");
+
+        List<Object> expected = new CsvInterpreter().readData(q.build(), Charger.class);
+        List<Object> actual = db.readData(q.withSource("charger").build(), Charger.class);
+
+        assertEquals(expected.size(), actual.size());
     }
 }

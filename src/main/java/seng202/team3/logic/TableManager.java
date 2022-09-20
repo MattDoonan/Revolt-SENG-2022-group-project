@@ -2,12 +2,11 @@ package seng202.team3.logic;
 
 import java.io.IOException;
 import seng202.team3.data.database.SqlInterpreter;
-import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
 
-
 /**
- * A Table Manager that implements the adding, deleting and editing functionality of a charger
+ * A Table Manager that implements the adding, deleting and editing
+ * functionality of a charger
  *
  * @author Michelle Hsieh
  * @version 1.0.0, Sep 22

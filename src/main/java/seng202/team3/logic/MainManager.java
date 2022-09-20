@@ -2,12 +2,8 @@ package seng202.team3.logic;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import seng202.team3.data.database.ComparisonType;
-import seng202.team3.data.database.QueryBuilder;
-import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
@@ -50,7 +46,6 @@ public class MainManager extends ChargerHandler implements ChargerInterface {
         return distance;
     }
 
-
     /**
      * Send chargers within range of the selected location to the table and temp
      * data.
@@ -67,7 +62,6 @@ public class MainManager extends ChargerHandler implements ChargerInterface {
         return closerChargers;
     }
 
-
     /**
      * Returns a list of the closest chargers according to set distance from
      * position
@@ -80,7 +74,6 @@ public class MainManager extends ChargerHandler implements ChargerInterface {
         }
         return compareDistance();
     }
-
 
     /**
      * Adds a charger at the location of the coordinate.
@@ -118,6 +111,5 @@ public class MainManager extends ChargerHandler implements ChargerInterface {
             bridge.loadMoreInfo(getSelectedCharger().getChargerId());
         }
     }
-
 
 }

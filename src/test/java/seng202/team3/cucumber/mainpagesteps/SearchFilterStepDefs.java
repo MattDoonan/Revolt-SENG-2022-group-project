@@ -1,5 +1,4 @@
-package seng202.team3.cucumber.mainPageSteps;
-
+package seng202.team3.cucumber.mainpagesteps;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -37,7 +36,6 @@ public class SearchFilterStepDefs {
         manager = new MainManager();
     }
 
-
     @Given("There is no current input given")
     public void noInputGiven() {
         manager.resetQuery();
@@ -45,7 +43,7 @@ public class SearchFilterStepDefs {
     }
 
     /**
-     * AT_1
+     * AT_1 when condition
      */
     @When("The user inputs a valid query {string}")
     public void userTriesValidQuery(String query) {
@@ -53,6 +51,11 @@ public class SearchFilterStepDefs {
         manager.makeAllChargers();
     }
 
+    /**
+     * AT_2 then condition
+     * 
+     * @param query query being filtered
+     */
     @Then("The user gets the chargers that best match their query {string}")
     public void chargersFilteredCorrectly(String query) {
         boolean isValid = true;
@@ -68,7 +71,7 @@ public class SearchFilterStepDefs {
     }
 
     /**
-     * AT_2
+     * AT_2 when condition
      */
     @When("The user inputs an invalid query {string}")
     public void badInputGiven(String query) {
@@ -76,6 +79,9 @@ public class SearchFilterStepDefs {
         manager.makeAllChargers();
     }
 
+    /**
+     * AT_2 then condition
+     */
     @Then("No results are listed")
     public void noChargers() {
         assertEquals(0, manager.getCloseChargerData().size());
@@ -84,12 +90,15 @@ public class SearchFilterStepDefs {
     /**
      * AT_3
      */
-    @When("The user filters for no charging cost") 
+    @When("The user filters for no charging cost")
     public void filterChargerCost() {
         manager.adjustQuery("haschargingcost", "False", ComparisonType.EQUAL);
         manager.makeAllChargers();
     }
 
+    /**
+     * AT_3
+     */
     @Then("The list of chargers found have no charging cost")
     public void noPaidChargers() {
         boolean isValid = true;
@@ -103,23 +112,37 @@ public class SearchFilterStepDefs {
     }
 
     /**
-     * AT_4     no favourite implemented
+     * AT_4 no favourite implemented
      */
+    public void func4() {
+        // IMPLEMENT ME
+    }
 
     /**
-     * AT_5     need testFX to sort as front end table handles the sorting
+     * AT_5 need testFX to sort as front end table handles the sorting
      */
+    public void func5() {
+        // IMPLEMENT ME
+    }
 
     /**
-     * AT_6     need testFX unless you can test FXML if field is shown?
+     * AT_6 need testFX unless you can test FXML if field is shown?
      */
+    public void func6() {
+        // IMPLEMENT ME
+    }
 
     /**
-     * AT_7     need testFX 
+     * AT_7 need testFX
      */
+    public void func7() {
+        // IMPLEMENT ME
+    }
 
     /**
-     * AT_8     testFX
+     * AT_8 testFX
      */
+    public void func8() {
+        // IMPLEMENT ME
+    }
 }
-

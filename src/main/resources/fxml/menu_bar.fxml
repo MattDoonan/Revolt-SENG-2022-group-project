@@ -34,7 +34,7 @@
                         <Font name="FreeSans" size="24.0" />
                      </font>
                   </Button>
-                  <Button fx:id="journeyButton" maxHeight="60.0" minHeight="60.0" minWidth="150.0" mnemonicParsing="false" onAction="#launchJourneyScreen" onMouseEntered="#journeyHover" onMouseExited="#journeyExit" prefHeight="60.0" prefWidth="200.0" style="-fx-background-color: #e06666;" text="Plan Journey" textFill="WHITE">
+                  <Button fx:id="journeyButton" maxHeight="60.0" minHeight="60.0" minWidth="150.0" mnemonicParsing="false" onMouseEntered="#journeyHover" onMouseExited="#journeyExit" prefHeight="60.0" prefWidth="200.0" style="-fx-background-color: #e06666;" text="Plan Journey" textFill="WHITE">
                      <font>
                         <Font name="FreeSans" size="24.0" />
                      </font>
