@@ -176,7 +176,6 @@ public class GarageController {
                 VehicleUpdateController controller = vehicleEdit.getController();
                 controller.displayInfo(vehicle);
             }
-            // editPopup.setAlwaysOnTop(true);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

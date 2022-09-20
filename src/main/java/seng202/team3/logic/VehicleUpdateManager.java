@@ -8,7 +8,7 @@ import seng202.team3.data.entity.Vehicle;
  * Manages updates of vehicles
  *
  * @author Celia Allen
- * @version 1.0.0, Aug 22
+ * @version 1.0.0, Sep 18
  */
 public class VehicleUpdateManager {
 
