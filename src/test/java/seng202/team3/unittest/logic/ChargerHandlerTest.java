@@ -47,7 +47,7 @@ public class ChargerHandlerTest {
     }
 
     /**
-     * Tests the creation of a {@link Chargers Charger} ArrayList using
+     * Tests the creation of a {@link Charger Charger} ArrayList using
      * makeAllChargers
      * Tests edge case of size, makes sure greater than 344 elements
      */
@@ -59,7 +59,7 @@ public class ChargerHandlerTest {
     }
 
     /**
-     * Tests the creation of a {@link Chargers Charger} ArrayList using
+     * Tests the creation of a {@link Charger Charger} ArrayList using
      * makeAllChargers
      * Tests edge case of size, makes sure less than 346 elements
      */
@@ -79,7 +79,7 @@ public class ChargerHandlerTest {
     }
 
     /**
-     * Test the use of getConnecters which gets {@link Connecter Connectors}
+     * Test the use of getConnecters which gets {@link Connector Connectors}
      * of a {@link Charger Charger}
      */
     @Test

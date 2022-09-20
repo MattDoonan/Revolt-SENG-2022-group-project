@@ -11,6 +11,9 @@ import javafx.fxml.FXML;
  */
 public class PromptPopUp extends PopUpWindow {
 
+    /**
+     * String of a type of popup window to display
+     */
     protected String type;
 
     /**

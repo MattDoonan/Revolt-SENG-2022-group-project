@@ -13,11 +13,25 @@ import javafx.stage.Stage;
  */
 public class PopUpWindow {
 
+    /**
+     * Label input box
+     */
     @FXML
     protected Label inputBox;
 
+    /**
+     * String prompt to be displayed
+     */
     protected String prompt;
+
+    /**
+     * Stage of application
+     */
     protected Stage stage;
+
+    /**
+     * Boolean, if is clicked, is true
+     */
     protected Boolean isClicked = false;
 
 

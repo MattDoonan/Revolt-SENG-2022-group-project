@@ -37,8 +37,14 @@ import seng202.team3.data.entity.Vehicle;
  */
 public class SqlInterpreter implements DataManager {
 
+    /**
+     * URL of database path
+     */
     private final String url;
 
+    /**
+     * Logger for SQL interpreter
+     */
     private static final Logger logManager = LogManager.getLogger();
 
     /**
