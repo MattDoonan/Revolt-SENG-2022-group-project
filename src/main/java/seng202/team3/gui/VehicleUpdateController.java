@@ -16,6 +16,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -23,6 +24,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -71,7 +73,7 @@ public class VehicleUpdateController {
      * Lable to display the currently added connections
      */
     @FXML
-    private Label addedConnections;
+    private ListView<HBox> addedConnections;
 
     /**
      * Dropdown of the connector types
@@ -180,12 +182,6 @@ public class VehicleUpdateController {
                 selectedVehicle.setImgPath("src/main/resources/images/null");
             }
             vehicle = selectedVehicle;
-            // selectedVehicle.setConnectors(connections);
-            // selectedVehicle.setMaxRange(Integer.parseInt(maxRangeText.getText()));
-            // selectedVehicle.setModel(modelText.getText());
-            // selectedVehicle.setMake(makeText.getText());
-            // selectedVehicle.setBatteryPercent(Double.parseDouble(currChargeText.getText()));
-            // vehicle = selectedVehicle;
         } else {
             vehicle = new Vehicle();
         }
@@ -246,7 +242,7 @@ public class VehicleUpdateController {
             makeText.setText(null);
             modelText.setText(null);
             maxRangeText.setText(null);
-            addedConnections.setText(null);
+            addedConnections.getItems().clear();
             imgName.setText(null);
             connections = new ArrayList<>();
             connectorType.setPromptText("Connector Type");
@@ -279,9 +275,15 @@ public class VehicleUpdateController {
                 root.addRow(1, save);
                 root.setStyle("-fx-padding: 20;");
                 save.setOnMouseClicked((MouseEvent event) -> {
+                    Button button = new Button("Delete");
+                    button.setId(connector.getText());
+                    button.setOnAction(e -> deleteConnection(e));
+                    Label label = new Label("Connection: " + connector.getText());
+                    HBox hbox = new HBox();
+                    hbox.getChildren().addAll(label, button);
                     connections.add(connector.getText());
-                    addedConnections.setText("Connection: "
-                            + connector.getText() + "\n" + addedConnections.getText());
+                    addedConnections.getItems().add(hbox);
+                    
                     Stage connectorStage = (Stage) save.getScene().getWindow();
                     connectorStage.close();
                 });
@@ -291,11 +293,30 @@ public class VehicleUpdateController {
                 connectorPopup.setScene(new Scene(root, 300, 100));
                 connectorPopup.showAndWait();
             } else {
+                
                 connections.add(connectorType.getValue());
-                addedConnections.setText("Connection: "
-                        + connectorType.getValue() + "\n" + addedConnections.getText());
+                Button button = new Button("Delete");
+                button.setId(connectorType.getValue());
+                button.setOnAction(e -> deleteConnection(e));
+                Label label = new Label("Connection: " + connectorType.getValue());
+                HBox hbox = new HBox();
+                hbox.getChildren().addAll(label, button);
+                addedConnections.getItems().add(hbox);
+
             }
         }
+
+    }
+
+    /**
+     * Delete a connection
+     * @param e ActionEvent
+     */
+    public void deleteConnection(ActionEvent e) {
+        int index = connections.indexOf(((Node) e.getSource()).getId());
+        System.out.println(((Node) e.getSource()).getId());
+        connections.remove(((Node) e.getSource()).getId());
+        addedConnections.getItems().remove(index);
 
     }
 
@@ -405,16 +426,19 @@ public class VehicleUpdateController {
             makeText.setText(vehicle.getMake());
             modelText.setText(vehicle.getModel());
             maxRangeText.setText(Integer.toString(vehicle.getMaxRange()));
-            addedConnections.setText(vehicle.getConnectors().toString());
             currChargeText.setText(vehicle.getBatteryPercent().toString());
             imgName.setText(vehicle.getImgPath().replace("src/main/resources/images/", ""));
             selectedImg = vehicle.getImgPath().replace("src/main/resources/images/", "");
             connections = vehicle.getConnectors();
-            String strConns = "";
             for (String connection : connections) {
-                strConns += "Connection: " + connection + "\n";
+                Button button = new Button("Delete");
+                button.setId(connection);
+                button.setOnAction(e -> deleteConnection(e));
+                Label label = new Label("Connection: " + connection);
+                HBox hbox = new HBox();
+                hbox.getChildren().addAll(label, button);
+                addedConnections.getItems().add(hbox);
             }
-            addedConnections.setText(strConns);
         }
     }
 
