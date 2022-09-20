@@ -88,6 +88,7 @@ public class MainManager extends ChargerHandler implements ChargerInterface {
     @Override
     public void addCharger() {
         new JavaScriptBridge().loadChargerEdit(null, selectedCoordinate);
+        makeAllChargers();
     }
 
     /**
@@ -117,6 +118,7 @@ public class MainManager extends ChargerHandler implements ChargerInterface {
         if (getSelectedCharger() != null) {
             JavaScriptBridge bridge = new JavaScriptBridge();
             bridge.loadMoreInfo(getSelectedCharger().getChargerId());
+            makeAllChargers();
         }
     }
 

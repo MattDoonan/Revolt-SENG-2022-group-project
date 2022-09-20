@@ -212,10 +212,19 @@ public class ChargerController {
             newCharger.setChargerId(charger.getChargerId());
         }
         coordinate.setAddress(address.getText());
+        if (address.getText().length() == 0) {
+            errors.add("Needs an address, e.g. 132 Science Road, Christchurch");
+        }
         newCharger.setLocation(coordinate);
         newCharger.setOperator(operator.getText());
         newCharger.setOwner(owner.getText());
+        if (owner.getText().length() == 0) {
+            errors.add("Needs an owner, e.g. Sam");
+        }
         newCharger.setName(name.getText());
+        if (name.getText().length() == 0) {
+            errors.add("Needs a name, e.g. Home");
+        }
         newCharger.setAvailable24Hrs(open24.isSelected());
         newCharger.setChargeCost(cost.isSelected());
         newCharger.setParkingCost(costParks.isSelected());
