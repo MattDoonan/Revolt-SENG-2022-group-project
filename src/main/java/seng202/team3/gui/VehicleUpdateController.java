@@ -38,7 +38,6 @@ import seng202.team3.logic.VehicleUpdateManager;
  */
 public class VehicleUpdateController {
 
-
     @FXML
     private TextField makeText;
 
@@ -62,7 +61,7 @@ public class VehicleUpdateController {
 
     @FXML
     private Button saveChanges;
-
+    
     @FXML
     private Label inputBox;
 
