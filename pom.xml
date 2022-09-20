@@ -232,6 +232,8 @@
         <configuration>
           <show>private</show>
           <nohelp>true</nohelp>
+          <failsOnError>true</failsOnError>
+          <failOnWarnings>true</failOnWarnings>
         </configuration>
       </plugin>
     </plugins>
