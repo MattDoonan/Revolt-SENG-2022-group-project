@@ -860,13 +860,18 @@ public class SqlInterpreter implements DataManager {
      * @version 1.0.0, Sep 22
      */
     private class WriteChargerThread extends Thread {
-        static int threadCount = 4;
+        static int threadCount = 5;
         ArrayList<Object> chargersToWrite;
         Connection conn;
 
         public WriteChargerThread(ArrayList<Object> chargersToWrite) {
             this.chargersToWrite = chargersToWrite;
             this.conn = createConnection();
+            try {
+                this.conn.setAutoCommit(false);
+            } catch (SQLException e) {
+                e.printStackTrace(); // TODO: handle exception
+            }
         }
 
         public void addCharger(Charger c) {
@@ -877,12 +882,18 @@ public class SqlInterpreter implements DataManager {
 
             for (Object c : chargersToWrite) {
                 try {
-                    mutex.acquire();
                     writeCharger(conn, (Charger) c);
-                    mutex.release();
-                } catch (IOException | InterruptedException e) {
+                } catch (IOException e) {
                     e.printStackTrace(); // TODO: handle this exception
                 }
+            }
+            System.out.println("about to write");
+            try {
+                mutex.acquire();
+                this.conn.commit();
+                mutex.release();
+            } catch (SQLException | InterruptedException e) {
+                e.printStackTrace(); // TODO: handle exception
             }
 
         }
