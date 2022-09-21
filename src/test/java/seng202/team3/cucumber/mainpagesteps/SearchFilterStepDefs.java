@@ -43,7 +43,7 @@ public class SearchFilterStepDefs {
     }
 
     /**
-     * AT_1 when condition
+     * AT_2 when condition
      */
     @When("The user inputs a valid query {string}")
     public void userTriesValidQuery(String query) {
@@ -71,7 +71,7 @@ public class SearchFilterStepDefs {
     }
 
     /**
-     * AT_2 when condition
+     * AT_3 when condition
      */
     @When("The user inputs an invalid query {string}")
     public void badInputGiven(String query) {
@@ -80,7 +80,7 @@ public class SearchFilterStepDefs {
     }
 
     /**
-     * AT_2 then condition
+     * AT_3 then condition
      */
     @Then("No results are listed")
     public void noChargers() {
@@ -88,7 +88,7 @@ public class SearchFilterStepDefs {
     }
 
     /**
-     * AT_3
+     * AT_4
      */
     @When("The user filters for no charging cost")
     public void filterChargerCost() {
@@ -97,7 +97,7 @@ public class SearchFilterStepDefs {
     }
 
     /**
-     * AT_3
+     * AT_4
      */
     @Then("The list of chargers found have no charging cost")
     public void noPaidChargers() {
@@ -112,35 +112,35 @@ public class SearchFilterStepDefs {
     }
 
     /**
-     * AT_4 no favourite implemented
+     * AT_5 no favourite implemented
      */
     public void func4() {
         // IMPLEMENT ME
     }
 
     /**
-     * AT_5 need testFX to sort as front end table handles the sorting
+     * AT_6 need testFX to sort as front end table handles the sorting
      */
     public void func5() {
         // IMPLEMENT ME
     }
 
     /**
-     * AT_6 need testFX unless you can test FXML if field is shown?
+     * AT_7 need testFX unless you can test FXML if field is shown?
      */
     public void func6() {
         // IMPLEMENT ME
     }
 
     /**
-     * AT_7 need testFX
+     * AT_8 need testFX
      */
     public void func7() {
         // IMPLEMENT ME
     }
 
     /**
-     * AT_8 testFX
+     * AT_9 testFX
      */
     public void func8() {
         // IMPLEMENT ME
