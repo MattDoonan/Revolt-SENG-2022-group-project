@@ -51,6 +51,9 @@ you’ll need to re-enable it). To import your project:
 - If you haven't already, Build the project.
 - Open a command line interface inside the project directory and run `cd target` to change into the target directory.
 - Run the command `java -jar revolt-1.0-SNAPSHOT.jar` to open the application.
+- If this fails in Intellij go to edit configurations then the plus sign or add configuration
+- Then click maven and then in command line type javafx:run and then apply
+- run the configuration
 
 ## Testing
 1. Open a command line interface inside the project directory and run `mvn test` to run all tests.
