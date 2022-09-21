@@ -7,6 +7,7 @@ import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import org.javatuples.Triplet;
@@ -102,7 +103,9 @@ public class CsvInterpreter implements DataReader {
         List<Object> data;
 
         // Initialize the raw data to object converter
-        CsvToBean<Object> builder = new CsvToBeanBuilder<Object>(readFile(query.getSource()))
+        CsvToBean<Object> builder = new CsvToBeanBuilder<Object>(
+                new InputStreamReader(getClass().getClassLoader().getResourceAsStream(
+                        query.getSource() + ".csv")))
                 .withThrowExceptions(false) // ignore exceptions to handle later
                 .withType(objectToInterpretAs)
                 .build();

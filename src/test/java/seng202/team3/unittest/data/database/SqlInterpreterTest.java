@@ -55,7 +55,7 @@ public class SqlInterpreterTest {
 
     /**
      * Used for testing to simplify db writing methods
-     * 
+     *
      * @param objectToTest obeject to write to database
      * @throws IOException if the writing fails
      */
@@ -82,7 +82,7 @@ public class SqlInterpreterTest {
 
     /**
      * Arguments to pass to parameterized tests
-     * 
+     *
      * @return stream of arguments for parameterized tests
      */
     private static Stream<Arguments> dbSingleEntities() {
@@ -163,7 +163,7 @@ public class SqlInterpreterTest {
 
     /**
      * Tests single entities can be read and written to the database
-     * 
+     *
      * @param objectToTest entity to test
      * @param dbTable      table to interact with
      * @throws IOException read/write error
@@ -184,12 +184,12 @@ public class SqlInterpreterTest {
 
     @Test
     public void writeChargersFromCsvTest() throws IOException {
-        db.addChargerCsvToData("src/test/resources/csvtest/validChargers.csv");
+        db.addChargerCsvToData("csvtest/validChargers");
         QueryBuilder q = new QueryBuilderImpl().withSource("charger");
         List<Object> result = db.readData(q.build(), Charger.class);
 
         List<Object> expected = new CsvInterpreter().readData(
-                q.withSource("src/test/resources/csvtest/validChargers.csv").build(),
+                q.withSource("csvtest/validChargers").build(),
                 Charger.class);
 
         for (Object o : expected) {
@@ -527,7 +527,7 @@ public class SqlInterpreterTest {
 
     /**
      * Check doesn't add record when missing required field
-     * 
+     *
      * @param objectToTest object to add
      * @param dbTable      table to add to
      * @throws IOException read from database fails
@@ -568,7 +568,7 @@ public class SqlInterpreterTest {
     public void allRecordsOnlyOnceTest() throws IOException {
         // objectToTest is unused but defined so existing methodsource can be used
 
-        db.addChargerCsvToData("src/test/resources/csvtest/validChargers.csv");
+        db.addChargerCsvToData("csvtest/validChargers");
 
         List<Object> result = db.readData(
                 new QueryBuilderImpl().withSource("charger").build(),
@@ -585,7 +585,7 @@ public class SqlInterpreterTest {
 
     @Test
     public void singleFilterTest() throws IOException {
-        db.addChargerCsvToData("src/test/resources/csvtest/filtering.csv");
+        db.addChargerCsvToData("csvtest/filtering");
 
         List<Object> result = db.readData(
                 new QueryBuilderImpl().withSource("charger")
@@ -603,7 +603,7 @@ public class SqlInterpreterTest {
 
     @Test
     public void singleFilterCaseInsensitiveTest() throws IOException {
-        db.addChargerCsvToData("src/test/resources/csvtest/filtering.csv");
+        db.addChargerCsvToData("csvtest/filtering");
 
         List<Object> result = db.readData(
                 new QueryBuilderImpl().withSource("charger")
@@ -621,7 +621,7 @@ public class SqlInterpreterTest {
 
     @Test
     public void multipleFilterTest() throws IOException {
-        db.addChargerCsvToData("src/test/resources/csvtest/filtering.csv");
+        db.addChargerCsvToData("csvtest/filtering");
 
         List<Object> result = db.readData(
                 new QueryBuilderImpl().withSource("charger")
@@ -640,7 +640,7 @@ public class SqlInterpreterTest {
 
     @Test
     public void filterByColumnOnRelatedTableTest() throws IOException {
-        db.addChargerCsvToData("src/test/resources/csvtest/filtering.csv");
+        db.addChargerCsvToData("csvtest/filtering");
 
         List<Object> result = db.readData(
                 new QueryBuilderImpl().withSource("charger")
@@ -666,7 +666,7 @@ public class SqlInterpreterTest {
 
     @Test
     public void multipleFilterSameAttributeTest() throws IOException {
-        db.addChargerCsvToData("src/test/resources/csvtest/filtering.csv");
+        db.addChargerCsvToData("csvtest/filtering");
 
         List<Object> result = db.readData(
                 new QueryBuilderImpl().withSource("charger")
@@ -686,7 +686,7 @@ public class SqlInterpreterTest {
     @Test
     public void filterByNonExistentColumnTest() throws IOException {
 
-        db.addChargerCsvToData("src/test/resources/csvtest/filtering.csv");
+        db.addChargerCsvToData("csvtest/filtering");
 
         assertThrows(IOException.class, () -> {
             db.readData(
@@ -699,10 +699,10 @@ public class SqlInterpreterTest {
 
     @Test
     public void allRecordsImported() throws IOException {
-        db.addChargerCsvToData("src/test/resources/csvtest/filtering.csv");
+        db.addChargerCsvToData("csvtest/filtering");
 
         QueryBuilder q = new QueryBuilderImpl()
-                .withSource("src/test/resources/csvtest/filtering.csv");
+                .withSource("csvtest/filtering");
 
         List<Object> expected = new CsvInterpreter().readData(q.build(), Charger.class);
         List<Object> actual = db.readData(q.withSource("charger").build(), Charger.class);
