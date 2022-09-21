@@ -14,7 +14,7 @@ import seng202.team3.data.entity.Vehicle;
  * Logic layer for the garage Controller
  *
  * @author Celia Allen
- * @version 1.0.0, Aug 22
+ * @version 1.0.0, Sep 13
  *
  */
 public class GarageManager {
