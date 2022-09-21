@@ -142,8 +142,7 @@ public class SqlInterpreter implements DataReader {
                 .getPath();
         path = URLDecoder.decode(path, StandardCharsets.UTF_8);
         File directory = new File((path));
-        return "jdbc:sqlite:" + directory.getParentFile()
-                + System.getProperty("file.separator") + "/database.db";
+        return "jdbc:sqlite:" + directory.getParentFile() + "/database.db";
     }
 
     /**
