@@ -16,60 +16,59 @@ public class Charger {
 
     /** Unique identifier */
     @CsvBindByName(column = "CHARGERID", required = true)
-    int chargerId;
+    private int chargerId;
 
     /** When the charger was first available */
     @CsvBindByName(column = "dateFirstOperational")
-    String dateOpened;
+    private String dateOpened;
 
     /** Name of the charger */
     @CsvBindByName(column = "name", required = true)
-    String name;
+    private String name;
 
     /** {@link Connector Connectors} available on charger */
-    @CsvBindAndSplitByName(column = "connectorsList", elementType = Connector.class, 
-                            splitOn = ",(?=( )*\\{)", converter = ConnectorConverter.class, 
-                            required = true)
-    ArrayList<Connector> connectors;
+    @CsvBindAndSplitByName(column = "connectorsList", elementType = Connector.class,
+            splitOn = ",(?=( )*\\{)", converter = ConnectorConverter.class, required = true)
+    private ArrayList<Connector> connectors;
 
     /** {@link Coordinate Coordinate} information for the charger */
     @CsvRecurse
-    Coordinate location;
+    private Coordinate location;
 
     /** Number of parks available at the charger */
     @CsvBindByName(column = "carParkCount", required = true)
-    int availableParks;
+    private int availableParks;
 
     /** Maximum amount of time that can be spent at a charger */
     @CsvCustomBindByName(column = "maxTimeLimit", converter = TimeLimitConverter.class)
-    Double timeLimit;
+    private Double timeLimit;
 
     /** Business that manages the charger */
     @CsvBindByName(column = "operator", required = true)
-    String operator;
+    private String operator;
 
     /** Business that owns the charger */
     @CsvBindByName(column = "owner", required = true)
-    String owner;
+    private String owner;
 
     /** Accessible to the public */
-    boolean isPublic;
+    private boolean isPublic;
 
     /** Has tourist attraction nearby */
     @CsvBindByName(column = "hasTouristAttraction", required = true)
-    boolean hasAttraction;
+    private boolean hasAttraction;
 
     /** Can be accessed 24 hours in the day */
     @CsvBindByName(column = "is24Hours", required = true)
-    boolean is24Hrs;
+    private boolean is24Hrs;
 
     /** Has cost for parking */
     @CsvBindByName(column = "hasCarparkCost", required = true)
-    boolean hasParkingCost;
+    private boolean hasParkingCost;
 
     /** Has cost for charging */
     @CsvBindByName(column = "hasChargingCost", required = true)
-    boolean hasChargeCost;
+    private boolean hasChargeCost;
 
     /** Stores the type of current used by connectors */
     private String currentType;

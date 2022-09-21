@@ -901,24 +901,24 @@ public class SqlInterpreter implements DataReader {
         /**
          * Number of threads
          */
-        static int threadCount = 4;
+        private static int threadCount = 4;
 
         /**
          * List of chargers to write
          */
-        ArrayList<Object> chargersToWrite;
+        private ArrayList<Object> chargersToWrite;
 
         /**
          * Thread db connection
          */
-        Connection conn;
+        private Connection conn;
 
         /**
          * Initialize thread
          * 
          * @param chargersToWrite sublist of chargers for thread to write
          */
-        public WriteChargerThread(ArrayList<Object> chargersToWrite) {
+        private WriteChargerThread(ArrayList<Object> chargersToWrite) {
             this.chargersToWrite = chargersToWrite;
             this.conn = createConnection();
         }

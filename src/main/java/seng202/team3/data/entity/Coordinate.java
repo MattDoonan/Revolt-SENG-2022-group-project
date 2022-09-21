@@ -11,19 +11,19 @@ import com.opencsv.bean.CsvBindByName;
 public class Coordinate {
     /** X-Coordinate on Waka-Kotahi map */
     @CsvBindByName(column = "X", required = true)
-    Double xpos;
+    private Double xpos;
 
     /** Y-Coordinate on Waka-Kotahi map */
     @CsvBindByName(column = "Y", required = true)
-    Double ypos;
+    private Double ypos;
 
     /** Latitude coordinate */
     @CsvBindByName(column = "latitude", required = true)
-    Double lat;
+    private Double lat;
 
     /** Longitude coordinate */
     @CsvBindByName(column = "longitude", required = true)
-    Double lon;
+    private Double lon;
 
     /** Physical address */
     @CsvBindByName(column = "address", required = true)
@@ -59,8 +59,8 @@ public class Coordinate {
      * @see #Coordinate(Double, Double, Double, Double, String)
      * @param xpos a {@link java.lang.Double} object
      * @param ypos a {@link java.lang.Double} object
-     * @param lat a {@link java.lang.Double} object
-     * @param lon a {@link java.lang.Double} object
+     * @param lat  a {@link java.lang.Double} object
+     * @param lon  a {@link java.lang.Double} object
      */
     public Coordinate(Double xpos, Double ypos, Double lat, Double lon) {
         this(xpos, ypos, lat, lon, "");
