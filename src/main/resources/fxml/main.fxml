@@ -152,7 +152,7 @@
         </Button>
     </items>
   </SplitPane>
-            <ScrollPane maxHeight="180.0" prefWidth="530.0">
+            <ScrollPane minHeight="180.0" maxHeight="180.0" prefWidth="530.0">
                <content>
                   <HBox fx:id="displayInfo" maxHeight="50.0" prefWidth="530.0" spacing="20.0" style="-fx-background-color: #FFFFFF;">
                      <padding>
