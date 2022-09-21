@@ -172,6 +172,7 @@
               cucumber.junit-platform.naming-strategy=long
             </configurationParameters>
           </properties>
+          <testFailureIgnore>false</testFailureIgnore>
         </configuration>
       </plugin>
 
