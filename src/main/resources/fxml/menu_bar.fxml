@@ -29,16 +29,6 @@
             </HBox>
             <HBox alignment="CENTER_LEFT" nodeOrientation="RIGHT_TO_LEFT" prefHeight="60.0" prefWidth="1920.0">
                <children>
-                  <Button fx:id="accountButton" maxHeight="60.0" minHeight="60.0" minWidth="150.0" mnemonicParsing="false" onMouseEntered="#accountHover" onMouseExited="#accountExit" prefHeight="60.0" prefWidth="200.0" style="-fx-background-color: #e06666;" text="Account" textFill="WHITE">
-                     <font>
-                        <Font name="FreeSans" size="24.0" />
-                     </font>
-                  </Button>
-                  <Button fx:id="journeyButton" maxHeight="60.0" minHeight="60.0" minWidth="150.0" mnemonicParsing="false" onMouseEntered="#journeyHover" onMouseExited="#journeyExit" prefHeight="60.0" prefWidth="200.0" style="-fx-background-color: #e06666;" text="Plan Journey" textFill="WHITE">
-                     <font>
-                        <Font name="FreeSans" size="24.0" />
-                     </font>
-                  </Button>
                   <Button fx:id="vehicleButton" maxHeight="60.0" minHeight="60.0" minWidth="150.0" mnemonicParsing="false" onAction="#loadVehicleScreen" onMouseEntered="#vehicleHover" onMouseExited="#vehicleExit" prefHeight="60.0" prefWidth="200.0" style="-fx-background-color: #e06666;" text="My Vehicles" textFill="WHITE">
                      <font>
                         <Font name="FreeSans" size="24.0" />
