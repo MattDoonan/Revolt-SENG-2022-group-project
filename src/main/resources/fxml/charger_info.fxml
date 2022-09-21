@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="497.0" prefWidth="337.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.ChargerController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="497.0" prefWidth="337.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.ChargerController">
     <children>
       <GridPane layoutX="14.0" layoutY="14.0" prefHeight="380.0" prefWidth="309.0">
         <columnConstraints>
@@ -24,17 +31,50 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label text="Name:" />
-            <Label text="Owner:" GridPane.rowIndex="1" />
-            <Label text="Operator:" GridPane.rowIndex="2" />
-            <Label text="Address:" GridPane.rowIndex="3" />
-            <Label text="Is open 24 hours?" GridPane.rowIndex="4" />
-            <Label text="No. of carparks:" GridPane.rowIndex="5" />
-            <Label text="Cost to carparks?" GridPane.rowIndex="6" />
-            <Label text="Maximum Time Limit:" GridPane.rowIndex="7" />
-            <Label text="Tourist Attractions?" GridPane.rowIndex="8" />
-            <Label text="Cost to charge?" GridPane.rowIndex="9" />
-            <Label text="Current types:" GridPane.rowIndex="10" />
+            <Label text="Name:">
+               <padding>
+                  <Insets left="6.0" />
+               </padding></Label>
+            <Label text="Owner:" GridPane.rowIndex="1">
+               <padding>
+                  <Insets left="6.0" />
+               </padding></Label>
+            <Label text="Operator:" GridPane.rowIndex="2">
+               <padding>
+                  <Insets left="6.0" />
+               </padding></Label>
+            <Label text="Address:" GridPane.rowIndex="3">
+               <padding>
+                  <Insets left="6.0" />
+               </padding></Label>
+            <Label text="Is open 24 hours?" GridPane.rowIndex="4">
+               <padding>
+                  <Insets left="6.0" />
+               </padding></Label>
+            <Label text="No. of carparks:" GridPane.rowIndex="5">
+               <padding>
+                  <Insets left="6.0" />
+               </padding></Label>
+            <Label text="Cost to carparks?" GridPane.rowIndex="6">
+               <padding>
+                  <Insets left="6.0" />
+               </padding></Label>
+            <Label text="Maximum Time Limit:" GridPane.rowIndex="7">
+               <padding>
+                  <Insets left="6.0" />
+               </padding></Label>
+            <Label text="Tourist Attractions?" GridPane.rowIndex="8">
+               <padding>
+                  <Insets left="6.0" />
+               </padding></Label>
+            <Label text="Cost to charge?" GridPane.rowIndex="9">
+               <padding>
+                  <Insets left="6.0" />
+               </padding></Label>
+            <Label text="Current types:" GridPane.rowIndex="10">
+               <padding>
+                  <Insets left="6.0" />
+               </padding></Label>
             <TextField fx:id="name" GridPane.columnIndex="1" />
             <TextField fx:id="owner" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <TextField fx:id="operator" GridPane.columnIndex="1" GridPane.rowIndex="2" />
@@ -46,6 +86,36 @@
             <CheckBox fx:id="costParks" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="6" />
             <CheckBox fx:id="attractions" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="8" />
             <CheckBox fx:id="cost" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+            <Label text="*" textFill="RED">
+               <padding>
+                  <Insets bottom="2.0" />
+               </padding>
+            </Label>
+            <Label text="*" textFill="RED" GridPane.rowIndex="1">
+               <padding>
+                  <Insets bottom="2.0" />
+               </padding>
+            </Label>
+            <Label text="*" textFill="RED" GridPane.rowIndex="2">
+               <padding>
+                  <Insets bottom="2.0" />
+               </padding>
+            </Label>
+            <Label text="*" textFill="RED" GridPane.rowIndex="3">
+               <padding>
+                  <Insets bottom="2.0" />
+               </padding>
+            </Label>
+            <Label text="*" textFill="RED" GridPane.rowIndex="5">
+               <padding>
+                  <Insets bottom="2.0" />
+               </padding>
+            </Label>
+            <Label text="*" textFill="RED" GridPane.rowIndex="7">
+               <padding>
+                  <Insets bottom="2.0" />
+               </padding>
+            </Label>
          </children>
       </GridPane>
     <Button alignment="CENTER" layoutX="94.0" layoutY="170.0" onAction="#saveChanges" text="Save Changes" AnchorPane.bottomAnchor="21.0" AnchorPane.leftAnchor="94.0" AnchorPane.rightAnchor="94.0">
