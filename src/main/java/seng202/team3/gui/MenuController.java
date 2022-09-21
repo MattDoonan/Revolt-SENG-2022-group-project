@@ -35,18 +35,6 @@ public class MenuController {
     private Button vehicleButton;
 
     /**
-     * Button for the journey
-     */
-    @FXML
-    private Button journeyButton;
-
-    /**
-     * Button for the accounts
-     */
-    @FXML
-    private Button accountButton;
-
-    /**
      * The stage the application runs on
      */
     private Stage stage;
@@ -104,38 +92,6 @@ public class MenuController {
     public void vehicleExit() {
         vehicleButton.setStyle("-fx-text-fill:#ffffff;-fx-font-size: 24px; "
                 + "-fx-background-color: #e06666;");
-    }
-
-    /**
-     * journeyHover.
-     */
-    public void journeyHover() {
-        journeyButton.setStyle("-fx-text-fill:#000000;-fx-font-size: 26px; "
-                + "-fx-background-color: #e06666;");
-    }
-
-    /**
-     * journeyExit.
-     */
-    public void journeyExit() {
-        journeyButton.setStyle("-fx-text-fill:#ffffff;-fx-font-size: 24px; "
-                + "-fx-background-color: #e06666;");
-    }
-
-    /**
-     * accountHover.
-     */
-    public void accountHover() {
-        accountButton.setStyle("-fx-text-fill:#000000;-fx-font-size: 26px; "
-                + "-fx-background-color: #e06666;");
-    }
-
-    /**
-     * accountExit.
-     */
-    public void accountExit() {
-        accountButton.setStyle("-fx-text-fill:#ffffff;-fx-font-size: 24px;"
-                + " -fx-background-color: #e06666;");
     }
 
     /**
