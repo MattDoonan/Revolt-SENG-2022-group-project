@@ -24,7 +24,7 @@ import seng202.team3.logic.GarageManager;
  * Controller for the garage.fxml window
  * 
  * @author Celia Allen
- * @version 1.2.0, Aug 21
+ * @version 1.0.0, Aug 21
  */
 public class GarageController {
 

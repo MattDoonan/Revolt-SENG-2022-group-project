@@ -37,7 +37,7 @@ import seng202.team3.logic.VehicleUpdateManager;
  * A vehicle editing controller
  *
  * @author Celia Allen
- * @version 1.0.0, Sep 22
+ * @version 1.0.0, Sep 13
  */
 public class VehicleUpdateController {
 

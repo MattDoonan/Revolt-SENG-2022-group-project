@@ -901,17 +901,17 @@ public class SqlInterpreter implements DataReader {
         /**
          * Number of threads
          */
-        static int threadCount = 4;
+        private static int threadCount = 4;
 
         /**
          * List of chargers to write
          */
-        ArrayList<Object> chargersToWrite;
+        private ArrayList<Object> chargersToWrite;
 
         /**
          * Thread db connection
          */
-        Connection conn;
+        private Connection conn;
 
         /**
          * Initialize thread

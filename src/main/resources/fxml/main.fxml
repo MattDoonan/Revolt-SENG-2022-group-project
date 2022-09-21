@@ -163,7 +163,7 @@
             </ScrollPane>
             <ScrollPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: white;">
                <content>
-                  <VBox fx:id="chargerTable" style="-fx-background-color: #FFFFFF; -fx-fill-width: true;" />
+                  <VBox fx:id="chargerTable" prefWidth="530.0" style="-fx-background-color: #FFFFFF; -fx-fill-width: true;" />
                </content>
             </ScrollPane>
             </items>
