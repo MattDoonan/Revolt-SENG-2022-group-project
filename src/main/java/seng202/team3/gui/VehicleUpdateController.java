@@ -1,5 +1,6 @@
 package seng202.team3.gui;
 
+import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -252,7 +253,7 @@ public class VehicleUpdateController {
             errorFlag = 1;
             launchErrorPopUps();
             errors.clear();
-        } 
+        }
 
         if (errorFlag == 0) {
             selectedVehicle = null;
@@ -281,12 +282,12 @@ public class VehicleUpdateController {
                     button.setOnAction(e -> deleteConnection(e));
                     Label label = new Label("Connection: " + connector.getText());
                     HBox hbox = new HBox();
-                    Region filler = new Region(); 
+                    Region filler = new Region();
                     HBox.setHgrow(filler, Priority.ALWAYS);
                     hbox.getChildren().addAll(label, filler, button);
                     connections.add(connector.getText());
                     addedConnections.getItems().add(hbox);
-                    
+
                     Stage connectorStage = (Stage) save.getScene().getWindow();
                     connectorStage.close();
                 });
@@ -296,14 +297,14 @@ public class VehicleUpdateController {
                 connectorPopup.setScene(new Scene(root, 300, 100));
                 // connectorPopup.showAndWait();
             } else {
-                
+
                 connections.add(connectorType.getValue());
                 Button button = new Button("Delete");
                 button.setId(connectorType.getValue());
                 button.setOnAction(e -> deleteConnection(e));
                 Label label = new Label("Connection: " + connectorType.getValue());
                 HBox hbox = new HBox();
-                Region filler = new Region(); 
+                Region filler = new Region();
                 HBox.setHgrow(filler, Priority.ALWAYS);
                 hbox.getChildren().addAll(label, filler, button);
                 addedConnections.getItems().add(hbox);
@@ -312,8 +313,6 @@ public class VehicleUpdateController {
         }
 
     }
-
-
 
     /**
      * Displays pop-up window that allows a user add a unique connector
@@ -337,6 +336,7 @@ public class VehicleUpdateController {
 
     /**
      * Delete a connection
+     * 
      * @param e ActionEvent
      */
     public void deleteConnection(ActionEvent e) {
@@ -361,8 +361,9 @@ public class VehicleUpdateController {
             cancelImg.setLayoutY(360);
 
             for (int i = 0; i < imgNames.length; i++) {
-                Image img = new Image(new FileInputStream("src/main/resources/images/"
-                        + imgNames[i]));
+                Image img = new Image(
+                        new BufferedInputStream(
+                                new FileInputStream("src/main/resources/images/" + imgNames[i])));
                 ImageView view = new ImageView(img);
                 Button button = new Button();
                 button.setGraphic(view);
@@ -463,7 +464,7 @@ public class VehicleUpdateController {
                 button.setOnAction(e -> deleteConnection(e));
                 Label label = new Label("Connection: " + connection);
                 HBox hbox = new HBox();
-                Region filler = new Region(); 
+                Region filler = new Region();
                 HBox.setHgrow(filler, Priority.ALWAYS);
                 hbox.getChildren().addAll(label, filler, button);
                 addedConnections.getItems().add(hbox);

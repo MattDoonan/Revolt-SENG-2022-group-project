@@ -1,5 +1,6 @@
 package seng202.team3.gui;
 
+import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -216,7 +217,8 @@ public class MainController {
             try {
                 // Gets image for charger
                 ImageView image = new ImageView(new Image(
-                        new FileInputStream("src/main/resources/images/charger.png")));
+                        new BufferedInputStream(
+                                new FileInputStream("src/main/resources/images/charger.png"))));
                 // Edits the width and height to 150px
                 image.setFitHeight(150);
                 image.setFitWidth(150);
@@ -287,7 +289,8 @@ public class MainController {
             try {
                 // Gets image and adds it to an Image View
                 ImageView image = new ImageView(new Image(
-                        new FileInputStream("src/main/resources/images/charger.png")));
+                        new BufferedInputStream(
+                                new FileInputStream("src/main/resources/images/charger.png"))));
                 add.getChildren().add(image);
             } catch (FileNotFoundException e) {
                 Label image = new Label("Image");
