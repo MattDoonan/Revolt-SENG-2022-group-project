@@ -5,7 +5,7 @@ import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvException;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ import org.javatuples.Triplet;
  * Manages data reading and parsing from CSV files
  *
  * @author Harrison Tyson
- * @version 1.2.0, Aug 22
+ * @version 1.3.0, Aug 22
  */
 public class CsvInterpreter implements DataReader {
 
@@ -40,7 +40,7 @@ public class CsvInterpreter implements DataReader {
      * 
      * @throws IOException if file cannot be read successfully
      */
-    private FileReader readFile(String filename) throws IOException {
+    private InputStreamReader readFile(String filename) throws IOException {
         // Initialize File
         String filepath;
         if (filename.contains("\\") || filename.contains("/")) { // Allow full file path
@@ -48,7 +48,7 @@ public class CsvInterpreter implements DataReader {
         } else { // Check default file path if only name is specified
             filepath = DEFAULTFILEPATH + filename + ".csv";
         }
-        return new FileReader(filepath);
+        return new InputStreamReader(new FileInputStream(filepath));
     }
 
     /**
@@ -104,8 +104,7 @@ public class CsvInterpreter implements DataReader {
 
         // Initialize the raw data to object converter
         CsvToBean<Object> builder = new CsvToBeanBuilder<Object>(
-                new InputStreamReader(getClass().getClassLoader().getResourceAsStream(
-                        query.getSource() + ".csv")))
+                readFile(query.getSource()))
                 .withThrowExceptions(false) // ignore exceptions to handle later
                 .withType(objectToInterpretAs)
                 .build();

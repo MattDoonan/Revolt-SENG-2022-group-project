@@ -53,7 +53,7 @@ public class ChargerHandlerTest {
         mainManager = new MainManager();
         SqlInterpreter.getInstance().defaultDatabase();
         SqlInterpreter.getInstance()
-                .addChargerCsvToData("csvtest/filtering");
+                .addChargerCsvToData("src/test/resources/csvtest/filtering.csv");
     }
 
     /**
