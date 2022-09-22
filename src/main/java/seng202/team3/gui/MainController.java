@@ -1,8 +1,6 @@
 package seng202.team3.gui;
 
 import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -218,12 +216,12 @@ public class MainController {
                 // Gets image for charger
                 ImageView image = new ImageView(new Image(
                         new BufferedInputStream(
-                                new FileInputStream("src/main/resources/images/charger.png"))));
+                                getClass().getResourceAsStream("/images/charger.png"))));
                 // Edits the width and height to 150px
                 image.setFitHeight(150);
                 image.setFitWidth(150);
                 displayInfo.getChildren().add(image); // adds to the HBox
-            } catch (FileNotFoundException e) {
+            } catch (NullPointerException e) {
                 Label image = new Label("Image");
                 displayInfo.getChildren().add(image);
             }
@@ -290,9 +288,9 @@ public class MainController {
                 // Gets image and adds it to an Image View
                 ImageView image = new ImageView(new Image(
                         new BufferedInputStream(
-                                new FileInputStream("src/main/resources/images/charger.png"))));
+                                getClass().getResourceAsStream("/images/charger.png"))));
                 add.getChildren().add(image);
-            } catch (FileNotFoundException e) {
+            } catch (NullPointerException e) {
                 Label image = new Label("Image");
                 add.getChildren().add(image); // adds to the HBox
             }

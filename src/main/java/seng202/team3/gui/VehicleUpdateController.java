@@ -1,7 +1,6 @@
 package seng202.team3.gui;
 
 import java.io.BufferedInputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -363,7 +362,7 @@ public class VehicleUpdateController {
             for (int i = 0; i < imgNames.length; i++) {
                 Image img = new Image(
                         new BufferedInputStream(
-                                new FileInputStream("src/main/resources/images/" + imgNames[i])));
+                                getClass().getResourceAsStream("/images/" + imgNames[i])));
                 ImageView view = new ImageView(img);
                 Button button = new Button();
                 button.setGraphic(view);
@@ -372,7 +371,7 @@ public class VehicleUpdateController {
                 button.setOnAction(e -> imgSelected(e));
             }
             displayImgSelect();
-        } catch (IOException e) {
+        } catch (NullPointerException e) {
             Logger logger = Logger.getLogger(getClass().getName());
             logger.log(Level.SEVERE, "File not found.", e);
         }
