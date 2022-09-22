@@ -77,6 +77,7 @@ public class SqlInterpreter implements DataReader {
             try {
                 addChargerCsvToData("charger");
             } catch (IOException e) {
+                e.printStackTrace();
                 // Do Nothing TODO: send this to higher layer
             }
         }
@@ -85,8 +86,8 @@ public class SqlInterpreter implements DataReader {
     /**
      * Adds all the charger data stored in the CSV file to the database
      *
-     * @param source the file location to get the data from
-     * @throws java.io.IOException if any.
+     * @param source the name of the resource
+     * @throws java.io.IOException if any chargers cannot be written.
      */
     public void addChargerCsvToData(String source) throws IOException {
         Query q = new QueryBuilderImpl().withSource(source).build();

@@ -107,7 +107,7 @@ public class MainManagerTest {
      */
     @Test
     public void originalListTest() throws IOException {
-        db.addChargerCsvToData("src/test/resources/csvtest/filtering.csv");
+        db.addChargerCsvToData("csvtest/filtering");
 
         QueryBuilder q = new QueryBuilderImpl().withSource("charger");
         ArrayList<Charger> chargerList = new ArrayList<>();
@@ -129,7 +129,7 @@ public class MainManagerTest {
      */
     @Test
     public void distanceOriginalListTest() throws IOException {
-        db.addChargerCsvToData("src/test/resources/csvtest/filtering.csv");
+        db.addChargerCsvToData("csvtest/filtering");
 
         QueryBuilder q = new QueryBuilderImpl().withSource("charger");
         ArrayList<Charger> chargerList = new ArrayList<>();
@@ -162,7 +162,7 @@ public class MainManagerTest {
      */
     @Test
     public void changeDistanceTest() throws IOException {
-        db.addChargerCsvToData("src/test/resources/csvtest/filtering.csv");
+        db.addChargerCsvToData("csvtest/filtering");
 
         QueryBuilder q = new QueryBuilderImpl().withSource("charger");
         ArrayList<Charger> chargerList = new ArrayList<>();
@@ -195,7 +195,7 @@ public class MainManagerTest {
      */
     @Test
     public void addAcTypeQuery() throws IOException {
-        db.addChargerCsvToData("src/test/resources/csvtest/filtering.csv");
+        db.addChargerCsvToData("csvtest/filtering");
 
         QueryBuilder q = new QueryBuilderImpl().withSource("charger")
                 .withFilter("connectorcurrent", "AC", ComparisonType.CONTAINS);
@@ -220,7 +220,7 @@ public class MainManagerTest {
      */
     @Test
     public void addDcTypeQuery() throws IOException {
-        db.addChargerCsvToData("src/test/resources/csvtest/filtering.csv");
+        db.addChargerCsvToData("csvtest/filtering");
 
         QueryBuilder q = new QueryBuilderImpl().withSource("charger")
                 .withFilter("connectorcurrent", "DC", ComparisonType.CONTAINS);
@@ -247,7 +247,7 @@ public class MainManagerTest {
      */
     @Test
     public void addAttractionQuery() throws IOException {
-        db.addChargerCsvToData("src/test/resources/csvtest/filtering.csv");
+        db.addChargerCsvToData("csvtest/filtering");
         QueryBuilder q = new QueryBuilderImpl().withSource("charger")
                 .withFilter("hastouristattraction", "True", ComparisonType.CONTAINS);
         ArrayList<Charger> chargerList = new ArrayList<>();
@@ -274,7 +274,7 @@ public class MainManagerTest {
      */
     @Test
     public void addChargingCostQuery() throws IOException {
-        db.addChargerCsvToData("src/test/resources/csvtest/filtering.csv");
+        db.addChargerCsvToData("csvtest/filtering");
         QueryBuilder q = new QueryBuilderImpl().withSource("charger")
                 .withFilter("haschargingcost", "False", ComparisonType.CONTAINS);
         ArrayList<Charger> chargerList = new ArrayList<>();
@@ -300,7 +300,7 @@ public class MainManagerTest {
      */
     @Test
     public void queryChargeCostWithCurrentTest() throws IOException {
-        db.addChargerCsvToData("src/test/resources/csvtest/filtering.csv");
+        db.addChargerCsvToData("csvtest/filtering");
         QueryBuilder q = new QueryBuilderImpl().withSource("charger")
                 .withFilter("haschargingcost", "False", ComparisonType.CONTAINS)
                 .withFilter("connectorcurrent", "DC", ComparisonType.CONTAINS);
@@ -323,7 +323,7 @@ public class MainManagerTest {
 
     @Test
     public void queryTouristAttractionWithCurrentTest() throws IOException {
-        db.addChargerCsvToData("src/test/resources/csvtest/filtering.csv");
+        db.addChargerCsvToData("csvtest/filtering");
         QueryBuilder q = new QueryBuilderImpl().withSource("charger")
                 .withFilter("hastouristattraction", "True", ComparisonType.CONTAINS)
                 .withFilter("connectorcurrent", "AC", ComparisonType.CONTAINS);
@@ -351,7 +351,7 @@ public class MainManagerTest {
      */
     @Test
     public void positionNull() throws IOException {
-        db.addChargerCsvToData("src/test/resources/csvtest/filtering.csv");
+        db.addChargerCsvToData("csvtest/filtering");
         QueryBuilder q = new QueryBuilderImpl().withSource("charger");
         ArrayList<Charger> chargerList = new ArrayList<>();
         try {

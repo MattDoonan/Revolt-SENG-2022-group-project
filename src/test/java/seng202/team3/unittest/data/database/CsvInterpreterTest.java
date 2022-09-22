@@ -41,7 +41,7 @@ public class CsvInterpreterTest {
     @BeforeEach
     public void setUp() throws IOException {
         query = new QueryBuilderImpl()
-                .withSource("src/test/resources/csvtest/validChargers.csv")
+                .withSource("csvtest/validChargers")
                 .build();
         result = new CsvInterpreter().readData(query, Charger.class);
     }
@@ -63,7 +63,7 @@ public class CsvInterpreterTest {
     @Test
     public void invalidFilePathTest() {
         // Check error is thrown
-        assertThrows(FileNotFoundException.class, () -> {
+        assertThrows(NullPointerException.class, () -> {
             Query query = new QueryBuilderImpl()
                     .withSource("NonExistentFilePath")
                     .build();
@@ -79,7 +79,7 @@ public class CsvInterpreterTest {
         // Check exception is thrown
         IOException exception = assertThrows(IOException.class, () -> {
             Query query = new QueryBuilderImpl()
-                    .withSource("src/test/resources/csvtest/missingHeader.csv")
+                    .withSource("csvtest/missingHeader")
                     .build();
             new CsvInterpreter().readData(query, Charger.class);
         });
@@ -98,7 +98,7 @@ public class CsvInterpreterTest {
         // Check exception is thrown
         IOException exception = assertThrows(IOException.class, () -> {
             Query query = new QueryBuilderImpl()
-                    .withSource("src/test/resources/csvtest/invalidDataType.csv")
+                    .withSource("csvtest/invalidDataType")
                     .build();
             new CsvInterpreter().readData(query, Charger.class);
         });
@@ -117,7 +117,7 @@ public class CsvInterpreterTest {
         // Check exception is thrown
         IOException exception = assertThrows(IOException.class, () -> {
             Query query = new QueryBuilderImpl()
-                    .withSource("src/test/resources/csvtest/missingDataValue.csv")
+                    .withSource("csvtest/missingDataValue")
                     .build();
             new CsvInterpreter().readData(query, Charger.class);
         });
@@ -137,7 +137,7 @@ public class CsvInterpreterTest {
         // Check exception is thrown
         IOException exception = assertThrows(IOException.class, () -> {
             Query query = new QueryBuilderImpl()
-                    .withSource("src/test/resources/csvtest/multipleErrorMessagesCombine.csv")
+                    .withSource("csvtest/multipleErrorMessagesCombine")
                     .build();
             new CsvInterpreter().readData(query, Charger.class);
         });

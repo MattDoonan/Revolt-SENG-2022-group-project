@@ -5,7 +5,6 @@ import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvException;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -19,11 +18,6 @@ import org.javatuples.Triplet;
  * @version 1.3.0, Aug 22
  */
 public class CsvInterpreter implements DataReader {
-
-    /**
-     * Default location to look for files
-     */
-    private static final String DEFAULTFILEPATH = "src/main/resources/";
 
     /**
      * Unused constructor
@@ -42,13 +36,10 @@ public class CsvInterpreter implements DataReader {
      */
     private InputStreamReader readFile(String filename) throws IOException {
         // Initialize File
-        String filepath;
-        if (filename.contains("\\") || filename.contains("/")) { // Allow full file path
-            filepath = filename;
-        } else { // Check default file path if only name is specified
-            filepath = DEFAULTFILEPATH + filename + ".csv";
+        if (!filename.startsWith("/")) {
+            filename = "/" + filename + ".csv";
         }
-        return new InputStreamReader(new FileInputStream(filepath));
+        return new InputStreamReader(getClass().getResourceAsStream(filename));
     }
 
     /**
