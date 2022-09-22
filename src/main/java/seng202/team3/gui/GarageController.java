@@ -1,7 +1,6 @@
 package seng202.team3.gui;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -418,15 +417,15 @@ public class GarageController {
             }
             try {
                 if (vehicleData.get(index).getImgPath().equals(
-                        "src/main/resources/images/null")) {
+                        "/images/null")) {
                     imageview.setImage(null);
                 } else {
-                    Image image = new Image(new FileInputStream(
-                            vehicleData.get(index).getImgPath()));
+                    Image image = new Image(new BufferedInputStream(
+                            getClass().getResourceAsStream(vehicleData.get(index).getImgPath())));
                     imageview.setImage(image);
                 }
 
-            } catch (FileNotFoundException e) {
+            } catch (NullPointerException e) {
                 e.printStackTrace();
             }
         }

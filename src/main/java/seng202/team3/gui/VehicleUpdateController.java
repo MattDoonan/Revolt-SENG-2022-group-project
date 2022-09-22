@@ -179,9 +179,9 @@ public class VehicleUpdateController {
 
         if (selectedVehicle != null) {
             if (selectedImg != null) {
-                selectedVehicle.setImgPath("src/main/resources/images/" + selectedImg);
+                selectedVehicle.setImgPath("/images/" + selectedImg);
             } else {
-                selectedVehicle.setImgPath("src/main/resources/images/null");
+                selectedVehicle.setImgPath("/images/null");
             }
             vehicle = selectedVehicle;
         } else {
@@ -230,9 +230,9 @@ public class VehicleUpdateController {
             vehicle.setConnectors(connections);
         }
         if (selectedImg != null) {
-            vehicle.setImgPath("src/main/resources/images/" + selectedImg);
+            vehicle.setImgPath("/images/" + selectedImg);
         } else {
-            vehicle.setImgPath("src/main/resources/images/null");
+            vehicle.setImgPath("/images/null");
         }
 
         if (vehicle.getBatteryPercent() == null) {
@@ -454,8 +454,8 @@ public class VehicleUpdateController {
             modelText.setText(vehicle.getModel());
             maxRangeText.setText(Integer.toString(vehicle.getMaxRange()));
             currChargeText.setText(vehicle.getBatteryPercent().toString());
-            imgName.setText(vehicle.getImgPath().replace("src/main/resources/images/", ""));
-            selectedImg = vehicle.getImgPath().replace("src/main/resources/images/", "");
+            imgName.setText(vehicle.getImgPath().replace("/images/", ""));
+            selectedImg = vehicle.getImgPath().replace("/images/", "");
             connections = vehicle.getConnectors();
             for (String connection : connections) {
                 Button button = new Button("Delete");
