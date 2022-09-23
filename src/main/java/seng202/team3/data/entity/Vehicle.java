@@ -31,6 +31,9 @@ public class Vehicle {
     /** Path to vehicle image */
     private String imgPath;
 
+    /** Flag for if this vehicle is the user's currently-selected vehicle */
+    private boolean currVehicle;
+
     /**
      * Default filepath for missing images
      */
@@ -52,6 +55,7 @@ public class Vehicle {
         this.connectors = connectors;
         this.imgPath = DEFAULTIMGPATH;
         this.batteryPercent = 100.0;
+        this.currVehicle = false;
     }
 
     /**
@@ -194,6 +198,24 @@ public class Vehicle {
      */
     public int getVehicleId() {
         return vehicleId;
+    }
+
+    /**
+     * Set whether this vehicle is the user's currently selected one
+     *
+     * @param flag true or false
+     */
+    public void setcurrVehicle(Boolean flag) {
+        this.currVehicle = flag;
+    }
+
+    /**
+     * returns whether this vehicle is the user's currently selected one
+     *
+     * @return the vehicle status
+     */
+    public boolean getCurrVehicle() {
+        return currVehicle;
     }
 
     /**
