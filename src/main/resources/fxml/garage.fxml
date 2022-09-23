@@ -1,48 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1080.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.GarageController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1500.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.GarageController">
    <children>
-      <Label layoutX="478.0" layoutY="107.0" text="My Garage">
+      <Label layoutX="688.0" layoutY="103.0" text="My Garage">
          <font>
             <Font size="24.0" />
          </font>
       </Label>
-      <Button fx:id="nextBtn" layoutX="907.0" layoutY="320.0" mnemonicParsing="false" onAction="#nextBtnClicked" prefHeight="40.0" prefWidth="42.0" text="&gt;&gt;" />
-      <Button fx:id="prevBtn" layoutX="130.0" layoutY="320.0" mnemonicParsing="false" onAction="#prevBtnClicked" prefHeight="40.0" prefWidth="42.0" text="&lt;&lt;" />
-      <AnchorPane fx:id="anchorTwo" layoutX="431.0" layoutY="188.0" prefHeight="344.0" prefWidth="200.0" style="-fx-border-color: black;">
+      <Button fx:id="nextBtn" layoutX="1227.0" layoutY="380.0" mnemonicParsing="false" onAction="#nextBtnClicked" prefHeight="40.0" prefWidth="42.0" text="&gt;&gt;" />
+      <Button fx:id="prevBtn" layoutX="228.0" layoutY="400.0" mnemonicParsing="false" onAction="#prevBtnClicked" prefHeight="40.0" prefWidth="42.0" text="&lt;&lt;" />
+      <AnchorPane fx:id="anchorTwo" layoutX="615.0" layoutY="189.0" prefHeight="416.0" prefWidth="262.0" style="-fx-border-color: black;">
          <children>
-            <Button fx:id="editCarTwo" layoutX="105.0" layoutY="310.0" mnemonicParsing="false" onAction="#setEdit" text="Edit" />
-            <Button fx:id="deleteCarTwo" layoutX="149.0" layoutY="310.0" mnemonicParsing="false" onAction="#setDelete" text="Delete" />
-            <ImageView fx:id="vehicleImageTwo" fitHeight="130.0" fitWidth="214.0" layoutX="-2.0" layoutY="58.0" pickOnBounds="true" preserveRatio="true" />
-            <TextArea fx:id="makeModelTwo" editable="false" layoutX="1.0" layoutY="6.0" prefHeight="51.0" prefWidth="214.0" stylesheets="@textarea.css" wrapText="true" />
-            <TextArea fx:id="carDetailsTwo" editable="false" layoutX="1.0" layoutY="188.0" prefHeight="116.0" prefWidth="214.0" stylesheets="@textarea.css" wrapText="true" />
+            <Button fx:id="editCarTwo" layoutX="153.0" layoutY="376.0" mnemonicParsing="false" onAction="#setEdit" text="Edit" />
+            <Button fx:id="deleteCarTwo" layoutX="197.0" layoutY="376.0" mnemonicParsing="false" onAction="#setDelete" text="Delete" />
+            <ImageView fx:id="vehicleImageTwo" fitHeight="130.0" fitWidth="262.0" layoutX="-2.0" layoutY="58.0" pickOnBounds="true" preserveRatio="true" />
+            <TextArea fx:id="makeModelTwo" editable="false" layoutX="1.0" layoutY="6.0" prefHeight="51.0" prefWidth="258.0" stylesheets="@textarea.css" wrapText="true" />
+            <TextArea fx:id="carDetailsTwo" editable="false" layoutX="1.0" layoutY="188.0" prefHeight="116.0" prefWidth="258.0" stylesheets="@textarea.css" wrapText="true" />
+            <TextArea fx:id="currSelectedTwo" layoutX="1.0" layoutY="304.0" prefHeight="58.0" prefWidth="258.0" stylesheets="@textarea.css" />
+            <Button fx:id="currEvTwo" layoutX="14.0" layoutY="376.0" mnemonicParsing="false" onAction="#setCurr" text="Set as Current Vehicle" />
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="anchorTwo1" layoutX="199.0" layoutY="188.0" prefHeight="344.0" prefWidth="200.0" style="-fx-border-color: black;">
+      <AnchorPane fx:id="anchorTwo1" layoutX="308.0" layoutY="189.0" prefHeight="416.0" prefWidth="253.0" style="-fx-border-color: black;">
          <children>
-            <Button fx:id="editCarOne" layoutX="105.0" layoutY="310.0" mnemonicParsing="false" onAction="#setEdit" text="Edit" />
-            <Button fx:id="deleteCarOne" layoutX="149.0" layoutY="310.0" mnemonicParsing="false" onAction="#setDelete" text="Delete" />
-            <ImageView fx:id="vehicleImageOne" fitHeight="130.0" fitWidth="214.0" layoutX="-2.0" layoutY="58.0" pickOnBounds="true" preserveRatio="true" />
-            <TextArea fx:id="makeModelOne" editable="false" layoutX="1.0" layoutY="6.0" prefHeight="51.0" prefWidth="214.0" stylesheets="@textarea.css" wrapText="true" />
-            <TextArea fx:id="carDetailsOne" editable="false" layoutX="1.0" layoutY="188.0" prefHeight="116.0" prefWidth="214.0" stylesheets="@textarea.css" wrapText="true" />
+            <Button fx:id="editCarOne" layoutX="153.0" layoutY="376.0" mnemonicParsing="false" onAction="#setEdit" text="Edit" />
+            <Button fx:id="deleteCarOne" layoutX="197.0" layoutY="376.0" mnemonicParsing="false" onAction="#setDelete" text="Delete" />
+            <ImageView fx:id="vehicleImageOne" fitHeight="130.0" fitWidth="258.0" layoutX="-2.0" layoutY="58.0" pickOnBounds="true" preserveRatio="true" />
+            <TextArea fx:id="makeModelOne" editable="false" layoutX="1.0" layoutY="6.0" prefHeight="51.0" prefWidth="254.0" stylesheets="@textarea.css" wrapText="true" />
+            <TextArea fx:id="carDetailsOne" editable="false" layoutX="1.0" layoutY="188.0" prefHeight="116.0" prefWidth="258.0" stylesheets="@textarea.css" wrapText="true" />
+            <TextArea fx:id="currSelectedOne" layoutX="1.0" layoutY="304.0" prefHeight="58.0" prefWidth="258.0" stylesheets="@textarea.css" />
+            <Button fx:id="currEvOne" layoutX="14.0" layoutY="376.0" mnemonicParsing="false" onAction="#setCurr" text="Set as Current Vehicle" />
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="anchorTwo2" layoutX="660.0" layoutY="188.0" prefHeight="344.0" prefWidth="200.0" style="-fx-border-color: black;">
+      <AnchorPane fx:id="anchorTwo2" layoutX="930.0" layoutY="189.0" prefHeight="416.0" prefWidth="262.0" style="-fx-border-color: black;">
          <children>
-            <Button fx:id="editCarThree" layoutX="105.0" layoutY="310.0" mnemonicParsing="false" onAction="#setEdit" text="Edit" />
-            <Button fx:id="deleteCarThree" layoutX="149.0" layoutY="310.0" mnemonicParsing="false" onAction="#setDelete" text="Delete" />
-            <ImageView fx:id="vehicleImageThree" fitHeight="130.0" fitWidth="214.0" layoutX="-2.0" layoutY="58.0" pickOnBounds="true" preserveRatio="true" />
-            <TextArea fx:id="makeModelThree" editable="false" layoutX="1.0" layoutY="6.0" prefHeight="51.0" prefWidth="214.0" stylesheets="@textarea.css" wrapText="true" />
-            <TextArea fx:id="carDetailsThree" editable="false" layoutX="1.0" layoutY="188.0" prefHeight="116.0" prefWidth="214.0" stylesheets="@textarea.css" wrapText="true" />
+            <Button fx:id="editCarThree" layoutX="153.0" layoutY="376.0" mnemonicParsing="false" onAction="#setEdit" text="Edit" />
+            <Button fx:id="deleteCarThree" layoutX="197.0" layoutY="376.0" mnemonicParsing="false" onAction="#setDelete" text="Delete" />
+            <ImageView fx:id="vehicleImageThree" fitHeight="130.0" fitWidth="262.0" layoutX="-2.0" layoutY="58.0" pickOnBounds="true" preserveRatio="true" />
+            <TextArea fx:id="makeModelThree" editable="false" layoutX="1.0" layoutY="6.0" prefHeight="51.0" prefWidth="258.0" stylesheets="@textarea.css" wrapText="true" />
+            <TextArea fx:id="carDetailsThree" editable="false" layoutX="1.0" layoutY="188.0" prefHeight="116.0" prefWidth="258.0" stylesheets="@textarea.css" wrapText="true" />
+            <TextArea fx:id="currSelectedThree" layoutX="2.0" layoutY="304.0" prefHeight="58.0" prefWidth="258.0" stylesheets="@textarea.css" />
+            <Button fx:id="currEvThree" layoutX="14.0" layoutY="376.0" mnemonicParsing="false" onAction="#setCurr" text="Set as Current Vehicle" />
          </children>
       </AnchorPane>
-      <Button fx:id="openUpdate" layoutX="503.0" layoutY="585.0" mnemonicParsing="false" onAction="#launchUpdate" text="Add New" />
+      <Button fx:id="openUpdate" layoutX="713.0" layoutY="626.0" mnemonicParsing="false" onAction="#launchUpdate" text="Add New" />
    </children>
    <opaqueInsets>
       <Insets />

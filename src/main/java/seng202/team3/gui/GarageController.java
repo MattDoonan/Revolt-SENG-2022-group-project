@@ -82,6 +82,24 @@ public class GarageController {
     private TextArea carDetailsThree;
 
     /**
+     * Tells user whether the first vehicle is currently selected
+     */
+    @FXML
+    private TextArea currSelectedOne;
+
+    /**
+     * Tells user whether the second vehicle is currently selected
+     */
+    @FXML
+    private TextArea currSelectedTwo;
+
+    /**
+     * Tells user whether the third vehicle is currently selected
+     */
+    @FXML
+    private TextArea currSelectedThree;
+
+    /**
      * Button to edit the first vehicle
      */
     @FXML
@@ -116,6 +134,24 @@ public class GarageController {
      */
     @FXML
     private Button deleteCarThree;
+
+    /**
+     * Button to set the first vehicle as the user's current vehicle
+     */
+    @FXML
+    private Button currEvOne;
+
+    /**
+     * Button to set the second vehicle as the user's current vehicle
+     */
+    @FXML
+    private Button currEvTwo;
+
+    /**
+     * Button to set the third vehicle as the user's current vehicle
+     */
+    @FXML
+    private Button currEvThree;
 
     /**
      * Button to scroll the vehicle view forward
@@ -182,6 +218,40 @@ public class GarageController {
     @FXML
     public void launchUpdate() {
         launchEditable(null);
+    }
+
+    /**
+     * Sets the user's current vehicle
+     * 
+     * @param event the event that called the method
+     */
+    @FXML
+    public void setCurr(ActionEvent event) {
+        for (Vehicle vehicle : vehicleData) {
+            vehicle.setcurrVehicle(false);
+        }
+        String source = ((Button) event.getSource()).getId();
+        Vehicle currVehicle = new Vehicle();
+        switch (source) {
+            case "currEvOne":
+                vehicleData.get(0).setcurrVehicle(true);
+                currVehicle = vehicleData.get(0);
+                break;
+            case "currEvTwo":
+                vehicleData.get(1).setcurrVehicle(true);
+                currVehicle = vehicleData.get(1);
+                break;
+            case "currEvThree":
+                vehicleData.get(2).setcurrVehicle(true);
+                currVehicle = vehicleData.get(2);
+                break;
+            default:
+                break;
+        }
+        //manage.saveCurrVehicle(currVehicle);
+        // TODO: Add above line back in once database has currVehicle column
+        refresh();
+
     }
 
     /**
@@ -313,27 +383,33 @@ public class GarageController {
             populateDisplays("one", vehicleImageOne, 0);
             editCarOne.setVisible(true);
             deleteCarOne.setVisible(true);
+            currEvOne.setVisible(true);
         } else {
             editCarOne.setVisible(false);
             deleteCarOne.setVisible(false);
+            currEvOne.setVisible(false);
             clearDisplay("one", vehicleImageOne);
         }
         if (vehicleData.size() > 1) {
             populateDisplays("two", vehicleImageTwo, 1);
             editCarTwo.setVisible(true);
             deleteCarTwo.setVisible(true);
+            currEvTwo.setVisible(true);
         } else {
             editCarTwo.setVisible(false);
             deleteCarTwo.setVisible(false);
+            currEvTwo.setVisible(false);
             clearDisplay("two", vehicleImageTwo);
         }
         if (vehicleData.size() > 2) {
             populateDisplays("three", vehicleImageThree, 2);
             editCarThree.setVisible(true);
             deleteCarThree.setVisible(true);
+            currEvThree.setVisible(true);
         } else {
             editCarThree.setVisible(false);
             deleteCarThree.setVisible(false);
+            currEvThree.setVisible(false);
             clearDisplay("three", vehicleImageThree);
         }
         if (vehicleData.size() <= 3) {
@@ -356,14 +432,17 @@ public class GarageController {
             case "one":
                 makeModelOne.setText("");
                 carDetailsOne.setText("");
+                currSelectedOne.setText("");
                 break;
             case "two":
                 makeModelTwo.setText("");
                 carDetailsTwo.setText("");
+                currSelectedTwo.setText("");
                 break;
             case "three":
                 makeModelThree.setText("");
                 carDetailsThree.setText("");
+                currSelectedThree.setText("");
                 break;
             default:
                 break;
@@ -390,6 +469,8 @@ public class GarageController {
                                     + " km\n"
                                     + "Connections: "
                                     + vehicleData.get(index).getConnectors().toString());
+                    currSelectedOne.setText("Currently selected: " 
+                        + vehicleData.get(index).getCurrVehicle());
                     break;
                 case "two":
                     makeModelTwo.setText(vehicleData.get(index).getMake() + " "
@@ -400,6 +481,8 @@ public class GarageController {
                                     + " km\n"
                                     + "Connections: "
                                     + vehicleData.get(index).getConnectors().toString());
+                    currSelectedTwo.setText("Currently selected: " 
+                        + vehicleData.get(index).getCurrVehicle());
                     break;
                 case "three":
                     makeModelThree.setText(vehicleData.get(index).getMake() + " "
@@ -411,6 +494,8 @@ public class GarageController {
                                     + " km\n"
                                     + "Connections: "
                                     + vehicleData.get(index).getConnectors().toString());
+                    currSelectedThree.setText("Currently selected: " 
+                        + vehicleData.get(index).getCurrVehicle());
                     break;
                 default:
                     break;
