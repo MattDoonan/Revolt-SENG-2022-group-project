@@ -229,6 +229,7 @@ public class GarageController {
     public void setCurr(ActionEvent event) {
         for (Vehicle vehicle : vehicleData) {
             vehicle.setcurrVehicle(false);
+            manage.saveCurrVehicle(vehicle);
         }
         String source = ((Button) event.getSource()).getId();
         Vehicle currVehicle = new Vehicle();
@@ -248,8 +249,7 @@ public class GarageController {
             default:
                 break;
         }
-        //manage.saveCurrVehicle(currVehicle);
-        // TODO: Add above line back in once database has currVehicle column
+        manage.saveCurrVehicle(currVehicle);
         refresh();
 
     }

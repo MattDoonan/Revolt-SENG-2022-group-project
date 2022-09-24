@@ -44,7 +44,8 @@ CREATE TABLE if not exists vehicle
     rangekm INTEGER NOT NULL,
     connectorType VARCHAR(40),
     batteryPercent REAL NOT NULL,
-    imgPath VARCHAR(100)
+    imgPath VARCHAR(100),
+    currVehicle BIT
     );
 --SPLIT
 DROP TABLE IF EXISTS journey;
