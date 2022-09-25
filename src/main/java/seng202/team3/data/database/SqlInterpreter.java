@@ -455,6 +455,7 @@ public class SqlInterpreter implements DataReader {
         List<Object> vehicles = new ArrayList<>();
         while (rs.next()) {
             Vehicle v = new Vehicle();
+            v.setOwner(rs.getInt("owner"));
             v.setMake(rs.getString("make"));
             v.setModel(rs.getString("model"));
             v.setBatteryPercent(rs.getDouble("batteryPercent"));
@@ -757,9 +758,9 @@ public class SqlInterpreter implements DataReader {
      */
     public void writeVehicle(Vehicle v) throws IOException {
         String toAdd = "INSERT INTO vehicle (vehicleid, make, model, rangekm, "
-                + "connectorType, batteryPercent, imgPath) values(?,?,?,?,?,?,?)"
+                + "connectorType, batteryPercent, imgPath, owner) values(?,?,?,?,?,?,?,?)"
                 + "ON CONFLICT(vehicleid) DO UPDATE SET make = ?, model = ?, "
-                + "rangekm = ?, connectorType = ?, batteryPercent = ?, imgPath = ?";
+                + "rangekm = ?, connectorType = ?, batteryPercent = ?, imgPath = ?, owner = ?";
         try (Connection connection = createConnection();
                 PreparedStatement statement = connection.prepareStatement(toAdd)) {
             if (v.getVehicleId() == 0) {
@@ -779,12 +780,14 @@ public class SqlInterpreter implements DataReader {
             statement.setString(5, connectors);
             statement.setDouble(6, v.getBatteryPercent());
             statement.setString(7, v.getImgPath());
-            statement.setString(8, v.getMake());
-            statement.setString(9, v.getModel());
-            statement.setInt(10, v.getMaxRange());
-            statement.setString(11, connectors);
-            statement.setDouble(12, v.getBatteryPercent());
-            statement.setString(13, v.getImgPath());
+            statement.setInt(8, v.getOwner());
+            statement.setString(9, v.getMake());
+            statement.setString(10, v.getModel());
+            statement.setInt(11, v.getMaxRange());
+            statement.setString(12, connectors);
+            statement.setDouble(13, v.getBatteryPercent());
+            statement.setString(14, v.getImgPath());
+            statement.setInt(15, v.getOwner());
 
             statement.executeUpdate();
             if (v.getVehicleId() == 0) {

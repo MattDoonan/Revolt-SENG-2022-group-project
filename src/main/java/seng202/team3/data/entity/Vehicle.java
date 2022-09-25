@@ -1,6 +1,7 @@
 package seng202.team3.data.entity;
 
 import java.util.ArrayList;
+import seng202.team3.logic.UserManager;
 
 /**
  * Stores information about vehicles
@@ -32,6 +33,11 @@ public class Vehicle {
     private String imgPath;
 
     /**
+     * userid of the vehicle owner
+     */
+    private int owner;
+
+    /**
      * Default filepath for missing images
      */
     public static final String DEFAULTIMGPATH = "";
@@ -52,6 +58,7 @@ public class Vehicle {
         this.connectors = connectors;
         this.imgPath = DEFAULTIMGPATH;
         this.batteryPercent = 100.0;
+        setOwner(UserManager.getUser().getUserid());
     }
 
     /**
@@ -197,6 +204,24 @@ public class Vehicle {
     }
 
     /**
+     * Set the user id number
+     *
+     * @param number integer for the id
+     */
+    public void setOwner(int number) {
+        this.owner = number;
+    }
+
+    /**
+     * returns the user id number
+     *
+     * @return the id integer
+     */
+    public int getOwner() {
+        return owner;
+    }
+
+    /**
      * {@inheritDoc}}
      */
     @Override
@@ -215,6 +240,7 @@ public class Vehicle {
                 && v.getConnectors().equals(this.getConnectors())
                 && v.getCurrentRange().equals(this.getCurrentRange())
                 && v.getImgPath().equals(this.getImgPath())
-                && v.getVehicleId() == this.getVehicleId();
+                && v.getVehicleId() == this.getVehicleId()
+                && v.getOwner() == this.getOwner();
     }
 }

@@ -52,6 +52,7 @@ DROP TABLE IF EXISTS vehicle;
 CREATE TABLE if not exists vehicle
 (
     vehicleid INTEGER constraint dk_Veh PRIMARY KEY AUTOINCREMENT,
+    owner INTEGER NOT NULL references user(userid),
     make VARCHAR(10),
     model VARCHAR(10),
     rangekm INTEGER NOT NULL,
