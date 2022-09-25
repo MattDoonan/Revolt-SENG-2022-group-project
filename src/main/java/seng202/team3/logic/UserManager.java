@@ -24,7 +24,9 @@ public class UserManager {
     /**
      * List of available vehicles
      */
-    private static User user = new User("", "Guest", PermissionLevel.USER);
+    // TODO: remove this, manually sets admin account. Remove after login added and
+    // adding chargers has been restricted to signed in users
+    private static User user = new User("admin@admin.com", "admin", PermissionLevel.ADMIN);
 
     /**
      * Initialize UserManager
@@ -63,6 +65,7 @@ public class UserManager {
      * @return user
      */
     public static User getUser() {
+        user.setUserid(1); // TODO: remove this - currently maps all added chargers to admin
         return user;
     }
 

@@ -92,7 +92,7 @@ public class MainManagerTest {
         connectorList.add(dummyConnector);
         Coordinate coord = new Coordinate(4.5, 5.7, -36.85918, 174.76602);
         Charger c = new Charger(connectorList, "Test1", coord, 1, 0.3,
-                "Meridian", "Meridian", "2020/1/1 00:00:00", true, true, true, true);
+                "Meridian", "2020/1/1 00:00:00", true, true, true, true);
         manage.setSelectedCharger(c);
         assertEquals(c.getLocation().getLat(),
                 manage.getSelectedCharger().getLocation().getLat());

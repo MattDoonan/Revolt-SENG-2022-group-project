@@ -1,3 +1,4 @@
+
 package seng202.team3.data.database;
 
 import java.io.BufferedReader;
@@ -74,11 +75,13 @@ public class SqlInterpreter implements DataReader {
             createFile(url);
             defaultDatabase();
             // TODO: remove this when import functionality is implemented
-            try {
-                addChargerCsvToData("charger");
-            } catch (IOException e) {
-                e.printStackTrace();
-                // Do Nothing TODO: send this to higher layer
+            if (db == null) {
+                try {
+                    addChargerCsvToData("charger");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    // Do Nothing TODO: send this to higher layer
+                }
             }
         }
     }
@@ -383,13 +386,19 @@ public class SqlInterpreter implements DataReader {
             if (observedChargers.contains(rs.getInt("chargerid"))) {
                 continue;
             }
+            Statement additional = createConnection().createStatement();
 
-            // Get connectors
-            ResultSet connectorRs = createConnection().createStatement()
+            // // Get connectors
+            ResultSet connectorRs = additional
                     .executeQuery("SELECT * FROM connector WHERE chargerid = "
                             + rs.getInt("chargerid") + ";");
 
             connectors = asConnector(connectorRs);
+            connectorRs.close();
+
+            ResultSet userRs = additional
+                    .executeQuery("SELECT username FROM user WHERE userid = "
+                            + rs.getInt("owner") + ";");
 
             // Make charger
             Charger charger = new Charger();
@@ -405,7 +414,8 @@ public class SqlInterpreter implements DataReader {
             charger.setAvailableParks(rs.getInt("carparkcount"));
             charger.setTimeLimit(rs.getDouble("maxtimelimit"));
             charger.setOperator(rs.getString("operator"));
-            charger.setOwner(rs.getString("owner"));
+            charger.setOwnerId(rs.getInt("owner"));
+            charger.setOwner(userRs.getString("username"));
             charger.setHasAttraction(rs.getBoolean("hastouristattraction"));
             charger.setAvailable24Hrs(rs.getBoolean("is24hours"));
             charger.setParkingCost(rs.getBoolean("hascarparkcost"));
@@ -414,8 +424,11 @@ public class SqlInterpreter implements DataReader {
                 charger.addConnector((Connector) c);
             }
             charger.setCurrentType();
+
+            userRs.close();
             observedChargers.add(charger.getChargerId());
             chargers.add(charger);
+
         }
 
         return chargers;
@@ -565,7 +578,7 @@ public class SqlInterpreter implements DataReader {
             statement.setDouble(3, c.getLocation().getYpos());
             statement.setString(4, c.getName());
             statement.setString(5, c.getOperator());
-            statement.setString(6, c.getOwner());
+            statement.setInt(6, c.getOwnerId());
             statement.setString(7, c.getLocation().getAddress());
             statement.setBoolean(8, c.getAvailable24Hrs());
             statement.setInt(9, c.getAvailableParks());
@@ -581,7 +594,7 @@ public class SqlInterpreter implements DataReader {
             statement.setDouble(19, c.getLocation().getYpos());
             statement.setString(20, c.getName());
             statement.setString(21, c.getOperator());
-            statement.setString(22, c.getOwner());
+            statement.setInt(22, c.getOwnerId());
             statement.setString(23, c.getLocation().getAddress());
             statement.setBoolean(24, c.getAvailable24Hrs());
             statement.setInt(25, c.getAvailableParks());
@@ -907,7 +920,7 @@ public class SqlInterpreter implements DataReader {
         /**
          * Number of threads
          */
-        private static int threadCount = 4;
+        private static int threadCount = 1;
 
         /**
          * List of chargers to write
@@ -963,10 +976,10 @@ public class SqlInterpreter implements DataReader {
                 mutex.acquire();
                 this.conn.commit();
                 mutex.release();
+                this.conn.close();
             } catch (SQLException | InterruptedException e) {
                 e.printStackTrace(); // TODO: handle exception
             }
-
         }
     }
 }

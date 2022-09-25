@@ -5,11 +5,14 @@ CREATE TABLE if not exists user
 (
    userid INTEGER constraint dk_users PRIMARY KEY AUTOINCREMENT,
    email VARCHAR(250) NOT NULL,
-   username VARCHAR(50) NOT NULL,
+   username VARCHAR(50) NOT NULL UNIQUE,
    password VARCHAR(170) NOT NULL,
    permissions INTEGER NOT NULL,
    carbonSaved REAL
    );
+--SPLIT
+INSERT INTO user (username, password, email, carbonSaved, permissions)
+VALUES ("admin","admin","admin@admin.com",0,3);
 --SPLIT
 DROP TABLE IF EXISTS charger;
 --SPLIT
@@ -19,7 +22,7 @@ CREATE TABLE IF NOT EXISTS charger
     x REAL,
     y REAL,
     operator VARCHAR(50),
-    owner VARCHAR(50) NOT NULL,
+    owner INTEGER NOT NULL references User(userid),
     address VARCHAR(255) NOT NULL,
     name VARCHAR(50) NOT NULL,
     is24hours BIT,

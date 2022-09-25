@@ -5,14 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.util.ArrayList;
-
 import javax.management.InstanceAlreadyExistsException;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
@@ -112,7 +109,7 @@ public class ChargerHandlerTest {
 
         Coordinate testCoord = new Coordinate(1.1, 2.3, -43.53418, 172.627572, "CHHosp");
         Charger testCharger = new Charger(connectorList, "Hosp", testCoord, 2, 1.2,
-                "operator", "owner", "01-01-2000",
+                "operator", "01-01-2000",
                 true, true, true, true);
         assertEquals(" AC DC", manager.getConnectors(testCharger));
     }

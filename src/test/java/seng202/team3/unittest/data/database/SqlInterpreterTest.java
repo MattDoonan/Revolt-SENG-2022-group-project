@@ -109,7 +109,8 @@ public class SqlInterpreterTest {
         db.defaultDatabase();
         testConnector1 = new Connector("ChardaMo", "AC", "Available", "123", 3);
         testConnector2 = new Connector("ChardaMo", "AC", "Available", "420", 1);
-        testUser = new User("test@user.com", "test", PermissionLevel.USER);
+        testUser = new User("admin@admin.com", "admin",
+                PermissionLevel.ADMIN); // TODO: get user from db
         testUser.setUserid(DEFAULTID);
         UserManager.setUser(testUser);
         testCharger = new Charger(new ArrayList<Connector>(
@@ -118,7 +119,6 @@ public class SqlInterpreterTest {
                 new Coordinate(4.8, 6.2, -32.85658, 177.77702, "testAddy1"),
                 1,
                 0.3,
-                "Meridian",
                 "Meridian",
                 "2020/05/01 00:00:00+00",
                 false,
@@ -408,7 +408,7 @@ public class SqlInterpreterTest {
         db.writeCharger(testCharger); // Write to database
 
         // Modify attributes
-        testCharger.setOwner("Tesla");
+        testCharger.setName("New");
         testCharger.setAvailable24Hrs(false);
         testCharger.setOperator("Seng202");
 
@@ -501,7 +501,7 @@ public class SqlInterpreterTest {
         writeSingleEntity(testJourney);
         testJourney.getChargers().get(0).setName("New Name");
         testJourney.getChargers().get(0).setOperator("New op");
-        testJourney.getChargers().get(0).setOwner("New owner");
+        testJourney.getChargers().get(0).setDateOpened("00:00:00 12/34/56");
         writeSingleEntity(testJourney.getChargers().get(0));
         List<Object> result = db.readData(
                 new QueryBuilderImpl().withSource("journey").withFilter("journeyid",
@@ -544,7 +544,7 @@ public class SqlInterpreterTest {
 
         switch (objectToTest.getClass().getSimpleName()) {
             case "Charger":
-                ((Charger) objectToTest).setOwner(null);
+                ((Charger) objectToTest).setName(null);
                 break;
             case "Connector":
                 ((Connector) objectToTest).setCurrent(null);

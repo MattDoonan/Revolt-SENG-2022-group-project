@@ -180,7 +180,7 @@ public class CsvInterpreterTest {
                         170.100913,
                         "4 Kitchener Dr, Mount Cook National Park 7999, New Zealand"),
                 1, 0.0, "MERIDIAN ENERGY LIMITED",
-                "MERIDIAN ENERGY LIMITED", "2020/05/01 00:00:00+00",
+                "2020/05/01 00:00:00+00",
                 false, true, true, false);
         c.setChargerId(1);
         assertEquals(c, (Charger) result.get(0));

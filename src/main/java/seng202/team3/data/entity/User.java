@@ -35,7 +35,6 @@ public class User {
         this.accountName = accountName;
         this.level = level;
         this.carbonSaved = 0;
-        userid = 1;
     }
 
     /**
