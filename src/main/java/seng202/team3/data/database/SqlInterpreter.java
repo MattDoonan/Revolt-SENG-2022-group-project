@@ -1013,6 +1013,28 @@ public class SqlInterpreter implements DataReader {
     }
 
     /**
+     * Checks a password against the db for the login screen
+     * 
+     * @param user     user to log in
+     * @param password requested password
+     * @return if passwords match
+     */
+    public boolean validatePassword(User user, String password) {
+        String correctPassword = null;
+
+        try {
+            ResultSet userRs = createConnection().createStatement()
+                    .executeQuery("SELECT password FROM user WHERE userid = "
+                            + user.getUserid());
+            correctPassword = userRs.getString("password");
+        } catch (SQLException e) {
+            return false;
+        }
+
+        return password.equals(correctPassword);
+    }
+
+    /**
      * Allows threading for writing chargers to db to improve performance
      * 
      * @author Harrison Tyson

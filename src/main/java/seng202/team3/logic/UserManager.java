@@ -17,16 +17,11 @@ import seng202.team3.data.entity.User;
 public class UserManager {
 
     /**
-     * Query object to retrieve vehicles
-     */
-    private QueryBuilder userDataQuery;
-
-    /**
      * List of available vehicles
      */
-    // TODO: remove this, manually sets admin account. Remove after login added and
-    // adding chargers has been restricted to signed in
-    private static User user = new User("admin@admin.com", "admin", PermissionLevel.ADMIN);
+    // TODO: Remove after login added and adding chargers has been restricted to
+    // signed in
+    private static User user = new User("", "guest", PermissionLevel.USER);
 
     /**
      * Initialize UserManager
@@ -36,27 +31,15 @@ public class UserManager {
     }
 
     /**
-     * Load the initial query
-     */
-    public void resetQuery() {
-        userDataQuery = new QueryBuilderImpl().withSource("user");
-    }
-
-    /**
-     * Create the vehicle list from the main Query
-     *
-     */
-    public void getUserData() {
-        // TODO: get user from password and email address
-    }
-
-    /**
      * Tries to log the user in, checking if the user exists in the database
      * 
-     * @param user details to check the database with
+     * @param user     details to check the database with
+     * @param password password to check
      */
     public void login(User user, String password) {
-        // TODO
+        if (SqlInterpreter.getInstance().validatePassword(user, password)) {
+            UserManager.setUser(user);
+        }
     }
 
     /**
@@ -81,7 +64,8 @@ public class UserManager {
     /**
      * Saves the given user (and any changes made) to the database
      * 
-     * @param user the user whose details need to be saved
+     * @param user     the user whose details need to be saved
+     * @param password the new password for the user
      */
     public void saveUser(User user, String password) {
         try {

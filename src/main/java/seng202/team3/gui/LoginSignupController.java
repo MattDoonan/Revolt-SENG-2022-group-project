@@ -90,7 +90,8 @@ public class LoginSignupController {
 
     /**
      * Initialises the sign up
-     *
+     * 
+     * @param menuControl the controller for the menu
      */
     public void init(MenuController menuControl) {
         this.menuControl = menuControl;
