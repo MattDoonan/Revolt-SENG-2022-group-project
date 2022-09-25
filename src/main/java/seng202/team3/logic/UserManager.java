@@ -25,7 +25,7 @@ public class UserManager {
      * List of available vehicles
      */
     // TODO: remove this, manually sets admin account. Remove after login added and
-    // adding chargers has been restricted to signed in users
+    // adding chargers has been restricted to signed in
     private static User user = new User("admin@admin.com", "admin", PermissionLevel.ADMIN);
 
     /**
@@ -84,11 +84,11 @@ public class UserManager {
      * @param user the user whose details need to be saved
      */
     public void saveUser(User user) {
-        // try {
-        // SqlInterpreter.getInstance().writeUser(user);
-        // } catch (IOException e) {
-        // e.printStackTrace();
-        // }
+        try {
+            SqlInterpreter.getInstance().writeUser(user);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

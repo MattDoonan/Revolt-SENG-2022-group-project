@@ -28,6 +28,8 @@ import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
 import seng202.team3.data.entity.Journey;
+import seng202.team3.data.entity.PermissionLevel;
+import seng202.team3.data.entity.User;
 import seng202.team3.data.entity.Vehicle;
 
 /**
@@ -282,6 +284,10 @@ public class SqlInterpreter implements DataReader {
                             .executeUpdate("DELETE FROM journey WHERE vehicleid = " + id + ";");
                     break;
 
+                case "user":
+                    // TODO: decide what to delete
+                    break;
+
                 default:
                     break;
             }
@@ -351,6 +357,9 @@ public class SqlInterpreter implements DataReader {
                     break;
                 case "Journey":
                     objects = asJourney(rs);
+                    break;
+                case "User":
+                    objects = asUser(rs);
                     break;
                 default: // Gets fields as list of strings
                     while (rs.next()) {
@@ -542,6 +551,29 @@ public class SqlInterpreter implements DataReader {
         }
 
         return journeys;
+    }
+
+    /**
+     * Reads ResultSet as user
+     * 
+     * @param rs ResultSet to read from
+     * 
+     * @return list of users
+     * @throws SQLException if sql interaction fails
+     */
+    private List<Object> asUser(ResultSet rs) throws SQLException {
+        List<Object> users = new ArrayList<>();
+        while (rs.next()) {
+            User user = new User();
+            user.setUserid(rs.getInt("userid"));
+            user.setAccountName(rs.getString("username"));
+            user.setEmail(rs.getString("email"));
+            user.setCarbonSaved(rs.getInt("carbonSaved"));
+            user.setLevel(PermissionLevel.fromValue(rs.getInt("permissions")));
+
+            users.add(user);
+        }
+        return users;
     }
 
     /**
@@ -905,6 +937,76 @@ public class SqlInterpreter implements DataReader {
                 statement.executeUpdate();
             }
 
+        } catch (SQLException | NullPointerException e) {
+            throw new IOException(e.getMessage());
+        }
+    }
+
+    /**
+     * Adds object user to the database with password
+     * 
+     * @param user     the user object
+     * @param password the new password for the user
+     * @throws IOException to check for errors
+     */
+    public void writeUser(User user, String password) throws IOException {
+        String toAdd = "INSERT INTO user (userid, email, username, password, "
+                + "permissions, carbonSaved) "
+                + "values(?,?,?,?,?,?) ON CONFLICT(userid) DO UPDATE SET "
+                + "email = ?, username = ?, password = ?,"
+                + " permissions = ?, carbonSaved = ?";
+        try (Connection connection = createConnection();
+                PreparedStatement statement = connection.prepareStatement(toAdd)) {
+            if (user.getUserid() == 0) {
+                statement.setNull(1, 0);
+            } else {
+                statement.setInt(1, user.getUserid());
+            }
+            statement.setString(2, user.getEmail());
+            statement.setString(3, user.getAccountName());
+            statement.setString(4, password);
+            statement.setInt(5, user.getLevel().ordinal());
+            statement.setDouble(6, user.getCarbonSaved());
+            statement.setString(7, user.getEmail());
+            statement.setString(8, user.getAccountName());
+            statement.setString(9, password);
+            statement.setInt(10, user.getLevel().ordinal());
+            statement.setDouble(11, user.getCarbonSaved());
+            statement.executeUpdate();
+            if (user.getUserid() == 0) {
+                user.setUserid(statement.getGeneratedKeys().getInt(1));
+            }
+        } catch (SQLException | NullPointerException e) {
+            throw new IOException(e.getMessage());
+        }
+    }
+
+    /**
+     * Updates existing user (does not require password)
+     * 
+     * @param user the user object
+     * @throws IOException to check for errors
+     */
+    public void writeUser(User user) throws IOException {
+        String toAdd = "UPDATE user SET "
+                + "email = ?, username = ?,"
+                + " permissions = ?, carbonSaved = ? WHERE userid = ?;";
+        try (Connection connection = createConnection();
+                PreparedStatement statement = connection.prepareStatement(toAdd)) {
+            if (user.getUserid() == 0) {
+                statement.setNull(1, 0);
+            } else {
+                statement.setInt(1, user.getUserid());
+            }
+            statement.setString(2, user.getEmail());
+            statement.setString(3, user.getAccountName());
+            statement.setInt(4, user.getLevel().ordinal());
+            statement.setDouble(5, user.getCarbonSaved());
+            statement.setInt(6, user.getUserid());
+            statement.executeUpdate();
+            if (user.getUserid() == 0) {
+                user.setUserid(statement.getGeneratedKeys().getInt(1));
+            }
         } catch (SQLException | NullPointerException e) {
             throw new IOException(e.getMessage());
         }

@@ -79,6 +79,9 @@ public class SqlInterpreterTest {
                 db.writeCharger(testCharger);
                 db.writeJourney((Journey) objectToTest);
                 break;
+            case "User":
+                db.writeUser((User) objectToTest, "admin"); // arbitrary password
+                break;
             default:
                 fail();
         }
@@ -94,7 +97,8 @@ public class SqlInterpreterTest {
                 Arguments.of(testCharger, "charger"),
                 Arguments.of(testConnector1, "connector"),
                 Arguments.of(testVehicle, "vehicle"),
-                Arguments.of(testJourney, "journey"));
+                Arguments.of(testJourney, "journey"),
+                Arguments.of(testUser, "user"));
     }
 
     @BeforeAll
@@ -107,11 +111,27 @@ public class SqlInterpreterTest {
     @BeforeEach
     void reset() {
         db.defaultDatabase();
-        testConnector1 = new Connector("ChardaMo", "AC", "Available", "123", 3);
-        testConnector2 = new Connector("ChardaMo", "AC", "Available", "420", 1);
+        try {
+            db.createConnection()
+                    .createStatement()
+                    .executeUpdate("DELETE FROM user"); // remove default admin
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         testUser = new User("admin@admin.com", "admin",
                 PermissionLevel.ADMIN); // TODO: get user from db
         testUser.setUserid(DEFAULTID);
+
+        try {
+            db.writeUser(testUser, "admin");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        testConnector1 = new Connector("ChardaMo", "AC", "Available", "123", 3);
+        testConnector2 = new Connector("ChardaMo", "AC", "Available", "420", 1);
+
         UserManager.setUser(testUser);
         testCharger = new Charger(new ArrayList<Connector>(
                 Arrays.asList(testConnector1, testConnector2)),
@@ -243,6 +263,15 @@ public class SqlInterpreterTest {
     public void deleteMissingEntityTest(Object objectToTest, String dbTable) throws IOException {
         // Empty db
         QueryBuilder q = new QueryBuilderImpl().withSource(dbTable);
+        if (objectToTest instanceof User) { // Remove default user
+            try {
+                db.createConnection()
+                        .createStatement()
+                        .executeUpdate("DELETE FROM user"); // remove default admin
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
 
         List<Object> originalTable = db.readData(q.build(), objectToTest.getClass());
         db.deleteData(dbTable, DEFAULTID);
@@ -276,6 +305,10 @@ public class SqlInterpreterTest {
                 break;
             case "Journey":
                 ((Journey) objectToTest).setJourneyId(0);
+                break;
+            case "User":
+                ((User) objectToTest).setUserid(0);
+                ((User) objectToTest).setAccountName("newName"); // username must be unique
                 break;
             default:
                 fail();
@@ -555,6 +588,16 @@ public class SqlInterpreterTest {
             case "Journey":
                 ((Journey) objectToTest).setStartPosition(
                         new Coordinate(4.8, 6.2, null, 177.77702, "testAddy1"));
+                break;
+            case "User":
+                try { // remove default records
+                    db.createConnection()
+                            .createStatement()
+                            .executeUpdate("DELETE FROM user"); // remove default admin
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                ((User) objectToTest).setAccountName(null);
                 break;
             default:
                 fail();

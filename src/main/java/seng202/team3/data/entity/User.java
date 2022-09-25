@@ -133,4 +133,20 @@ public class User {
     public PermissionLevel getLevel() {
         return level;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        User u;
+        if (o instanceof User) {
+            u = (User) o;
+        } else {
+            return false;
+        }
+
+        return u.getUserid() == this.getUserid()
+                && u.getEmail().equals(this.getEmail())
+                && u.getAccountName().equals(this.getAccountName())
+                && u.getCarbonSaved() == this.getCarbonSaved()
+                && u.getLevel().equals(this.getLevel());
+    }
 }
