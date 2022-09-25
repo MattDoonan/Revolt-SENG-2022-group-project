@@ -35,7 +35,10 @@ import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
 import seng202.team3.data.entity.Journey;
+import seng202.team3.data.entity.PermissionLevel;
+import seng202.team3.data.entity.User;
 import seng202.team3.data.entity.Vehicle;
+import seng202.team3.logic.UserManager;
 
 /**
  * Tests for SqlInterpreter {@link SqlInterpreter} Class
@@ -50,6 +53,7 @@ public class SqlInterpreterTest {
     static Charger testCharger;
     static Vehicle testVehicle;
     static Journey testJourney;
+    static User testUser;
 
     static final int DEFAULTID = 1;
 
@@ -105,7 +109,9 @@ public class SqlInterpreterTest {
         db.defaultDatabase();
         testConnector1 = new Connector("ChardaMo", "AC", "Available", "123", 3);
         testConnector2 = new Connector("ChardaMo", "AC", "Available", "420", 1);
-
+        testUser = new User("test@user.com", "test", PermissionLevel.USER);
+        testUser.setUserid(DEFAULTID);
+        UserManager.setUser(testUser);
         testCharger = new Charger(new ArrayList<Connector>(
                 Arrays.asList(testConnector1, testConnector2)),
                 "Test2",

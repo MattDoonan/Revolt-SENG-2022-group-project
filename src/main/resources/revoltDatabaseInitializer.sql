@@ -1,3 +1,16 @@
+--SPLIT
+DROP TABLE IF EXISTS user;
+--SPLIT
+CREATE TABLE if not exists user
+(
+   userid INTEGER constraint dk_users PRIMARY KEY AUTOINCREMENT,
+   email VARCHAR(250) NOT NULL,
+   username VARCHAR(50) NOT NULL,
+   password VARCHAR(170) NOT NULL,
+   permissions INTEGER NOT NULL,
+   carbonSaved REAL
+   );
+--SPLIT
 DROP TABLE IF EXISTS charger;
 --SPLIT
 CREATE TABLE IF NOT EXISTS charger
@@ -52,6 +65,7 @@ DROP TABLE IF EXISTS journey;
 CREATE TABLE if not exists journey
 (
     journeyid INTEGER constraint dk_journey PRIMARY KEY AUTOINCREMENT,
+    userid INTEGER NOT NULL references user(userid),
     vehicleid INTEGER NOT NULL references Vehicle(vehicleid),
     startLat REAL NOT NULL,
     startLon REAL NOT NULL,
