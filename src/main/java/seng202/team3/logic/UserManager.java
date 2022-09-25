@@ -55,7 +55,7 @@ public class UserManager {
      * 
      * @param user details to check the database with
      */
-    public void login(User user) {
+    public void login(User user, String password) {
         // TODO
     }
 
@@ -83,9 +83,9 @@ public class UserManager {
      * 
      * @param user the user whose details need to be saved
      */
-    public void saveUser(User user) {
+    public void saveUser(User user, String password) {
         try {
-            SqlInterpreter.getInstance().writeUser(user);
+            SqlInterpreter.getInstance().writeUser(user, password);
         } catch (IOException e) {
             e.printStackTrace();
         }

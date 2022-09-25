@@ -4,8 +4,11 @@ import java.io.IOException;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
@@ -137,6 +140,56 @@ public class MenuController {
             GarageController controller = garageLoader.getController();
             controller.init();
             menuWindow.setCenter(garageViewParent);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Loads the login screen upon click
+     */
+    @FXML
+    public void loadSignup() {
+        try {
+            FXMLLoader signup = new FXMLLoader(getClass().getResource(
+                    "/fxml/signup.fxml"));
+            AnchorPane base = signup.load();
+            Scene modalScene = new Scene(base);
+            Stage signupPopup = new Stage();
+            signupPopup.setScene(modalScene);
+            signupPopup.setResizable(false);
+            signupPopup.setTitle("Signup");
+            signupPopup.initModality(Modality.WINDOW_MODAL);
+            LoginSignupController controller = signup.getController();
+            controller.init(this);
+            signupPopup.setAlwaysOnTop(true);
+            signupPopup.showAndWait();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Loads the signup screen upon click
+     */
+    @FXML
+    public void loadLogin() {
+        try {
+            FXMLLoader login = new FXMLLoader(getClass().getResource(
+                    "/fxml/login.fxml"));
+            AnchorPane base = login.load();
+            Scene modalScene = new Scene(base);
+            Stage loginPopup = new Stage();
+            loginPopup.setScene(modalScene);
+            loginPopup.setResizable(false);
+            loginPopup.setTitle("Login");
+            loginPopup.initModality(Modality.WINDOW_MODAL);
+            LoginSignupController controller = login.getController();
+            controller.init(this);
+            loginPopup.setAlwaysOnTop(true);
+            loginPopup.showAndWait();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
