@@ -10,6 +10,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
+import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.gui.MainController;
@@ -26,6 +27,7 @@ import seng202.team3.logic.Calculations;
 public class MainSearchFilterTestFx extends TestFxBase {
 
     private MainController controller;
+    static SqlInterpreter db;
 
     /**
      * Implements the abstract method for this window
@@ -45,6 +47,11 @@ public class MainSearchFilterTestFx extends TestFxBase {
      */
     @Override
     public void start(Stage stage) throws Exception {
+        SqlInterpreter.removeInstance();
+        db = SqlInterpreter.initialiseInstanceWithUrl(
+                "jdbc:sqlite:./target/test-classes/test_database.db");
+        db.addChargerCsvToData("csvtest/filtering");
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
         Parent page = loader.load();
         initState(loader, stage);
@@ -190,8 +197,9 @@ public class MainSearchFilterTestFx extends TestFxBase {
     @Test
     public void distanceFilterDisables() {
         boolean isValid = true;
+        int total;
+        total = controller.getManager().getCloseChargerData().size();
         clickOn("#executeSearch");
-        int total = controller.getManager().getCloseChargerData().size();
         controller.getManager().resetQuery();
         controller.getManager().makeAllChargers();
         if (total != controller.getManager().getCloseChargerData().size()) {
