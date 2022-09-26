@@ -6,10 +6,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import seng202.team3.data.entity.User;
 
 /**
  * Class which loads the menu and runs the main controller (default)
@@ -38,6 +38,19 @@ public class MenuController {
     private Button vehicleButton;
 
     /**
+     * Login signout button
+     */
+    @FXML
+    private Button loginSignout;
+
+    /**
+     * Account button
+     */
+    @FXML
+    private Button accountPage;
+
+
+    /**
      * The stage the application runs on
      */
     private Stage stage;
@@ -47,6 +60,9 @@ public class MenuController {
      * one instance at a time
      */
     private static MainController controller;
+
+    /** User that is logged in */
+    private static User loggedIn;
 
     /**
      * unused constructor
@@ -98,6 +114,40 @@ public class MenuController {
     }
 
     /**
+     * accountHover.
+     */
+    public void accountHover() {
+        accountPage.setStyle("-fx-text-fill:#000000;-fx-font-size: 26px; "
+                + "-fx-background-color: #e06666;");
+    }
+
+    /**
+     * accountExit.
+     */
+    public void accountExit() {
+        accountPage.setStyle("-fx-text-fill:#ffffff;-fx-font-size: 24px; "
+                + "-fx-background-color: #e06666;");
+    }
+
+    /**
+     * loginHover.
+     */
+    public void loginHover() {
+        loginSignout.setStyle("-fx-text-fill:#000000;-fx-font-size: 26px; "
+                + "-fx-background-color: #e06666;");
+    }
+
+    /**
+     * loginExit.
+     */
+    public void loginExit() {
+        loginSignout.setStyle("-fx-text-fill:#ffffff;-fx-font-size: 24px; "
+                + "-fx-background-color: #e06666;");
+    }
+
+
+
+    /**
      * Initialises the main screen with only one version of the maincontroller
      */
     public void initHome() {
@@ -146,28 +196,23 @@ public class MenuController {
     }
 
     /**
-     * Loads the login screen upon click
+     * Checks if the user is logged in or out and does action
      */
     @FXML
-    public void loadSignup() {
-        createLoginWindow("/fxml/signup.fxml", "Signup", null);
+    public void loginOut() {
+        if (loggedIn == null) {
+            createLoginWindow("/fxml/login.fxml", "Login", null);
+        } else {
+            signOut();
+        }
     }
-
-    /**
-     * Loads the signup screen upon click
-     */
-    @FXML
-    public void loadLogin() {
-        createLoginWindow("/fxml/login.fxml", "Login", null);
-    }
-
 
     /**
      * Creates a login window if not previously initialised
      *
      * @param resource the resource to be fetched
-     * @param title the title of the window
-     * @param pane the BorderPane of the window
+     * @param title    the title of the window
+     * @param pane     the BorderPane of the window
      */
     public void createLoginWindow(String resource, String title, BorderPane pane) {
         Stage loginPopup = new Stage();
@@ -181,12 +226,11 @@ public class MenuController {
                 loginPopup.setResizable(false);
                 loginPopup.setTitle(title);
                 loginPopup.initModality(Modality.WINDOW_MODAL);
-                LoginSignupController controller = login.getController();
-                controller.init(this);
-                controller.setStage(loginPopup);
-                controller.setPane(base);
+                LoginSignupController loginController = login.getController();
+                loginController.setStage(loginPopup);
+                loginController.init(this);
+                loginController.setPane(base);
                 loginPopup.showAndWait();
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -195,17 +239,63 @@ public class MenuController {
             try {
                 FXMLLoader login = new FXMLLoader(getClass().getResource(
                         resource));
-                LoginSignupController controller = login.getController();
-                controller.init(this);
-                controller.setPane(pane);
-                controller.setStage(loginPopup);
                 Parent base = login.load();
+                LoginSignupController loginController = login.getController();
                 pane.setCenter(base);
+                loginPopup.setTitle(title);
+                loginController.init(this);
+                loginController.setPane(pane);
+                loginController.setStage(loginPopup);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
+    /**
+     * Loads the account page if the user is signed in
+     */
+    @FXML
+    public void loadAccountScreen() {
+        try {
+            if (loggedIn == null) {
+                createLoginWindow("/fxml/login.fxml", "Login", null);
+            } else {
+                FXMLLoader accountLoader =
+                        new FXMLLoader(getClass().getResource("/fxml/account.fxml"));
+                Parent accountViewParent = accountLoader.load();
+                AccountController controller = accountLoader.getController();
+                controller.init();
+                menuWindow.setCenter(accountViewParent);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Sets the current logged in user
+     * @param u the logged in user
+     */
+    public void setUser(User u) {
+        this.loggedIn = u;
+        loginSignout.setText("logout");
+    }
+
+    /**
+     * Sets loggedIn to be null
+     */
+    public void signOut() {
+        this.loggedIn = null;
+        loginSignout.setText("Login");
+    }
+
+    /**
+     * Gets the current logged in user
+     * @return the logged in user
+     */
+    public User getUser() {
+        return loggedIn;
+    }
 
 }
