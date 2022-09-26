@@ -1,11 +1,17 @@
 package seng202.team3.gui;
 
+import de.jensd.fx.glyphs.GlyphIcon;
+import de.jensd.fx.glyphs.GlyphsDude;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
+
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
@@ -44,10 +50,22 @@ public class LoginSignupController {
     private PasswordField signupPasswordField;
 
     /**
+     * The show password field
+     */
+    @FXML
+    private TextField showPassFieldSignup;
+
+    /**
      * The signup confirm password field
      */
     @FXML
     private PasswordField confPassField;
+
+    /**
+     * The show confirm password field
+     */
+    @FXML
+    private TextField showConfPassFieldSignup;
 
     /**
      * The login email field
@@ -60,6 +78,30 @@ public class LoginSignupController {
      */
     @FXML
     private PasswordField loginPasswordField;
+
+    /**
+     * The show password field
+     */
+    @FXML
+    private TextField showPassLogin;
+
+    /**
+     * Button to show login password
+     */
+    @FXML
+    private Button showLoginPassword;
+
+    /**
+     * Button to show signup password
+     */
+    @FXML
+    private Button showPassSignup;
+
+    /**
+     * Button to show signup password
+     */
+    @FXML
+    private Button showConfPassSignup;
 
     /**
      * List of user input errors for adding user / logging in
@@ -133,6 +175,12 @@ public class LoginSignupController {
      */
     public void init(MenuController menuControl) {
         this.menuControl = menuControl;
+        if (showPassLogin != null) {
+            setIcon("login", "show");
+        } else if (showPassSignup != null) {
+            setIcon("signup", "show");
+            setIcon("signupconf", "show");
+        }
     }
 
     /**
@@ -285,5 +333,65 @@ public class LoginSignupController {
      */
     public void close() {
         stage.close();
+    }
+
+
+    /**
+     * Show the user's password
+     */
+    @FXML
+    public void showPassword(ActionEvent event) {
+        String source = ((Button) event.getSource()).getId();
+        TextField passTextField = new TextField();
+        PasswordField passField = new PasswordField();
+        String popup = "";
+        switch (source) {
+            case "showLoginPassword":
+                passTextField = showPassLogin;
+                passField = loginPasswordField;
+                popup = "login";
+                break;
+            case "showPassSignup":
+                passTextField = showPassFieldSignup;
+                passField = signupPasswordField;
+                popup = "signup";
+                break;
+            case "showConfPassSignup":
+                passTextField = showConfPassFieldSignup;
+                passField = confPassField;
+                popup = "signupconf";
+                break;
+            default:
+                break;
+        }
+
+        if (passTextField.isVisible()) {
+            passTextField.setVisible(false);
+            passTextField.setText(null);
+            setIcon(popup, "show");
+        } else if (!passField.getText().equals("")) {
+            passTextField.setVisible(true);
+            passTextField.setText(passField.getText());
+            setIcon(popup, "hide");
+        }
+    }
+
+    /**
+     * Set the button icon
+     */
+    public void setIcon(String popup, String type) {
+        Button button = new Button();
+        if (popup.equals("login")) {
+            button = showLoginPassword;
+        } else if (popup.equals("signup")) {
+            button = showPassSignup;
+        } else if (popup.equals("signupconf")) {
+            button = showConfPassSignup;
+        }
+        if (type.equals("show")) {
+            GlyphsDude.setIcon(button, FontAwesomeIcon.EYE);
+        } else {
+            GlyphsDude.setIcon(button, FontAwesomeIcon.EYE_SLASH);
+        }
     }
 }

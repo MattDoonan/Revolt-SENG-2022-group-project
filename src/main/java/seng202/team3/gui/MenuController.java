@@ -182,11 +182,10 @@ public class MenuController {
                 loginPopup.setTitle(title);
                 loginPopup.initModality(Modality.WINDOW_MODAL);
                 LoginSignupController loginController = login.getController();
-                loginController.init(this);
                 loginController.setStage(loginPopup);
+                loginController.init(this);
                 loginController.setPane(base);
                 loginPopup.showAndWait();
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -198,6 +197,7 @@ public class MenuController {
                 Parent base = login.load();
                 LoginSignupController loginController = login.getController();
                 pane.setCenter(base);
+                loginPopup.setTitle(title);
                 loginController.init(this);
                 loginController.setPane(pane);
                 loginController.setStage(loginPopup);
