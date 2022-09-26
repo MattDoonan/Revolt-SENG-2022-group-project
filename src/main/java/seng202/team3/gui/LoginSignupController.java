@@ -239,6 +239,7 @@ public class LoginSignupController {
         if (errors.isEmpty()) {
             manage.saveUser(user, signupPasswordField.getText());
             menuControl.setUser(user);
+            stage.close();
         } else {
             launchErrorPopUps();
             errors.clear();
@@ -261,7 +262,10 @@ public class LoginSignupController {
         if (errors.isEmpty()) {
             try {
                 User user = manage.login(loginEmailField.getText(), loginPasswordField.getText());
-                menuControl.setUser(user);
+                if (user != null) {
+                    menuControl.setUser(user);
+                    stage.close();
+                }
             } catch (SQLException | IOException e) {
                 // TODO popup for error
             }
