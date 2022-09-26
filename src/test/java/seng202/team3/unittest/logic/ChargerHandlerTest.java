@@ -33,7 +33,7 @@ public class ChargerHandlerTest {
     MainManager mainManager;
 
     @BeforeAll
-    static void intialize() throws InstanceAlreadyExistsException {
+    static void intialize() throws InstanceAlreadyExistsException, IOException {
         SqlInterpreter.removeInstance();
         SqlInterpreter.initialiseInstanceWithUrl(
                 "jdbc:sqlite:./target/test-classes/test_database.db");
