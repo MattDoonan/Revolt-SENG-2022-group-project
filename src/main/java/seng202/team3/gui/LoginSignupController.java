@@ -337,7 +337,8 @@ public class LoginSignupController {
 
 
     /**
-     * Show the user's password
+     * Shows/hides the user's password
+     * @param event the event that called the function
      */
     @FXML
     public void showPassword(ActionEvent event) {
@@ -378,6 +379,8 @@ public class LoginSignupController {
 
     /**
      * Set the button icon
+     * @param popup the password field to add the icon to
+     * @param type the type the icon should be
      */
     public void setIcon(String popup, String type) {
         Button button = new Button();
