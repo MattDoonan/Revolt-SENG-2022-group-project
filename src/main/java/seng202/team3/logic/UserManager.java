@@ -75,4 +75,18 @@ public class UserManager {
         }
     }
 
+
+    /**
+     * Updates a pre-existing user
+     *
+     * @param user the user to update
+     */
+    public void updateUser(User user) {
+        try {
+            SqlInterpreter.getInstance().writeUser(user);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
