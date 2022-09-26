@@ -391,11 +391,10 @@ public class SqlInterpreter implements DataReader {
                     try {
                         Integer.parseInt(filter.getValue1());
                         sql += filter.getValue0() + " = " + filter.getValue1();
-                    } catch (NumberFormatException e){
-                        if(filter.getValue1().equalsIgnoreCase("False")
+                    } catch (NumberFormatException e) {
+                        if (filter.getValue1().equalsIgnoreCase("False")
                                 || filter.getValue1().equalsIgnoreCase("True")) {
                             sql += filter.getValue0() + " = " + filter.getValue1();
-
                         } else {
                             sql += filter.getValue0() + " = " + "'" + filter.getValue1() + "'";
                         }
