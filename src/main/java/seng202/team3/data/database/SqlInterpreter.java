@@ -65,8 +65,9 @@ public class SqlInterpreter implements DataReader {
      * calls createAFile and defaultDatabase if the database doesn't exist
      * 
      * @param db the url sent through
+     * @throws IOException if default data cannot be populated
      */
-    private SqlInterpreter(String db) {
+    private SqlInterpreter(String db) throws IOException {
         if (db == null || db.isEmpty()) {
             url = getDatabasePath();
             logManager.info(getDatabasePath());
@@ -76,13 +77,11 @@ public class SqlInterpreter implements DataReader {
         if (!checkExist(url)) {
             createFile(url);
             defaultDatabase();
-            // TODO: remove this when import functionality is implemented
             if (db == null) {
                 try {
-                    addChargerCsvToData("charger");
+                    importDemoData();
                 } catch (IOException e) {
-                    e.printStackTrace();
-                    // Do Nothing TODO: send this to higher layer
+                    throw e;
                 }
             }
         }
@@ -100,11 +99,45 @@ public class SqlInterpreter implements DataReader {
     }
 
     /**
+     * Imports default demo data from the CSV into the database
+     * Adds user stubs for each owner
+     * 
+     * @throws IOException db read/write fails
+     */
+    public void importDemoData() throws IOException {
+        List<Object> chargersToImport = new CsvInterpreter().readData(
+                new QueryBuilderImpl().withSource("charger").build(), Charger.class);
+        ArrayList<String> owners = new ArrayList<>();
+        for (Object o : chargersToImport) {
+            if (!owners.contains(((Charger) o).getDemoOwner())) {
+                owners.add(((Charger) o).getDemoOwner());
+            }
+        }
+
+        for (int i = 0; i < owners.size(); i++) {
+            writeUser(
+                    new User(
+                            "example" + i + "@fake.com", owners.get(i),
+                            PermissionLevel.CHARGEROWNER),
+                    "demo");
+        }
+
+        for (int i = 0; i < chargersToImport.size(); i++) {
+            Charger c = (Charger) chargersToImport.get(i);
+            // +2 to account for 0 index and default admin user at userid = 1
+            c.setOwnerId(owners.indexOf(c.getDemoOwner()) + 2);
+        }
+
+        writeCharger(new ArrayList<>(chargersToImport));
+    }
+
+    /**
      * Returns the instance of the class
      *
      * @return the instance
+     * @throws IOException if the database cannot be reached/populated
      */
-    public static SqlInterpreter getInstance() {
+    public static SqlInterpreter getInstance() throws IOException {
         if (instance == null) {
             instance = new SqlInterpreter(null);
         }
@@ -124,9 +157,10 @@ public class SqlInterpreter implements DataReader {
      *                                                         singleton
      *                                                         instance
      * @author Morgan English, Dec 21
+     * @throws IOException if an error occurs connecting to the database
      */
     public static SqlInterpreter initialiseInstanceWithUrl(String url)
-            throws InstanceAlreadyExistsException {
+            throws InstanceAlreadyExistsException, IOException {
         if (instance == null) {
             instance = new SqlInterpreter(url);
         } else {
@@ -287,21 +321,24 @@ public class SqlInterpreter implements DataReader {
                 case "user":
                     List<Object> charger = readData(new QueryBuilderImpl().withSource("charger")
                             .withFilter("owner", " " + id + " ",
-                                    ComparisonType.EQUAL).build(), Charger.class);
+                                    ComparisonType.EQUAL)
+                            .build(), Charger.class);
                     for (Object o : charger) {
                         deleteData("charger", ((Charger) o).getChargerId());
                     }
 
                     List<Object> journey = readData(new QueryBuilderImpl().withSource("journey")
                             .withFilter("userid", "" + id + "",
-                                    ComparisonType.EQUAL).build(), Journey.class);
+                                    ComparisonType.EQUAL)
+                            .build(), Journey.class);
                     for (Object o : journey) {
                         deleteData("journey", ((Journey) o).getJourneyId());
                     }
 
                     List<Object> vehicles = readData(new QueryBuilderImpl().withSource("vehicle")
                             .withFilter("owner", "" + id + "",
-                                    ComparisonType.EQUAL).build(), Vehicle.class);
+                                    ComparisonType.EQUAL)
+                            .build(), Vehicle.class);
                     for (Object o : vehicles) {
                         deleteData("vehicle", ((Vehicle) o).getVehicleId());
                     }

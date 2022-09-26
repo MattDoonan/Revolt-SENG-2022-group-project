@@ -55,6 +55,10 @@ public class Charger {
     /** userid of the charger owner */
     private int ownerId;
 
+    /** Name of the user to map ownership to for demo data */
+    @CsvBindByName(column = "owner")
+    private String demoOwner;
+
     /** Accessible to the public */
     private boolean isPublic;
 
@@ -128,6 +132,7 @@ public class Charger {
         setCurrentType();
         setOwnerId(UserManager.getUser().getUserid());
         setOwner(UserManager.getUser().getAccountName());
+        demoOwner = null;
     }
 
     /**
@@ -269,6 +274,24 @@ public class Charger {
      */
     public void setOperator(String operator) {
         this.operator = operator;
+    }
+
+    /**
+     * Gets the demo owner of the charger
+     *
+     * @return the demo owner of the charger
+     */
+    public String getDemoOwner() {
+        return demoOwner;
+    }
+
+    /**
+     * Sets the demo owner of the charger
+     *
+     * @param owner new demo owner of the charger
+     */
+    public void setDemoOwner(String owner) {
+        this.demoOwner = owner;
     }
 
     /**

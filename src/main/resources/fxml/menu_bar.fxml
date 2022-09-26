@@ -35,6 +35,7 @@
                     <items>
                       <MenuItem mnemonicParsing="false" onAction="#loadLogin" style="-fx-font-size: 18;" text="Login" />
                       <MenuItem mnemonicParsing="false" onAction="#loadSignup" style="-fx-font-size: 18;" text="Sign Up" />
+                      <MenuItem mnemonicParsing="false" onAction="#loadAccountScreen" style="-fx-font-size: 18;" text="View Account" />
                     </items>
                      <font>
                         <Font size="24.0" />

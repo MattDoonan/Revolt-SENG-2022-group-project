@@ -6,7 +6,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -161,13 +160,12 @@ public class MenuController {
         createLoginWindow("/fxml/login.fxml", "Login", null);
     }
 
-
     /**
      * Creates a login window if not previously initialised
      *
      * @param resource the resource to be fetched
-     * @param title the title of the window
-     * @param pane the BorderPane of the window
+     * @param title    the title of the window
+     * @param pane     the BorderPane of the window
      */
     public void createLoginWindow(String resource, String title, BorderPane pane) {
         Stage loginPopup = new Stage();
@@ -207,5 +205,20 @@ public class MenuController {
         }
     }
 
+    /**
+     * Loads the account page
+     */
+    @FXML
+    public void loadAccountScreen() {
+        try {
+            FXMLLoader accountLoader = new FXMLLoader(getClass().getResource("/fxml/account.fxml"));
+            Parent accountViewParent = accountLoader.load();
+            AccountController controller = accountLoader.getController();
+            controller.init();
+            menuWindow.setCenter(accountViewParent);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 }
