@@ -2,7 +2,6 @@ package seng202.team3.logic;
 
 import java.io.IOException;
 import java.sql.SQLException;
-
 import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.database.Query;
 import seng202.team3.data.database.QueryBuilderImpl;

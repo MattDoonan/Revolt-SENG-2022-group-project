@@ -1087,7 +1087,8 @@ public class SqlInterpreter implements DataReader {
      * @throws SQLException if the sql fails
      * @throws IOException if interaction fails
      */
-    public User validatePassword(String username, String password) throws SQLException, IOException {
+    public User validatePassword(String username, String password)
+            throws SQLException, IOException {
         String correctPassword = null;
         ResultSet userRs;
         try {
@@ -1097,6 +1098,9 @@ public class SqlInterpreter implements DataReader {
             correctPassword = userRs.getString("password");
         } catch (SQLException e) {
             throw new SQLException(e.getMessage());
+        }
+        if (correctPassword == null) {
+            return null;
         }
         if (encoder.matches(password, correctPassword)) {
             List<Object> result = readData(new QueryBuilderImpl().withSource("user")
