@@ -3,12 +3,17 @@ package seng202.team3.cucumber.mainpagesteps;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+
+import javax.management.InstanceAlreadyExistsException;
+
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import javafx.collections.ObservableList;
 import seng202.team3.data.database.ComparisonType;
+import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.logic.MainManager;
 
@@ -18,14 +23,23 @@ import seng202.team3.logic.MainManager;
  * @author Michelle Hsieh
  * @version 1.0.1, Sep 22
  */
-public class SearchFilterStepDefs {
+public class SearchFilterStepDefsTest {
 
     private MainManager manager;
+    static SqlInterpreter db;
 
     /**
      * Initialises the Cucumber Test Base
      */
-    public SearchFilterStepDefs() {
+    public SearchFilterStepDefsTest() {
+        SqlInterpreter.removeInstance();
+        try {
+            db = SqlInterpreter.initialiseInstanceWithUrl(
+                    "jdbc:sqlite:./target/test-classes/test_database.db");
+            db.addChargerCsvToData("csvtest/filtering");
+        } catch (IOException | InstanceAlreadyExistsException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

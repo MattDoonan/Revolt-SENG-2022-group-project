@@ -11,6 +11,8 @@ import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.TextInputControlMatchers;
+
+import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.gui.MainWindow;
 
 /**
@@ -34,6 +36,8 @@ public class NewEditVehicleTestFx extends TestFxBase {
     @FXML
     private TextField currChargeText;
 
+    static SqlInterpreter db;
+
     /**
      * Implements the abstract method for this window
      *
@@ -42,6 +46,8 @@ public class NewEditVehicleTestFx extends TestFxBase {
     @Override
     public void setUp() throws Exception {
         ApplicationTest.launch(MainWindow.class);
+        db.defaultDatabase();
+        db.addChargerCsvToData("csvtest/filtering");
     }
 
     /**
@@ -52,6 +58,11 @@ public class NewEditVehicleTestFx extends TestFxBase {
      */
     @Override
     public void start(Stage stage) throws Exception {
+        SqlInterpreter.removeInstance();
+        db = SqlInterpreter.initialiseInstanceWithUrl(
+                "jdbc:sqlite:./target/test-classes/test_database.db");
+        db.addChargerCsvToData("csvtest/filtering");
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/vehicle_update.fxml"));
         Parent page = loader.load();
         initState();
