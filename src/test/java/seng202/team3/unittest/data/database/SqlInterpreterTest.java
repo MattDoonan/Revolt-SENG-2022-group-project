@@ -332,6 +332,50 @@ public class SqlInterpreterTest {
     }
 
     /**
+     * Tests check if deleting a user deletes all associated information
+     */
+    @Test
+    public void delUserTestForJourneys() throws IOException {
+        writeSingleEntity(testUser);
+        testJourney.setUser(testUser.getUserid());
+        writeSingleEntity(testJourney);
+        db.deleteData("user", testUser.getUserid());
+        List<Object> result = db.readData(
+                new QueryBuilderImpl().withSource("journey")
+                        .withFilter("userid", String.valueOf(testUser.getUserid()),
+                                ComparisonType.EQUAL).build(),
+                Journey.class);
+        assertArrayEquals(new Object[] {}, result.toArray());
+    }
+
+    @Test
+    public void delUserTestForVehicles() throws IOException {
+        writeSingleEntity(testUser);
+        testVehicle.setOwner(testUser.getUserid());
+        writeSingleEntity(testVehicle);
+        db.deleteData("user", testUser.getUserid());
+        List<Object> result = db.readData(
+                new QueryBuilderImpl().withSource("vehicle")
+                        .withFilter("owner", String.valueOf(testUser.getUserid()),
+                                ComparisonType.EQUAL).build(),
+                Vehicle.class);
+        assertArrayEquals(new Object[] {}, result.toArray());
+    }
+
+    @Test
+    public void delUserTestForChargers() throws IOException {
+        writeSingleEntity(testUser);
+        testCharger.setOwner(testUser.getAccountName());
+        writeSingleEntity(testCharger);
+        db.deleteData("user", testUser.getUserid());
+        List<Object> result = db.readData(
+                new QueryBuilderImpl().withSource("charger")
+                        .withFilter("owner", String.valueOf(testUser.getUserid()),
+                                ComparisonType.EQUAL).build(),
+                Charger.class);
+        assertArrayEquals(new Object[] {}, result.toArray());
+    }
+    /**
      * Checks if the connectors associated with the chargers are deleted
      */
     @Test
