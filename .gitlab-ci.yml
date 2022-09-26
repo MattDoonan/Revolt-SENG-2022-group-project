@@ -1,11 +1,11 @@
 junit:
   stage: test
   script:
-    - mvn -B clean test
+    - mvn -B clean test -Dtest=\*Test
 generate_artifacts:
   stage: deploy
   script:
-    - mvn -B clean package
+    - mvn -B clean package -DskipTests
   artifacts:
     paths:
       - target/revolt*.jar

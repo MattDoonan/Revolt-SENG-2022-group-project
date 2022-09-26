@@ -23,7 +23,7 @@ import seng202.team3.logic.MainManager;
  * @author Michelle Hsieh
  * @version 1.0.1, Sep 22
  */
-public class SearchFilterStepDefs {
+public class SearchFilterStepDefsTest {
 
     private MainManager manager;
     static SqlInterpreter db;
@@ -31,7 +31,7 @@ public class SearchFilterStepDefs {
     /**
      * Initialises the Cucumber Test Base
      */
-    public SearchFilterStepDefs() {
+    public SearchFilterStepDefsTest() {
         SqlInterpreter.removeInstance();
         try {
             db = SqlInterpreter.initialiseInstanceWithUrl(
