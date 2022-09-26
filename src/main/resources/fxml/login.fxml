@@ -8,10 +8,10 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
-<?import javafx.scene.layout.BorderPane?>
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.LoginSignupController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.LoginSignupController">
    <center>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="600.0">
    <children>
@@ -37,6 +37,8 @@
       </Label>
       <Button fx:id="signUpBtn" layoutX="270.0" layoutY="422.0" mnemonicParsing="false" onAction="#signUpRedirect" text="Sign Up" />
       <ImageView fx:id="logo" fitHeight="78.0" fitWidth="166.0" layoutX="217.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
+            <Button fx:id="showLoginPassword" layoutX="432.0" layoutY="209.0" mnemonicParsing="false" onAction="#showPassword" />
+            <TextField fx:id="showPassLogin" editable="false" layoutX="174.0" layoutY="209.0" prefHeight="26.0" prefWidth="250.0" visible="false" />
    </children>
 </AnchorPane>
    </center>
