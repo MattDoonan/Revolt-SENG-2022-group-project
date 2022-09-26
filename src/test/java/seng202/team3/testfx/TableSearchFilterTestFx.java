@@ -11,6 +11,8 @@ import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.testfx.api.FxRobotException;
 import org.testfx.framework.junit5.ApplicationTest;
+
+import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.gui.MainWindow;
 import seng202.team3.gui.TableController;
@@ -25,6 +27,8 @@ public class TableSearchFilterTestFx extends TestFxBase {
 
     private TableController controller;
 
+    static SqlInterpreter db;
+
     @Override
     public void setUp() throws Exception {
         ApplicationTest.launch(MainWindow.class);
@@ -32,6 +36,11 @@ public class TableSearchFilterTestFx extends TestFxBase {
 
     @Override
     public void start(Stage stage) throws Exception {
+        SqlInterpreter.removeInstance();
+        db = SqlInterpreter.initialiseInstanceWithUrl(
+                "jdbc:sqlite:./target/test-classes/test_database.db");
+        db.addChargerCsvToData("csvtest/filtering");
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main_table.fxml"));
         Parent page = loader.load();
         initState(loader, stage);
