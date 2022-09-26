@@ -389,7 +389,6 @@ public class SqlInterpreter implements DataReader {
                     break;
                 case EQUAL:
                     try {
-                        System.out.println("h");
                         Integer.parseInt(filter.getValue1());
                         sql += filter.getValue0() + " = " + filter.getValue1();
                     } catch (NumberFormatException e){
