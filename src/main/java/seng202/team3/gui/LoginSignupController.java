@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
@@ -66,9 +67,19 @@ public class LoginSignupController {
     private ArrayList<String> errors = new ArrayList<>();
 
     /**
+     * The current stage
+     */
+    private Stage stage;
+
+    /**
      * The manager
      */
     private UserManager manage = new UserManager();
+
+    /**
+     * The border pane
+     */
+    private BorderPane pane;
 
     /**
      * Instance of the MenuController
@@ -86,6 +97,33 @@ public class LoginSignupController {
      */
     public LoginSignupController() {
         // Unused
+    }
+
+    /**
+     * Sets the stage
+     *
+     * @param stage the stage to be set
+     */
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
+    /**
+     * Gets the stage
+     *
+     * @return the Stage to be gotten
+     */
+    public Stage getStage() {
+        return stage;
+    }
+
+    /**
+     * Sets the border pane as pane
+     *
+     * @param pane the BorderPane for the controller
+     */
+    public void setPane(BorderPane pane) {
+        this.pane = pane;
     }
 
     /**
@@ -128,10 +166,11 @@ public class LoginSignupController {
             errors.add("Password required.");
         } else {
             if (signupPasswordField.getText() != null) {
-                String ptn = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[";
-                ptn += "\\!@#&\\(\\)\\-\\[\\{\\}\\]:;',\\?\\/\\*~\\$\\^\\+\\=\\<\\>]).{8,20}$";
+                //String ptn = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[";
+                //ptn += "\\!@#&\\(\\)\\-\\[\\{\\}\\]:;',\\?\\/\\*~\\$\\^\\+\\=\\<\\>]).{8,20}$";
                 // String ptn = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])";
                 // ptn += ".{4,20}$";
+                String ptn = "\\w+";
                 boolean matchFound = Pattern.matches(ptn, signupPasswordField.getText());
                 if (!matchFound) {
                     String errorStr = "Password must contain one uppercase letter, one lowercase";
@@ -193,6 +232,7 @@ public class LoginSignupController {
      * Launches an error popup when trying to do illegal things
      */
     public void launchErrorPopUps() {
+        stage.setAlwaysOnTop(false);
         try {
             FXMLLoader error = new FXMLLoader(getClass().getResource(
                     "/fxml/error_popup.fxml"));
@@ -220,9 +260,7 @@ public class LoginSignupController {
      */
     @FXML
     public void loginRedirect() {
-        Stage stage = (Stage) signupUsernameField.getScene().getWindow();
-        stage.close();
-        menuControl.loadLogin();
+        menuControl.createLoginWindow("/fxml/login.fxml", "Login", pane);
     }
 
     /**
@@ -230,9 +268,7 @@ public class LoginSignupController {
      */
     @FXML
     public void signUpRedirect() {
-        Stage stage = (Stage) loginEmailField.getScene().getWindow();
-        stage.close();
-        menuControl.loadSignup();
+        menuControl.createLoginWindow("/fxml/signup.fxml", "Signup", pane);
     }
 
     /**
@@ -243,4 +279,11 @@ public class LoginSignupController {
         // TODO
     }
 
+
+    /**
+     * Closes this window.
+     */
+    public void close() {
+        stage.close();
+    }
 }
