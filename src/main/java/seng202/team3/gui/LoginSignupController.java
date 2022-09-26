@@ -1,12 +1,10 @@
 package seng202.team3.gui;
 
-import de.jensd.fx.glyphs.GlyphIcon;
 import de.jensd.fx.glyphs.GlyphsDude;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
