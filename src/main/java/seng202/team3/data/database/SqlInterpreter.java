@@ -1084,6 +1084,8 @@ public class SqlInterpreter implements DataReader {
      * @param username     user to log in
      * @param password requested password
      * @return if passwords match
+     * @throws SQLException if the sql fails
+     * @throws IOException if interaction fails
      */
     public User validatePassword(String username, String password) throws SQLException, IOException {
         String correctPassword = null;

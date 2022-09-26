@@ -39,6 +39,9 @@ public class UserManager {
      * 
      * @param username details to check the database with
      * @param password password to check
+     * @return the user object null if fails
+     * @throws IOException if database layer fails
+     * @throws SQLException if database layer fails
      */
     public User login(String username, String password) throws IOException, SQLException {
         return SqlInterpreter.getInstance().validatePassword(username, password);
