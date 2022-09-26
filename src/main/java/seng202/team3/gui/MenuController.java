@@ -181,10 +181,10 @@ public class MenuController {
                 loginPopup.setResizable(false);
                 loginPopup.setTitle(title);
                 loginPopup.initModality(Modality.WINDOW_MODAL);
-                LoginSignupController controller = login.getController();
-                controller.init(this);
-                controller.setStage(loginPopup);
-                controller.setPane(base);
+                LoginSignupController loginController = login.getController();
+                loginController.init(this);
+                loginController.setStage(loginPopup);
+                loginController.setPane(base);
                 loginPopup.showAndWait();
 
             } catch (IOException e) {
@@ -195,12 +195,12 @@ public class MenuController {
             try {
                 FXMLLoader login = new FXMLLoader(getClass().getResource(
                         resource));
-                LoginSignupController controller = login.getController();
-                controller.init(this);
-                controller.setPane(pane);
-                controller.setStage(loginPopup);
                 Parent base = login.load();
+                LoginSignupController loginController = login.getController();
                 pane.setCenter(base);
+                loginController.init(this);
+                loginController.setPane(pane);
+                loginController.setStage(loginPopup);
             } catch (IOException e) {
                 e.printStackTrace();
             }
