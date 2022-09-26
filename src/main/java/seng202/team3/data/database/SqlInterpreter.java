@@ -24,6 +24,7 @@ import javax.management.InstanceAlreadyExistsException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.javatuples.Triplet;
+import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
@@ -59,6 +60,12 @@ public class SqlInterpreter implements DataReader {
      * Control db write access
      */
     static Semaphore mutex = new Semaphore(1);
+
+    /**
+     * The password hashing function
+     */
+    private static Argon2PasswordEncoder encoder = new Argon2PasswordEncoder(
+            32, 64, 1, 15 * 1024, 2);
 
     /**
      * Initializes the SqlInterpreter and checks if the url is null
@@ -375,7 +382,11 @@ public class SqlInterpreter implements DataReader {
                             + filter.getValue1() + "%')";
                     break;
                 case EQUAL:
-                    sql += filter.getValue0() + " = " + filter.getValue1();
+                    if (filter.getValue0() instanceof String) {
+                        sql += filter.getValue0() + " = " + "'" + filter.getValue1() + "'";
+                    } else {
+                        sql += filter.getValue0() + " = " + filter.getValue1();
+                    }
                     break;
                 case GREATER_THAN:
                     sql += filter.getValue0() + " > " + filter.getValue1();
@@ -1030,12 +1041,12 @@ public class SqlInterpreter implements DataReader {
             }
             statement.setString(2, user.getEmail());
             statement.setString(3, user.getAccountName());
-            statement.setString(4, password);
+            statement.setString(4, encoder.encode(password));
             statement.setInt(5, user.getLevel().ordinal());
             statement.setDouble(6, user.getCarbonSaved());
             statement.setString(7, user.getEmail());
             statement.setString(8, user.getAccountName());
-            statement.setString(9, password);
+            statement.setString(9, encoder.encode(password));
             statement.setInt(10, user.getLevel().ordinal());
             statement.setDouble(11, user.getCarbonSaved());
             statement.executeUpdate();
@@ -1084,27 +1095,39 @@ public class SqlInterpreter implements DataReader {
     /**
      * Checks a password against the db for the login screen
      * 
-     * @param user     user to log in
+     * @param username user to log in
      * @param password requested password
      * @return if passwords match
+     * @throws SQLException if the sql fails
+     * @throws IOException  if interaction fails
      */
-    public boolean validatePassword(User user, String password) {
+    public User validatePassword(String username, String password)
+            throws SQLException, IOException {
         String correctPassword = null;
-
+        ResultSet userRs;
         try {
-            Connection conn = createConnection();
-            Statement stmt = conn.createStatement();
-            ResultSet userRs = stmt.executeQuery("SELECT password FROM user WHERE userid = "
-                    + user.getUserid());
+            userRs = createConnection().createStatement()
+                    .executeQuery("SELECT password FROM user WHERE username =  '"
+                            + username + "' ");
             correctPassword = userRs.getString("password");
             userRs.close();
             stmt.close();
             conn.close();
         } catch (SQLException e) {
-            return false;
+            throw new SQLException(e.getMessage());
         }
-
-        return password.equals(correctPassword);
+        if (correctPassword == null) {
+            return null;
+        }
+        if (encoder.matches(password, correctPassword)) {
+            List<Object> result = readData(new QueryBuilderImpl().withSource("user")
+                    .withFilter("username", username, ComparisonType.EQUAL)
+                    .build(), User.class);
+            if (result.size() == 1) {
+                return (User) result.get(0);
+            }
+        }
+        return null;
     }
 
     /**

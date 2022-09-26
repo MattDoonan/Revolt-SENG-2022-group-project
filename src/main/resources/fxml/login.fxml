@@ -20,7 +20,7 @@
             <Font size="36.0" />
          </font>
       </Label>
-      <TextField fx:id="loginEmailField" layoutX="174.0" layoutY="163.0" prefHeight="26.0" prefWidth="251.0" promptText="Email" />
+      <TextField fx:id="loginEmailField" layoutX="174.0" layoutY="163.0" prefHeight="26.0" prefWidth="251.0" promptText="Username" />
       <PasswordField fx:id="loginPasswordField" layoutX="174.0" layoutY="209.0" prefHeight="26.0" prefWidth="251.0" promptText="Password" />
       <Hyperlink fx:id="forgotPasswordlink" layoutX="322.0" layoutY="236.0" onAction="#forgotPassword" text="Forgot Password?" />
       <Button fx:id="loginBtn" layoutX="275.0" layoutY="271.0" mnemonicParsing="false" onAction="#login" text="Log In" />
