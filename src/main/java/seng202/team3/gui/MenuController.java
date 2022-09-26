@@ -150,24 +150,7 @@ public class MenuController {
      */
     @FXML
     public void loadSignup() {
-        try {
-            FXMLLoader signup = new FXMLLoader(getClass().getResource(
-                    "/fxml/signup.fxml"));
-            AnchorPane base = signup.load();
-            Scene modalScene = new Scene(base);
-            Stage signupPopup = new Stage();
-            signupPopup.setScene(modalScene);
-            signupPopup.setResizable(false);
-            signupPopup.setTitle("Signup");
-            signupPopup.initModality(Modality.WINDOW_MODAL);
-            LoginSignupController controller = signup.getController();
-            controller.init(this);
-            signupPopup.setAlwaysOnTop(true);
-            signupPopup.showAndWait();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        createLoginWindow("/fxml/signup.fxml", "Signup", null);
     }
 
     /**
@@ -175,24 +158,54 @@ public class MenuController {
      */
     @FXML
     public void loadLogin() {
-        try {
-            FXMLLoader login = new FXMLLoader(getClass().getResource(
-                    "/fxml/login.fxml"));
-            AnchorPane base = login.load();
-            Scene modalScene = new Scene(base);
-            Stage loginPopup = new Stage();
-            loginPopup.setScene(modalScene);
-            loginPopup.setResizable(false);
-            loginPopup.setTitle("Login");
-            loginPopup.initModality(Modality.WINDOW_MODAL);
-            LoginSignupController controller = login.getController();
-            controller.init(this);
-            loginPopup.setAlwaysOnTop(true);
-            loginPopup.showAndWait();
+        createLoginWindow("/fxml/login.fxml", "Login", null);
+    }
 
-        } catch (IOException e) {
-            e.printStackTrace();
+
+    /**
+     * Creates a login window if not previously initialised
+     *
+     * @param resource the resource to be fetched
+     * @param title the title of the window
+     * @param pane the BorderPane of the window
+     */
+    public void createLoginWindow(String resource, String title, BorderPane pane) {
+        Stage loginPopup = new Stage();
+        if (pane == null) {
+            try {
+                FXMLLoader login = new FXMLLoader(getClass().getResource(
+                        resource));
+                BorderPane base = login.load();
+                Scene modalScene = new Scene(base);
+                loginPopup.setScene(modalScene);
+                loginPopup.setResizable(false);
+                loginPopup.setTitle(title);
+                loginPopup.initModality(Modality.WINDOW_MODAL);
+                LoginSignupController controller = login.getController();
+                controller.init(this);
+                controller.setStage(loginPopup);
+                controller.setPane(base);
+                loginPopup.showAndWait();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        } else {
+            try {
+                FXMLLoader login = new FXMLLoader(getClass().getResource(
+                        resource));
+                LoginSignupController controller = login.getController();
+                controller.init(this);
+                controller.setPane(pane);
+                controller.setStage(loginPopup);
+                Parent base = login.load();
+                pane.setCenter(base);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
+
 
 }
