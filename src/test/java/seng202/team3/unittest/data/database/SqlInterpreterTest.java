@@ -1,5 +1,6 @@
 package seng202.team3.unittest.data.database;
 
+import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -807,28 +808,28 @@ public class SqlInterpreterTest {
      * Tests validate users
      */
     @Test
-    public void testValidateUsers() throws IOException {
+    public void testValidateUsers() throws IOException, SQLException {
         writeSingleEntity(testUser);
-        Boolean result = db.validatePassword(testUser, "admin");
-        assertTrue(result);
+        User result = db.validatePassword(testUser.getAccountName(), "admin");
+        assertEquals(testUser, result);
     }
 
     /**
      * Test wrong password
      */
     @Test
-    public void testWrongPasswordUsers() throws IOException {
+    public void testWrongPasswordUsers() throws IOException, SQLException {
         writeSingleEntity(testUser);
-        Boolean result = db.validatePassword(testUser, "wrong");
-        assertFalse(result);
+        User result = db.validatePassword(testUser.getAccountName(), "wrong");
+        assertNull(result);
     }
 
     /**
      * Test wrong password
      */
     @Test
-    public void testFakeUsers() throws IOException {
-        Boolean result = db.validatePassword(testUser, "wrong");
-        assertFalse(result);
+    public void testFakeUsers() throws IOException, SQLException {
+        User result = db.validatePassword(testUser.getAccountName(), "wrong");
+        assertNull(result);
     }
 }

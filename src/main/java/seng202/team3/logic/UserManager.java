@@ -1,7 +1,13 @@
 package seng202.team3.logic;
 
 import java.io.IOException;
+import java.sql.SQLException;
+
+import seng202.team3.data.database.ComparisonType;
+import seng202.team3.data.database.Query;
+import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
+import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.data.entity.User;
 
@@ -31,20 +37,11 @@ public class UserManager {
     /**
      * Tries to log the user in, checking if the user exists in the database
      * 
-     * @param user     details to check the database with
+     * @param username details to check the database with
      * @param password password to check
      */
-    public void login(User user, String password) {
-        try {
-            if (SqlInterpreter.getInstance().validatePassword(user, password)) {
-                UserManager.setUser(user);
-                System.out.println("logged in");
-            } else {
-                System.out.println("failed to login");
-            }
-        } catch (IOException e) {
-            e.printStackTrace(); // TODO: GUI to handle this error
-        }
+    public User login(String username, String password) throws IOException, SQLException {
+        return SqlInterpreter.getInstance().validatePassword(username, password);
     }
 
     /**
@@ -74,6 +71,7 @@ public class UserManager {
      */
     public void saveUser(User user, String password) {
         try {
+            System.out.println(password);
             SqlInterpreter.getInstance().writeUser(user, password);
         } catch (IOException e) {
             e.printStackTrace();

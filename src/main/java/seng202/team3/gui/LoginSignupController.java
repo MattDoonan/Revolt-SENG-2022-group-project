@@ -3,6 +3,7 @@ package seng202.team3.gui;
 import de.jensd.fx.glyphs.GlyphsDude;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 import javafx.event.ActionEvent;
@@ -127,12 +128,6 @@ public class LoginSignupController {
     private MenuController menuControl;
 
     /**
-     * The password hashing function
-     */
-    private static Argon2PasswordEncoder encoder = new Argon2PasswordEncoder(
-            32, 64, 1, 15 * 1024, 2);
-
-    /**
      * Initialises the sign up
      */
     public LoginSignupController() {
@@ -242,8 +237,7 @@ public class LoginSignupController {
         user.setLevel(PermissionLevel.USER);
 
         if (errors.isEmpty()) {
-            var encodedPassword = encoder.encode(signupPasswordField.getText());
-            manage.saveUser(user, encodedPassword);
+            manage.saveUser(user, signupPasswordField.getText());
             menuControl.setUser(user);
         } else {
             launchErrorPopUps();
@@ -256,20 +250,21 @@ public class LoginSignupController {
      */
     @FXML
     public void login() {
-        User user = new User();
 
         if (loginEmailField.getText().equals("")) {
             errors.add("Email required.");
-        } else {
-            user.setEmail(loginEmailField.getText());
         }
         if (loginPasswordField.getText().equals("")) {
             errors.add("Password required.");
         }
 
         if (errors.isEmpty()) {
-            manage.login(user, loginPasswordField.getText());
-            menuControl.setUser(user);
+            try {
+                User user = manage.login(loginEmailField.getText(), loginPasswordField.getText());
+                menuControl.setUser(user);
+            } catch (SQLException | IOException e) {
+                // TODO popup for error
+            }
         } else {
             launchErrorPopUps();
             errors.clear();
