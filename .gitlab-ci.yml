@@ -17,3 +17,6 @@ generate_doc:
   stage: deploy
   script:
     - mvn -B clean javadoc:javadoc
+  artifacts:
+    paths:
+      - target/site/apidocs/
