@@ -10,6 +10,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import seng202.team3.data.entity.User;
+import seng202.team3.logic.UserManager;
 
 /**
  * Class which loads the menu and runs the main controller (default)
@@ -49,7 +50,6 @@ public class MenuController {
     @FXML
     private Button accountPage;
 
-
     /**
      * The stage the application runs on
      */
@@ -60,9 +60,6 @@ public class MenuController {
      * one instance at a time
      */
     private static MainController controller;
-
-    /** User that is logged in */
-    private static User loggedIn;
 
     /**
      * unused constructor
@@ -145,8 +142,6 @@ public class MenuController {
                 + "-fx-background-color: #e06666;");
     }
 
-
-
     /**
      * Initialises the main screen with only one version of the maincontroller
      */
@@ -200,7 +195,7 @@ public class MenuController {
      */
     @FXML
     public void loginOut() {
-        if (loggedIn == null) {
+        if (UserManager.getUser() == null) {
             createLoginWindow("/fxml/login.fxml", "Login", null);
         } else {
             signOut();
@@ -258,11 +253,11 @@ public class MenuController {
     @FXML
     public void loadAccountScreen() {
         try {
-            if (loggedIn == null) {
+            if (UserManager.getUser() == null) {
                 createLoginWindow("/fxml/login.fxml", "Login", null);
             } else {
-                FXMLLoader accountLoader =
-                        new FXMLLoader(getClass().getResource("/fxml/account.fxml"));
+                FXMLLoader accountLoader = new FXMLLoader(getClass()
+                        .getResource("/fxml/account.fxml"));
                 Parent accountViewParent = accountLoader.load();
                 AccountController controller = accountLoader.getController();
                 controller.init();
@@ -275,27 +270,22 @@ public class MenuController {
 
     /**
      * Sets the current logged in user
+     * 
      * @param u the logged in user
      */
     public void setUser(User u) {
-        this.loggedIn = u;
-        loginSignout.setText("logout");
+        UserManager.setUser(u);
+        loginSignout.setText("Logout");
+        // TODO: kill pop up
     }
 
     /**
      * Sets loggedIn to be null
      */
     public void signOut() {
-        this.loggedIn = null;
+        UserManager.setUser(null);
         loginSignout.setText("Login");
-    }
-
-    /**
-     * Gets the current logged in user
-     * @return the logged in user
-     */
-    public User getUser() {
-        return loggedIn;
+        // TODO: display confirmation popup
     }
 
 }

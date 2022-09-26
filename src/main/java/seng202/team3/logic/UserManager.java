@@ -2,7 +2,6 @@ package seng202.team3.logic;
 
 import java.io.IOException;
 import seng202.team3.data.database.SqlInterpreter;
-import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.data.entity.User;
 
 /**
@@ -15,11 +14,9 @@ import seng202.team3.data.entity.User;
 public class UserManager {
 
     /**
-     * List of available vehicles
+     * Active user
      */
-    // TODO: Remove after login added and adding chargers has been restricted to
-    // signed in
-    private static User user = new User("", "guest", PermissionLevel.USER);
+    private static User user = null;
 
     /**
      * Initialize UserManager
@@ -38,9 +35,9 @@ public class UserManager {
         try {
             if (SqlInterpreter.getInstance().validatePassword(user, password)) {
                 UserManager.setUser(user);
-                System.out.println("logged in");
+                // TODO: display confirmation message
             } else {
-                System.out.println("failed to login");
+                // TODO: display error message
             }
         } catch (IOException e) {
             e.printStackTrace(); // TODO: GUI to handle this error
@@ -53,7 +50,6 @@ public class UserManager {
      * @return user
      */
     public static User getUser() {
-        user.setUserid(1); // TODO: remove this - currently maps all added chargers to admin
         return user;
     }
 
