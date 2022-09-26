@@ -5,6 +5,8 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.transform.Scale;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 
@@ -34,7 +36,9 @@ public class MainWindow extends Application {
         MenuController baseController = baseLoader.getController();
         baseController.init(primaryStage);
         primaryStage.setTitle("Revolt App");
-        Scene scene = new Scene(root, 1500, 820);
+        double height = Screen.getPrimary().getBounds().getHeight()-80;
+        double width = Screen.getPrimary().getBounds().getWidth();
+        Scene scene = new Scene(root, width, height);
         baseController.initHome();
         primaryStage.setScene(scene);
         primaryStage.show();
