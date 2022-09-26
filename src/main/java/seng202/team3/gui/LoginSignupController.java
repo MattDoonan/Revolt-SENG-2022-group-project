@@ -198,6 +198,7 @@ public class LoginSignupController {
         if (errors.isEmpty()) {
             var encodedPassword = encoder.encode(signupPasswordField.getText());
             manage.saveUser(user, encodedPassword);
+            menuControl.setUser(user);
         } else {
             launchErrorPopUps();
             errors.clear();
@@ -222,6 +223,7 @@ public class LoginSignupController {
 
         if (errors.isEmpty()) {
             manage.login(user, loginPasswordField.getText());
+            menuControl.setUser(user);
         } else {
             launchErrorPopUps();
             errors.clear();

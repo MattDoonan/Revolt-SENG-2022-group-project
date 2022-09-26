@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import seng202.team3.data.entity.User;
 
 /**
  * Class which loads the menu and runs the main controller (default)
@@ -37,6 +38,19 @@ public class MenuController {
     private Button vehicleButton;
 
     /**
+     * Login signout button
+     */
+    @FXML
+    private Button loginSignout;
+
+    /**
+     * Account button
+     */
+    @FXML
+    private Button accountPage;
+
+
+    /**
      * The stage the application runs on
      */
     private Stage stage;
@@ -46,6 +60,9 @@ public class MenuController {
      * one instance at a time
      */
     private static MainController controller;
+
+    /** User that is logged in */
+    private static User loggedIn;
 
     /**
      * unused constructor
@@ -97,6 +114,40 @@ public class MenuController {
     }
 
     /**
+     * accountHover.
+     */
+    public void accountHover() {
+        accountPage.setStyle("-fx-text-fill:#000000;-fx-font-size: 26px; "
+                + "-fx-background-color: #e06666;");
+    }
+
+    /**
+     * accountExit.
+     */
+    public void accountExit() {
+        accountPage.setStyle("-fx-text-fill:#ffffff;-fx-font-size: 24px; "
+                + "-fx-background-color: #e06666;");
+    }
+
+    /**
+     * loginHover.
+     */
+    public void loginHover() {
+        loginSignout.setStyle("-fx-text-fill:#000000;-fx-font-size: 26px; "
+                + "-fx-background-color: #e06666;");
+    }
+
+    /**
+     * loginExit.
+     */
+    public void loginExit() {
+        loginSignout.setStyle("-fx-text-fill:#ffffff;-fx-font-size: 24px; "
+                + "-fx-background-color: #e06666;");
+    }
+
+
+
+    /**
      * Initialises the main screen with only one version of the maincontroller
      */
     public void initHome() {
@@ -145,19 +196,15 @@ public class MenuController {
     }
 
     /**
-     * Loads the login screen upon click
+     * Checks if the user is logged in or out and does action
      */
     @FXML
-    public void loadSignup() {
-        createLoginWindow("/fxml/signup.fxml", "Signup", null);
-    }
-
-    /**
-     * Loads the signup screen upon click
-     */
-    @FXML
-    public void loadLogin() {
-        createLoginWindow("/fxml/login.fxml", "Login", null);
+    public void loginOut() {
+        if (loggedIn == null) {
+            createLoginWindow("/fxml/login.fxml", "Login", null);
+        } else {
+            signOut();
+        }
     }
 
     /**
@@ -206,19 +253,49 @@ public class MenuController {
     }
 
     /**
-     * Loads the account page
+     * Loads the account page if the user is signed in
      */
     @FXML
     public void loadAccountScreen() {
         try {
-            FXMLLoader accountLoader = new FXMLLoader(getClass().getResource("/fxml/account.fxml"));
-            Parent accountViewParent = accountLoader.load();
-            AccountController controller = accountLoader.getController();
-            controller.init();
-            menuWindow.setCenter(accountViewParent);
+            if (loggedIn == null) {
+                createLoginWindow("/fxml/login.fxml", "Login", null);
+            } else {
+                FXMLLoader accountLoader =
+                        new FXMLLoader(getClass().getResource("/fxml/account.fxml"));
+                Parent accountViewParent = accountLoader.load();
+                AccountController controller = accountLoader.getController();
+                controller.init();
+                menuWindow.setCenter(accountViewParent);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Sets the current logged in user
+     * @param u the logged in user
+     */
+    public void setUser(User u) {
+        this.loggedIn = u;
+        loginSignout.setText("logout");
+    }
+
+    /**
+     * Sets loggedIn to be null
+     */
+    public void signOut() {
+        this.loggedIn = null;
+        loginSignout.setText("Login");
+    }
+
+    /**
+     * Gets the current logged in user
+     * @return the logged in user
+     */
+    public User getUser() {
+        return loggedIn;
     }
 
 }
