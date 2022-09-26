@@ -112,16 +112,20 @@ public class SqlInterpreterTest {
     void reset() {
         db.defaultDatabase();
         try {
-            db.createConnection()
-                    .createStatement()
-                    .executeUpdate("DELETE FROM user"); // remove default admin
+            Connection conn = db.createConnection();
+
+            conn.createStatement()
+                    .executeUpdate("DELETE FROM user;"); // remove default admin
+            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         testUser = new User("admin@admin.com", "admin",
-                PermissionLevel.ADMIN); // TODO: get user from db
+                PermissionLevel.ADMIN);
         testUser.setUserid(DEFAULTID);
+
+        UserManager.setUser(testUser);
 
         try {
             db.writeUser(testUser, "admin");
@@ -265,9 +269,9 @@ public class SqlInterpreterTest {
         QueryBuilder q = new QueryBuilderImpl().withSource(dbTable);
         if (objectToTest instanceof User) { // Remove default user
             try {
-                db.createConnection()
-                        .createStatement()
-                        .executeUpdate("DELETE FROM user"); // remove default admin
+                Connection conn = db.createConnection();
+                conn.createStatement().executeUpdate("DELETE FROM user"); // remove default admin
+                conn.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -323,6 +327,9 @@ public class SqlInterpreterTest {
                 ResultSet rs = stmt.executeQuery("SELECT " + dbTable + "id "
                         + "FROM " + dbTable + " ORDER BY " + dbTable + "id DESC LIMIT 0,1")) {
             entityId = rs.getInt(dbTable + "id");
+            rs.close();
+            stmt.close();
+            conn.close();
 
         } catch (SQLException e) {
             throw new IOException(e.getMessage());
@@ -333,7 +340,7 @@ public class SqlInterpreterTest {
 
     /**
      * Tests check if deleting a user deletes all associated information
-           */
+     */
     @Test
     public void delUserTestForJourneys() throws IOException {
         writeSingleEntity(testUser);
@@ -343,7 +350,8 @@ public class SqlInterpreterTest {
         List<Object> result = db.readData(
                 new QueryBuilderImpl().withSource("journey")
                         .withFilter("userid", String.valueOf(testUser.getUserid()),
-                                ComparisonType.EQUAL).build(),
+                                ComparisonType.EQUAL)
+                        .build(),
                 Journey.class);
         assertArrayEquals(new Object[] {}, result.toArray());
     }
@@ -357,7 +365,8 @@ public class SqlInterpreterTest {
         List<Object> result = db.readData(
                 new QueryBuilderImpl().withSource("vehicle")
                         .withFilter("owner", String.valueOf(testUser.getUserid()),
-                                ComparisonType.EQUAL).build(),
+                                ComparisonType.EQUAL)
+                        .build(),
                 Vehicle.class);
         assertArrayEquals(new Object[] {}, result.toArray());
     }
@@ -371,10 +380,12 @@ public class SqlInterpreterTest {
         List<Object> result = db.readData(
                 new QueryBuilderImpl().withSource("charger")
                         .withFilter("owner", String.valueOf(testUser.getUserid()),
-                                ComparisonType.EQUAL).build(),
+                                ComparisonType.EQUAL)
+                        .build(),
                 Charger.class);
         assertArrayEquals(new Object[] {}, result.toArray());
     }
+
     /**
      * Checks if the connectors associated with the chargers are deleted
      */
@@ -402,6 +413,7 @@ public class SqlInterpreterTest {
         ResultSet result = db.createConnection().createStatement().executeQuery(
                 "SELECT * FROM stop WHERE journeyid = " + testJourney.getJourneyId() + ";");
         assertFalse(result.getBoolean(1));
+        result.close();
     }
 
     /**
@@ -414,6 +426,7 @@ public class SqlInterpreterTest {
         ResultSet result = db.createConnection().createStatement().executeQuery(
                 "SELECT * FROM stop WHERE chargerid = " + testCharger.getChargerId() + ";");
         assertFalse(result.getBoolean(3));
+        result.close();
     }
 
     /**
@@ -635,9 +648,9 @@ public class SqlInterpreterTest {
                 break;
             case "User":
                 try { // remove default records
-                    db.createConnection()
-                            .createStatement()
-                            .executeUpdate("DELETE FROM user"); // remove default admin
+                    Connection conn = db.createConnection();
+                    Statement stmt = conn.createStatement();
+                    stmt.executeUpdate("DELETE FROM user"); // remove default admin
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }

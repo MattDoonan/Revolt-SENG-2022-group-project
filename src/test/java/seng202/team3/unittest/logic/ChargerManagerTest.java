@@ -20,7 +20,10 @@ import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
+import seng202.team3.data.entity.PermissionLevel;
+import seng202.team3.data.entity.User;
 import seng202.team3.logic.ChargerManager;
+import seng202.team3.logic.UserManager;
 
 /**
  * Unit tests for {@link ChargerManager} ChargerManager Class in Logic
@@ -36,6 +39,7 @@ public class ChargerManagerTest {
     static Charger charge3;
     static Charger charge4;
     static SqlInterpreter db;
+    static User testUser;
 
     /**
      * Makes a test database
@@ -44,6 +48,12 @@ public class ChargerManagerTest {
      */
     @BeforeAll
     static void intialize() throws InstanceAlreadyExistsException, IOException {
+        testUser = new User("admin@admin.com", "admin",
+                PermissionLevel.USER);
+        testUser.setUserid(1);
+
+        UserManager.setUser(testUser);
+
         SqlInterpreter.removeInstance();
         db = SqlInterpreter.initialiseInstanceWithUrl(
                 "jdbc:sqlite:./target/test-classes/test_database.db");

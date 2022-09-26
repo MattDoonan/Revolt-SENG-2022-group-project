@@ -14,8 +14,11 @@ import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
+import seng202.team3.data.entity.PermissionLevel;
+import seng202.team3.data.entity.User;
 import seng202.team3.logic.ChargerHandler;
 import seng202.team3.logic.MainManager;
+import seng202.team3.logic.UserManager;
 
 /**
  * Unit tests for a {@link ChargerHandler ChargerHandler} Class in Logic
@@ -31,6 +34,7 @@ public class ChargerHandlerTest {
      */
     ChargerHandler manager;
     MainManager mainManager;
+    static User testUser;
 
     @BeforeAll
     static void intialize() throws InstanceAlreadyExistsException, IOException {
@@ -46,6 +50,11 @@ public class ChargerHandlerTest {
      */
     @BeforeEach
     public void setUp() throws IOException {
+        testUser = new User("admin@admin.com", "admin",
+                PermissionLevel.USER);
+        testUser.setUserid(1);
+
+        UserManager.setUser(testUser);
         manager = new ChargerHandler();
         mainManager = new MainManager();
         SqlInterpreter.getInstance().defaultDatabase();

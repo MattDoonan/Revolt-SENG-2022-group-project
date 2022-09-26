@@ -14,8 +14,11 @@ import org.testfx.framework.junit5.ApplicationTest;
 
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
+import seng202.team3.data.entity.PermissionLevel;
+import seng202.team3.data.entity.User;
 import seng202.team3.gui.MainWindow;
 import seng202.team3.gui.TableController;
+import seng202.team3.logic.UserManager;
 
 /**
  * Tests for charger searching from table GUI view
@@ -28,17 +31,25 @@ public class TableSearchFilterTestFx extends TestFxBase {
     private TableController controller;
 
     static SqlInterpreter db;
+    static User testUser;
 
     @Override
     public void setUp() throws Exception {
         ApplicationTest.launch(MainWindow.class);
+
     }
 
     @Override
     public void start(Stage stage) throws Exception {
+        testUser = new User("admin@admin.com", "admin",
+                PermissionLevel.ADMIN);
+        testUser.setUserid(1);
+        UserManager.setUser(testUser);
         SqlInterpreter.removeInstance();
         db = SqlInterpreter.initialiseInstanceWithUrl(
                 "jdbc:sqlite:./target/test-classes/test_database.db");
+        db.defaultDatabase();
+
         db.addChargerCsvToData("csvtest/filtering");
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main_table.fxml"));
@@ -56,12 +67,14 @@ public class TableSearchFilterTestFx extends TestFxBase {
      * @param stage  the stage of the application
      */
     public void initState(FXMLLoader loader, Stage stage) {
+        UserManager.setUser(testUser);
         controller = loader.getController();
         controller.init();
     }
 
     @Test
     public void containsAddress() {
+        UserManager.setUser(testUser);
         boolean isValid = true;
         clickOn("#searchCharger");
         write("christ");

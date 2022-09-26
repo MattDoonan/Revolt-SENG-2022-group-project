@@ -13,8 +13,11 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import seng202.team3.data.database.SqlInterpreter;
+import seng202.team3.data.entity.PermissionLevel;
+import seng202.team3.data.entity.User;
 import seng202.team3.data.entity.Vehicle;
 import seng202.team3.logic.GarageManager;
+import seng202.team3.logic.UserManager;
 import seng202.team3.logic.VehicleUpdateManager;
 
 /**
@@ -39,12 +42,20 @@ public class UpdateVehicleManagerTest {
             new ArrayList<Vehicle>());
     private ObservableList<Vehicle> initialVehicleList;
 
+    static User testUser;
+
     /**
      * BeforeEach create vehicles to add to garage
      *
      */
     @BeforeEach
     public void setUp() {
+        testUser = new User("admin@admin.com", "admin",
+                PermissionLevel.USER);
+        testUser.setUserid(1);
+
+        UserManager.setUser(testUser);
+
         testVehicle = new Vehicle("TestMake", "TestModel",
                 1234, new ArrayList<String>(Arrays.asList("Type 2 Socketed")));
         testVehicle.setImgPath("null");

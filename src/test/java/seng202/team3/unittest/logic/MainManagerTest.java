@@ -20,9 +20,12 @@ import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
+import seng202.team3.data.entity.PermissionLevel;
+import seng202.team3.data.entity.User;
 import seng202.team3.logic.ChargerManager;
 import seng202.team3.logic.GeoLocationHandler;
 import seng202.team3.logic.MainManager;
+import seng202.team3.logic.UserManager;
 
 /**
  * Unit tests for {@link MainManager} MainManager class in logic
@@ -35,6 +38,7 @@ public class MainManagerTest {
     private MainManager manage;
     private ChargerManager charge;
     static SqlInterpreter db;
+    static User testUser;
 
     @BeforeAll
     static void intialize() throws InstanceAlreadyExistsException, IOException {
@@ -48,6 +52,12 @@ public class MainManagerTest {
      */
     @BeforeEach
     public void setUp() {
+        testUser = new User("admin@admin.com", "admin",
+                PermissionLevel.USER);
+        testUser.setUserid(1);
+
+        UserManager.setUser(testUser);
+
         manage = new MainManager();
         charge = new ChargerManager();
         db.defaultDatabase();

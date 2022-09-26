@@ -38,7 +38,14 @@ public class AccountController {
      */
     @FXML
     private Text accountEmail;
-    
+
+    /**
+     * Unused constructor
+     */
+    public AccountController() {
+        // Unused
+    }
+
     /**
      * Initialize the window by getting the current User's Data
      *
@@ -50,6 +57,7 @@ public class AccountController {
 
     /**
      * Populates the text fields
+     * 
      * @param user User to get data from
      */
     private void populateText(User user) {

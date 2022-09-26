@@ -7,4 +7,11 @@ package seng202.team3.logic;
  * @version 1.0.0, Sep 22
  */
 public class AdminManager {
+
+    /**
+     * Unused constructor
+     */
+    public AdminManager() {
+        // unused
+    }
 }

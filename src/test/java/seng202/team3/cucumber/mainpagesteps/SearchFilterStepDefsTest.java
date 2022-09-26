@@ -6,7 +6,6 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 
 import javax.management.InstanceAlreadyExistsException;
-
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -15,7 +14,10 @@ import javafx.collections.ObservableList;
 import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
+import seng202.team3.data.entity.PermissionLevel;
+import seng202.team3.data.entity.User;
 import seng202.team3.logic.MainManager;
+import seng202.team3.logic.UserManager;
 
 /**
  * Cucumber Tests designed to check acceptance tests of searching and filtering
@@ -27,11 +29,17 @@ public class SearchFilterStepDefsTest {
 
     private MainManager manager;
     static SqlInterpreter db;
+    static User testUser;
 
     /**
      * Initialises the Cucumber Test Base
      */
     public SearchFilterStepDefsTest() {
+        testUser = new User("admin@admin.com", "admin",
+                PermissionLevel.USER);
+        testUser.setUserid(1);
+
+        UserManager.setUser(testUser);
         SqlInterpreter.removeInstance();
         try {
             db = SqlInterpreter.initialiseInstanceWithUrl(

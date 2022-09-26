@@ -13,7 +13,10 @@ import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.TextInputControlMatchers;
 
 import seng202.team3.data.database.SqlInterpreter;
+import seng202.team3.data.entity.PermissionLevel;
+import seng202.team3.data.entity.User;
 import seng202.team3.gui.MainWindow;
+import seng202.team3.logic.UserManager;
 
 /**
  * Code designed to test the searching and filtering of the Main Window
@@ -37,6 +40,7 @@ public class NewEditVehicleTestFx extends TestFxBase {
     private TextField currChargeText;
 
     static SqlInterpreter db;
+    static User testUser;
 
     /**
      * Implements the abstract method for this window
@@ -46,8 +50,6 @@ public class NewEditVehicleTestFx extends TestFxBase {
     @Override
     public void setUp() throws Exception {
         ApplicationTest.launch(MainWindow.class);
-        db.defaultDatabase();
-        db.addChargerCsvToData("csvtest/filtering");
     }
 
     /**
@@ -58,9 +60,15 @@ public class NewEditVehicleTestFx extends TestFxBase {
      */
     @Override
     public void start(Stage stage) throws Exception {
+        testUser = new User("admin@admin.com", "admin",
+                PermissionLevel.ADMIN);
+        testUser.setUserid(1);
+
+        UserManager.setUser(testUser);
         SqlInterpreter.removeInstance();
         db = SqlInterpreter.initialiseInstanceWithUrl(
                 "jdbc:sqlite:./target/test-classes/test_database.db");
+        db.defaultDatabase();
         db.addChargerCsvToData("csvtest/filtering");
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/vehicle_update.fxml"));

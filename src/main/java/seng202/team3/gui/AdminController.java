@@ -8,5 +8,11 @@ package seng202.team3.gui;
  */
 public class AdminController {
 
+    /**
+     * Unused constructor
+     */
+    public AdminController() {
+        // unused
+    }
 
 }
