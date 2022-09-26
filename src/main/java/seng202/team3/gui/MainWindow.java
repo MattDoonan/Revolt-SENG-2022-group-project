@@ -36,7 +36,7 @@ public class MainWindow extends Application {
         MenuController baseController = baseLoader.getController();
         baseController.init(primaryStage);
         primaryStage.setTitle("Revolt App");
-        double height = Screen.getPrimary().getBounds().getHeight()-80;
+        double height = Screen.getPrimary().getBounds().getHeight() - 80;
         double width = Screen.getPrimary().getBounds().getWidth();
         Scene scene = new Scene(root, width, height);
         baseController.initHome();

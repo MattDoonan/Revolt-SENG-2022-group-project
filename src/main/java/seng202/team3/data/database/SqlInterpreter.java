@@ -388,10 +388,18 @@ public class SqlInterpreter implements DataReader {
                             + filter.getValue1() + "%')";
                     break;
                 case EQUAL:
-                    if (filter.getValue0() instanceof String) {
-                        sql += filter.getValue0() + " = " + "'" + filter.getValue1() + "'";
-                    } else {
+                    try {
+                        System.out.println("h");
+                        Integer.parseInt(filter.getValue1());
                         sql += filter.getValue0() + " = " + filter.getValue1();
+                    } catch (NumberFormatException e){
+                        if(filter.getValue1().equalsIgnoreCase("False")
+                                || filter.getValue1().equalsIgnoreCase("True")) {
+                            sql += filter.getValue0() + " = " + filter.getValue1();
+
+                        } else {
+                            sql += filter.getValue0() + " = " + "'" + filter.getValue1() + "'";
+                        }
                     }
                     break;
                 case GREATER_THAN:
