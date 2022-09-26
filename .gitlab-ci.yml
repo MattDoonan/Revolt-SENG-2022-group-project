@@ -1,14 +1,14 @@
-junit: 
-  stage: test 
+junit:
+  stage: test
   script:
     - mvn -B clean test
-generate_artifacts: 
-  stage: deploy 
+generate_artifacts:
+  stage: deploy
   script:
-  - mvn -B clean package 
+    - mvn -B clean package
   artifacts:
     paths:
-    - target/revolt*.jar
+      - target/revolt*.jar
 checkstyle:
   stage: build
   script:
@@ -16,4 +16,4 @@ checkstyle:
 generate_doc:
   stage: deploy
   script:
-    - mvn -B clean javadoc:jar
+    - mvn -B clean javadoc:javadoc
