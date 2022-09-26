@@ -285,9 +285,33 @@ public class SqlInterpreter implements DataReader {
                     break;
 
                 case "user":
-                    // TODO: decide what to delete
+                    List<Object> user = readData(new QueryBuilderImpl().withSource("user")
+                            .withFilter("userid", " " + id + " ", ComparisonType.EQUAL)
+                            .build(), User.class);
+                    if (user.size() == 0) {
+                        return;
+                    }
+                    List<Object> charger = readData(new QueryBuilderImpl().withSource("charger")
+                            .withFilter("owner", " " +((User) user.get(0)).getAccountName() + " ",
+                                    ComparisonType.CONTAINS).build(), Charger.class);
+                    for (Object o: charger) {
+                        if (((Charger) o).getOwner().equals(((User) user.get(0)).getAccountName())) {
+                            deleteData("charger", ((Charger) o).getChargerId());
+                        }
+                    }
+                    List<Object> journey = readData(new QueryBuilderImpl().withSource("journey")
+                            .withFilter("userid", "" + id + "",
+                                    ComparisonType.EQUAL).build(), Journey.class);
+                    for (Object o: journey) {
+                        deleteData("journey", ((Journey) o).getJourneyId());
+                    }
+                    List<Object> vehicles = readData(new QueryBuilderImpl().withSource("vehicle")
+                            .withFilter("owner", "" + id + "",
+                                    ComparisonType.EQUAL).build(), Vehicle.class);
+                    for (Object o: vehicles) {
+                            deleteData("vehicle", ((Vehicle) o).getVehicleId());
+                    }
                     break;
-
                 default:
                     break;
             }
