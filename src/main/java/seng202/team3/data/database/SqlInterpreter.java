@@ -1104,11 +1104,11 @@ public class SqlInterpreter implements DataReader {
     public User validatePassword(String username, String password)
             throws SQLException, IOException {
         String correctPassword = null;
-        ResultSet userRs;
         try {
-            userRs = createConnection().createStatement()
-                    .executeQuery("SELECT password FROM user WHERE username =  '"
-                            + username + "' ");
+            Connection conn = createConnection();
+            Statement stmt = conn.createStatement();
+            ResultSet userRs = stmt.executeQuery("SELECT password FROM user WHERE username =  '"
+                    + username + "' ");
             correctPassword = userRs.getString("password");
             userRs.close();
             stmt.close();
