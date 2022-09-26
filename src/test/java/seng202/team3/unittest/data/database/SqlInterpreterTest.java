@@ -333,7 +333,7 @@ public class SqlInterpreterTest {
 
     /**
      * Tests check if deleting a user deletes all associated information
-     */
+           */
     @Test
     public void delUserTestForJourneys() throws IOException {
         writeSingleEntity(testUser);
@@ -801,5 +801,34 @@ public class SqlInterpreterTest {
         List<Object> actual = db.readData(q.withSource("charger").build(), Charger.class);
 
         assertEquals(expected.size(), actual.size());
+    }
+
+    /**
+     * Tests validate users
+     */
+    @Test
+    public void testValidateUsers() throws IOException {
+        writeSingleEntity(testUser);
+        Boolean result = db.validatePassword(testUser, "admin");
+        assertTrue(result);
+    }
+
+    /**
+     * Test wrong password
+     */
+    @Test
+    public void testWrongPasswordUsers() throws IOException {
+        writeSingleEntity(testUser);
+        Boolean result = db.validatePassword(testUser, "wrong");
+        assertFalse(result);
+    }
+
+    /**
+     * Test wrong password
+     */
+    @Test
+    public void testFakeUsers() throws IOException {
+        Boolean result = db.validatePassword(testUser, "wrong");
+        assertFalse(result);
     }
 }
