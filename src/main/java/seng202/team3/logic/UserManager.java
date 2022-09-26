@@ -3,6 +3,7 @@ package seng202.team3.logic;
 import java.io.IOException;
 import java.sql.SQLException;
 import seng202.team3.data.database.SqlInterpreter;
+import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.data.entity.User;
 
 /**
@@ -14,16 +15,22 @@ import seng202.team3.data.entity.User;
  */
 public class UserManager {
 
+
+    /**
+     * Guest user
+     */
+    private static User guest = new User("guest", "guest@gmail.com", PermissionLevel.GUEST);
+
+
     /**
      * Active user
      */
-    private static User user = null;
+    private static User user = guest;
 
     /**
      * Initialize UserManager
      */
     public UserManager() {
-
     }
 
     /**
@@ -55,6 +62,15 @@ public class UserManager {
      */
     public static void setUser(User user) {
         UserManager.user = user;
+    }
+
+    /**
+     * Gets the guest
+     *
+     * @return {@link User} the guest user
+     */
+    public static User getGuest() {
+        return guest;
     }
 
     /**

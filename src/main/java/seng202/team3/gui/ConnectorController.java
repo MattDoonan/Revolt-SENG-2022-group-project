@@ -182,4 +182,12 @@ public class ConnectorController {
         }
     }
 
+    /**
+     * Closes this stage
+     */
+    @FXML
+    public void goBack() {
+        stage.close();
+    }
+
 }

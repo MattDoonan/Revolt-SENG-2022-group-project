@@ -121,6 +121,7 @@ public class SqlInterpreter implements DataReader {
             }
         }
 
+
         for (int i = 0; i < owners.size(); i++) {
             writeUser(
                     new User(
@@ -134,6 +135,11 @@ public class SqlInterpreter implements DataReader {
             // +2 to account for 0 index and default admin user at userid = 1
             c.setOwnerId(owners.indexOf(c.getDemoOwner()) + 2);
         }
+
+        // rewrites Admin with no deformed password
+        writeUser((User) readData(new QueryBuilderImpl().withSource("user")
+                .withFilter("username", "admin",
+                        ComparisonType.EQUAL).build(), User.class).get(0), "admin");
 
         writeCharger(new ArrayList<>(chargersToImport));
     }
@@ -1107,7 +1113,7 @@ public class SqlInterpreter implements DataReader {
         try {
             Connection conn = createConnection();
             Statement stmt = conn.createStatement();
-            ResultSet userRs = stmt.executeQuery("SELECT password FROM user WHERE username =  '"
+            ResultSet userRs = stmt.executeQuery("SELECT password FROM user WHERE username = '"
                     + username + "' ");
             correctPassword = userRs.getString("password");
             userRs.close();

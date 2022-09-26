@@ -180,7 +180,7 @@ public class MainController {
      * Initialize the window
      *
      * @param stage      Top level container for this window
-     * @param menuWindow a {@link javafx.scene.layout.BorderPane} object
+     * @param menuWindow a {@link BorderPane} object
      */
     public void init(Stage stage, BorderPane menuWindow) {
         this.menuWindow = menuWindow;
@@ -277,7 +277,7 @@ public class MainController {
     /**
      * Adds every charger in charger list to the vbox
      *
-     * @param chargersToAdd a {@link javafx.collections.ObservableList} object
+     * @param chargersToAdd a {@link ObservableList} object
      */
     public void addChargersToDisplay(ObservableList<Charger> chargersToAdd) {
 
@@ -306,7 +306,7 @@ public class MainController {
             add.setSpacing(10);
             int finalI = i;
             // Sets on click functionally
-            add.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, event -> {
+            add.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
                 selectToView(finalI);
             });
             // Changes Hover style
@@ -460,7 +460,7 @@ public class MainController {
     /**
      * Gets the MainManager created by the MainController
      *
-     * @return {@link seng202.team3.logic.MainManager} the manager of this
+     * @return {@link MainManager} the manager of this
      *         controller
      */
     public MainManager getManager() {

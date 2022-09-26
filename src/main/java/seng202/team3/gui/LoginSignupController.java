@@ -307,7 +307,7 @@ public class LoginSignupController {
      */
     @FXML
     public void loginRedirect() {
-        menuControl.createLoginWindow("/fxml/login.fxml", "Login", pane);
+        menuControl.createLoginWindow("/fxml/login.fxml", "Login", pane, stage);
     }
 
     /**
@@ -315,7 +315,7 @@ public class LoginSignupController {
      */
     @FXML
     public void signUpRedirect() {
-        menuControl.createLoginWindow("/fxml/signup.fxml", "Signup", pane);
+        menuControl.createLoginWindow("/fxml/signup.fxml", "Signup", pane, stage);
     }
 
     /**

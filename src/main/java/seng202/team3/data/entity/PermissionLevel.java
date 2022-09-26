@@ -6,6 +6,11 @@ package seng202.team3.data.entity;
 public enum PermissionLevel {
 
     /**
+     * Guest User
+     */
+    GUEST,
+
+    /**
      * Basic User
      */
     USER,
@@ -29,10 +34,12 @@ public enum PermissionLevel {
     public static PermissionLevel fromValue(int i) {
         switch (i) {
             case 0:
-                return USER;
+                return GUEST;
             case 1:
-                return CHARGEROWNER;
+                return USER;
             case 2:
+                return CHARGEROWNER;
+            case 3:
                 return ADMIN;
             default:
                 throw new IllegalArgumentException("Invalid PermissionLevel value");

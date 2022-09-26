@@ -12,7 +12,7 @@ CREATE TABLE if not exists user
    );
 --SPLIT
 INSERT INTO user (username, password, email, carbonSaved, permissions)
-VALUES ("admin","admin","admin@admin.com",0,2);
+VALUES ("admin","admin","admin@admin.com",0,3);
 --SPLIT
 DROP TABLE IF EXISTS charger;
 --SPLIT

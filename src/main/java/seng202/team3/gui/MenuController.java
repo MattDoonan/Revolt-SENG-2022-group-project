@@ -180,11 +180,16 @@ public class MenuController {
      */
     public void loadVehicleScreen() {
         try {
-            FXMLLoader garageLoader = new FXMLLoader(getClass().getResource("/fxml/garage.fxml"));
-            Parent garageViewParent = garageLoader.load();
-            GarageController controller = garageLoader.getController();
-            controller.init();
-            menuWindow.setCenter(garageViewParent);
+            if (UserManager.getUser() == UserManager.getGuest()) {
+                createLoginWindow("/fxml/login.fxml", "Login", null, null);
+            } else {
+                FXMLLoader garageLoader = new FXMLLoader(getClass()
+                        .getResource("/fxml/garage.fxml"));
+                Parent garageViewParent = garageLoader.load();
+                GarageController controller = garageLoader.getController();
+                controller.init();
+                menuWindow.setCenter(garageViewParent);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -195,8 +200,8 @@ public class MenuController {
      */
     @FXML
     public void loginOut() {
-        if (UserManager.getUser() == null) {
-            createLoginWindow("/fxml/login.fxml", "Login", null);
+        if (UserManager.getUser() == UserManager.getGuest()) {
+            createLoginWindow("/fxml/login.fxml", "Login", null, null);
         } else {
             signOut();
         }
@@ -208,24 +213,25 @@ public class MenuController {
      * @param resource the resource to be fetched
      * @param title    the title of the window
      * @param pane     the BorderPane of the window
+     * @param stage    the Stage of the window
      */
-    public void createLoginWindow(String resource, String title, BorderPane pane) {
-        Stage loginPopup = new Stage();
+    public void createLoginWindow(String resource, String title, BorderPane pane, Stage stage) {
         if (pane == null) {
             try {
+                stage = new Stage();
                 FXMLLoader login = new FXMLLoader(getClass().getResource(
                         resource));
                 BorderPane base = login.load();
                 Scene modalScene = new Scene(base);
-                loginPopup.setScene(modalScene);
-                loginPopup.setResizable(false);
-                loginPopup.setTitle(title);
-                loginPopup.initModality(Modality.WINDOW_MODAL);
+                stage.setScene(modalScene);
+                stage.setResizable(false);
+                stage.setTitle(title);
+                stage.initModality(Modality.WINDOW_MODAL);
                 LoginSignupController loginController = login.getController();
-                loginController.setStage(loginPopup);
+                loginController.setStage(stage);
                 loginController.init(this);
                 loginController.setPane(base);
-                loginPopup.showAndWait();
+                stage.showAndWait();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -237,10 +243,10 @@ public class MenuController {
                 Parent base = login.load();
                 LoginSignupController loginController = login.getController();
                 pane.setCenter(base);
-                loginPopup.setTitle(title);
+                stage.setTitle(title);
                 loginController.init(this);
                 loginController.setPane(pane);
-                loginController.setStage(loginPopup);
+                loginController.setStage(stage);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -253,14 +259,14 @@ public class MenuController {
     @FXML
     public void loadAccountScreen() {
         try {
-            if (UserManager.getUser() == null) {
-                createLoginWindow("/fxml/login.fxml", "Login", null);
+            if (UserManager.getUser() == UserManager.getGuest()) {
+                createLoginWindow("/fxml/login.fxml", "Login", null, null);
             } else {
                 FXMLLoader accountLoader = new FXMLLoader(getClass()
                         .getResource("/fxml/account.fxml"));
                 Parent accountViewParent = accountLoader.load();
                 AccountController controller = accountLoader.getController();
-                controller.init();
+                controller.init(menuWindow);
                 menuWindow.setCenter(accountViewParent);
             }
         } catch (IOException e) {
@@ -283,8 +289,9 @@ public class MenuController {
      * Sets loggedIn to be null
      */
     public void signOut() {
-        UserManager.setUser(null);
+        UserManager.setUser(UserManager.getGuest());
         loginSignout.setText("Login");
+        initHome();
         // TODO: display confirmation popup
     }
 

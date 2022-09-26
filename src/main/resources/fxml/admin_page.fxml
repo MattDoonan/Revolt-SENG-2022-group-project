@@ -1,9 +1,77 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.AdminController">
+<BorderPane prefHeight="488.0" prefWidth="808.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.AdminController">
+   <top>
+      <Label text="Administration Page" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets top="20.0" />
+         </BorderPane.margin>
+         <font>
+            <Font size="29.0" />
+         </font>
+      </Label>
+   </top>
+   <right>
+      <VBox prefHeight="371.0" prefWidth="120.0" spacing="30.0" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets bottom="30.0" left="10.0" right="30.0" top="40.0" />
+         </BorderPane.margin>
+         <children>
+            <VBox prefHeight="49.0" prefWidth="120.0">
+               <children>
+                  <Label text="Permission Level:" />
+                  <MenuButton fx:id="menu" mnemonicParsing="false" prefHeight="24.0" prefWidth="126.0" text="Select...">
+                    <items>
+                      <MenuItem mnemonicParsing="false" onAction="#updateMenuUser" text="User" />
+                      <MenuItem mnemonicParsing="false" onAction="#updateMenuOwner" text="Charger Owner" />
+                        <MenuItem mnemonicParsing="false" onAction="#updateMenuAdmin" text="Administration" />
+                    </items>
+                  </MenuButton>
+               </children>
+            </VBox>
+            <Button maxHeight="64.0" maxWidth="120.0" mnemonicParsing="false" onAction="#editPermissions" prefHeight="64.0" prefWidth="120.0" text="Update Permissions" textAlignment="CENTER" wrapText="true" VBox.vgrow="NEVER">
+               <font>
+                  <Font size="14.0" />
+               </font></Button>
+            <Button mnemonicParsing="false" onAction="#addNewUser" prefHeight="28.0" prefWidth="131.0" text="Add New User" textAlignment="CENTER" wrapText="true" VBox.vgrow="NEVER">
+               <font>
+                  <Font size="14.0" />
+               </font></Button>
+            <Button mnemonicParsing="false" onAction="#deleteUser" prefHeight="28.0" prefWidth="124.0" text="Delete User" textAlignment="CENTER" wrapText="true">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
+            <Button mnemonicParsing="false" text="View Chargers" textAlignment="CENTER" wrapText="true">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
+            <Button onAction="#goBack" mnemonicParsing="false" prefHeight="28.0" prefWidth="127.0" text="Back" textAlignment="CENTER" wrapText="true">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
+         </children></VBox>
+   </right>
    <center>
-      <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="289.0" prefWidth="502.0" BorderPane.alignment="CENTER" />
+      <TableView fx:id="table" prefHeight="393.0" prefWidth="614.0" BorderPane.alignment="CENTER">
+        <columns>
+          <TableColumn fx:id="username" editable="false" minWidth="50.0" prefWidth="300.0" text="Username" />
+          <TableColumn fx:id="email" editable="false" prefWidth="400.0" text="Email" />
+            <TableColumn fx:id="permissions" editable="false" prefWidth="40.0" text="Permissions" />
+        </columns>
+         <BorderPane.margin>
+            <Insets bottom="30.0" left="30.0" right="20.0" top="20.0" />
+         </BorderPane.margin>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
+      </TableView>
    </center>
 </BorderPane>
