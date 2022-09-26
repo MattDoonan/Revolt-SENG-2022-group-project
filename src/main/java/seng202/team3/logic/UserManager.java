@@ -1,8 +1,6 @@
 package seng202.team3.logic;
 
 import java.io.IOException;
-import seng202.team3.data.database.QueryBuilder;
-import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.data.entity.User;
@@ -37,8 +35,15 @@ public class UserManager {
      * @param password password to check
      */
     public void login(User user, String password) {
-        if (SqlInterpreter.getInstance().validatePassword(user, password)) {
-            UserManager.setUser(user);
+        try {
+            if (SqlInterpreter.getInstance().validatePassword(user, password)) {
+                UserManager.setUser(user);
+                System.out.println("logged in");
+            } else {
+                System.out.println("failed to login");
+            }
+        } catch (IOException e) {
+            e.printStackTrace(); // TODO: GUI to handle this error
         }
     }
 
@@ -74,7 +79,6 @@ public class UserManager {
             e.printStackTrace();
         }
     }
-
 
     /**
      * Updates a pre-existing user
