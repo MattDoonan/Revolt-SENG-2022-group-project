@@ -97,8 +97,8 @@ DROP TABLE IF EXISTS views;
 --SPLIT
 CREATE TABLE views
 (
-    userid INTEGER NOT NULL references user(userid),
-    chargerid INTEGER NOT NULL references charger(chargerid),
+    userid INTEGER NOT NULL REFERENCES user(userid),
+    chargerid INTEGER NOT NULL REFERENCES charger(chargerid),
     times INTEGER,
     PRIMARY KEY (userid, chargerid)
-)
+    )

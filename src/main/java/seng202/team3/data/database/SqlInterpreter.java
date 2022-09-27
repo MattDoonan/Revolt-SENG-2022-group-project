@@ -663,6 +663,21 @@ public class SqlInterpreter implements DataReader {
     }
 
     /**
+     * Gets the number of times a charger has been viewed
+     * @param c the charger object
+     * @return the number of times viewed
+     * @throws SQLException if the database fails
+     */
+    public int getChargerViews(Charger c) throws SQLException {
+        ResultSet rs = createConnection().createStatement()
+                .executeQuery("Select SUM(times) FROM views "
+                        + "WHERE chargerid = " + c.getChargerId() + "");
+        int result = rs.getInt(1);
+        rs.close();
+        return result;
+    }
+
+    /**
      * Adds a new charger to the database from a charger object
      *
      * @param c          charger object
@@ -1140,6 +1155,29 @@ public class SqlInterpreter implements DataReader {
             }
         }
         return null;
+    }
+
+    /**
+     * Adds a relation if a user views a charger if doesn't exist
+     * Else updates the times viewed that charger
+     * @param u the user object
+     * @param c the charger object
+     * @throws IOException if the sql fails
+     */
+    public void addUserView(User u, Charger c) throws IOException, SQLException {
+        String toAdd = "INSERT INTO views (userid, chargerid, times)"
+                + " VALUES (?, ?, ?) ON CONFLICT(userid,chargerid)"
+                + " DO UPDATE SET times = times + 1";
+        try (Connection connection = createConnection();
+             PreparedStatement statement = connection.prepareStatement(toAdd)) {
+            statement.setInt(1, u.getUserid());
+            statement.setInt(2, c.getChargerId());
+            statement.setInt(3, 1);
+            statement.executeUpdate();
+            connection.close();
+        } catch (SQLException | NullPointerException e) {
+            throw new IOException(e.getMessage());
+        }
     }
 
     /**
