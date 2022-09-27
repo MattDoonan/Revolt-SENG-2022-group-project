@@ -1164,7 +1164,7 @@ public class SqlInterpreter implements DataReader {
      * @param c the charger object
      * @throws IOException if the sql fails
      */
-    public void addUserView(User u, Charger c) throws IOException, SQLException {
+    public void addUserView(User u, Charger c) throws IOException {
         String toAdd = "INSERT INTO views (userid, chargerid, times)"
                 + " VALUES (?, ?, ?) ON CONFLICT(userid,chargerid)"
                 + " DO UPDATE SET times = times + 1";
