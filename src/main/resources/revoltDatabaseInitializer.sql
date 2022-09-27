@@ -92,3 +92,13 @@ CREATE TABLE if not exists stop
     chargerid INTEGER NOT NULL references Charger(chargerid),
     PRIMARY KEY (journeyid, position)
     );
+--SPLIT
+DROP TABLE IF EXISTS views;
+--SPLIT
+CREATE TABLE views
+(
+    userid INTEGER NOT NULL references user(userid),
+    chargerid INTEGER NOT NULL references charger(chargerid),
+    times INTEGER,
+    PRIMARY KEY (userid, chargerid)
+)
