@@ -10,9 +10,14 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import seng202.team3.data.database.ComparisonType;
@@ -30,6 +35,11 @@ import seng202.team3.data.entity.Coordinate;
  * @version 1.0.0, Sep 22
  */
 public class ChargerController {
+
+    /**
+     * True if is displaying
+     */
+    private boolean isDisplay = false;
 
     /**
      * Active Charger
@@ -55,6 +65,12 @@ public class ChargerController {
      * String list of errors to display
      */
     private ArrayList<String> errors = new ArrayList<>();
+
+    /**
+     * The AnchorPane for the connector edits
+     */
+    @FXML
+    private BorderPane connectorEdit;
 
     /**
      * Field for the name of the charger
@@ -87,12 +103,6 @@ public class ChargerController {
     private TextField operator;
 
     /**
-     * Field for the currents supported by the charger
-     */
-    @FXML
-    private TextField currents;
-
-    /**
      * Field for the address of the charger
      */
     @FXML
@@ -121,6 +131,60 @@ public class ChargerController {
      */
     @FXML
     private CheckBox attractions;
+
+    /**
+     * Column mapping connectors to their currents
+     */
+    @FXML
+    private TableColumn<Connector, String> current;
+
+    /**
+     * Column mapping connectors to their power draw
+     */
+    @FXML
+    private TableColumn<Connector, String> wattage;
+
+    /**
+     * Column mapping connectors to their charging points
+     */
+    @FXML
+    private TableColumn<Connector, Integer> chargingPoints;
+
+    /**
+     * Column mapping connectors to their types
+     */
+    @FXML
+    private TableColumn<Connector, String> connectorTypes;
+
+    /**
+     * Column mapping connectors to their operative status
+     */
+    @FXML
+    private TableColumn<Connector, String> status;
+
+    /**
+     * Table view of connectors
+     */
+    @FXML
+    private TableView<Connector> connectorTable;
+
+    /**
+     * The add connector button
+     */
+    @FXML
+    private Button addConnectorButton;
+
+    /**
+     * The edit connector button
+     */
+    @FXML
+    private Button editConnectorButton;
+
+    /**
+     * The delete connector button
+     */
+    @FXML
+    private Button deleteConnectorButton;
 
     /**
      * Initialises the ChargerController, loading in the charger info
@@ -158,7 +222,6 @@ public class ChargerController {
             name.setText(charger.getName());
             parks.setText(Integer.toString(charger.getAvailableParks()));
             address.setText(charger.getLocation().getAddress());
-            currents.setText(charger.getCurrentType());
             time.setText(Double.toString(charger.getTimeLimit()));
             owner.setText(charger.getOwner());
             operator.setText(charger.getOperator());
@@ -177,6 +240,7 @@ public class ChargerController {
         } else {
             address.setText(prevCoordinate.getAddress());
         }
+        displayConnectorInfo();
     }
 
     /**
@@ -186,7 +250,8 @@ public class ChargerController {
      */
     public void init(Stage stage) {
         this.stage = stage;
-        setConnectors(getConnectors());
+        makeConnectors();
+        connectorTable.setItems(connectors);
     }
 
     /**
@@ -266,11 +331,10 @@ public class ChargerController {
     }
 
     /**
-     * Gets the connectors from the charger
+     * Makes a list of observable chargers
      *
-     * @return an ObservableList of {@link seng202.team3.data.entity.Connector}s
      */
-    public ObservableList<Connector> getConnectors() {
+    public void makeConnectors() {
         ArrayList<Connector> connectArray = new ArrayList<>();
         if (charger != null) {
             QueryBuilder query = new QueryBuilderImpl().withSource("connector")
@@ -285,7 +349,7 @@ public class ChargerController {
                 e.printStackTrace();
             }
         }
-        return (FXCollections.observableList(connectArray));
+        connectors = (FXCollections.observableList(connectArray));
     }
 
     /**
@@ -298,30 +362,12 @@ public class ChargerController {
     }
 
     /**
-     * Initialises the editConnectors screen
+     * Gets the connectors
+     *
+     * @return a list of {@link Connector}
      */
-    @FXML
-    public void editConnectors() {
-        try {
-            stage.setAlwaysOnTop(false);
-            FXMLLoader connectorCont = new FXMLLoader(getClass().getResource(
-                    "/fxml/connectors.fxml"));
-            AnchorPane root = connectorCont.load();
-            Scene modalScene = new Scene(root);
-            Stage modal = new Stage();
-            modal.setScene(modalScene);
-            modal.setResizable(false);
-            modal.setTitle("Connector Information");
-            modal.initModality(Modality.WINDOW_MODAL);
-            ConnectorController controller = connectorCont.getController();
-            controller.setConnectorList(connectors);
-            controller.displayConnectorInfo();
-            modal.setAlwaysOnTop(true);
-            modal.showAndWait();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+    public ObservableList<Connector> getConnectors() {
+        return connectors;
     }
 
     /**
@@ -350,4 +396,112 @@ public class ChargerController {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Displays all the connector information in the table
+     */
+    public void displayConnectorInfo() {
+
+        current.setCellValueFactory(new PropertyValueFactory<>("current"));
+
+        wattage.setCellValueFactory(new PropertyValueFactory<>("power"));
+
+        chargingPoints.setCellValueFactory(new PropertyValueFactory<>("count"));
+
+        connectorTypes.setCellValueFactory(new PropertyValueFactory<>("type"));
+
+        status.setCellValueFactory(new PropertyValueFactory<>("status"));
+
+    }
+
+    /**
+     * Opens a new add section
+     */
+    @FXML
+    public void addConnector() {
+        if (!isDisplay) {
+            hideButtons();
+            isDisplay = true;
+            launchEditable(null);
+        }
+    }
+
+    /**
+     * Deletes a connector
+     */
+    @FXML
+    public void deleteConnector() {
+        if (!isDisplay) {
+            int deletedValue = -1;
+            for (int i = 0; i < connectors.size(); i++) {
+                if (connectors.get(i) == connectorTable.getSelectionModel().getSelectedItem()) {
+                    deletedValue = i;
+                }
+            }
+            if (deletedValue != -1) {
+                connectors.remove(deletedValue);
+            }
+            connectorTable.refresh();
+            displayConnectorInfo();
+        }
+    }
+
+    /**
+     * Edits a connector
+     */
+    @FXML
+    public void editConnector() {
+
+        Connector connector = connectorTable.getSelectionModel().getSelectedItem();
+        if (!isDisplay) {
+            if (connector != null) {
+                hideButtons();
+                isDisplay = true;
+                launchEditable(connector);
+            }
+        }
+    }
+
+    /**
+     * Visually hides all the buttons
+     */
+    public void hideButtons() {
+        editConnectorButton.setOpacity(0.0);
+        deleteConnectorButton.setOpacity(0.0);
+        addConnectorButton.setOpacity(0.0);
+    }
+
+    /**
+     * Launches the editable portion
+     *
+     * @param connector the {@link seng202.team3.data.entity.Connector} for the
+     *                  connector info. Null if
+     *                  adding.
+     */
+    public void launchEditable(Connector connector) {
+        try {
+            FXMLLoader connectorEditRoot = new FXMLLoader(getClass().getResource(
+                    "/fxml/connector_info.fxml"));
+            BorderPane root = connectorEditRoot.load();
+            ConnectorEditController controller = connectorEditRoot.getController();
+            controller.setController(this);
+            controller.addConnector(connector);
+            connectorEdit.setCenter(root);
+            controller.displayInfo();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Resets the page
+     */
+    public void resetPage() {
+        editConnectorButton.setOpacity(100);
+        deleteConnectorButton.setOpacity(100);
+        addConnectorButton.setOpacity(100);
+        connectorEdit.setCenter(new BorderPane());
+        isDisplay = false;
+    }
+
 }

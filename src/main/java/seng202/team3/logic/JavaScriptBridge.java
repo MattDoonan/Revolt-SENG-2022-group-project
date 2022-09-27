@@ -192,8 +192,8 @@ public class JavaScriptBridge {
             Scene modalScene = new Scene(root);
             Stage modal = new Stage();
             modal.setScene(modalScene);
-            modal.setWidth(400);
-            modal.setHeight(550);
+            modal.setWidth(920);
+            modal.setHeight(578);
             modal.setResizable(false);
             modal.setTitle("Charger Information");
             modal.initModality(Modality.WINDOW_MODAL);

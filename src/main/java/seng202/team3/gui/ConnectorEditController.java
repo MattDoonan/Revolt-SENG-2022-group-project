@@ -55,9 +55,9 @@ public class ConnectorEditController {
     private Connector connector;
 
     /**
-     * Controller managing the connectors
+     * Controller managing the chargers
      */
-    private ConnectorController controller;
+    private ChargerController controller;
 
     /**
      * List of errors to display
@@ -99,11 +99,11 @@ public class ConnectorEditController {
     }
 
     /**
-     * Sets the ConnectorController holding all the controllers
+     * Sets the ChargerController associated with this
      *
-     * @param controller ConnectorController controller
+     * @param controller ChargerController controller
      */
-    public void setController(ConnectorController controller) {
+    public void setController(ChargerController controller) {
         this.controller = controller;
     }
 
@@ -111,7 +111,7 @@ public class ConnectorEditController {
      * Saves the changes and closes this window if necessary
      */
     @FXML
-    public void saveChanges() {
+    public void saveConnection() {
         Connector changedConnector;
         String powerString = wattage.getText();
         String currentString = current.getText();
@@ -139,25 +139,33 @@ public class ConnectorEditController {
             if (connector == null) {
                 changedConnector = new Connector(typeString, powerString,
                         statusString, currentString, points);
-                controller.getConnectorList().add(changedConnector);
+                controller.getConnectors().add(changedConnector);
             } else {
                 changedConnector = new Connector(typeString,
                         powerString, statusString, currentString, points, connector.getId());
             }
 
-            for (int i = 0; i < controller.getConnectorList().size(); i++) {
-                if (controller.getConnectorList().get(i) == connector) {
-                    controller.getConnectorList().set(i, changedConnector);
+            for (int i = 0; i < controller.getConnectors().size(); i++) {
+                if (controller.getConnectors().get(i) == connector) {
+                    controller.getConnectors().set(i, changedConnector);
                 }
             }
         }
         if (errors.isEmpty()) {
-            stage = (Stage) status.getScene().getWindow();
-            stage.close();
+            System.out.println(controller.getConnectors().size());
+            controller.resetPage();
         } else {
             launchErrorPopUps();
             errors.clear();
         }
+    }
+
+    /**
+     * Cancels the edit connector portion
+     */
+    @FXML
+    public void cancel() {
+        controller.resetPage();
     }
 
     /**
