@@ -1,6 +1,7 @@
 package seng202.team3.gui;
 
 import java.io.IOException;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -44,6 +45,12 @@ public class MenuController {
      * one instance at a time
      */
     private static MainController controller;
+
+    /**
+     * The JourneyController of the application; static as there is only
+     * one instance at a time
+     */
+    private static JourneyController journeyController;
 
     /**
      * unused constructor
@@ -120,6 +127,15 @@ public class MenuController {
     }
 
     /**
+     * Gets the static Journey Controller
+     *
+     * @return {@link JourneyController} the journeycontroller of this run
+     */
+    public JourneyController getJourneyController() {
+        return journeyController;
+    }
+
+    /**
      * Loads the home upon clicking
      */
     @FXML
@@ -137,6 +153,21 @@ public class MenuController {
             GarageController controller = garageLoader.getController();
             controller.init();
             menuWindow.setCenter(garageViewParent);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Loads the Journey Screen
+     */
+    public void loadJourneyScreen() {
+        try {
+            FXMLLoader journeyLoader = new FXMLLoader(getClass().getResource("/fxml/journey.fxml"));
+            Parent journeyViewParent = journeyLoader.load();
+            journeyController = journeyLoader.getController();
+            journeyController.init(stage);
+            menuWindow.setCenter(journeyViewParent);
         } catch (IOException e) {
             e.printStackTrace();
         }
