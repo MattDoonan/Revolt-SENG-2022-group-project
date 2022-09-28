@@ -227,7 +227,7 @@ public class MenuController {
                 stage.setScene(modalScene);
                 stage.setResizable(false);
                 stage.setTitle(title);
-                stage.initModality(Modality.WINDOW_MODAL);
+                stage.initModality(Modality.APPLICATION_MODAL);
                 LoginSignupController loginController = login.getController();
                 loginController.setStage(stage);
                 loginController.init(this);

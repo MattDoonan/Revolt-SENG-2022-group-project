@@ -240,7 +240,7 @@ public class GarageController {
             editPopup.setScene(modalScene);
             editPopup.setResizable(false);
             editPopup.setTitle("Vehicle Information");
-            editPopup.initModality(Modality.WINDOW_MODAL);
+            editPopup.initModality(Modality.APPLICATION_MODAL);
             if (vehicle != null) {
                 VehicleUpdateController controller = vehicleEdit.getController();
                 controller.displayInfo(vehicle);
@@ -292,7 +292,7 @@ public class GarageController {
             modal.setScene(modalScene);
             modal.setResizable(false);
             modal.setTitle("Delete Vehicle:");
-            modal.initModality(Modality.WINDOW_MODAL);
+            modal.initModality(Modality.APPLICATION_MODAL);
             VehicleUpdateController controller = vehicleDelete.getController();
             controller.setSelectedVehicle(vehicle);
             modal.setAlwaysOnTop(true);

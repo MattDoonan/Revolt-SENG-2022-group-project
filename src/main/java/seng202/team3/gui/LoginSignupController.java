@@ -289,7 +289,7 @@ public class LoginSignupController {
             errorPopup.setScene(modalScene);
             errorPopup.setResizable(false);
             errorPopup.setTitle("Error With:");
-            errorPopup.initModality(Modality.WINDOW_MODAL);
+            errorPopup.initModality(Modality.APPLICATION_MODAL);
             ErrorController controller = error.getController();
             controller.init();
             controller.setErrors(errors);

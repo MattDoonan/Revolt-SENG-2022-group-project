@@ -11,7 +11,7 @@
             <Font name="System Bold" size="15.0" />
          </font>
       </Label>
-      <Button layoutX="201.0" layoutY="197.0" mnemonicParsing="false" onMouseClicked="#close" text="Okay" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0" />
+      <Button layoutX="201.0" layoutY="197.0" mnemonicParsing="false" onAction="#close" text="Okay" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0" />
       <TableView fx:id="table" layoutX="20.0" layoutY="67.0" prefHeight="109.0" prefWidth="423.0">
         <columns>
           <TableColumn fx:id="errors" prefWidth="422.0" />

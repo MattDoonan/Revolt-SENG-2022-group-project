@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.List;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
+import seng202.team3.data.entity.User;
 
 /**
  * Manages charger-related functionality
