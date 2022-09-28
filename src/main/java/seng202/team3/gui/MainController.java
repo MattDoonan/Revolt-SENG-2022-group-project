@@ -306,7 +306,9 @@ public class MainController {
             add.setSpacing(10);
             int finalI = i;
             // Sets on click functionally
+            int finalI1 = i;
             add.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                manage.viewCharger(chargersToAdd.get(finalI1));
                 selectToView(finalI);
             });
             // Changes Hover style

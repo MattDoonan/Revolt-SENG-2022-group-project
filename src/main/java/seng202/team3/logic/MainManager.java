@@ -1,6 +1,7 @@
 package seng202.team3.logic;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -79,6 +80,18 @@ public class MainManager extends ChargerHandler implements ChargerInterface {
             return getData();
         }
         return compareDistance();
+    }
+
+    /**
+     * adds a view to the charger
+     * @param c the charger that has been viewed
+     */
+    public void viewCharger(Charger c) {
+        try {
+            SqlInterpreter.getInstance().addUserView(UserManager.getUser(), c);
+        } catch (IOException e) {
+            return;
+        }
     }
 
     /**
