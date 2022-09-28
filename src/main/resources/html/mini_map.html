@@ -78,17 +78,17 @@
                 new L.Control.Geocoder.Nominatim({
                     geocodingQueryParams: {
                         countrycodes: 'nz'
-                    }}).reverse(latlng, map.options.crs.scale(map.getZoom()), results => {
-                    let r = results[0]
-                    if (r) {
-                        addCoordinate(r.name, latlng.lat, latlng.lng)
-                        name = r.name
-                    } else {
-                        addCoordinate("Coordinate", latlng.lat, latlng.lng)
-                        name = "Coordinate"
+                    }}).reverse(latlng, 6), results => {
+                        let r = results[0]
+                        if (r) {
+                            addCoordinate(r.name, latlng.lat, latlng.lng)
+                            name = r.name
+                        } else {
+                            addCoordinate("Coordinate", latlng.lat, latlng.lng)
+                            name = "Coordinate"
+                        }
                     }
-            })
-        })
+                })
     }
 
     /**

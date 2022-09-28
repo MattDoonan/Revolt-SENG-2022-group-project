@@ -3,6 +3,7 @@ package seng202.team3.gui;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -498,4 +499,15 @@ public class MainController {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Searches on enter
+     *
+     * @param e the event handler
+     */
+    @FXML
+    public void onEnter(ActionEvent e) {
+        executeSearch();
+    }
+
 }

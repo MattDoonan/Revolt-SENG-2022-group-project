@@ -5,6 +5,7 @@ import java.util.List;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.json.simple.JSONObject;
@@ -188,15 +189,15 @@ public class JavaScriptBridge {
         try {
             FXMLLoader chargerCont = new FXMLLoader(getClass().getResource(
                     "/fxml/charger_info.fxml"));
-            AnchorPane root = chargerCont.load();
+            BorderPane root = chargerCont.load();
             Scene modalScene = new Scene(root);
             Stage modal = new Stage();
             modal.setScene(modalScene);
-            modal.setWidth(920);
-            modal.setHeight(578);
+            modal.setWidth(1085);
+            modal.setHeight(630);
             modal.setResizable(false);
             modal.setTitle("Charger Information");
-            modal.initModality(Modality.WINDOW_MODAL);
+            modal.initModality(Modality.APPLICATION_MODAL);
             ChargerController controller = chargerCont.getController();
             controller.setCoordinate(coordinate);
             controller.setCharger(charger);

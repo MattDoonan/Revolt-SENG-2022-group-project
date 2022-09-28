@@ -648,7 +648,7 @@ public class TableController {
             modal.setScene(modalScene);
             modal.setResizable(false);
             modal.setTitle("Are you sure? ");
-            modal.initModality(Modality.WINDOW_MODAL);
+            modal.initModality(Modality.APPLICATION_MODAL);
             PopUpWindow popController = popUp.getController();
             popController.addPrompt(prompt);
             modal.showAndWait();

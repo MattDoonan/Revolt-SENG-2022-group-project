@@ -117,7 +117,7 @@ public class NewUserController extends PopUpWindow {
             modal.setScene(modalScene);
             modal.setResizable(false);
             modal.setTitle("Error With Users:");
-            modal.initModality(Modality.WINDOW_MODAL);
+            modal.initModality(Modality.APPLICATION_MODAL);
             ErrorController errController = error.getController();
             errController.init();
             errController.setErrors(errors);

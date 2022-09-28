@@ -12,6 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -94,7 +95,7 @@ public class ChargerController {
      * Field for the owner of the charger
      */
     @FXML
-    private TextField owner;
+    private Label owner;
 
     /**
      * Field for the operator of the charger
@@ -223,8 +224,8 @@ public class ChargerController {
             parks.setText(Integer.toString(charger.getAvailableParks()));
             address.setText(charger.getLocation().getAddress());
             time.setText(Double.toString(charger.getTimeLimit()));
-            owner.setText(charger.getOwner());
             operator.setText(charger.getOperator());
+            owner.setText(charger.getOwner());
             if (charger.getAvailable24Hrs()) {
                 open24.setSelected(true);
             }
@@ -282,10 +283,6 @@ public class ChargerController {
         }
         newCharger.setLocation(coordinate);
         newCharger.setOperator(operator.getText());
-        newCharger.setOwner(owner.getText());
-        if (owner.getText().length() == 0) {
-            errors.add("Needs an owner, e.g. Sam");
-        }
         newCharger.setName(name.getText());
         if (name.getText().length() == 0) {
             errors.add("Needs a name, e.g. Home");
@@ -384,7 +381,7 @@ public class ChargerController {
             modal.setScene(modalScene);
             modal.setResizable(false);
             modal.setTitle("Error With Charger:");
-            modal.initModality(Modality.WINDOW_MODAL);
+            modal.initModality(Modality.APPLICATION_MODAL);
             ErrorController controller = error.getController();
             controller.init();
             controller.setErrors(errors);

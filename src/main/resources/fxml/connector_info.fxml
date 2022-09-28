@@ -83,8 +83,8 @@
    <bottom>
       <HBox prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-                     <Button mnemonicParsing="false" onMouseClicked="#saveConnection" prefHeight="24.0" prefWidth="209.0" text="Save Connector Changes" />
-            <Button onMouseClicked="#cancel" contentDisplay="RIGHT" mnemonicParsing="false" text="Cancel">
+                     <Button contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#saveConnection" prefHeight="24.0" prefWidth="209.0" text="Save Connector Changes" />
+            <Button contentDisplay="RIGHT" mnemonicParsing="false" onMouseClicked="#cancel" text="Cancel">
                <HBox.margin>
                   <Insets left="245.0" />
                </HBox.margin></Button>
@@ -92,6 +92,15 @@
          <BorderPane.margin>
             <Insets />
          </BorderPane.margin>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
       </HBox>
    </bottom>
+   <opaqueInsets>
+      <Insets bottom="30.0" />
+   </opaqueInsets>
+   <padding>
+      <Insets bottom="23.0" />
+   </padding>
       </BorderPane>
