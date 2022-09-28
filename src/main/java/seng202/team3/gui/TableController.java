@@ -20,8 +20,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.entity.Charger;
+import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.logic.JavaScriptBridge;
 import seng202.team3.logic.TableManager;
+import seng202.team3.logic.UserManager;
 
 /**
  * A TableController class that deals with the display of the table objects
@@ -40,272 +42,280 @@ public class TableController {
      * CheckBox for toggling dc filter
      */
     @FXML
-    private CheckBox dcButton;
+    protected CheckBox dcButton;
 
     /**
      * CheckBox for toggling ac filter
      */
     @FXML
-    private CheckBox acButton;
+    protected CheckBox acButton;
 
     /**
      * CheckBox for toggling has attraction filter
      */
     @FXML
-    private CheckBox attractionButton;
+    protected CheckBox attractionButton;
 
     /**
      * CheckBox for enabling filter by chargingCost
      */
     @FXML
-    private CheckBox chargingCost;
+    protected CheckBox chargingCost;
 
     /**
      * CheckBox for toggling chargingcost filter (true/false)
      */
     @FXML
-    private CheckBox hasChargingCost;
+    protected CheckBox hasChargingCost;
 
     /**
      * Checkbox for enabling time limit filter
      */
     @FXML
-    private CheckBox toggleTimeLimit;
+    protected CheckBox toggleTimeLimit;
 
     /**
      * Slider to set maximum limit
      */
     @FXML
-    private Slider timeLimit;
+    protected Slider timeLimit;
 
     /**
      * CheckBox for enabling number of parks filter
      */
     @FXML
-    private CheckBox onParkingFilter;
+    protected CheckBox onParkingFilter;
 
     /**
      * Slider to set number of parks
      */
     @FXML
-    private Slider parkingLot;
+    protected Slider parkingLot;
 
     /**
      * Checkbox to set filter without park cost
      */
     @FXML
-    private CheckBox withoutCarparkCost;
+    protected CheckBox withoutCarparkCost;
 
     /**
      * Checkbox to set filter with park cost
      */
     @FXML
-    private CheckBox withCarparkCost;
+    protected CheckBox withCarparkCost;
 
     /**
      * Checkbox for toggling always open
      */
     @FXML
-    private CheckBox openAllButton;
+    protected CheckBox openAllButton;
 
     /**
      * Checkbox for toggling not always open
      */
     @FXML
-    private CheckBox notOpenAllButton;
+    protected CheckBox notOpenAllButton;
 
     /**
      * CheckBox for toggling no nearby attractions filter
      */
     @FXML
-    private CheckBox noNearbyAttraction;
+    protected CheckBox noNearbyAttraction;
 
     /**
      * Toggle visibility of id field
      */
     @FXML
-    private CheckBox showId;
+    protected CheckBox showId;
 
     /**
      * Toggle visibility of x field
      */
     @FXML
-    private CheckBox showXpos;
+    protected CheckBox showXpos;
 
     /**
      * Toggle visibility of y field
      */
     @FXML
-    private CheckBox showYpos;
+    protected CheckBox showYpos;
 
     /**
      * Toggle visibility of operator field
      */
     @FXML
-    private CheckBox showOperator;
+    protected CheckBox showOperator;
 
     /**
      * Toggle visibility of address field
      */
     @FXML
-    private CheckBox showAddress;
+    protected CheckBox showAddress;
 
     /**
      * Toggle visibility of owner field
      */
     @FXML
-    private CheckBox showOwner;
+    protected CheckBox showOwner;
 
     /**
      * Toggle visibility of is24hrs field
      */
     @FXML
-    private CheckBox showHoursOpen;
+    protected CheckBox showHoursOpen;
 
     /**
      * Toggle visibility of num parks field
      */
     @FXML
-    private CheckBox showCarparks;
+    protected CheckBox showCarparks;
 
     /**
      * Toggle visibility of carpark cost field
      */
     @FXML
-    private CheckBox showCarparkCost;
+    protected CheckBox showCarparkCost;
 
     /**
      * Toggle visibility of time limit field
      */
     @FXML
-    private CheckBox showTimeLimit;
+    protected CheckBox showTimeLimit;
 
     /**
      * Toggle visibility of hasAttraction field
      */
     @FXML
-    private CheckBox showAttraction;
+    protected CheckBox showAttraction;
 
     /**
      * Toggle visibility of latitude field
      */
     @FXML
-    private CheckBox showLat;
+    protected CheckBox showLat;
 
     /**
      * Toggle visibility of longitude field
      */
     @FXML
-    private CheckBox showLon;
+    protected CheckBox showLon;
 
     /**
      * Toggle visibility of date opened field
      */
     @FXML
-    private CheckBox showOpening;
+    protected CheckBox showOpening;
 
     /**
      * Toggle visibility of charging cost field
      */
     @FXML
-    private CheckBox showChargingCost;
+    protected CheckBox showChargingCost;
 
     /**
      * Toggle visibility of connector current field
      */
     @FXML
-    private CheckBox showCurrent;
+    protected CheckBox showCurrent;
+
+    /**
+     * Toggle visibility of the chargers views
+     */
+    @FXML
+    protected CheckBox showViews;
 
     /**
      * Search bar to search for addresses
      */
     @FXML
-    private TextField searchCharger;
+    protected TextField searchCharger;
 
     /**
      * Table to contain all charger information
      */
     @FXML
-    private TableView<Charger> mainTable;
+    protected TableView<Charger> mainTable;
 
     /**
      * Maps charger to the id
      */
     @FXML
-    private final TableColumn<Charger, Integer> idCol = new TableColumn<>("Charger ID");
+    protected final TableColumn<Charger, Integer> idCol = new TableColumn<>("Charger ID");
 
     /**
      * Maps charger to the x coord
      */
     @FXML
-    private final TableColumn<Charger, Double> xposCol = new TableColumn<>("X coordinate");
+    protected final TableColumn<Charger, Double> xposCol = new TableColumn<>("X coordinate");
 
     /**
      * Maps charger to the y coord
      */
     @FXML
-    private final TableColumn<Charger, Double> yposCol = new TableColumn<>("Y coordinate");
+    protected final TableColumn<Charger, Double> yposCol = new TableColumn<>("Y coordinate");
 
     /**
      * Maps charger to the operator
      */
     @FXML
-    private final TableColumn<Charger, String> operatorCol = new TableColumn<>("Operator");
+    protected final TableColumn<Charger, String> operatorCol = new TableColumn<>("Operator");
 
     /**
      * Maps charger to the address
      */
     @FXML
-    private final TableColumn<Charger, String> addressCol = new TableColumn<>("Address");
+    protected final TableColumn<Charger, String> addressCol = new TableColumn<>("Address");
 
     /**
      * Maps charger to the owner
      */
     @FXML
-    private final TableColumn<Charger, String> ownerCol = new TableColumn<>("Owner");
+    protected final TableColumn<Charger, String> ownerCol = new TableColumn<>("Owner");
 
     /**
      * Maps charger to the hours open
      */
     @FXML
-    private final TableColumn<Charger, Boolean> hoursCol = new TableColumn<>("Hours Open");
+    protected final TableColumn<Charger, Boolean> hoursCol = new TableColumn<>("Hours Open");
 
     /**
      * Maps charger to the num parks
      */
     @FXML
-    private final TableColumn<Charger, Integer> carparkCol = new TableColumn<>("Carparks");
+    protected final TableColumn<Charger, Integer> carparkCol = new TableColumn<>("Carparks");
 
     /**
      * Maps charger to the parking cost
      */
     @FXML
-    private final TableColumn<Charger, Boolean> carparkCostCol = new TableColumn<>("Carpark Cost");
+    protected final TableColumn<Charger, Boolean>
+            carparkCostCol = new TableColumn<>("Carpark Cost");
 
     /**
      * Maps charger to the time limit
      */
     @FXML
-    private final TableColumn<Charger, Double> timeLimitCol = new TableColumn<>("Time limit");
+    protected final TableColumn<Charger, Double> timeLimitCol = new TableColumn<>("Time limit");
 
     /**
      * Maps charger to the has attraction
      */
     @FXML
-    private final TableColumn<Charger, Boolean> attractionCol = new TableColumn<>("Has Attraction");
+    protected final TableColumn<Charger, Boolean>
+            attractionCol = new TableColumn<>("Has Attraction");
 
     /**
      * Maps charger to the latitude
      */
     @FXML
-    private final TableColumn<Charger, Double> latitudeCol = new TableColumn<>(
+    protected final TableColumn<Charger, Double> latitudeCol = new TableColumn<>(
             "Latitude coordinate");
 
     /**
      * Maps charger to the longitude
      */
     @FXML
-    private final TableColumn<Charger, Double> longitudeCol = new TableColumn<>(
+    protected final TableColumn<Charger, Double> longitudeCol = new TableColumn<>(
             "Longitude coordinate");
 
     /**
@@ -313,15 +323,15 @@ public class TableController {
      */
 
     @FXML
-    private final TableColumn<Charger, String> openCol = new TableColumn<>(
+    protected final TableColumn<Charger, String> openCol = new TableColumn<>(
             "Date open");
 
     /**
-     * Maps charger to the chargin cost
+     * Maps charger to the charging cost
      */
 
     @FXML
-    private final TableColumn<Charger, Boolean> chargcostCol = new TableColumn<>(
+    protected final TableColumn<Charger, Boolean> chargcostCol = new TableColumn<>(
             "Charging cost");
 
     /**
@@ -329,8 +339,15 @@ public class TableController {
      */
 
     @FXML
-    private final TableColumn<Charger, String> currentsCol = new TableColumn<>(
+    protected final TableColumn<Charger, String> currentsCol = new TableColumn<>(
             "Current types");
+
+    /**
+     * The current charger views
+     */
+    @FXML
+    protected final TableColumn<Charger, Integer> viewsCol = new TableColumn<>(
+            "Charger Views");
 
     /**
      * Unused constructor
@@ -345,11 +362,25 @@ public class TableController {
     public void init() {
         manage = new TableManager();
         manage.resetQuery();
+        checkPermission();
         tableMaker();
         manage.makeAllChargers();
+        manage.chargerViewsList();
         addToDisplay(manage.getData());
         change();
         setIdForTesting();
+    }
+
+    /**
+     * Checks if the user is a charger owner
+     * if so adjust query, so they only see there chargers
+     */
+    private void checkPermission() {
+        if (UserManager.getUser().getLevel() == PermissionLevel.CHARGEROWNER) {
+            manage.adjustQuery("owner",
+                    Integer.toString(UserManager.getUser().getUserid()), ComparisonType.EQUAL);
+            showOwner.selectedProperty().setValue(false);
+        }
     }
 
     /**
@@ -372,6 +403,7 @@ public class TableController {
         openCol.setId("openCol");
         chargcostCol.setId("chargcostCol");
         currentsCol.setId("currentsCol");
+        viewsCol.setId("viewsCol");
     }
 
     /**
@@ -395,6 +427,7 @@ public class TableController {
         openCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
         chargcostCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
         currentsCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
+        viewsCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
         mainTable.getColumns().removeAll(mainTable.getColumns());
 
         // Checks if the user wants to view the column
@@ -446,6 +479,9 @@ public class TableController {
         if (showCurrent.isSelected()) {
             mainTable.getColumns().add(currentsCol);
         }
+        if (showViews.isSelected()) {
+            mainTable.getColumns().add(viewsCol);
+        }
         mainTable.requestFocus();
     }
 
@@ -495,8 +531,11 @@ public class TableController {
                 charger -> new ReadOnlyBooleanWrapper(charger.getValue().getChargeCost()));
         currentsCol.setCellValueFactory(
                 charger -> new ReadOnlyStringWrapper(manage.getConnectors(charger.getValue())));
+        viewsCol.setCellValueFactory(
+                charger -> new ReadOnlyIntegerWrapper(
+                        manage.getChargerViews(charger.getValue())).asObject());
         mainTable.getSelectionModel().select(0);
-        mainTable.getSortOrder().add(idCol);
+        mainTable.getSortOrder().add(addressCol);
         mainTable.sort();
     }
 
@@ -548,7 +587,9 @@ public class TableController {
         if (searchCharger.getText().length() != 0) {
             manage.adjustQuery("address", searchCharger.getText(), ComparisonType.CONTAINS);
         }
+        checkPermission();
         manage.makeAllChargers();
+        manage.chargerViewsList();
         addToDisplay(manage.getData());
     }
 

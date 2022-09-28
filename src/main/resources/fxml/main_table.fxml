@@ -14,9 +14,9 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.TableController">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.TableController">
    <center>
-      <TableView fx:id="mainTable" onMouseClicked="#setCharger" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+      <TableView fx:id="mainTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseClicked="#setCharger" prefWidth="200.0" BorderPane.alignment="CENTER" />
    </center>
    <padding>
       <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
@@ -25,7 +25,7 @@
       <HBox alignment="CENTER_LEFT" BorderPane.alignment="CENTER_LEFT">
          <children>
             <TextField fx:id="searchCharger" prefHeight="40" prefWidth="420" promptText="Search Charger" style="-fx-font-size: 20;" />
-            <MenuButton fx:id="filters" minHeight="30.0" mnemonicParsing="false" prefWidth="250.0" style="-fx-font-size: 20;" text="Filter Columns">
+            <MenuButton fx:id="filters" minHeight="30.0" mnemonicParsing="false" prefWidth="250.0" style="-fx-font-size: 20;" text="Filter">
                <items>
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
@@ -205,6 +205,11 @@
                   <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                      <content>
                         <CheckBox fx:id="showCurrent" selected="true" style="-fx-text-fill: black;" text="Show Current Type" />
+                     </content>
+                  </CustomMenuItem>
+                  <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
+                     <content>
+                        <CheckBox fx:id="showViews" selected="true" style="-fx-text-fill: black;" text="Show Views" />
                      </content>
                   </CustomMenuItem>
                </items>

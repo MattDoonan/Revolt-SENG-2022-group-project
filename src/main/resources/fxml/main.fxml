@@ -29,7 +29,7 @@
            </font></Button>
     </items>
   </SplitPane>
-  <SplitPane dividerPositions="0.7198067632850241" maxHeight="40.0">
+  <SplitPane dividerPositions="0.5" maxHeight="40.0">
     <items>
                       <MenuButton fx:id="filters" mnemonicParsing="false" prefHeight="40.0" prefWidth="510.0" style="-fx-font-size: 20;" text="Filters">
                           <font>
@@ -145,14 +145,10 @@
                         </Menu>
                           </items>
                       </MenuButton>
-        <Button minWidth="140.0" mnemonicParsing="false" onAction="#loadTableView" prefHeight="40.0" prefWidth="55.0" text="Show Table">
-           <font>
-              <Font size="17.0" />
-           </font>
-        </Button>
+                  <TextField maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="40.0" prefWidth="100.0" promptText="Charge" />
     </items>
   </SplitPane>
-            <ScrollPane minHeight="180.0" maxHeight="180.0" prefWidth="530.0">
+            <ScrollPane maxHeight="180.0" minHeight="180.0" prefWidth="530.0">
                <content>
                   <HBox fx:id="displayInfo" maxHeight="50.0" prefWidth="530.0" spacing="20.0" style="-fx-background-color: #FFFFFF;">
                      <padding>
@@ -168,7 +164,7 @@
             </ScrollPane>
             </items>
         </SplitPane>
-  <BorderPane fx:id="mainWindow" maxHeight="Infinity" maxWidth="Infinity" minHeight="400" minWidth="600.0">
+  <BorderPane fx:id="mainWindow" maxHeight="Infinity" maxWidth="Infinity" minHeight="400.0" minWidth="600.0">
 <top>
 </top>
 </BorderPane>

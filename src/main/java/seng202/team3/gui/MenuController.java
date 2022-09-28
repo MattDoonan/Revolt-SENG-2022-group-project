@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.data.entity.User;
 import seng202.team3.logic.UserManager;
 

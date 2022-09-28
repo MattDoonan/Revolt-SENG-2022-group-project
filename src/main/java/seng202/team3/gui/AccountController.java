@@ -45,10 +45,41 @@ public class AccountController {
     private Text accountEmail;
 
     /**
+     * distance travelled text
+     */
+    @FXML
+    private Text distanceTravelled;
+
+    /**
+     * number of stops text
+     */
+    @FXML
+    private Text numberStops;
+
+    /**
+     * carbon saved text
+     */
+    @FXML
+    private Text carbonSaved;
+
+    /**
+     * most viewed text
+     */
+    @FXML
+    private Text mostViewed;
+
+
+    /**
      * EditAdmin button
      */
     @FXML
     private Button editAdmin;
+
+    /**
+     * Borderpane to implement chargers
+     */
+    @FXML
+    private BorderPane chargerTable;
 
     /**
      * The borderpane containing this
@@ -70,6 +101,7 @@ public class AccountController {
     public void init(BorderPane border) {
         User user = UserManager.getUser();
         populateText(user);
+        setChargerTable();
         this.border = border;
         if (user.getLevel() != PermissionLevel.ADMIN) {
             editAdmin.setOpacity(0);
@@ -84,6 +116,10 @@ public class AccountController {
     private void populateText(User user) {
         accountName.setText(user.getAccountName());
         accountEmail.setText(user.getEmail());
+        distanceTravelled.setText("Not implemented yet");
+        numberStops.setText("Not implemented yet");
+        carbonSaved.setText("Not implemented yet");
+        mostViewed.setText("Not implemented yet");
     }
 
     /**
@@ -99,6 +135,25 @@ public class AccountController {
                 AdminController controller = editor.getController();
                 controller.init(border);
                 border.setCenter(editorParent);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * Opens the charger table for charger owners and admins
+     */
+    public void setChargerTable() {
+        if (UserManager.getUser().getLevel() == PermissionLevel.ADMIN
+                || UserManager.getUser().getLevel() == PermissionLevel.CHARGEROWNER) {
+            try {
+                FXMLLoader mainScene = new FXMLLoader(getClass()
+                        .getResource("/fxml/main_table.fxml"));
+                Parent mainNode = mainScene.load();
+                TableController controller = mainScene.getController();
+                controller.init();
+                chargerTable.setTop(mainNode);
             } catch (IOException e) {
                 e.printStackTrace();
             }
