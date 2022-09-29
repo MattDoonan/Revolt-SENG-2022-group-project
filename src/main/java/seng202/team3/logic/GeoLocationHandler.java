@@ -3,9 +3,13 @@ package seng202.team3.logic;
 import com.maxmind.geoip2.DatabaseReader;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
 import com.maxmind.geoip2.model.CityResponse;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.InetAddress;
+import java.net.URL;
 import org.apache.commons.io.FileUtils;
 import seng202.team3.data.entity.Coordinate;
 
@@ -107,7 +111,7 @@ public class GeoLocationHandler {
     public static void setCurrentLocation() throws IOException, GeoIp2Exception {
         loadGeoLocationData(); // load in database if not already loaded
 
-        InetAddress userIp = InetAddress.getByName("203.211.72.160");
+        InetAddress userIp = InetAddress.getByName(getIp());
         Coordinate location = new Coordinate();
         CityResponse response = dbReader.city(userIp);
 
@@ -131,5 +135,18 @@ public class GeoLocationHandler {
 
             dbReader = new DatabaseReader.Builder(ipDb).build();
         }
+    }
+
+    /**
+     * Gets the external ip of the user through amazon web services
+     * 
+     * @return string ip of the user in dotted decimal
+     * @throws IOException if the fetch fails or ip cannot be read
+     */
+    private static String getIp() throws IOException {
+        InputStream ip = new URL("http://checkip.amazonaws.com").openStream();
+        BufferedReader input = new BufferedReader(new InputStreamReader(ip));
+
+        return input.readLine(); // ip
     }
 }
