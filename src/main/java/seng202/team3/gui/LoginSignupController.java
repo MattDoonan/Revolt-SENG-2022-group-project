@@ -237,6 +237,7 @@ public class LoginSignupController {
             User user = manage.login(loginEmailField.getText(), loginPasswordField.getText());
             if (user != null) {
                 menuControl.setUser(user);
+                menuControl.initHome(); // refreshes main screen
                 stage.close();
             } else {
                 loginPasswordField.clear();
