@@ -19,6 +19,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import seng202.team3.data.database.ComparisonType;
@@ -189,6 +190,12 @@ public class ChargerController {
     private Button deleteConnectorButton;
 
     /**
+     * The delete charger button
+     */
+    @FXML
+    private Button deleteButton;
+
+    /**
      * Initialises the ChargerController, loading in the charger info
      */
     public ChargerController() {
@@ -241,6 +248,7 @@ public class ChargerController {
             }
         } else {
             address.setText(prevCoordinate.getAddress());
+            deleteButton.setOpacity(0.0);
         }
         displayConnectorInfo();
     }
@@ -503,4 +511,41 @@ public class ChargerController {
         isDisplay = false;
     }
 
+    /**
+     * Launches the confirmation screen
+     */
+    @FXML
+    public void launchConfirmation() {
+        if (charger != null) {
+            stage.setAlwaysOnTop(false);
+            try {
+                FXMLLoader popUp = new FXMLLoader(getClass().getResource(
+                        "/fxml/prompt_popup.fxml"));
+                VBox root = popUp.load();
+                Scene modalScene = new Scene(root);
+                Stage modal = new Stage();
+                modal.setScene(modalScene);
+                modal.setResizable(false);
+                modal.setTitle("Click or cancel:");
+                modal.initModality(Modality.APPLICATION_MODAL);
+                PromptPopUp popController = popUp.getController();
+                popController.setType("delete");
+                popController.addPrompt("Are you sure you want to DELETE this "
+                        + "\n charger? \n\n");
+                modal.showAndWait();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                MainController controller = new MenuController().getController();
+                if (controller.getManager().getSelectedCharger() == null) {
+                    controller.getMapController().addChargersOnMap();
+                    controller.viewChargers(null);
+                    new MenuController().getController().viewChargers(null);
+                    stage.close();
+                }
+            }
+        }
+    }
+
 }
+

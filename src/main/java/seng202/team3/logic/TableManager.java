@@ -30,6 +30,15 @@ public class TableManager extends ChargerHandler implements ChargerInterface {
     }
 
     /**
+     * The user being queried
+     *
+     * @param user the user being queries
+     */
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    /**
      * {@inheritDoc}
      * Adds a charger at a specified coordinate
      */
@@ -78,9 +87,9 @@ public class TableManager extends ChargerHandler implements ChargerInterface {
     @Override
     public void resetQuery() {
         mainDataQuery = new QueryBuilderImpl().withSource("charger");
-        if (UserManager.getUser().getLevel() == PermissionLevel.CHARGEROWNER) {
+        if (user.getLevel() == PermissionLevel.CHARGEROWNER) {
             mainDataQuery.withFilter("owner",
-                    Integer.toString(UserManager.getUser().getUserid()), ComparisonType.EQUAL);
+                    Integer.toString(user.getUserid()), ComparisonType.EQUAL);
         }
     }
 }

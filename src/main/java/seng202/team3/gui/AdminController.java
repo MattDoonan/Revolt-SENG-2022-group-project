@@ -17,6 +17,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import seng202.team3.data.database.SqlInterpreter;
+import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.data.entity.User;
 import seng202.team3.logic.AdminManager;
 import seng202.team3.logic.UserManager;
@@ -288,15 +289,38 @@ public class AdminController {
     @FXML
     public void goBack() {
         try {
-            FXMLLoader accountLoader = new FXMLLoader(getClass()
-                    .getResource("/fxml/account.fxml"));
-            Parent accountViewParent = accountLoader.load();
-            AccountController controller = accountLoader.getController();
-            controller.init(border);
-            border.setCenter(accountViewParent);
-        } catch (IOException ex) {
-            ex.printStackTrace();
+            FXMLLoader mainScene = new FXMLLoader(getClass()
+                    .getResource("/fxml/main_table.fxml"));
+            Parent mainNode = mainScene.load();
+            TableController controller = mainScene.getController();
+            controller.init();
+            border.setTop(mainNode);
+            controller.setUser(UserManager.getUser());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
     }
 
+    /**
+     * Opens the charger table for the specific charger owner
+     */
+    @FXML
+    public void setChargerTable() {
+        try {
+            FXMLLoader mainScene = new FXMLLoader(getClass()
+                    .getResource("/fxml/main_table.fxml"));
+            Parent mainNode = mainScene.load();
+            TableController controller = mainScene.getController();
+            controller.init();
+            border.setTop(mainNode);
+            controller.setUser(table.getSelectionModel().getSelectedItem());
+            controller.populateTable();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
+
+
+

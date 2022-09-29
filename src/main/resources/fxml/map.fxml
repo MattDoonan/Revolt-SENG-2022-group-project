@@ -1,39 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ToolBar?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.web.WebView?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.web.*?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="400" minWidth="600" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.MapViewController">
-    <center>
-        <WebView fx:id="webView" prefHeight="1000.0" prefWidth="1000.0" />
-    </center>
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="400" minWidth="600" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.MapViewController">
+   <center>
+        <WebView fx:id="webView" prefHeight="1000.0" prefWidth="1000.0" BorderPane.alignment="CENTER" />
+   </center>
    <top>
-      <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-        <items>
-            <Button mnemonicParsing="false" onAction="#toggleRoute" text="Show Route">
+      <AnchorPane maxHeight="0.0" maxWidth="400.0" minHeight="0.0" minWidth="400.0" prefHeight="0.0" prefWidth="400.0" BorderPane.alignment="CENTER_LEFT">
+         <children>
+            <Button fx:id="addButton" layoutX="269.0" layoutY="9.0" mnemonicParsing="false" onMouseClicked="#addCharger" prefHeight="68.0" prefWidth="142.0" text="Add Charger">
                <font>
-                  <Font size="15.0" />
+                  <Font size="18.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" onMouseClicked="#addCharger" text="Add Charger">
+            <Button fx:id="routing" layoutX="76.0" layoutY="9.0" mnemonicParsing="false" onAction="#toggleRoute" prefHeight="68.0" prefWidth="142.0" style="-fx-background-color:#3ea055;" text="Route To Charger" textAlignment="CENTER" wrapText="true">
                <font>
-                  <Font size="15.0" />
+                  <Font size="18.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" onMouseClicked="#editCharger" text="Edit Charger">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Button>
-          <Button mnemonicParsing="false" onMouseClicked="#deleteCharger" text="Delete Charger">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Button>
-        </items>
-      </ToolBar>
+         </children>
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
+      </AnchorPane>
    </top>
 </BorderPane>

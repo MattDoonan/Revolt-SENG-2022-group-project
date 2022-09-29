@@ -153,8 +153,8 @@ public class AccountController {
                         .getResource("/fxml/admin_page.fxml"));
                 Parent editorParent = editor.load();
                 AdminController controller = editor.getController();
-                controller.init(border);
-                border.setCenter(editorParent);
+                controller.init(chargerTable);
+                chargerTable.setTop(editorParent);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -165,8 +165,8 @@ public class AccountController {
      * Opens the charger table for charger owners and admins
      */
     public void setChargerTable() {
-        if (manage.getUser().getLevel() == PermissionLevel.ADMIN
-                || manage.getUser().getLevel() == PermissionLevel.CHARGEROWNER) {
+        if (UserManager.getUser().getLevel() == PermissionLevel.ADMIN
+                || UserManager.getUser().getLevel() == PermissionLevel.CHARGEROWNER) {
             try {
                 FXMLLoader mainScene = new FXMLLoader(getClass()
                         .getResource("/fxml/main_table.fxml"));
@@ -174,6 +174,8 @@ public class AccountController {
                 controller = mainScene.getController();
                 controller.init();
                 chargerTable.setTop(mainNode);
+                controller.setUser(UserManager.getUser());
+                controller.populateTable();
             } catch (IOException e) {
                 e.printStackTrace();
             }

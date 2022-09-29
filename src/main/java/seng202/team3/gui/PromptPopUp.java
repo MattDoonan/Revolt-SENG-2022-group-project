@@ -51,6 +51,7 @@ public class PromptPopUp extends PopUpWindow {
                 cancel();
             }
             case "add" -> {
+                stage.setOpacity(0.0);
                 controller.getManager().addCharger();
                 cancel();
             }

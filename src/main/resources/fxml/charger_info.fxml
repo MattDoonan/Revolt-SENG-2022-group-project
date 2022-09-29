@@ -7,7 +7,7 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="632.0" prefWidth="982.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.ChargerController">
          <right>
-            <BorderPane prefHeight="475.0" prefWidth="549.0" BorderPane.alignment="CENTER">
+            <BorderPane prefHeight="592.0" prefWidth="549.0" BorderPane.alignment="CENTER">
                <top>
                   <Label alignment="TOP_LEFT" text="Connectors:" BorderPane.alignment="TOP_LEFT">
                      <font>
@@ -52,7 +52,7 @@
       
                </bottom>
          <BorderPane.margin>
-            <Insets bottom="20.0" right="20.0" top="20.0" />
+            <Insets bottom="20.0" right="20.0" top="26.0" />
          </BorderPane.margin>
             </BorderPane>
          </right>
@@ -183,17 +183,28 @@
                </opaqueInsets>
                   </GridPane>
          </center>
-         <bottom>
-                <Button alignment="CENTER" onAction="#saveChanges" prefHeight="30.0" prefWidth="167.0" text="Save Changes" BorderPane.alignment="CENTER">
-               <BorderPane.margin>
-                  <Insets bottom="40.0" />
-               </BorderPane.margin></Button>
-         </bottom>
          <BorderPane.margin>
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
          </BorderPane.margin>
          <opaqueInsets>
             <Insets bottom="20.0" />
          </opaqueInsets>
+         <bottom>
+            <VBox alignment="TOP_CENTER" prefHeight="92.0" prefWidth="373.0" spacing="20.0" BorderPane.alignment="CENTER">
+               <children>
+                      <Button alignment="CENTER" onAction="#saveChanges" prefHeight="30.0" prefWidth="167.0" text="Save Changes" />
+                  <Button fx:id="deleteButton" mnemonicParsing="false" onMouseClicked="#launchConfirmation" prefHeight="28.0" prefWidth="136.0" text="DELETE Charger" />
+               </children>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <padding>
+                  <Insets bottom="60.0" />
+               </padding>
+               <BorderPane.margin>
+                  <Insets top="-20.0" />
+               </BorderPane.margin>
+            </VBox>
+         </bottom>
       </BorderPane>
    </center></BorderPane>

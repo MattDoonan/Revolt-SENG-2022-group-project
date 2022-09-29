@@ -70,6 +70,8 @@ public class TableSearchFilterTestFx extends TestFxBase {
         UserManager.setUser(testUser);
         controller = loader.getController();
         controller.init();
+        controller.setUser(UserManager.getUser());
+        controller.populateTable();
     }
 
     @Test

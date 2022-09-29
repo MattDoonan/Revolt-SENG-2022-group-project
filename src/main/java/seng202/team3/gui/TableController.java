@@ -21,6 +21,7 @@ import javafx.stage.Stage;
 import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.PermissionLevel;
+import seng202.team3.data.entity.User;
 import seng202.team3.logic.JavaScriptBridge;
 import seng202.team3.logic.TableManager;
 import seng202.team3.logic.UserManager;
@@ -355,12 +356,27 @@ public class TableController {
      */
     public void init() {
         manage = new TableManager();
+    }
+
+    /**
+     * Populates the table
+     */
+    public void populateTable() {
         manage.resetQuery();
         tableMaker();
         manage.makeAllChargers();
         addToDisplay(manage.getData());
         change();
         setIdForTesting();
+    }
+
+    /**
+     * The table from point-of-view of user
+     *
+     * @param user the user involved
+     */
+    public void setUser(User user) {
+        manage.setUser(user);
     }
 
     /**

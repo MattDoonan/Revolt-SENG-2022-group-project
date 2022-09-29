@@ -4,6 +4,7 @@ import java.io.IOException;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -33,6 +34,18 @@ public class MapViewController extends MapHandler {
     private boolean routeDisplayed = false;
 
     /**
+     * The routing button
+     */
+    @FXML
+    private Button routing;
+
+    /**
+     * The add Charger button
+     */
+    @FXML
+    private Button addButton;
+
+    /**
      * unused constructor
      */
     public MapViewController() {
@@ -49,6 +62,7 @@ public class MapViewController extends MapHandler {
         this.stage = stage;
         javaScriptBridge = new JavaScriptBridge();
         this.map = map;
+        addButton.setOpacity(0.0);
         initMap();
         this.stage.sizeToScene();
     }
@@ -59,6 +73,12 @@ public class MapViewController extends MapHandler {
      */
     @Override
     public void addChargersOnMap() {
+        if (UserManager.getUser().getLevel() != PermissionLevel.ADMIN
+                && UserManager.getUser().getLevel() != PermissionLevel.CHARGEROWNER) {
+            addButton.setOpacity(0.0);
+        } else {
+            addButton.setOpacity(100.0);
+        }
         int userId = 0;
         if (UserManager.getUser().getLevel() == PermissionLevel.ADMIN) {
             userId = -1;
@@ -131,6 +151,7 @@ public class MapViewController extends MapHandler {
                     chargerCoord.getLat(), chargerCoord.getLon(), charger.getChargerId(), "c", 1);
             javaScriptConnector.call("addRoute");
         }
+
     }
 
     /**
@@ -157,8 +178,17 @@ public class MapViewController extends MapHandler {
     public void toggleRoute() {
         if (routeDisplayed) {
             removeRoute();
+            addButton.setOpacity(0.0);
+            routing.setText("Route To Charger");
+            routing.setStyle("-fx-background-color:#3ea055;");
         } else {
+            if (UserManager.getUser().getLevel() == PermissionLevel.ADMIN
+                    || UserManager.getUser().getLevel() == PermissionLevel.CHARGEROWNER) {
+                addButton.setOpacity(100.0);
+            }
             addRouteToCharger();
+            routing.setText("Stop Routing");
+            routing.setStyle("-fx-background-color:#FF3131;");
         }
     }
 
@@ -196,30 +226,14 @@ public class MapViewController extends MapHandler {
      */
     @FXML
     public void addCharger() {
-        if (new MenuController().getController().getManager()
-                .getPosition().getAddress().equals("Coordinate")) {
-            javaScriptConnector.call("addCoordinateName");
+        if (addButton.getOpacity() == 100.0) {
+            if (new MenuController().getController().getManager()
+                    .getPosition().getAddress().equals("Coordinate")) {
+                javaScriptConnector.call("addCoordinateName");
+            }
+            loadPromptScreens("Search an address or click on the map\n"
+                    + "and confirm to add a charger: \n\n", "add");
         }
-        loadPromptScreens("Search an address or click on the map\n"
-                + "and confirm to add a charger: \n\n", "add");
-    }
-
-    /**
-     * Executes an edit prompt
-     */
-    @FXML
-    public void editCharger() {
-        loadPromptScreens("Click on a charger on the map and\n"
-                + "confirm to edit a charger: \n\n", "edit");
-    }
-
-    /**
-     * Executes a delete prompt
-     */
-    @FXML
-    public void deleteCharger() {
-        loadPromptScreens("Click on a charger on the map and\n"
-                + "confirm to DELETE a charger: \n\n", "delete");
     }
 
 

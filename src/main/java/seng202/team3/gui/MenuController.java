@@ -183,7 +183,8 @@ public class MenuController {
         try {
             if (UserManager.getUser() == UserManager.getGuest()) {
                 createLoginWindow("/fxml/login.fxml", "Login", null, null);
-            } else {
+            }
+            if (UserManager.getUser() != UserManager.getGuest()) {
                 FXMLLoader garageLoader = new FXMLLoader(getClass()
                         .getResource("/fxml/garage.fxml"));
                 Parent garageViewParent = garageLoader.load();
@@ -252,6 +253,7 @@ public class MenuController {
                 e.printStackTrace();
             }
         }
+        initHome();
     }
 
     /**
@@ -262,7 +264,8 @@ public class MenuController {
         try {
             if (UserManager.getUser() == UserManager.getGuest()) {
                 createLoginWindow("/fxml/login.fxml", "Login", null, null);
-            } else {
+            }
+            if (UserManager.getUser() != UserManager.getGuest()) {
                 FXMLLoader accountLoader = new FXMLLoader(getClass()
                         .getResource("/fxml/account.fxml"));
                 Parent accountViewParent = accountLoader.load();
@@ -287,7 +290,7 @@ public class MenuController {
     }
 
     /**
-     * Sets loggedIn to be null
+     * Sets loggedIn to be Guest
      */
     public void signOut() {
         UserManager.setUser(UserManager.getGuest());
