@@ -24,7 +24,6 @@ import javax.management.InstanceAlreadyExistsException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.javatuples.Triplet;
-import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
@@ -60,12 +59,6 @@ public class SqlInterpreter implements DataReader {
      * Control db write access
      */
     static Semaphore mutex = new Semaphore(1);
-
-    /**
-     * The password hashing function
-     */
-    private static Argon2PasswordEncoder encoder = new Argon2PasswordEncoder(
-            32, 64, 1, 15 * 1024, 2);
 
     /**
      * Initializes the SqlInterpreter and checks if the url is null
@@ -121,7 +114,6 @@ public class SqlInterpreter implements DataReader {
             }
         }
 
-
         for (int i = 0; i < owners.size(); i++) {
             writeUser(
                     new User(
@@ -139,7 +131,8 @@ public class SqlInterpreter implements DataReader {
         // rewrites Admin with no deformed password
         writeUser((User) readData(new QueryBuilderImpl().withSource("user")
                 .withFilter("username", "admin",
-                        ComparisonType.EQUAL).build(), User.class).get(0), "admin");
+                        ComparisonType.EQUAL)
+                .build(), User.class).get(0), "admin");
 
         writeCharger(new ArrayList<>(chargersToImport));
     }
@@ -664,6 +657,7 @@ public class SqlInterpreter implements DataReader {
 
     /**
      * Gets the number of times a charger has been viewed
+     * 
      * @param c the charger object
      * @return the number of times viewed
      * @throws SQLException if the database fails
@@ -1068,12 +1062,12 @@ public class SqlInterpreter implements DataReader {
             }
             statement.setString(2, user.getEmail());
             statement.setString(3, user.getAccountName());
-            statement.setString(4, encoder.encode(password));
+            statement.setString(4, password);
             statement.setInt(5, user.getLevel().ordinal());
             statement.setDouble(6, user.getCarbonSaved());
             statement.setString(7, user.getEmail());
             statement.setString(8, user.getAccountName());
-            statement.setString(9, encoder.encode(password));
+            statement.setString(9, password);
             statement.setInt(10, user.getLevel().ordinal());
             statement.setDouble(11, user.getCarbonSaved());
             statement.executeUpdate();
@@ -1138,7 +1132,7 @@ public class SqlInterpreter implements DataReader {
         if (correctPassword == null) {
             return null;
         }
-        if (encoder.matches(password, correctPassword)) {
+        if (password == correctPassword) {
             List<Object> result = readData(new QueryBuilderImpl().withSource("user")
                     .withFilter("username", username, ComparisonType.EQUAL)
                     .build(), User.class);

@@ -19,7 +19,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.data.entity.User;
 import seng202.team3.logic.UserManager;
@@ -273,7 +272,6 @@ public class LoginSignupController {
         // TODO
     }
 
-
     /**
      * Closes this window.
      */
@@ -281,9 +279,9 @@ public class LoginSignupController {
         stage.close();
     }
 
-
     /**
      * Shows/hides the user's password
+     * 
      * @param event the event that called the function
      */
     @FXML
@@ -325,8 +323,9 @@ public class LoginSignupController {
 
     /**
      * Set the button icon
+     * 
      * @param popup the password field to add the icon to
-     * @param type the type the icon should be
+     * @param type  the type the icon should be
      */
     public void setIcon(String popup, String type) {
         Button button = new Button();
@@ -353,7 +352,6 @@ public class LoginSignupController {
     public void onEnter(ActionEvent e) {
         login();
     }
-
 
     /**
      * Signs up on enter
