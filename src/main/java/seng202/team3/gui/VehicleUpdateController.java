@@ -31,6 +31,7 @@ import javafx.scene.layout.TilePane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import seng202.team3.data.entity.Vehicle;
+import seng202.team3.logic.UserManager;
 import seng202.team3.logic.VehicleUpdateManager;
 
 /**
@@ -240,6 +241,7 @@ public class VehicleUpdateController {
         }
 
         if (errors.isEmpty()) {
+            vehicle.setOwner(UserManager.getUser().getUserid());
             manage.saveVehicle(vehicle);
             makeText.setText(null);
             modelText.setText(null);
@@ -340,7 +342,7 @@ public class VehicleUpdateController {
      */
     public void deleteConnection(ActionEvent e) {
         int index = connections.indexOf(((Node) e.getSource()).getId());
-        System.out.println(((Node) e.getSource()).getId());
+        // System.out.println(((Node) e.getSource()).getId());
         connections.remove(((Node) e.getSource()).getId());
         addedConnections.getItems().remove(index);
 

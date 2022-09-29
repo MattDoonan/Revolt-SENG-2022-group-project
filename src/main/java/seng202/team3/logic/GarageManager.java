@@ -5,10 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.database.QueryBuilder;
 import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
+import seng202.team3.data.entity.User;
 import seng202.team3.data.entity.Vehicle;
+import seng202.team3.gui.MenuController;
 
 /**
  * Logic layer for the garage Controller
@@ -30,9 +33,17 @@ public class GarageManager {
     private ObservableList<Vehicle> vehicleData;
 
     /**
+     * The current user
+     */
+    private User user;
+
+
+    /**
      * Initialize GarageManager
      */
     public GarageManager() {
+        user = UserManager.getUser();
+        // System.out.println("GarageMan UserID: " + user.getUserid());
         // resetQuery();
     }
 
@@ -40,7 +51,8 @@ public class GarageManager {
      * Load the initial query
      */
     public void resetQuery() {
-        vehicleDataQuery = new QueryBuilderImpl().withSource("vehicle");
+        vehicleDataQuery = new QueryBuilderImpl().withSource("vehicle")
+            .withFilter("owner", Integer.toString(user.getUserid()), ComparisonType.EQUAL);
     }
 
     /**
