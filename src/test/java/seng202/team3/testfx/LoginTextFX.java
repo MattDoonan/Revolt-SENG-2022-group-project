@@ -27,8 +27,6 @@ public class LoginTextFX extends TestFxBase{
 
     private LoginSignupController controller;
 
-    private User u;
-
     @Override
     public void setUp() throws Exception {
         ApplicationTest.launch(MainWindow.class);
@@ -49,18 +47,6 @@ public class LoginTextFX extends TestFxBase{
         controller = loader.getController();
         controller.init(new MenuController());
     }
-
-    @BeforeEach
-    public void setup() throws IOException {
-        u = new User("test@gmail.com", "Tester", PermissionLevel.USER);
-        SqlInterpreter.getInstance().writeUser(u, "1234");
-    }
-
-    @AfterEach
-    public void reset() throws IOException {
-        SqlInterpreter.getInstance().deleteData("user", u.getUserid());
-    }
-
 
     @Test
     public void testFailedLogin() {
