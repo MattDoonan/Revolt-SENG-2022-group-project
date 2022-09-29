@@ -481,21 +481,6 @@ public class MainController {
         mapController.toggleRoute();
     }
 
-    /**
-     * Initialises the welcome page;
-     */
-    public void loadTableView() {
-        try {
-            FXMLLoader mainScene = new FXMLLoader(getClass()
-                    .getResource("/fxml/main_table.fxml"));
-            Parent mainNode = mainScene.load();
-            TableController controller = mainScene.getController();
-            controller.init();
-            menuWindow.setCenter(mainNode);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     /**
      * Searches on enter

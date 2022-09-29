@@ -6,6 +6,7 @@ import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Coordinate;
 import seng202.team3.data.entity.PermissionLevel;
+import seng202.team3.data.entity.User;
 
 /**
  * A Table Manager that implements the adding, deleting and editing
@@ -16,6 +17,10 @@ import seng202.team3.data.entity.PermissionLevel;
  */
 public class TableManager extends ChargerHandler implements ChargerInterface {
 
+    /**
+     * The current user of this table
+     */
+    private User user;
 
     /**
      * unused constructor

@@ -150,6 +150,7 @@
                 removeCoordinate()
                 addCoordinate(e.geocode.name, latlng.lat, latlng.lng)
                 javaScriptBridge.addLocationName(e.geocode.name)
+                movePosition(latlng.lat, latlng.lng)
             })
             return searchBar;
         }
