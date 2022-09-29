@@ -3,11 +3,19 @@ package seng202.team3.gui;
 import java.io.IOException;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import seng202.team3.data.entity.Charger;
+import seng202.team3.data.entity.Coordinate;
+import seng202.team3.logic.Calculations;
 import seng202.team3.logic.JourneyManager;
 
 /**
@@ -32,6 +40,9 @@ public class JourneyController {
 
     @FXML
     private BorderPane mainWindow;
+
+    @FXML 
+    private VBox journeyTable;
 
     private Stage stage;
 
@@ -123,4 +134,45 @@ public class JourneyController {
         startLabel.setText("Start not set");
         endLabel.setText("End not set");
     }
+
+    /**
+     * Adds a charger to the Journey table
+     * @param charger charger to add to table
+     */
+    public void addChargerToDisplay(Charger charger) {
+        VBox text = new VBox(new Text(charger.getName()),
+                new Text("\n" + Math.floor(Calculations.calculateDistance(charger.getLocation(), 
+                journeyManager.getPosition()) * 100) / 100 + " km Distance"));
+        //TODO fix the calculation or completley remove
+        Button btn = new Button("Remove");
+        // btn.setOnAction(new EventHandler() {
+ 
+        //     @Override
+        //     public void handle(ActionEvent event) {
+        //         removeFromDisplay();
+        //     }
+        // });
+        VBox buttonBox = new VBox(btn);
+        buttonBox.setAlignment(Pos.CENTER_RIGHT);
+        HBox content = new HBox(text, buttonBox);
+        content.setPadding(new Insets(15));
+        journeyTable.getChildren().add(content);
+    }
+
+    /**
+     * Adds a location to the Journey table
+     * @param coordinate coordinate to add to table
+     */
+    public void addLocationToDisplay(Coordinate coordinate) {
+
+    }
+
+    /**
+     * Button method which removes the charger/location from table
+     * and removes from the journey
+     */
+    public void removeFromDisplay() {
+
+    }
+
 }
