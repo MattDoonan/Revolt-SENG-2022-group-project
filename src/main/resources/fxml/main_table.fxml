@@ -207,11 +207,6 @@
                         <CheckBox fx:id="showCurrent" selected="true" style="-fx-text-fill: black;" text="Show Current Type" />
                      </content>
                   </CustomMenuItem>
-                  <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
-                     <content>
-                        <CheckBox fx:id="showViews" selected="true" style="-fx-text-fill: black;" text="Show Views" />
-                     </content>
-                  </CustomMenuItem>
                </items>
             </MenuButton>
             <MenuButton minHeight="30.0" mnemonicParsing="false" prefWidth="250.0" style="-fx-font-size: 20;" text="Modify Chargers">

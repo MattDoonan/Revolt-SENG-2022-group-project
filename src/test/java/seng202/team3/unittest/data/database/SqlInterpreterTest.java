@@ -846,46 +846,4 @@ public class SqlInterpreterTest {
         assertNull(result);
     }
 
-    /**
-     * Tests if one view is counted
-     */
-    @Test
-    public void readWriteUserFirstView() throws IOException, SQLException {
-        writeSingleEntity(testUser);
-        writeSingleEntity(testCharger);
-        db.addUserView(testUser, testCharger);
-        assertEquals(1, db.getChargerViews(testCharger));
-    }
-
-    /**
-     * Lots of views for a charger for one user
-     */
-    @Test
-    public void readWriteUserMultipleTimes() throws IOException, SQLException {
-        writeSingleEntity(testUser);
-        writeSingleEntity(testCharger);
-        for(int i = 0; i < 10; i++) {
-            db.addUserView(testUser, testCharger);
-        }
-        assertEquals(10, db.getChargerViews(testCharger));
-    }
-
-    /**
-     * Lots of views from multiple users for a charger for one user
-     */
-    @Test
-    public void readWrite2UserMultipleTimes() throws IOException, SQLException {
-        writeSingleEntity(testUser);
-        writeSingleEntity(testCharger);
-        for(int i = 0; i < 10; i++) {
-            db.addUserView(testUser, testCharger);
-        }
-        testUser.setUserid(0);
-        testUser.setAccountName("newUser");
-        writeSingleEntity(testUser);
-        for(int i = 0; i < 6; i++) {
-            db.addUserView(testUser, testCharger);
-        }
-        assertEquals(16, db.getChargerViews(testCharger));
-    }
 }

@@ -1158,29 +1158,6 @@ public class SqlInterpreter implements DataReader {
     }
 
     /**
-     * Adds a relation if a user views a charger if doesn't exist
-     * Else updates the times viewed that charger
-     * @param u the user object
-     * @param c the charger object
-     * @throws IOException if the sql fails
-     */
-    public void addUserView(User u, Charger c) throws IOException {
-        String toAdd = "INSERT INTO views (userid, chargerid, times)"
-                + " VALUES (?, ?, ?) ON CONFLICT(userid,chargerid)"
-                + " DO UPDATE SET times = times + 1";
-        try (Connection connection = createConnection();
-             PreparedStatement statement = connection.prepareStatement(toAdd)) {
-            statement.setInt(1, u.getUserid());
-            statement.setInt(2, c.getChargerId());
-            statement.setInt(3, 1);
-            statement.executeUpdate();
-            connection.close();
-        } catch (SQLException | NullPointerException e) {
-            throw new IOException(e.getMessage());
-        }
-    }
-
-    /**
      * Allows threading for writing chargers to db to improve performance
      * 
      * @author Harrison Tyson

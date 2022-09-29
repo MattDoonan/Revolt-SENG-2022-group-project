@@ -18,37 +18,12 @@ import seng202.team3.data.entity.Coordinate;
  */
 public class TableManager extends ChargerHandler implements ChargerInterface {
 
-    /** ArrayList of charger views */
-    Map<Charger, Integer> chargerViews;
 
     /**
      * unused constructor
      */
     public TableManager() {
         // unused
-    }
-
-    /**
-     * Gets a list of charger views
-     */
-    public void chargerViewsList() {
-        chargerViews = new HashMap<Charger, Integer>();
-        for (Charger charger : getData()) {
-            try {
-                chargerViews.put(charger, SqlInterpreter.getInstance().getChargerViews(charger));
-            } catch (IOException | SQLException e) {
-                chargerViews.put(charger, 0);
-            }
-        }
-    }
-
-    /**
-     * Gets the views of the current charger
-     * @param c the charger object
-     * @return the number of views
-     */
-    public int getChargerViews(Charger c) {
-        return chargerViews.get(c);
     }
 
     /**

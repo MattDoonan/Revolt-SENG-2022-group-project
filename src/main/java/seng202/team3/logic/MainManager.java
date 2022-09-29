@@ -83,18 +83,6 @@ public class MainManager extends ChargerHandler implements ChargerInterface {
     }
 
     /**
-     * adds a view to the charger
-     * @param c the charger that has been viewed
-     */
-    public void viewCharger(Charger c) {
-        try {
-            SqlInterpreter.getInstance().addUserView(UserManager.getUser(), c);
-        } catch (IOException e) {
-            return;
-        }
-    }
-
-    /**
      * {@inheritDoc}
      * Adds a charger at the location of the coordinate.
      */

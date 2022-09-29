@@ -342,12 +342,6 @@ public class TableController {
     protected final TableColumn<Charger, String> currentsCol = new TableColumn<>(
             "Current types");
 
-    /**
-     * The current charger views
-     */
-    @FXML
-    protected final TableColumn<Charger, Integer> viewsCol = new TableColumn<>(
-            "Charger Views");
 
     /**
      * Unused constructor
@@ -365,7 +359,6 @@ public class TableController {
         checkPermission();
         tableMaker();
         manage.makeAllChargers();
-        manage.chargerViewsList();
         addToDisplay(manage.getData());
         change();
         setIdForTesting();
@@ -403,7 +396,6 @@ public class TableController {
         openCol.setId("openCol");
         chargcostCol.setId("chargcostCol");
         currentsCol.setId("currentsCol");
-        viewsCol.setId("viewsCol");
     }
 
     /**
@@ -427,7 +419,6 @@ public class TableController {
         openCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
         chargcostCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
         currentsCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
-        viewsCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
         mainTable.getColumns().removeAll(mainTable.getColumns());
 
         // Checks if the user wants to view the column
@@ -479,9 +470,6 @@ public class TableController {
         if (showCurrent.isSelected()) {
             mainTable.getColumns().add(currentsCol);
         }
-        if (showViews.isSelected()) {
-            mainTable.getColumns().add(viewsCol);
-        }
         mainTable.requestFocus();
     }
 
@@ -531,9 +519,6 @@ public class TableController {
                 charger -> new ReadOnlyBooleanWrapper(charger.getValue().getChargeCost()));
         currentsCol.setCellValueFactory(
                 charger -> new ReadOnlyStringWrapper(manage.getConnectors(charger.getValue())));
-        viewsCol.setCellValueFactory(
-                charger -> new ReadOnlyIntegerWrapper(
-                        manage.getChargerViews(charger.getValue())).asObject());
         mainTable.getSelectionModel().select(0);
         mainTable.getSortOrder().add(addressCol);
         mainTable.sort();
@@ -589,7 +574,6 @@ public class TableController {
         }
         checkPermission();
         manage.makeAllChargers();
-        manage.chargerViewsList();
         addToDisplay(manage.getData());
     }
 
