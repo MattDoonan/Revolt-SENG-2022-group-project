@@ -20,6 +20,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Stream;
 import javax.management.InstanceAlreadyExistsException;
+
+import io.cucumber.java.bs.A;
+import io.cucumber.java.bs.I;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -842,8 +846,76 @@ public class SqlInterpreterTest {
      */
     @Test
     public void testFakeUsers() throws IOException, SQLException {
+        testUser = new User("fake@gmail.com", "test", PermissionLevel.USER);
         User result = db.validatePassword(testUser.getAccountName(), "wrong");
         assertNull(result);
+    }
+
+    /**
+     * Updates a valid user
+     */
+    @Test
+    public void updateValidUser(){
+        testUser = new User("test@gmail.com", "test", PermissionLevel.USER);
+        try {
+            db.writeUser(testUser, "1234");
+            testUser.setCarbonSaved(500);
+            testUser.setAccountName("New Account name");
+            testUser.setLevel(PermissionLevel.CHARGEROWNER);
+            db.writeUser(testUser);
+            List<Object> res = SqlInterpreter.getInstance().readData(new QueryBuilderImpl()
+                    .withSource("user").withFilter("username", testUser.getAccountName(),
+                            ComparisonType.EQUAL).build(), User.class);
+            assertEquals(testUser, (User) res.get(0));
+        } catch (SQLException | IOException e) {
+            Assertions.fail("Database failed");
+        }
+    }
+
+    /**
+     * Tests updating a null user
+     */
+    @Test
+    public void updateNullUser() {
+        try {
+            db.writeUser(null);
+            Assertions.fail("Database shouldn't add null pointers");
+        } catch (SQLException e) {
+            Assertions.fail("Database failed");
+        } catch (NullPointerException n) {
+            Assertions.assertTrue(true);
+        }
+    }
+
+    @Test
+    public void updateFakeUser() {
+        try {
+            db.writeUser(new User("fake@email", "fake", PermissionLevel.USER));
+            List<Object> res = SqlInterpreter.getInstance().readData(new QueryBuilderImpl()
+                    .withSource("user").withFilter("username", "fake",
+                            ComparisonType.EQUAL).build(), User.class);
+            Assertions.assertEquals(0, res.size());
+        } catch (SQLException | IOException e) {
+            Assertions.fail("Database Failed");
+        }
+    }
+
+    /**
+     * Checks if the program updates the password
+     */
+    @Test
+    public void updatePassword() {
+        User updatable = new User("fake@email", "fake", PermissionLevel.USER);
+        try {
+            db.writeUser(updatable, "1234");
+            updatable.setCarbonSaved(50);
+            updatable.setEmail("update@gmail.com");
+            db.writeUser(updatable, "5678");
+            User login = db.validatePassword(updatable.getAccountName(), "5678");
+            assertEquals(updatable, login);
+        } catch (SQLException | IOException e) {
+            Assertions.fail("Database failed");
+        }
     }
 
 }
