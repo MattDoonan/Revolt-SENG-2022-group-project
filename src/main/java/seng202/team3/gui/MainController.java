@@ -156,6 +156,11 @@ public class MainController {
     private CheckBox noNearbyAttraction;
 
     /**
+     * The default image to be used
+     */
+    private Image image;
+
+    /**
      * The BorderPane containing entire application
      */
     private BorderPane menuWindow;
@@ -186,6 +191,7 @@ public class MainController {
     public void init(Stage stage, BorderPane menuWindow) {
         this.menuWindow = menuWindow;
         manage = new MainManager();
+        fetchImage();
         loadMapView(stage);
         manage.resetQuery();
         manage.makeAllChargers();
@@ -194,6 +200,21 @@ public class MainController {
         change();
 
     }
+
+    /**
+     * Tries to fetch the image
+     */
+    public void fetchImage() {
+        try {
+            // Gets image and adds it to an Image View
+            image = new Image(
+                    new BufferedInputStream(
+                            getClass().getResourceAsStream("/images/charger.png")));
+        } catch (NullPointerException e) {
+            image = null;
+        }
+    }
+
 
     /**
      * Display charger info on panel
@@ -285,13 +306,11 @@ public class MainController {
         chargerTable.getChildren().removeAll(chargerTable.getChildren()); // clears vbox
         for (int i = 0; i < chargersToAdd.size(); i++) {
             HBox add = new HBox(); // creates HBox that will contain the changer info
-            try {
-                // Gets image and adds it to an Image View
-                ImageView image = new ImageView(new Image(
-                        new BufferedInputStream(
-                                getClass().getResourceAsStream("/images/charger.png"))));
-                add.getChildren().add(image);
-            } catch (NullPointerException e) {
+
+            //adds the cached image
+            if (image != null) {
+                add.getChildren().add(new ImageView(image));
+            } else {
                 Label image = new Label("Image");
                 add.getChildren().add(image); // adds to the HBox
             }
