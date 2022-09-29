@@ -332,8 +332,14 @@
 				isJourney = true;
 			}
 
+			/**
+			 * Adds a circle overlay on map
+			 */
 			function addCircle(lat, long, rad) {
-				circle = L.circle([lat, long], {radius: rad}).addTo(map);
+				if (circle) {
+					circle.remove();
+				}
+				circle = L.circle([lat, long], { radius: rad }).addTo(map);
 			}
 		</script>
 	</body>

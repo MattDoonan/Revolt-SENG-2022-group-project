@@ -17,6 +17,7 @@ import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
 import seng202.team3.gui.ChargerController;
+import seng202.team3.gui.JourneyController;
 import seng202.team3.gui.MainController;
 import seng202.team3.gui.MenuController;
 
@@ -178,10 +179,14 @@ public class JavaScriptBridge {
      */
     public void addChargerToJourney(int id) {
         chargerHandler(id);
+        
         MainManager mainManager = new MenuController().getController().getManager();
-        JourneyManager journeyManager = new MenuController().getJourneyController().getManager();
+        JourneyController journeyController = new MenuController().getJourneyController();
+        JourneyManager journeyManager = journeyController.getManager();
+        Charger charger = mainManager.getSelectedCharger();
 
-        journeyManager.addCharger(mainManager.getSelectedCharger());
+        journeyController.getMapController().addChargersAroundPoint(charger.getLocation());
+        journeyManager.addCharger(charger);
     }
 
     /**

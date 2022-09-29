@@ -34,7 +34,9 @@ public class JourneyController {
     private BorderPane mainWindow;
 
     private Stage stage;
+
     private JourneyMapController mapController;
+
     private JourneyManager journeyManager;
 
     /**
@@ -50,6 +52,14 @@ public class JourneyController {
 
     public JourneyManager getManager() {
         return this.journeyManager;
+    }
+
+    /**
+     * Gets the map controller associated with this controller
+     * @return MapController mapController
+     */
+    public JourneyMapController getMapController() {
+        return this.mapController;
     }
 
     /**
@@ -79,7 +89,7 @@ public class JourneyController {
         journeyManager.setStart(journeyManager.getPosition());
         makeStart.setDisable(true);
         startLabel.setText("Start position: " + journeyManager.getPosition().getAddress());
-        mapController.addChargersOnMap();
+        mapController.addChargersAroundPoint(journeyManager.getPosition());
     }
 
     /**

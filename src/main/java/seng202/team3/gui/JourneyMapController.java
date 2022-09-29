@@ -40,12 +40,29 @@ public class JourneyMapController extends MapHandler {
         javaScriptConnector.call("clearMarkers");
         journeyManager.resetQuery();
         journeyManager.makeAllChargers();
+
+        for (Charger charger : journeyManager.getData()) {
+            javaScriptConnector.call("addMarker", charger.getLocation().getAddress(),
+                    charger.getLocation().getLat(), charger.getLocation().getLon(),
+                    charger.getChargerId());
+        }
+    }
+
+    /**
+     * Shows chargers on map around given coordinate with radius of vehicle range
+     * @param coord centre of circle
+     */
+    public void addChargersAroundPoint(Coordinate coord) {
+        javaScriptConnector.call("setJourney");
+        javaScriptConnector.call("clearMarkers");
+        journeyManager.resetQuery();
+        journeyManager.makeAllChargers();
         //TODO move above into own function
 
         ChargerManager chargerManager = new ChargerManager();
         ArrayList<Charger> arrayChargers = new ArrayList<>(journeyManager.getData());
         ArrayList<Charger> nearbyChargers = chargerManager.getNearbyChargers(arrayChargers,
-                    journeyManager.getPosition(), 10.0);
+                    coord, 10.0);
         //TODO implement vehiclular distance
 
         for (Charger charger : nearbyChargers) {
@@ -53,6 +70,8 @@ public class JourneyMapController extends MapHandler {
                     charger.getLocation().getLat(), charger.getLocation().getLon(),
                     charger.getChargerId());
         }
+
+        addCircle(coord);
     }
 
     /**
@@ -61,8 +80,6 @@ public class JourneyMapController extends MapHandler {
     public void addStartMarker() {
         javaScriptConnector.call("addCoordinate", "Start",
                 journeyManager.getPosition().getLat(), journeyManager.getPosition().getLon());
-        javaScriptConnector.call("addCircle", journeyManager.getPosition().getLat(), 
-                journeyManager.getPosition().getLon(), 10000); //TODO vehicle distance for radius
     }
 
     /**
@@ -71,6 +88,16 @@ public class JourneyMapController extends MapHandler {
     public void addEndMarker() {
         javaScriptConnector.call("addCoordinate", "Destination",
                 journeyManager.getPosition().getLat(), journeyManager.getPosition().getLon());
+    }
+
+    /**
+     * Adds a circle around an inputted point on the map
+     * with radius of vehicle range
+     * @param coord coordinate for centre of circle
+     */
+    public void addCircle(Coordinate coord) {
+        javaScriptConnector.call("addCircle", coord.getLat(), coord.getLon(), 10000);
+        //TODO vehicle distance for radius
     }
 
 
