@@ -105,7 +105,7 @@ public abstract class MapHandler {
 
             locationRequest.showAndWait();
 
-            locationAccepted = locationRequest.getResult() == ButtonType.YES;
+            setLocationAccepted(locationRequest.getResult() == ButtonType.YES);
         }
 
         if (locationAccepted) {
@@ -117,6 +117,15 @@ public abstract class MapHandler {
             }
         }
 
+    }
+
+    /**
+     * Sets the location to the accepted permission
+     *
+     * @param permission boolean true if permission granted, else false
+     */
+    public static void setLocationAccepted(Boolean permission) {
+        locationAccepted = permission;
     }
 
     /**

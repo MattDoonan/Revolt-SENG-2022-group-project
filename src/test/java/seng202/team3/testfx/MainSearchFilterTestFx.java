@@ -69,7 +69,7 @@ public class MainSearchFilterTestFx extends TestFxBase {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
         Parent page = loader.load();
         MapHandler.resetPermission();
-        push(KeyCode.ESCAPE); // Select no on dialog
+        MapHandler.setLocationAccepted(true);
         initState(loader, stage);
         Scene scene = new Scene(page);
         stage.setScene(scene);

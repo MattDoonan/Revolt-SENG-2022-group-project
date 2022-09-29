@@ -1,7 +1,7 @@
 junit:
   stage: test
   script:
-    - mvn -B clean test -Dtest=\*Test
+    - mvn -B clean test
 generate_artifacts:
   stage: deploy
   script:
