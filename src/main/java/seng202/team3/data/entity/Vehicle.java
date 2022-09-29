@@ -243,4 +243,14 @@ public class Vehicle {
                 && v.getVehicleId() == this.getVehicleId()
                 && v.getOwner() == this.getOwner();
     }
+
+    /**
+     * toString function (mostly for debugging purposes)
+     * 
+     * @return string representation of vehicle
+     */
+    public String toString() {
+        return "MAKE: " + make + "  MODEL: " + model + "  MAXRANGE: " + maxRange 
+            + "  ID: " + vehicleId + "  OWNER: " + owner;
+    }
 }

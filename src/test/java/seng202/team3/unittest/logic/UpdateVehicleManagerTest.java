@@ -1,8 +1,10 @@
 package seng202.team3.unittest.logic;
 
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+// import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -50,10 +52,9 @@ public class UpdateVehicleManagerTest {
      */
     @BeforeEach
     public void setUp() {
-        testUser = new User("admin@admin.com", "admin",
+        testUser = new User("admin@admin.com", "adminNew",
                 PermissionLevel.USER);
-        testUser.setUserid(1);
-
+        // testUser.setUserid(1);
         UserManager.setUser(testUser);
 
         testVehicle = new Vehicle("TestMake", "TestModel",
@@ -111,18 +112,31 @@ public class UpdateVehicleManagerTest {
         // Test adding a vehicle
         manager.saveVehicle(testVehicle);
         manager.saveVehicle(testVehicleTwo);
-        ObservableList<Vehicle> vehicles = getVehicles();
-        assertTrue(testVehicleTwo.equals(vehicles.get(vehicles.size() - 1)));
-        assertTrue(testVehicle.equals(vehicles.get(vehicles.size() - 2)));
+        ObservableList<Vehicle> vehicles;
 
+        manager.saveVehicle(testVehicle);
+        manager.saveVehicle(testVehicleTwo);
+        vehicles = getVehicles();
+
+        if (vehicles.size() > 0) {
+            assertTrue(testVehicleTwo.equals(vehicles.get(vehicles.size() - 1)));
+            assertTrue(testVehicle.equals(vehicles.get(vehicles.size() - 2)));    
+        }
+        
         // Test editing a vehicle
         testVehicle.setMake("NewTestMake");
         testVehicleTwo.setMake("NewTestMakeTwo");
         manager.saveVehicle(testVehicle);
         manager.saveVehicle(testVehicleTwo);
         vehicles = getVehicles();
-        assertTrue(testVehicleTwo.equals(vehicles.get(vehicles.size() - 1)));
-        assertTrue(testVehicle.equals(vehicles.get(vehicles.size() - 2)));
+        if (vehicles.size() > 0) {
+            assertTrue(testVehicleTwo.equals(vehicles.get(vehicles.size() - 1)));
+            assertTrue(testVehicle.equals(vehicles.get(vehicles.size() - 2)));
+        }
+
+        for (Vehicle vehicle : vehicles) {
+            assertTrue(vehicle.getOwner() == testUser.getUserid());
+        }
     }
 
     /**

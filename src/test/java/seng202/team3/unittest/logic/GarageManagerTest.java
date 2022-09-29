@@ -50,7 +50,6 @@ public class GarageManagerTest {
         testUser = new User("admin@admin.com", "admin",
                 PermissionLevel.USER);
         testUser.setUserid(1);
-
         UserManager.setUser(testUser);
 
         testVehicle = new Vehicle("TestMake", "TestModel",
@@ -117,6 +116,10 @@ public class GarageManagerTest {
         ObservableList<Vehicle> vehicles = manager.getData();
         assertTrue(testVehicleTwo.equals(vehicles.get(vehicles.size() - 1)));
         assertTrue(testVehicle.equals(vehicles.get(vehicles.size() - 2)));
+
+        for (Vehicle vehicle : vehicles) {
+            assertTrue(vehicle.getOwner() == testUser.getUserid());
+        }
     }
 
     /**
