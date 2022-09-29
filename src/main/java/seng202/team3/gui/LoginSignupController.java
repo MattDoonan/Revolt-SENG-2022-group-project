@@ -187,30 +187,13 @@ public class LoginSignupController {
     }
 
     /**
-     * Checks the email if its valid
-     * @return the boolean of valid email.
-     */
-    public boolean checkEmail() {
-        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."
-                + "[a-zA-Z0-9_+&*-]+)*@"
-                + "(?:[a-zA-Z0-9-]+\\.)+[a-z"
-                + "A-Z]{2,7}$";
-
-        Pattern pat = Pattern.compile(emailRegex);
-        if (signupEmailField.getText() == null) {
-            return false;
-        }
-        return pat.matcher(signupEmailField.getText()).matches();
-    }
-
-    /**
      * Checks the given user details for errors.
      * If no errors, calls manager to save user to database
      */
     @FXML
     public void signUp() {
         Boolean fail = false;
-        if (!checkEmail()) {
+        if (!UserManager.checkEmail(signupEmailField.getText())) {
             signupEmailField.setStyle("-fx-border-color: #ff0000;");
             fail = true;
         }
@@ -223,8 +206,6 @@ public class LoginSignupController {
             confPassField.setStyle("-fx-border-color: #ff0000;");
             fail = true;
         }
-        System.out.println(signupPasswordField.getText());
-        System.out.println(confPassField.getText());
         if (!signupPasswordField.getText().equals(confPassField.getText())) {
             confPassField.setStyle("-fx-border-color: #ff0000;");
             fail = true;

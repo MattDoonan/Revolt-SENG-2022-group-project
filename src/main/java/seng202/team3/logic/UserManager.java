@@ -2,6 +2,7 @@ package seng202.team3.logic;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.regex.Pattern;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.data.entity.User;
@@ -85,16 +86,32 @@ public class UserManager {
     }
 
     /**
+     * Checks the email if its valid
+     * @param email the string of the email
+     * @return the boolean of valid email.
+     */
+    public static boolean checkEmail(String email) {
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."
+                + "[a-zA-Z0-9_+&*-]+)*@"
+                + "(?:[a-zA-Z0-9-]+\\.)+[a-z"
+                + "A-Z]{2,7}$";
+
+        Pattern pat = Pattern.compile(emailRegex);
+        if (email == null) {
+            return false;
+        }
+        return pat.matcher(email).matches();
+    }
+
+    /**
      * Updates a pre-existing user
      *
      * @param user the user to update
+     * @throws IOException on sql fail
+     * @throws SQLException on sql fail
      */
-    public void updateUser(User user) {
-        try {
-            SqlInterpreter.getInstance().writeUser(user);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void updateUser(User user) throws IOException, SQLException {
+        SqlInterpreter.getInstance().writeUser(user);
     }
 
 }

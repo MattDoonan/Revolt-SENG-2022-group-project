@@ -1089,34 +1089,26 @@ public class SqlInterpreter implements DataReader {
      * Updates existing user (does not require password)
      * 
      * @param user the user object
-     * @throws IOException to check for errors
+     * @throws SQLException to check for errors
      */
-    public void writeUser(User user) throws IOException {
+    public void writeUser(User user) throws SQLException {
         String toAdd = "UPDATE user SET "
                 + "email = ?, username = ?,"
                 + " permissions = ?, carbonSaved = ? WHERE userid = ?;";
-        try (Connection connection = createConnection();
-                PreparedStatement statement = connection.prepareStatement(toAdd)) {
-            if (user.getUserid() == 0) {
-                statement.setNull(1, 0);
-            } else {
-                statement.setInt(1, user.getUserid());
-            }
-            statement.setString(2, user.getEmail());
-            statement.setString(3, user.getAccountName());
-            statement.setInt(4, user.getLevel().ordinal());
-            statement.setDouble(5, user.getCarbonSaved());
-            statement.setInt(6, user.getUserid());
-            statement.executeUpdate();
-            if (user.getUserid() == 0) {
-                user.setUserid(statement.getGeneratedKeys().getInt(1));
-            }
-
-            statement.close();
-            connection.close();
-        } catch (SQLException | NullPointerException e) {
-            throw new IOException(e.getMessage());
+        Connection connection = createConnection();
+        PreparedStatement statement = connection.prepareStatement(toAdd);
+        statement.setString(1, user.getEmail());
+        statement.setString(2, user.getAccountName());
+        statement.setInt(3, user.getLevel().ordinal());
+        statement.setDouble(4, user.getCarbonSaved());
+        statement.setInt(5, user.getUserid());
+        statement.executeUpdate();
+        if (user.getUserid() == 0) {
+            user.setUserid(statement.getGeneratedKeys().getInt(1));
         }
+        statement.close();
+        connection.close();
+
     }
 
     /**

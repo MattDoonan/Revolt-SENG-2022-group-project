@@ -1,10 +1,12 @@
 package seng202.team3.gui;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 import seng202.team3.data.entity.PermissionLevel;
@@ -36,13 +38,25 @@ public class AccountController {
      * Test for account name
      */
     @FXML
-    private Text accountName;
+    private TextField accountName;
 
     /**
      * Text for account email
      */
     @FXML
-    private Text accountEmail;
+    private TextField accountEmail;
+
+    /**
+     * Text for setting password
+     */
+    @FXML
+    private TextField accountPassword;
+
+    /**
+     * Button to confirm changes to user info
+     */
+    @FXML
+    private Button confirm;
 
     /**
      * distance travelled text
@@ -86,6 +100,9 @@ public class AccountController {
      */
     private BorderPane border;
 
+    /** the user manager */
+    private UserManager manage = new UserManager();
+
     /**
      * Unused constructor
      */
@@ -99,12 +116,12 @@ public class AccountController {
      * @param border the BorderPane
      */
     public void init(BorderPane border) {
-        User user = UserManager.getUser();
+        User user = manage.getUser();
         populateText(user);
         setChargerTable();
         this.border = border;
-        if (user.getLevel() != PermissionLevel.ADMIN) {
-            editAdmin.setOpacity(0);
+        if (user.getLevel() == PermissionLevel.ADMIN) {
+            editAdmin.setVisible(true);
         }
     }
 
@@ -127,7 +144,7 @@ public class AccountController {
      */
     @FXML
     public void adminEditing() {
-        if (UserManager.getUser().getLevel() == PermissionLevel.ADMIN) {
+        if (manage.getUser().getLevel() == PermissionLevel.ADMIN) {
             try {
                 FXMLLoader editor = new FXMLLoader(getClass()
                         .getResource("/fxml/admin_page.fxml"));
@@ -145,8 +162,8 @@ public class AccountController {
      * Opens the charger table for charger owners and admins
      */
     public void setChargerTable() {
-        if (UserManager.getUser().getLevel() == PermissionLevel.ADMIN
-                || UserManager.getUser().getLevel() == PermissionLevel.CHARGEROWNER) {
+        if (manage.getUser().getLevel() == PermissionLevel.ADMIN
+                || manage.getUser().getLevel() == PermissionLevel.CHARGEROWNER) {
             try {
                 FXMLLoader mainScene = new FXMLLoader(getClass()
                         .getResource("/fxml/main_table.fxml"));
@@ -157,6 +174,77 @@ public class AccountController {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+
+
+    /**
+     * Makes it so you can edit your own details on click
+     */
+    public void editDetails() {
+        if (editAccountButton.getText().equals("Edit Account")) {
+            editAccountButton.setText("Back");
+            confirm.setVisible(true);
+            accountPassword.setVisible(true);
+            accountName.setEditable(true);
+            accountEmail.setEditable(true);
+            accountName.setStyle("-fx-border-color: #000000; -fx-background-color: #FFFFFF;");
+            accountEmail.setStyle("-fx-border-color: #000000; -fx-background-color: #FFFFFF;");
+
+        } else {
+            editAccountButton.setText("Edit Account");
+            confirm.setVisible(false);
+            accountPassword.setVisible(false);
+            accountName.setEditable(false);
+            accountEmail.setEditable(false);
+            accountName.setStyle("-fx-border-color: transparent; "
+                    + "-fx-background-color: transparent;");
+            accountEmail.setStyle("-fx-border-color: transparent; "
+                    + "-fx-background-color: transparent;");
+            populateText(manage.getUser());
+        }
+    }
+
+    /**
+     * Confirms the changes made from the user
+     */
+    public void confirmChanges() {
+        Boolean fail = false;
+        if (!manage.checkEmail(accountEmail.getText())) {
+            accountEmail.setStyle("-fx-border-color: #ff0000;");
+            fail = true;
+        }
+        if (accountName.getText().isEmpty()) {
+            accountName.setStyle("-fx-border-color: #ff0000;");
+            fail = true;
+        }
+        if (fail) {
+            return;
+        }
+        User user = new User();
+        user.setAccountName(accountName.getText());
+        user.setEmail(accountEmail.getText());
+        user.setCarbonSaved(manage.getUser().getCarbonSaved());
+        user.setLevel(manage.getUser().getLevel());
+        user.setUserid(manage.getUser().getUserid());
+        Boolean failAll = false;
+        try {
+            if (accountPassword.getText().length() == 0) {
+                manage.updateUser(user);
+                manage.setUser(user);
+
+            } else if (accountPassword.getText().length() < 4) {
+                accountPassword.setStyle("-fx-border-color: #ff0000;");
+            } else {
+                manage.saveUser(user, accountPassword.getText());
+                manage.setUser(user);
+            }
+            editDetails();
+        } catch (IOException | SQLException e) {
+            accountPassword.setStyle("-fx-border-color: #ff0000;");
+            accountName.setStyle("-fx-border-color: #ff0000;");
+            accountEmail.setStyle("-fx-border-color: #ff0000;");
         }
     }
 }

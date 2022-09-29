@@ -18,6 +18,11 @@
 <center>
    <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="600.0">
    <children>
+            <Label fx:id="invalidSignup" layoutX="204.0" layoutY="116.0" text="Invalid information entered" textFill="RED" visible="false">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
       <Label layoutX="137.0" layoutY="65.0" text="Create an Account">
          <font>
             <Font size="36.0" />
@@ -120,10 +125,18 @@
                   </Button>
          </children>
       </GridPane>
-            <Label fx:id="invalidSignup" layoutX="204.0" layoutY="116.0" text="Invalid information entered" textFill="RED" visible="false">
+            <Label layoutX="109.0" layoutY="320.0" text="*" textFill="RED">
                <font>
                   <Font size="14.0" />
                </font>
+            </Label>
+            <Label layoutX="113.0" layoutY="320.0" text="Required inputs">
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <padding>
+                  <Insets left="7.0" />
+               </padding>
             </Label>
    </children>
 </AnchorPane>
