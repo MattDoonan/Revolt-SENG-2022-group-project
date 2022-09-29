@@ -251,6 +251,6 @@ public class Vehicle {
      */
     public String toString() {
         return "MAKE: " + make + "  MODEL: " + model + "  MAXRANGE: " + maxRange 
-        + "  ID: " + vehicleId + "  OWNER: " + owner;
+            + "  ID: " + vehicleId + "  OWNER: " + owner;
     }
 }
