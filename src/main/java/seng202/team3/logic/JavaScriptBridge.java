@@ -53,6 +53,10 @@ public class JavaScriptBridge {
         if (menu.getController() != null) {
             menu.getController().getManager().setPosition();
         }
+        if (menu.getJourneyController() != null) {
+            menu.getJourneyController().getManager().setPosition();
+            //TODO check back later
+        }
     }
 
     /**
@@ -168,6 +172,10 @@ public class JavaScriptBridge {
         loadChargerEdit(main.getSelectedCharger(), main.getPosition());
     }
 
+    /**
+     * Adds a {@link Charger Charger} to Journey
+     * @param id unique identifier
+     */
     public void addChargerToJourney(int id) {
         chargerHandler(id);
         MainManager mainManager = new MenuController().getController().getManager();

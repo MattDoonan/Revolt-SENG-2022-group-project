@@ -26,7 +26,7 @@ public class JourneyManager extends ChargerHandler {
     private Coordinate end;
 
 
-    private Coordinate tempPosition;
+    // private Coordinate tempPosition;
 
     /** List of {@link Charger chargers} that are candidates for journey*/
     private ObservableList<Charger> candidateChargers;
@@ -57,23 +57,23 @@ public class JourneyManager extends ChargerHandler {
         return selectedJourney;
     }
 
-    /**
-     * Gets temporary position
-     *
-     * @return temporary position
-     */
-    public Coordinate getPosition() {
-        return tempPosition;
-    }
+    // /**
+    //  * Gets temporary position
+    //  *
+    //  * @return temporary position
+    //  */
+    // public Coordinate getPosition() {
+    //     return tempPosition;
+    // }
 
-    /**
-     * Sets temporary position
-     *
-     * @param tempPosition temporary position
-     */
-    public void setPosition(Coordinate tempPosition) {
-        this.tempPosition = tempPosition;
-    }
+    // /**
+    //  * Sets temporary position
+    //  *
+    //  * @param tempPosition temporary position
+    //  */
+    // public void setPosition(Coordinate tempPosition) {
+    //     this.tempPosition = tempPosition;
+    // }
 
     /**
      * Gets start position

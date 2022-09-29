@@ -47,6 +47,7 @@
 			let routeToCharger;
 			let pointCoordinates = []; // contains a list of all the coordinates in a route in order.
 			let isJourney = false;
+			var circle;
 
 			/**
 			 * Creates a red icon
@@ -71,6 +72,8 @@
 				clearMarkers: clearMarkers,
 				addLocationToRoute: addLocationToRoute,
 				addCoordinateName: addCoordinateName,
+				setJourney: setJourney,
+				addCircle: addCircle,
 			};
 
 			/**
@@ -114,7 +117,7 @@
 					let latlng = map.mouseEventToLatLng(
 						map_event.originalEvent
 					);
-					if (!isRoute) {
+					if (isJourney || !isRoute) {
 						javaScriptBridge.addCoordinateFromClick(
 							`{"lat": ${latlng.lat}, "lng": ${latlng.lng}}`
 						);
@@ -327,6 +330,10 @@
 			 */
 			function setJourney() {
 				isJourney = true;
+			}
+
+			function addCircle(lat, long, rad) {
+				circle = L.circle([lat, long], {radius: rad}).addTo(map);
 			}
 		</script>
 	</body>

@@ -1,7 +1,6 @@
 package seng202.team3.gui;
 
 import java.io.IOException;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

@@ -1,7 +1,6 @@
 package seng202.team3.gui;
 
 import java.io.IOException;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -80,6 +79,7 @@ public class JourneyController {
         journeyManager.setStart(journeyManager.getPosition());
         makeStart.setDisable(true);
         startLabel.setText("Start position: " + journeyManager.getPosition().getAddress());
+        mapController.addChargersOnMap();
     }
 
     /**

@@ -1,8 +1,10 @@
 package seng202.team3.gui;
 
+import java.util.ArrayList;
 import javafx.stage.Stage;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
+import seng202.team3.logic.ChargerManager;
 import seng202.team3.logic.JavaScriptBridge;
 import seng202.team3.logic.JourneyManager;
 
@@ -38,7 +40,15 @@ public class JourneyMapController extends MapHandler {
         javaScriptConnector.call("clearMarkers");
         journeyManager.resetQuery();
         journeyManager.makeAllChargers();
-        for (Charger charger : journeyManager.getData()) {
+        //TODO move above into own function
+
+        ChargerManager chargerManager = new ChargerManager();
+        ArrayList<Charger> arrayChargers = new ArrayList<>(journeyManager.getData());
+        ArrayList<Charger> nearbyChargers = chargerManager.getNearbyChargers(arrayChargers,
+                    journeyManager.getPosition(), 10.0);
+        //TODO implement vehiclular distance
+
+        for (Charger charger : nearbyChargers) {
             javaScriptConnector.call("addMarker", charger.getLocation().getAddress(),
                     charger.getLocation().getLat(), charger.getLocation().getLon(),
                     charger.getChargerId());
