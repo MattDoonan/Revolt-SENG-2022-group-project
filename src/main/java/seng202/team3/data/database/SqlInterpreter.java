@@ -7,8 +7,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.math.BigInteger;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -119,7 +122,7 @@ public class SqlInterpreter implements DataReader {
                     new User(
                             "example" + i + "@fake.com", owners.get(i),
                             PermissionLevel.CHARGEROWNER),
-                    "demo");
+                            encryptThisString("demo"));
         }
 
         for (int i = 0; i < chargersToImport.size(); i++) {
@@ -132,7 +135,7 @@ public class SqlInterpreter implements DataReader {
         writeUser((User) readData(new QueryBuilderImpl().withSource("user")
                 .withFilter("username", "admin",
                         ComparisonType.EQUAL)
-                .build(), User.class).get(0), "admin");
+                .build(), User.class).get(0), encryptThisString("admin"));
 
         writeCharger(new ArrayList<>(chargersToImport));
     }
@@ -1215,4 +1218,42 @@ public class SqlInterpreter implements DataReader {
             }
         }
     }
+
+
+    /**
+     * Hashes the user's password
+     * From https://www.geeksforgeeks.org/sha-512-hash-in-java/
+     * @param input the string to be encrypted
+     * @return the encrypted string
+     */
+    public static String encryptThisString(String input) {
+        try {
+            // getInstance() method is called with algorithm SHA-512
+            MessageDigest md = MessageDigest.getInstance("SHA-512");
+  
+            // digest() method is called
+            // to calculate message digest of the input string
+            // returned as array of byte
+            byte[] messageDigest = md.digest(input.getBytes());
+  
+            // Convert byte array into signum representation
+            BigInteger no = new BigInteger(1, messageDigest);
+  
+            // Convert message digest into hex value
+            String hashtext = no.toString(16);
+  
+            // Add preceding 0s to make it 32 bit
+            while (hashtext.length() < 32) {
+                hashtext = "0" + hashtext;
+            }
+  
+            // return the HashText
+            return hashtext;
+
+        } catch (NoSuchAlgorithmException e) {
+            // For specifying wrong message digest algorithms
+            throw new RuntimeException(e);
+        }
+    }
+
 }
