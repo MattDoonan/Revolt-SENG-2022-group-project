@@ -6,7 +6,8 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" />
     <link rel="stylesheet"
         href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <link rel="stylesheet"
+        href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
 
     <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
@@ -32,8 +33,7 @@
     <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
     <script>
         let map;
-        let lat = -43.5279;
-        let lon = 172.5765;
+        let defaultZoom = 6;
         let markers = [];
         let coordinate;
         var javaScriptBridge; // must be declared as var (will not be correctly assigned in java with let keyword)
@@ -57,6 +57,7 @@
         let jsConnector = {
             addMarker,
             addCoordinate,
+            removeCoordinate,
             movePosition,
             addRoute,
             removeRoute,
@@ -87,12 +88,16 @@
          * creates and initialises the Google map, also defines on click event that calls java code
          *
          */
-        function initMap() {
-
+        function initMap(lat, lon, zoomed) {
             let mapOptions = {
                 center: [lat, lon],
-                zoom: 12
+                zoom: defaultZoom
             }
+
+            if (zoomed) {
+                mapOptions.zoom = 12;
+            }
+
             map = new L.map('map', mapOptions);
             new L.TileLayer('https://tile.csse.canterbury.ac.nz/hot/{z}/{x}/{y}.png', { // UCs tilemap server
                 attribution: '© OpenStreetMap contributors<br>Served by University of Canterbury'
@@ -119,7 +124,8 @@
             new L.Control.Geocoder.Nominatim({
                 geocodingQueryParams: {
                     countrycodes: 'nz'
-                }}).reverse(latlng, 4, results => {
+                }
+            }).reverse(latlng, 4, results => {
                 let r = results[0]
                 if (r) {
                     removeCoordinate();
@@ -137,12 +143,13 @@
                 geocoder: new L.Control.Geocoder.Nominatim({
                     geocodingQueryParams: {
                         countrycodes: 'nz'
-                    }}),
+                    }
+                }),
                 defaultMarkGeocode: false,
                 position: "topleft",
                 collapsed: false,
                 placeholder: "Search location",
-            }).on('markgeocode', function(e) {
+            }).on('markgeocode', function (e) {
                 let latlng = e.geocode.center
                 javaScriptBridge.addCoordinateFromClick(`{"lat": ${latlng.lat}, "lng": ${latlng.lng}}`)
                 removeCoordinate()
@@ -170,11 +177,11 @@
 
             //Allocates the text output on button according to permission level
             if (isEditable) {
-                textOutput = "<br><button type='button' onclick='javaScriptBridge.loadMoreInfo("+
-                id + ")'>Edit Charger</button>"
+                textOutput = "<br><button type='button' onclick='javaScriptBridge.loadMoreInfo(" +
+                    id + ")'>Edit Charger</button>"
             }
             m.bindPopup("Address: " + title + textOutput)
-            m.on("mouseover", function(ev) {m.openPopup();})
+            m.on("mouseover", function (ev) { m.openPopup(); })
             m.addTo(map).on("click", e => javaScriptBridge.chargerHandler(id),
             )
             markers.push(m)
@@ -200,9 +207,9 @@
          * @param lng longitude to place coordinate marker at
          */
         function addCoordinate(title, lat, lng) {
-            coordinate = new L.Marker([lat, lng], {icon: redIcon})
+            coordinate = new L.Marker([lat, lng], { icon: redIcon })
             coordinate.bindPopup(title + ": " + lat.toFixed(4) + " " + lng.toFixed(4))
-            coordinate.on("click", function(ev) {coordinate.openPopup()})
+            coordinate.on("click", function (ev) { coordinate.openPopup() })
             coordinate.addTo(map)
         }
 
@@ -255,7 +262,8 @@
                 geocoder: new L.Control.Geocoder.Nominatim({
                     geocodingQueryParams: {
                         countrycodes: 'nz'
-                    }}),
+                    }
+                }),
             }).addTo(map);
         }
 

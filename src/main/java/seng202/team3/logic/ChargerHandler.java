@@ -11,7 +11,6 @@ import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
-import seng202.team3.data.entity.User;
 
 /**
  * A class that deals with querying charger data and positional data

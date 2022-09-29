@@ -24,6 +24,7 @@ import javafx.stage.Stage;
 import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.logic.Calculations;
+import seng202.team3.logic.GeoLocationHandler;
 import seng202.team3.logic.MainManager;
 import seng202.team3.logic.MapManager;
 
@@ -195,7 +196,12 @@ public class MainController {
         loadMapView(stage);
         manage.resetQuery();
         manage.makeAllChargers();
-        manage.setDistance(changeDistance.getValue());
+        manage.setPosition();
+        if (manage.getPosition() == GeoLocationHandler.DEFAULT_COORDINATE) {
+            manage.setDistance(0);
+        } else {
+            manage.setDistance(changeDistance.getValue());
+        }
         addChargersToDisplay(manage.getCloseChargerData());
         change();
 
@@ -214,7 +220,6 @@ public class MainController {
             image = null;
         }
     }
-
 
     /**
      * Display charger info on panel
@@ -307,7 +312,7 @@ public class MainController {
         for (int i = 0; i < chargersToAdd.size(); i++) {
             HBox add = new HBox(); // creates HBox that will contain the changer info
 
-            //adds the cached image
+            // adds the cached image
             if (image != null) {
                 add.getChildren().add(new ImageView(image));
             } else {
@@ -509,6 +514,5 @@ public class MainController {
     public void onEnter(ActionEvent e) {
         executeSearch();
     }
-
 
 }

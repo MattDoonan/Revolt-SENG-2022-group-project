@@ -1132,7 +1132,7 @@ public class SqlInterpreter implements DataReader {
         if (correctPassword == null) {
             return null;
         }
-        if (password == correctPassword) {
+        if (password.equals(correctPassword)) {
             List<Object> result = readData(new QueryBuilderImpl().withSource("user")
                     .withFilter("username", username, ComparisonType.EQUAL)
                     .build(), User.class);

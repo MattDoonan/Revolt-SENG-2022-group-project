@@ -1,7 +1,6 @@
 package seng202.team3.gui;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.fxml.FXML;
@@ -16,12 +15,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import seng202.team3.data.database.SqlInterpreter;
-import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.data.entity.User;
 import seng202.team3.logic.AdminManager;
 import seng202.team3.logic.UserManager;
-
 
 /**
  * An AdminController class that displays on the FXML
@@ -144,7 +140,6 @@ public class AdminController {
             e.printStackTrace();
         }
     }
-
 
     /**
      * Adds a new user
@@ -321,6 +316,3 @@ public class AdminController {
         }
     }
 }
-
-
-

@@ -108,8 +108,10 @@ public class MapViewController extends MapHandler {
      * @param coordinate the coordinate which is clicked
      */
     public void makeCoordinate(Coordinate coordinate) {
+        javaScriptConnector.call("removeCoordinate");
         javaScriptConnector.call("addCoordinate", "Current Coordinate: ",
                 coordinate.getLat(), coordinate.getLon());
+        changePosition(coordinate);
         map.makeCoordinate(coordinate);
     }
 
@@ -235,7 +237,5 @@ public class MapViewController extends MapHandler {
                     + "and confirm to add a charger: \n\n", "add");
         }
     }
-
-
 
 }

@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.data.entity.User;
 import seng202.team3.gui.MainController;
 import seng202.team3.gui.MainWindow;
+import seng202.team3.gui.MapHandler;
 import seng202.team3.logic.Calculations;
 import seng202.team3.logic.UserManager;
 
@@ -41,6 +43,7 @@ public class MainSearchFilterTestFx extends TestFxBase {
     @Override
     public void setUp() throws Exception {
         ApplicationTest.launch(MainWindow.class);
+
     }
 
     /**
@@ -65,10 +68,13 @@ public class MainSearchFilterTestFx extends TestFxBase {
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
         Parent page = loader.load();
+        MapHandler.resetPermission();
+        push(KeyCode.ESCAPE); // Select no on dialog
         initState(loader, stage);
         Scene scene = new Scene(page);
         stage.setScene(scene);
         stage.show();
+        controller.getManager().resetQuery();
     }
 
     /**
@@ -82,6 +88,7 @@ public class MainSearchFilterTestFx extends TestFxBase {
         controller = loader.getController();
         BorderPane b = new BorderPane();
         controller.init(stage, b);
+
     }
 
     /**
@@ -89,11 +96,11 @@ public class MainSearchFilterTestFx extends TestFxBase {
      */
     @Test
     public void lessWhenSearchAddress() {
-        clickOn("#executeSearch");
+        controller.getManager().setPosition();
         int total;
         total = controller.getManager().getCloseChargerData().size();
         clickOn("#searchCharger");
-        write("auck");
+        write("christ");
         clickOn("#executeSearch");
         int newTotal = controller.getManager().getCloseChargerData().size();
         assertTrue(total > newTotal);
@@ -117,6 +124,7 @@ public class MainSearchFilterTestFx extends TestFxBase {
 
     @Test
     public void filtersMultipleTicks() {
+        // clickOn("NO");
         boolean isValid = true;
         clickOn("#filters");
         clickOn("#chargerTypes");

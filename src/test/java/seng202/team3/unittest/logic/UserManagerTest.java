@@ -1,5 +1,9 @@
 package seng202.team3.unittest.logic;
 
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,10 +17,6 @@ import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.data.entity.User;
 import seng202.team3.logic.UserManager;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.stream.Stream;
 
 public class UserManagerTest {
 
@@ -24,11 +24,10 @@ public class UserManagerTest {
 
     private User user;
 
-
     @BeforeEach
     public void reset() {
         manager = new UserManager();
-        user = new User("real@gmail.com", "testAccount", PermissionLevel.USER );
+        user = new User("real@gmail.com", "testAccount", PermissionLevel.USER);
     }
 
     @AfterEach
@@ -57,7 +56,8 @@ public class UserManagerTest {
         }
         List<Object> res = SqlInterpreter.getInstance().readData(new QueryBuilderImpl()
                 .withSource("user").withFilter("username", "testAccount",
-                        ComparisonType.EQUAL).build(), User.class);
+                        ComparisonType.EQUAL)
+                .build(), User.class);
 
         Assertions.assertEquals((User) res.get(0), user);
     }
@@ -70,7 +70,8 @@ public class UserManagerTest {
         manager.saveUser(user, "test");
         List<Object> res = SqlInterpreter.getInstance().readData(new QueryBuilderImpl()
                 .withSource("user").withFilter("username", "testAccount",
-                        ComparisonType.EQUAL).build(), User.class);
+                        ComparisonType.EQUAL)
+                .build(), User.class);
         try {
             Assertions.assertEquals((User) res.get(0),
                     manager.login("testAccount", "test"));
@@ -91,7 +92,8 @@ public class UserManagerTest {
             manager.updateUser(user);
             List<Object> res = SqlInterpreter.getInstance().readData(new QueryBuilderImpl()
                     .withSource("user").withFilter("username", "testAccount",
-                            ComparisonType.EQUAL).build(), User.class);
+                            ComparisonType.EQUAL)
+                    .build(), User.class);
             Assertions.assertEquals((User) res.get(0), user);
         } catch (SQLException e) {
             Assertions.fail("Database failed");
@@ -113,6 +115,7 @@ public class UserManagerTest {
 
     /**
      * Tests some valid email addresses
+     * 
      * @param email the email string
      */
     @ParameterizedTest
@@ -121,10 +124,9 @@ public class UserManagerTest {
         Assertions.assertTrue(manager.checkEmail(email));
     }
 
-
     private static Stream<Arguments> negativeEmailTests() {
         return Stream.of(
-                // Arguments.of("abc-@mail.com"),  // Test needs to pass but fails
+                // Arguments.of("abc-@mail.com"), // Test needs to pass but fails
                 Arguments.of("abc..def@mail.com"),
                 Arguments.of(".abc@mail.com"),
                 Arguments.of("abc#def@mail.com"),
@@ -136,11 +138,12 @@ public class UserManagerTest {
 
     /**
      * Tests some invalid email addresses
+     * 
      * @param email the email
      */
     @ParameterizedTest
     @MethodSource("negativeEmailTests")
     public void testInvalidEmails(String email) {
-        Assertions.assertFalse(manager.checkEmail(email));
+        Assertions.assertFalse(UserManager.checkEmail(email));
     }
 }

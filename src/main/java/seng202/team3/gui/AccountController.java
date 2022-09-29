@@ -82,7 +82,6 @@ public class AccountController {
     @FXML
     private Text mostViewed;
 
-
     /**
      * EditAdmin button
      */
@@ -119,7 +118,7 @@ public class AccountController {
      * @param border the BorderPane
      */
     public void init(BorderPane border) {
-        User user = manage.getUser();
+        User user = UserManager.getUser();
         populateText(user);
         setChargerTable();
         this.border = border;
@@ -147,7 +146,7 @@ public class AccountController {
      */
     @FXML
     public void adminEditing() {
-        if (manage.getUser().getLevel() == PermissionLevel.ADMIN) {
+        if (UserManager.getUser().getLevel() == PermissionLevel.ADMIN) {
             try {
                 FXMLLoader editor = new FXMLLoader(getClass()
                         .getResource("/fxml/admin_page.fxml"));
@@ -182,8 +181,6 @@ public class AccountController {
         }
     }
 
-
-
     /**
      * Makes it so you can edit your own details on click
      */
@@ -207,7 +204,7 @@ public class AccountController {
                     + "-fx-background-color: transparent;");
             accountEmail.setStyle("-fx-border-color: transparent; "
                     + "-fx-background-color: transparent;");
-            populateText(manage.getUser());
+            populateText(UserManager.getUser());
         }
     }
 
@@ -216,7 +213,7 @@ public class AccountController {
      */
     public void confirmChanges() {
         Boolean fail = false;
-        if (!manage.checkEmail(accountEmail.getText())) {
+        if (!UserManager.checkEmail(accountEmail.getText())) {
             accountEmail.setStyle("-fx-border-color: #ff0000;");
             fail = true;
         }
@@ -230,20 +227,20 @@ public class AccountController {
         User user = new User();
         user.setAccountName(accountName.getText());
         user.setEmail(accountEmail.getText());
-        user.setCarbonSaved(manage.getUser().getCarbonSaved());
-        user.setLevel(manage.getUser().getLevel());
-        user.setUserid(manage.getUser().getUserid());
-        Boolean failAll = false;
+        user.setCarbonSaved(UserManager.getUser().getCarbonSaved());
+        user.setLevel(UserManager.getUser().getLevel());
+        user.setUserid(UserManager.getUser().getUserid());
+
         try {
             if (accountPassword.getText().length() == 0) {
                 manage.updateUser(user);
-                manage.setUser(user);
+                UserManager.setUser(user);
 
             } else if (accountPassword.getText().length() < 4) {
                 accountPassword.setStyle("-fx-border-color: #ff0000;");
             } else {
                 manage.saveUser(user, accountPassword.getText());
-                manage.setUser(user);
+                UserManager.setUser(user);
             }
             editDetails();
         } catch (IOException | SQLException e) {
@@ -258,8 +255,8 @@ public class AccountController {
      * Calls table refresh if the table exists
      */
     public void tableRefresh() {
-        if (manage.getUser().getLevel() == PermissionLevel.ADMIN
-                || manage.getUser().getLevel() == PermissionLevel.CHARGEROWNER) {
+        if (UserManager.getUser().getLevel() == PermissionLevel.ADMIN
+                || UserManager.getUser().getLevel() == PermissionLevel.CHARGEROWNER) {
             controller.refreshTable();
         }
     }

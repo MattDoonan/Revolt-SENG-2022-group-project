@@ -20,11 +20,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.entity.Charger;
-import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.data.entity.User;
 import seng202.team3.logic.JavaScriptBridge;
 import seng202.team3.logic.TableManager;
-import seng202.team3.logic.UserManager;
 
 /**
  * A TableController class that deals with the display of the table objects
@@ -289,8 +287,8 @@ public class TableController {
      * Maps charger to the parking cost
      */
     @FXML
-    protected final TableColumn<Charger, Boolean>
-            carparkCostCol = new TableColumn<>("Carpark Cost");
+    protected final TableColumn<Charger, Boolean> carparkCostCol = new TableColumn<>(
+            "Carpark Cost");
 
     /**
      * Maps charger to the time limit
@@ -302,8 +300,8 @@ public class TableController {
      * Maps charger to the has attraction
      */
     @FXML
-    protected final TableColumn<Charger, Boolean>
-            attractionCol = new TableColumn<>("Has Attraction");
+    protected final TableColumn<Charger, Boolean> attractionCol = new TableColumn<>(
+            "Has Attraction");
 
     /**
      * Maps charger to the latitude
@@ -342,7 +340,6 @@ public class TableController {
     @FXML
     protected final TableColumn<Charger, String> currentsCol = new TableColumn<>(
             "Current types");
-
 
     /**
      * Unused constructor

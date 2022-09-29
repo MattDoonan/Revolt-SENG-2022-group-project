@@ -60,7 +60,8 @@ public class JavaScriptBridge {
      * Parses a string into a series of coordinates
      *
      * @param latlng the string to be parsed
-     * @return {@link seng202.team3.data.entity.Coordinate}, the coordinate end product
+     * @return {@link seng202.team3.data.entity.Coordinate}, the coordinate end
+     *         product
      */
     public Coordinate parseCoordinate(String latlng) {
         JSONParser parser = new JSONParser();
@@ -182,8 +183,10 @@ public class JavaScriptBridge {
     /**
      * Creates the charger adding/editing screen when necessary
      *
-     * @param charger    the {@link seng202.team3.data.entity.Charger} that is being selected
-     * @param coordinate the {@link seng202.team3.data.entity.Coordinate} that is being selected
+     * @param charger    the {@link seng202.team3.data.entity.Charger} that is being
+     *                   selected
+     * @param coordinate the {@link seng202.team3.data.entity.Coordinate} that is
+     *                   being selected
      */
     public void loadChargerEdit(Charger charger, Coordinate coordinate) {
         try {

@@ -1,5 +1,12 @@
 package seng202.team3.logic;
 
+import com.maxmind.geoip2.DatabaseReader;
+import com.maxmind.geoip2.exception.GeoIp2Exception;
+import com.maxmind.geoip2.model.CityResponse;
+import java.io.File;
+import java.io.IOException;
+import java.net.InetAddress;
+import org.apache.commons.io.FileUtils;
 import seng202.team3.data.entity.Coordinate;
 
 /**
@@ -19,6 +26,17 @@ public class GeoLocationHandler {
      * Coordinate to perform the geolocation with
      */
     private Coordinate coordinate;
+
+    /**
+     * Default coordinate all nz
+     */
+    public static final Coordinate DEFAULT_COORDINATE = new Coordinate(
+            null, null, -40.9006, 174.8860, "New Zealand");
+
+    /**
+     * DatabaseReader for geolocation data
+     */
+    private static DatabaseReader dbReader;
 
     /**
      * Private initaliser for the geolocation handler
@@ -48,6 +66,9 @@ public class GeoLocationHandler {
      * @return {@link seng202.team3.data.entity.Coordinate} the selected coordinate
      */
     public Coordinate getCoordinate() {
+        if (coordinate == null) {
+            coordinate = DEFAULT_COORDINATE;
+        }
         return coordinate;
     }
 
@@ -75,5 +96,40 @@ public class GeoLocationHandler {
      */
     public void clearCoordinate() {
         coordinate = null;
+    }
+
+    /**
+     * Finds the users city from their ip address
+     * 
+     * @throws IOException     if the database cannot be read
+     * @throws GeoIp2Exception if a city cannot be found
+     */
+    public static void setCurrentLocation() throws IOException, GeoIp2Exception {
+        loadGeoLocationData(); // load in database if not already loaded
+
+        InetAddress userIp = InetAddress.getByName("203.211.72.160");
+        Coordinate location = new Coordinate();
+        CityResponse response = dbReader.city(userIp);
+
+        location.setLat(response.getLocation().getLatitude());
+        location.setLon(response.getLocation().getLongitude());
+        location.setAddress("My Position");
+        GeoLocationHandler.getInstance().setCoordinate(location, location.getAddress());
+    }
+
+    /**
+     * Loads in the GeoLocation database which maps ips to cities
+     * 
+     * @throws IOException if the database cannot be read
+     */
+    private static void loadGeoLocationData() throws IOException {
+        if (dbReader == null) {
+
+            File ipDb = File.createTempFile("geolocation", "db");
+            FileUtils.copyInputStreamToFile(
+                    getInstance().getClass().getResourceAsStream("/GeoLite2-City.mmdb"), ipDb);
+
+            dbReader = new DatabaseReader.Builder(ipDb).build();
+        }
     }
 }

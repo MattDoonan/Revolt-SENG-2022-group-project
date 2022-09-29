@@ -11,7 +11,6 @@ import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.User;
 import seng202.team3.data.entity.Vehicle;
-import seng202.team3.gui.MenuController;
 
 /**
  * Logic layer for the garage Controller
@@ -37,7 +36,6 @@ public class GarageManager {
      */
     private User user;
 
-
     /**
      * Initialize GarageManager
      */
@@ -52,7 +50,7 @@ public class GarageManager {
      */
     public void resetQuery() {
         vehicleDataQuery = new QueryBuilderImpl().withSource("vehicle")
-            .withFilter("owner", Integer.toString(user.getUserid()), ComparisonType.EQUAL);
+                .withFilter("owner", Integer.toString(user.getUserid()), ComparisonType.EQUAL);
     }
 
     /**

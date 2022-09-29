@@ -1,6 +1,7 @@
 package seng202.team3.logic;
 
 import seng202.team3.data.entity.Coordinate;
+import seng202.team3.gui.MenuController;
 
 /**
  * Manages Map-related functionality
@@ -42,8 +43,9 @@ public class MapManager {
     public void makeCoordinate(Coordinate coordinate) {
         GeoLocationHandler.getInstance().setCoordinate(coordinate,
                 coordinate.getAddress());
+
         manager.setPosition();
-        manager.getCloseChargerData();
+        new MenuController().getController().refreshTable();
     }
 
 }

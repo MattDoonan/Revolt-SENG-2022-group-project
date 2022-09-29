@@ -1,13 +1,11 @@
 package seng202.team3.logic;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
-import seng202.team3.data.entity.Coordinate;
 import seng202.team3.data.entity.PermissionLevel;
 
 /**
@@ -32,7 +30,7 @@ public class MainManager extends ChargerHandler implements ChargerInterface {
      * Saves the MainController to call later
      */
     public MainManager() {
-        selectedCoordinate = new Coordinate(null, null, -43.522518157958984, 172.5811767578125);
+        selectedCoordinate = GeoLocationHandler.getInstance().getCoordinate();
     }
 
     /**
@@ -67,7 +65,7 @@ public class MainManager extends ChargerHandler implements ChargerInterface {
                     arrayChargers, selectedCoordinate, distance);
         } else {
             arrayChargers = chargerManager.getNearbyChargers(
-                    arrayChargers, selectedCoordinate, 2000); //Enough to cover NZ
+                    arrayChargers, selectedCoordinate, 2000); // Enough to cover NZ
         }
         ObservableList<Charger> closerChargers = FXCollections.observableList(arrayChargers);
         return closerChargers;
@@ -122,7 +120,7 @@ public class MainManager extends ChargerHandler implements ChargerInterface {
     public void editCharger() {
         if (getSelectedCharger() != null) {
             if ((UserManager.getUser().getLevel() == PermissionLevel.ADMIN)
-                || (getSelectedCharger().getOwnerId() == UserManager.getUser().getUserid())) {
+                    || (getSelectedCharger().getOwnerId() == UserManager.getUser().getUserid())) {
                 JavaScriptBridge bridge = new JavaScriptBridge();
                 bridge.loadMoreInfo(getSelectedCharger().getChargerId());
                 makeAllChargers();
