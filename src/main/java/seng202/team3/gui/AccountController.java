@@ -103,6 +103,9 @@ public class AccountController {
     /** the user manager */
     private UserManager manage = new UserManager();
 
+    /** Table controller */
+    private TableController controller;
+
     /**
      * Unused constructor
      */
@@ -168,7 +171,7 @@ public class AccountController {
                 FXMLLoader mainScene = new FXMLLoader(getClass()
                         .getResource("/fxml/main_table.fxml"));
                 Parent mainNode = mainScene.load();
-                TableController controller = mainScene.getController();
+                controller = mainScene.getController();
                 controller.init();
                 chargerTable.setTop(mainNode);
             } catch (IOException e) {
@@ -245,6 +248,17 @@ public class AccountController {
             accountPassword.setStyle("-fx-border-color: #ff0000;");
             accountName.setStyle("-fx-border-color: #ff0000;");
             accountEmail.setStyle("-fx-border-color: #ff0000;");
+        }
+        tableRefresh();
+    }
+
+    /**
+     * Calls table refresh if the table exists
+     */
+    public void tableRefresh() {
+        if (manage.getUser().getLevel() == PermissionLevel.ADMIN
+                || manage.getUser().getLevel() == PermissionLevel.CHARGEROWNER) {
+            controller.refreshTable();
         }
     }
 }

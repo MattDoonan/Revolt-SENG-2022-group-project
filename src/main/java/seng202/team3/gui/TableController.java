@@ -366,7 +366,7 @@ public class TableController {
     /**
      * Sets the id of each column so they can all be fx tested
      */
-    public void setIdForTesting() {
+    private void setIdForTesting() {
         idCol.setId("idCol");
         xposCol.setId("xposCol");
         yposCol.setId("yposCol");
@@ -388,7 +388,7 @@ public class TableController {
     /**
      * Initializes tha table and columns
      */
-    public void tableMaker() {
+    private void tableMaker() {
         mainTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         idCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
         xposCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
@@ -465,7 +465,7 @@ public class TableController {
      *
      * @param chargersToAdd Observable list of charger objects
      */
-    public void addToDisplay(ObservableList<Charger> chargersToAdd) {
+    private void addToDisplay(ObservableList<Charger> chargersToAdd) {
         mainTable.getItems().clear();
         mainTable.setItems(chargersToAdd);
         idCol.setCellValueFactory(charger -> new ReadOnlyIntegerWrapper(
@@ -566,7 +566,7 @@ public class TableController {
     /**
      * Sets the Original text and updates distance filter for chargers on slider
      */
-    public void change() {
+    private void change() {
         onParkingFilter.textProperty()
                 .setValue("Minimum number of spaces ("
                         + Math.round(parkingLot.getValue()) + ")");
@@ -598,7 +598,7 @@ public class TableController {
      * Executes an add, loading a small mapview screen
      */
     @FXML
-    public void addCharger() {
+    private void addCharger() {
 
         try {
             FXMLLoader miniMap = new FXMLLoader(getClass().getResource(
@@ -669,6 +669,13 @@ public class TableController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Refreshes the table info
+     */
+    public void refreshTable() {
+        updateTable();
     }
 
     /**
