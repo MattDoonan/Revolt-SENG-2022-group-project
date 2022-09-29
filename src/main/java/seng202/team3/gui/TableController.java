@@ -356,24 +356,11 @@ public class TableController {
     public void init() {
         manage = new TableManager();
         manage.resetQuery();
-        checkPermission();
         tableMaker();
         manage.makeAllChargers();
         addToDisplay(manage.getData());
         change();
         setIdForTesting();
-    }
-
-    /**
-     * Checks if the user is a charger owner
-     * if so adjust query, so they only see there chargers
-     */
-    private void checkPermission() {
-        if (UserManager.getUser().getLevel() == PermissionLevel.CHARGEROWNER) {
-            manage.adjustQuery("owner",
-                    Integer.toString(UserManager.getUser().getUserid()), ComparisonType.EQUAL);
-            showOwner.selectedProperty().setValue(false);
-        }
     }
 
     /**
@@ -572,7 +559,6 @@ public class TableController {
         if (searchCharger.getText().length() != 0) {
             manage.adjustQuery("address", searchCharger.getText(), ComparisonType.CONTAINS);
         }
-        checkPermission();
         manage.makeAllChargers();
         addToDisplay(manage.getData());
     }

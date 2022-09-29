@@ -1,13 +1,11 @@
 package seng202.team3.logic;
 
 import java.io.IOException;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import seng202.team3.data.database.ComparisonType;
+import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
-import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
+import seng202.team3.data.entity.PermissionLevel;
 
 /**
  * A Table Manager that implements the adding, deleting and editing
@@ -68,4 +66,16 @@ public class TableManager extends ChargerHandler implements ChargerInterface {
         }
     }
 
+
+    /**
+     * Load the initial query; overwritten to have a filter according to permission level
+     */
+    @Override
+    public void resetQuery() {
+        mainDataQuery = new QueryBuilderImpl().withSource("charger");
+        if (UserManager.getUser().getLevel() == PermissionLevel.CHARGEROWNER) {
+            mainDataQuery.withFilter("owner",
+                    Integer.toString(UserManager.getUser().getUserid()), ComparisonType.EQUAL);
+        }
+    }
 }
