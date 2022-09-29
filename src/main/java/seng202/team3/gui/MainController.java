@@ -167,6 +167,11 @@ public class MainController {
     private BorderPane menuWindow;
 
     /**
+     * A reflection of the routing state of mapcontroller
+     */
+    private Boolean routing;
+
+    /**
      * The map controller
      */
     private MapViewController mapController;
@@ -495,14 +500,17 @@ public class MainController {
      * Gets the manager to edit the charger
      */
     public void editCharger() {
-        manage.editCharger();
+        checkRouting();
+        if (!routing) {
+            manage.editCharger();
+        }
     }
 
     /**
-     * Toggles the route view on.
+     * Checks if routing. If routing, sets editable to
      */
-    public void toggleRoute() {
-        mapController.toggleRoute();
+    public void checkRouting() {
+        routing = mapController.isRouteDisplayed();
     }
 
     /**

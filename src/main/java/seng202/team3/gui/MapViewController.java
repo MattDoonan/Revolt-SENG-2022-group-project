@@ -180,18 +180,27 @@ public class MapViewController extends MapHandler {
     public void toggleRoute() {
         if (routeDisplayed) {
             removeRoute();
-            addButton.setOpacity(0.0);
-            routing.setText("Route To Charger");
-            routing.setStyle("-fx-background-color:#3ea055;");
-        } else {
             if (UserManager.getUser().getLevel() == PermissionLevel.ADMIN
                     || UserManager.getUser().getLevel() == PermissionLevel.CHARGEROWNER) {
                 addButton.setOpacity(100.0);
             }
+            routing.setText("Route To Charger");
+            routing.setStyle("-fx-background-color:#3ea055;");
+        } else {
+            addButton.setOpacity(0.0);
             addRouteToCharger();
             routing.setText("Stop Routing");
             routing.setStyle("-fx-background-color:#FF3131;");
         }
+    }
+
+    /**
+     * Gets the routeDisplayed field
+     *
+     * @return a boolean of true, if route is displayed, else false.
+     */
+    public boolean isRouteDisplayed() {
+        return routeDisplayed;
     }
 
     /**

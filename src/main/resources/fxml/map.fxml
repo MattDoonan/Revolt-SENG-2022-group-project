@@ -29,4 +29,15 @@
          </BorderPane.margin>
       </AnchorPane>
    </top>
+   <bottom>
+      <AnchorPane maxHeight="0.0" minHeight="0.0" prefHeight="0.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button alignment="CENTER" layoutX="10.0" layoutY="-93.0" mnemonicParsing="false" prefHeight="86.0" prefWidth="103.0" text="RelocatePosition" textAlignment="CENTER" wrapText="true">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Button>
+         </children>
+      </AnchorPane>
+   </bottom>
 </BorderPane>

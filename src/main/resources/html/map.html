@@ -104,6 +104,7 @@
             }).addTo(map)
 
             createBar().addTo(map)
+            addCoordinate("Current location: ", lat, lon)
 
             map.on("click", (map_event) => {
                 let latlng = map.mouseEventToLatLng(map_event.originalEvent)
