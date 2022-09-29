@@ -66,7 +66,14 @@ public abstract class MapHandler {
                         javaScriptConnector = (JSObject) webEngine.executeScript("jsConnector");
                         javaScriptConnector.call("initMap");
 
-                        addChargersOnMap();
+                        // TODO find a better way for these
+                        if (this instanceof MapViewController) {
+                            addChargersOnMap();
+                        }
+                        
+                        if (this instanceof JourneyMapController) {
+                            javaScriptConnector.call("setJourney");
+                        }
                     }
                 });
     }

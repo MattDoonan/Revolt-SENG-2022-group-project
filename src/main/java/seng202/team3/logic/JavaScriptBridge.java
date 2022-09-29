@@ -168,6 +168,14 @@ public class JavaScriptBridge {
         loadChargerEdit(main.getSelectedCharger(), main.getPosition());
     }
 
+    public void addChargerToJourney(int id) {
+        chargerHandler(id);
+        MainManager mainManager = new MenuController().getController().getManager();
+        JourneyManager journeyManager = new MenuController().getJourneyController().getManager();
+
+        journeyManager.addCharger(mainManager.getSelectedCharger());
+    }
+
     /**
      * Sets the singleton ChargerManager Coordinate to the latlng
      *

@@ -30,6 +30,12 @@ public class MenuController {
     private Button menuButton;
 
     /**
+     * Button for journey
+     */
+    @FXML
+    private Button journeyButton;
+
+    /**
      * Button for the vehicle
      */
     @FXML
@@ -82,6 +88,22 @@ public class MenuController {
      */
     public void menuExit() {
         menuButton.setStyle("-fx-text-fill:#ffffff;-fx-font-size: 24px; "
+                + "-fx-background-color: #e06666;");
+    }
+
+    /**
+     * journeyHover
+     */
+    public void journeyHover() {
+        journeyButton.setStyle("-fx-text-fill:#000000; -fx-font-size: 26px; "
+                + "-fx-background-color: #e06666;");
+    }
+
+    /**
+     * journeyExit
+     */
+    public void journeyExit() {
+        journeyButton.setStyle("-fx-text-fill:#ffffff;-fx-font-size: 24px; "
                 + "-fx-background-color: #e06666;");
     }
 

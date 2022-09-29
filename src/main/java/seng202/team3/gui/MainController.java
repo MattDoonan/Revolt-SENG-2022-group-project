@@ -23,6 +23,7 @@ import javafx.stage.Stage;
 import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.logic.Calculations;
+import seng202.team3.logic.JourneyManager;
 import seng202.team3.logic.MainManager;
 import seng202.team3.logic.MapManager;
 
