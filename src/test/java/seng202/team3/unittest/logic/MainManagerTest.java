@@ -374,7 +374,7 @@ public class MainManagerTest {
         manage.resetQuery();
         manage.makeAllChargers();
         // Checks the sizes of each list
-        assertArrayEquals(chargerList.toArray(), manage.getCloseChargerData().toArray());
+        assertEquals(chargerList.size(), manage.getCloseChargerData().size());
 
     }
 }
