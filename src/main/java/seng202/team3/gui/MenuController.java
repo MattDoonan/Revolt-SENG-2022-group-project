@@ -262,8 +262,7 @@ public class MenuController {
         try {
             if (UserManager.getUser() == UserManager.getGuest()) {
                 createLoginWindow("/fxml/login.fxml", "Login", null, null);
-            }
-            if (UserManager.getUser() == UserManager.getGuest()) {
+            } else {
                 FXMLLoader accountLoader = new FXMLLoader(getClass()
                         .getResource("/fxml/account.fxml"));
                 Parent accountViewParent = accountLoader.load();
