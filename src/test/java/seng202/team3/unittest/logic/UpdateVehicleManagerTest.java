@@ -112,7 +112,11 @@ public class UpdateVehicleManagerTest {
         // Test adding a vehicle
         manager.saveVehicle(testVehicle);
         manager.saveVehicle(testVehicleTwo);
-        ObservableList<Vehicle> vehicles = getVehicles();
+        ObservableList<Vehicle> vehicles;
+        
+        manager.saveVehicle(testVehicle);
+        manager.saveVehicle(testVehicleTwo);
+        vehicles = getVehicles();
 
         assertTrue(testVehicleTwo.equals(vehicles.get(vehicles.size() - 1)));
         assertTrue(testVehicle.equals(vehicles.get(vehicles.size() - 2)));
