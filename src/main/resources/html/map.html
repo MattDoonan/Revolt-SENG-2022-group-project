@@ -55,15 +55,15 @@
          * This object can be returned to our java code, where we can call the functions we define inside of it
          */
         let jsConnector = {
-            addMarker: addMarker,
-            addCoordinate: addCoordinate,
-            movePosition: movePosition,
-            addRoute: addRoute,
-            removeRoute: removeRoute,
-            initMap: initMap,
-            clearMarkers: clearMarkers,
-            addLocationToRoute: addLocationToRoute,
-            addCoordinateName: addCoordinateName,
+            addMarker,
+            addCoordinate,
+            movePosition,
+            addRoute,
+            removeRoute,
+            initMap,
+            clearMarkers,
+            addLocationToRoute,
+            addCoordinateName,
         };
 
 
@@ -99,8 +99,6 @@
             }).addTo(map)
 
             createBar().addTo(map)
-
-
 
             map.on("click", (map_event) => {
                 let latlng = map.mouseEventToLatLng(map_event.originalEvent)
@@ -162,12 +160,20 @@
          * @param title tooltip to display on hover
          * @param lat latitude to place marker at
          * @param lng longitude to place marker at
+         * @param id the id of the marker (charger id)
+         * @param isEditable true if editable
          */
-        function addMarker(title, lat, lng, id) {
+        function addMarker(title, lat, lng, id, isEditable) {
             let m = new L.Marker([lat, lng])
             m.id = id
-            m.bindPopup("Address: " + title + "<br><button type='button' onclick='javaScriptBridge.loadMoreInfo("+
-                id + ")'>Edit Charger</button>")
+            let textOutput = ""
+
+            //Allocates the text output on button according to permission level
+            if (isEditable) {
+                textOutput = "<br><button type='button' onclick='javaScriptBridge.loadMoreInfo("+
+                id + ")'>Edit Charger</button>"
+            }
+            m.bindPopup("Address: " + title + textOutput)
             m.on("mouseover", function(ev) {m.openPopup();})
             m.addTo(map).on("click", e => javaScriptBridge.chargerHandler(id),
             )

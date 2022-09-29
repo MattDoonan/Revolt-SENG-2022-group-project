@@ -500,7 +500,6 @@ public class MainController {
         mapController.toggleRoute();
     }
 
-
     /**
      * Searches on enter
      *
@@ -510,5 +509,6 @@ public class MainController {
     public void onEnter(ActionEvent e) {
         executeSearch();
     }
+
 
 }

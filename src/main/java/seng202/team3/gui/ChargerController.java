@@ -28,6 +28,7 @@ import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
+import seng202.team3.logic.UserManager;
 
 /**
  * Allows you to edit a charger
@@ -268,6 +269,7 @@ public class ChargerController {
             Coordinate location = prevCoordinate;
             coordinate.setLon(location.getLon());
             coordinate.setLat(location.getLat());
+            newCharger.setOwnerId(UserManager.getUser().getUserid());
             newCharger.setDateOpened(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss")
                     .format(Date.from(Instant.now())));
         } else {

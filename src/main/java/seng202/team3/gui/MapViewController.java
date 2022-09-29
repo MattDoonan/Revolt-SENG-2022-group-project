@@ -9,8 +9,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
+import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.logic.JavaScriptBridge;
 import seng202.team3.logic.MapManager;
+import seng202.team3.logic.UserManager;
 
 /**
  * A start into a MapViewController which uses the University UC OSM viewer
@@ -57,11 +59,24 @@ public class MapViewController extends MapHandler {
      */
     @Override
     public void addChargersOnMap() {
+        int userId = 0;
+        if (UserManager.getUser().getLevel() == PermissionLevel.ADMIN) {
+            userId = -1;
+        } else if (UserManager.getUser().getLevel() == PermissionLevel.CHARGEROWNER) {
+            userId = UserManager.getUser().getUserid();
+        }
         javaScriptConnector.call("clearMarkers");
+        if (UserManager.getUser().getLevel() == PermissionLevel.ADMIN) {
+            javaScriptConnector.call("givePermission");
+        }
         for (Charger charger : map.getController().getCloseChargerData()) {
+            boolean hasPermission = false;
+            if (userId == -1 || userId == charger.getOwnerId()) {
+                hasPermission = true;
+            }
             javaScriptConnector.call("addMarker", charger.getLocation().getAddress(),
                     charger.getLocation().getLat(), charger.getLocation().getLon(),
-                    charger.getChargerId());
+                    charger.getChargerId(), hasPermission);
         }
     }
 
@@ -206,5 +221,7 @@ public class MapViewController extends MapHandler {
         loadPromptScreens("Click on a charger on the map and\n"
                 + "confirm to DELETE a charger: \n\n", "delete");
     }
+
+
 
 }

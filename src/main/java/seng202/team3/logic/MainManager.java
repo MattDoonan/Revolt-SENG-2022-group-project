@@ -8,6 +8,7 @@ import javafx.collections.ObservableList;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
+import seng202.team3.data.entity.PermissionLevel;
 
 /**
  * Logic layer for the main Controller
@@ -64,6 +65,9 @@ public class MainManager extends ChargerHandler implements ChargerInterface {
         if (distance != 0) {
             arrayChargers = chargerManager.getNearbyChargers(
                     arrayChargers, selectedCoordinate, distance);
+        } else {
+            arrayChargers = chargerManager.getNearbyChargers(
+                    arrayChargers, selectedCoordinate, 2000); //Enough to cover NZ
         }
         ObservableList<Charger> closerChargers = FXCollections.observableList(arrayChargers);
         return closerChargers;
@@ -117,9 +121,12 @@ public class MainManager extends ChargerHandler implements ChargerInterface {
     @Override
     public void editCharger() {
         if (getSelectedCharger() != null) {
-            JavaScriptBridge bridge = new JavaScriptBridge();
-            bridge.loadMoreInfo(getSelectedCharger().getChargerId());
-            makeAllChargers();
+            if ((UserManager.getUser().getLevel() == PermissionLevel.ADMIN)
+                || (getSelectedCharger().getOwnerId() == UserManager.getUser().getUserid())) {
+                JavaScriptBridge bridge = new JavaScriptBridge();
+                bridge.loadMoreInfo(getSelectedCharger().getChargerId());
+                makeAllChargers();
+            }
         }
     }
 

@@ -342,4 +342,26 @@ public class LoginSignupController {
             GlyphsDude.setIcon(button, FontAwesomeIcon.EYE_SLASH);
         }
     }
+
+    /**
+     * Logs in on enter
+     *
+     * @param e the event handler
+     */
+    @FXML
+    public void onEnter(ActionEvent e) {
+        login();
+    }
+
+
+    /**
+     * Signs up on enter
+     *
+     * @param e the event handler
+     */
+    @FXML
+    public void signing(ActionEvent e) {
+        signUp();
+    }
+
 }
