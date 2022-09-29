@@ -78,14 +78,10 @@ public class UserManager {
      * 
      * @param user     the user whose details need to be saved
      * @param password the new password for the user
+     * @throws IOException if the database fails
      */
-    public void saveUser(User user, String password) {
-        try {
-            System.out.println(password);
-            SqlInterpreter.getInstance().writeUser(user, password);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void saveUser(User user, String password) throws IOException {
+        SqlInterpreter.getInstance().writeUser(user, password);
     }
 
     /**

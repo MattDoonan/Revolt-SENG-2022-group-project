@@ -11,10 +11,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
@@ -127,6 +129,14 @@ public class LoginSignupController {
      */
     private MenuController menuControl;
 
+    /** Invalid login error */
+    @FXML
+    private Label invalidLogin;
+
+    /** invalid signup error */
+    @FXML
+    private Label invalidSignup;
+
     /**
      * Initialises the sign up
      */
@@ -177,72 +187,63 @@ public class LoginSignupController {
     }
 
     /**
+     * Checks the email if its valid
+     * @return the boolean of valid email.
+     */
+    public boolean checkEmail() {
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."
+                + "[a-zA-Z0-9_+&*-]+)*@"
+                + "(?:[a-zA-Z0-9-]+\\.)+[a-z"
+                + "A-Z]{2,7}$";
+
+        Pattern pat = Pattern.compile(emailRegex);
+        if (signupEmailField.getText() == null) {
+            return false;
+        }
+        return pat.matcher(signupEmailField.getText()).matches();
+    }
+
+    /**
      * Checks the given user details for errors.
      * If no errors, calls manager to save user to database
      */
     @FXML
     public void signUp() {
-        User user = new User();
-
-        if (signupUsernameField.getText().equals("")) {
-            errors.add("Username required.");
-        } else {
-            user.setAccountName(signupUsernameField.getText());
+        Boolean fail = false;
+        if (!checkEmail()) {
+            signupEmailField.setStyle("-fx-border-color: #ff0000;");
+            fail = true;
         }
-        if (signupEmailField.getText().equals("")) {
-            errors.add("Email required.");
-        } else {
-            if (signupEmailField.getText() != null) {
-                String ptn = "^(\\w+[!#\\$%&'\\*\\+-\\/=\\?\\^_`{|\\.]?\\w+)+";
-                ptn += "@(\\w+-?\\w+)+\\.(\\w+-?\\w+)+(\\.\\w+-?\\w+)?$";
-                boolean matchFound = Pattern.matches(ptn, signupEmailField.getText());
-                if (!matchFound) {
-                    errors.add("Invalid email address.");
-                } else {
-                    user.setEmail(signupEmailField.getText());
-                }
-            }
+        if (signupUsernameField.getText().isEmpty()) {
+            signupUsernameField.setStyle("-fx-border-color: #ff0000;");
+            fail = true;
         }
-        if (signupPasswordField.getText().equals("")) {
-            errors.add("Password required.");
-        } else {
-            if (signupPasswordField.getText() != null) {
-                //String ptn = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[";
-                //ptn += "\\!@#&\\(\\)\\-\\[\\{\\}\\]:;',\\?\\/\\*~\\$\\^\\+\\=\\<\\>]).{8,20}$";
-                // String ptn = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])";
-                // ptn += ".{4,20}$";
-                String ptn = "\\w+";
-                boolean matchFound = Pattern.matches(ptn, signupPasswordField.getText());
-                if (!matchFound) {
-                    String errorStr = "Password must contain one uppercase letter, one lowercase";
-                    errorStr += " letter, one number and one special character.";
-                    errors.add(errorStr);
-                }
-            }
+        if (signupPasswordField.getText().length() < 4) {
+            signupPasswordField.setStyle("-fx-border-color: #ff0000;");
+            confPassField.setStyle("-fx-border-color: #ff0000;");
+            fail = true;
         }
-        if (confPassField.getText().equals("")) {
-            errors.add("Confirm password required.");
-        }
+        System.out.println(signupPasswordField.getText());
+        System.out.println(confPassField.getText());
         if (!signupPasswordField.getText().equals(confPassField.getText())) {
-            errors.add("Passwords must match.");
+            confPassField.setStyle("-fx-border-color: #ff0000;");
+            fail = true;
         }
-
-        // var myPassword = "ThisIsMyPassword";
-        // var encodedPassword = encoder.encode(myPassword);
-        // System.out.println("encodedpassword: " + encodedPassword);
-        // var validPassword = encoder.matches(myPassword, encodedPassword);
-        // System.out.println("valid?: " + validPassword);
-
+        if (fail) {
+            invalidSignup.setVisible(true);
+            return;
+        }
+        User user = new User();
+        user.setAccountName(signupUsernameField.getText());
+        user.setEmail(signupEmailField.getText());
         user.setCarbonSaved(0);
         user.setLevel(PermissionLevel.USER);
-
-        if (errors.isEmpty()) {
+        try {
             manage.saveUser(user, signupPasswordField.getText());
             menuControl.setUser(user);
             stage.close();
-        } else {
-            launchErrorPopUps();
-            errors.clear();
+        } catch (IOException e) {
+            invalidSignup.setVisible(true);
         }
     }
 
@@ -251,54 +252,18 @@ public class LoginSignupController {
      */
     @FXML
     public void login() {
-
-        if (loginEmailField.getText().equals("")) {
-            errors.add("Email required.");
-        }
-        if (loginPasswordField.getText().equals("")) {
-            errors.add("Password required.");
-        }
-
-        if (errors.isEmpty()) {
-            try {
-                User user = manage.login(loginEmailField.getText(), loginPasswordField.getText());
-                if (user != null) {
-                    menuControl.setUser(user);
-                    stage.close();
-                }
-            } catch (SQLException | IOException e) {
-                // TODO popup for error
-            }
-        } else {
-            launchErrorPopUps();
-            errors.clear();
-        }
-    }
-
-    /**
-     * Launches an error popup when trying to do illegal things
-     */
-    public void launchErrorPopUps() {
-        stage.setAlwaysOnTop(false);
         try {
-            FXMLLoader error = new FXMLLoader(getClass().getResource(
-                    "/fxml/error_popup.fxml"));
-            AnchorPane base = error.load();
-            Scene modalScene = new Scene(base);
-            Stage errorPopup = new Stage();
-            errorPopup.setScene(modalScene);
-            errorPopup.setResizable(false);
-            errorPopup.setTitle("Error With:");
-            errorPopup.initModality(Modality.APPLICATION_MODAL);
-            ErrorController controller = error.getController();
-            controller.init();
-            controller.setErrors(errors);
-            controller.setPromptType("error");
-            controller.displayErrors();
-            errorPopup.setAlwaysOnTop(true);
-            errorPopup.showAndWait();
-        } catch (IOException e) {
-            e.printStackTrace();
+            User user = manage.login(loginEmailField.getText(), loginPasswordField.getText());
+            if (user != null) {
+                menuControl.setUser(user);
+                stage.close();
+            } else {
+                loginPasswordField.clear();
+                invalidLogin.setVisible(true);
+            }
+        } catch (SQLException | IOException e) {
+            loginPasswordField.clear();
+            invalidLogin.setVisible(true);
         }
     }
 

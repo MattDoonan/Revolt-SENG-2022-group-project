@@ -18,7 +18,7 @@
 <center>
    <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="600.0">
    <children>
-      <Label layoutX="154.0" layoutY="76.0" text="Create an Account">
+      <Label layoutX="137.0" layoutY="65.0" text="Create an Account">
          <font>
             <Font size="36.0" />
          </font>
@@ -51,7 +51,7 @@
         </rowConstraints>
          <children>
             <PasswordField fx:id="signupPasswordField" prefHeight="26.0" prefWidth="166.0" promptText="Password" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <TextField fx:id="showPassFieldSignup" prefHeight="26.0" prefWidth="166.0" GridPane.columnIndex="1" GridPane.rowIndex="2" editable="false" visible="false" />
+            <TextField fx:id="showPassFieldSignup" editable="false" prefHeight="26.0" prefWidth="166.0" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <TextField fx:id="signupEmailField" prefHeight="26.0" prefWidth="191.0" promptText="Email" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <TextField fx:id="signupUsernameField" promptText="Username" GridPane.columnIndex="1" />
             <Label text="Username:">
@@ -107,19 +107,24 @@
                </font>
             </Label>
             <PasswordField fx:id="confPassField" promptText="Confirm Password" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <TextField fx:id="showConfPassFieldSignup" prefHeight="26.0" prefWidth="166.0" GridPane.columnIndex="1" GridPane.rowIndex="3" editable="false" visible="false" />
-                  <Button fx:id="showPassSignup" mnemonicParsing="false" GridPane.columnIndex="2" GridPane.rowIndex="2" onAction="#showPassword">
+            <TextField fx:id="showConfPassFieldSignup" editable="false" prefHeight="26.0" prefWidth="166.0" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <Button fx:id="showPassSignup" mnemonicParsing="false" onAction="#showPassword" GridPane.columnIndex="2" GridPane.rowIndex="2">
                      <GridPane.margin>
                         <Insets left="4.0" />
                      </GridPane.margin>
                   </Button>
-                  <Button fx:id="showConfPassSignup" mnemonicParsing="false" GridPane.columnIndex="2" GridPane.rowIndex="3" onAction="#showPassword">
+                  <Button fx:id="showConfPassSignup" mnemonicParsing="false" onAction="#showPassword" GridPane.columnIndex="2" GridPane.rowIndex="3">
                      <GridPane.margin>
                         <Insets left="4.0" />
                      </GridPane.margin>
                   </Button>
          </children>
       </GridPane>
+            <Label fx:id="invalidSignup" layoutX="204.0" layoutY="116.0" text="Invalid information entered" textFill="RED" visible="false">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
    </children>
 </AnchorPane>
 </center>
