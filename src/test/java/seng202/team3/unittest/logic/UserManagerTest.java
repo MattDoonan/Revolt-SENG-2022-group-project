@@ -4,10 +4,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Stream;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -18,11 +15,20 @@ import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.data.entity.User;
 import seng202.team3.logic.UserManager;
 
+import javax.management.InstanceAlreadyExistsException;
+
 public class UserManagerTest {
 
     private UserManager manager;
 
     private User user;
+
+    @BeforeAll
+    static void initialize() throws InstanceAlreadyExistsException, IOException {
+        SqlInterpreter.removeInstance();
+        SqlInterpreter.initialiseInstanceWithUrl(
+                "jdbc:sqlite:./target/test-classes/test_database.db");
+    }
 
     @BeforeEach
     public void reset() {

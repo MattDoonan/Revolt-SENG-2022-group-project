@@ -76,7 +76,7 @@ public class VehiclesPageFx extends TestFxBase {
         verifyThat("#makeText", Node::isVisible);
     }
 
-    private static Stream<Arguments> inputs() {
+    private static Stream<Arguments> importantInputs() {
         return Stream.of(
                 Arguments.of("#makeText", "Tesla"),
                 Arguments.of("#modelText", "Y"),
@@ -84,7 +84,7 @@ public class VehiclesPageFx extends TestFxBase {
     }
 
     @ParameterizedTest
-    @MethodSource("inputs")
+    @MethodSource("importantInputs")
     public void checkAllReqInputs(String node, String text) {
         clickOn("#openUpdate");
         clickOn(node);
@@ -92,5 +92,7 @@ public class VehiclesPageFx extends TestFxBase {
         clickOn("#saveChanges");
         verifyThat("#prompt", Node::isVisible);
     }
+
+
 
 }

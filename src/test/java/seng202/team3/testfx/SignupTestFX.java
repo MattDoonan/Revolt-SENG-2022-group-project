@@ -5,11 +5,15 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
+import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.gui.LoginSignupController;
 import seng202.team3.gui.MainWindow;
 import seng202.team3.gui.MenuController;
+import javax.management.InstanceAlreadyExistsException;
+import java.io.IOException;
 
 import static org.testfx.api.FxAssert.verifyThat;
 
@@ -17,6 +21,12 @@ public class SignupTestFX extends TestFxBase {
 
     private LoginSignupController controller;
 
+    @BeforeAll
+    static void initialize() throws InstanceAlreadyExistsException, IOException {
+        SqlInterpreter.removeInstance();
+        SqlInterpreter.initialiseInstanceWithUrl(
+                "jdbc:sqlite:./target/test-classes/test_database.db");
+    }
 
     @Override
     public void setUp() throws Exception {
