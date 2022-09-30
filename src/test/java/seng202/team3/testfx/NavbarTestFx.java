@@ -39,7 +39,7 @@ public class NavbarTestFx extends TestFxBase{
                 "jdbc:sqlite:./target/test-classes/test_database.db");
         user = new User("test@gmail.com", "MrTest", PermissionLevel.ADMIN);
         password = "1234";
-        SqlInterpreter.getInstance().writeUser(user, SqlInterpreter.encryptThisString(password));
+        SqlInterpreter.getInstance().writeUser(user, UserManager.encryptThisString(password));
     }
 
     @AfterAll

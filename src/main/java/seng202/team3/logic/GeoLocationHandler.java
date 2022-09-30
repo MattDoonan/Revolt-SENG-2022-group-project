@@ -67,7 +67,7 @@ public class GeoLocationHandler {
     /**
      * Clear current instance - USED FOR TESTING ONLY
      */
-    public static void clearInstance(){
+    public static void clearInstance() {
         instance = null;
     }
 
