@@ -23,7 +23,7 @@ import seng202.team3.gui.TableController;
  * @author Michelle Hsieh
  * @version 1.0.1, Sep 22
  */
-public class SearchFilterTableStepDefsTest extends CucumberFxBase {
+public class SearchFilterTableStepDefs extends CucumberFxBase {
 
     private static TableController controller;
     static SqlInterpreter db;
@@ -50,7 +50,8 @@ public class SearchFilterTableStepDefsTest extends CucumberFxBase {
     }
 
     /**
-     * {@inheritDoc}
+     * Calls Clean Up from static FxBase
+     * TODO: figure out why inheritDoc is not working here
      */
     @AfterAll
     public static void cleanUp() {

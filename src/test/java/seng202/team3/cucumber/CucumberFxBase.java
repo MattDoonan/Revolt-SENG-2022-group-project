@@ -5,7 +5,6 @@ import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
-import org.junit.jupiter.api.AfterEach;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit5.ApplicationTest;
 import seng202.team3.gui.MainWindow;
@@ -64,28 +63,11 @@ public abstract class CucumberFxBase extends ApplicationTest {
     }
 
     /**
-     * Clear program location for future tests
-     * Use with @AfterAll
-     */
-    public static void cleanUp() {
-        atLocation = false;
-    }
-
-    /**
-     * Does not execute when using cucumber
-     * {@inheritDoc}
-     */
-    @Override
-    public void start(Stage stage) throws Exception {
-        // unused
-    }
-
-    /**
      * Free resources after tests
+     * User with @AfterEach
      * 
      * @throws TimeoutException application does not respond in time
      */
-    @AfterEach
     public void afterEachTest() throws TimeoutException {
         try {
             FxToolkit.cleanupStages();
@@ -95,6 +77,28 @@ public abstract class CucumberFxBase extends ApplicationTest {
         FxToolkit.hideStage();
         release(new KeyCode[] {});
         release(new MouseButton[] {});
+    }
+
+    /**
+     * Clear program location for future tests
+     * Use with @AfterAll
+     */
+    public static void cleanUp() {
+        atLocation = false;
+        try {
+            FxToolkit.cleanupStages();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Does not execute when using cucumber
+     * {@inheritDoc}
+     */
+    @Override
+    public void start(Stage stage) throws Exception {
+        // unused
     }
 
     /**
