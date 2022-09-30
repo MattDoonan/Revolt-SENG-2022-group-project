@@ -65,6 +65,13 @@ public class GeoLocationHandler {
     }
 
     /**
+     * Clear current instance - USED FOR TESTING ONLY
+     */
+    public static void clearInstance(){
+        instance = null;
+    }
+
+    /**
      * Gets the coordinate
      *
      * @return {@link seng202.team3.data.entity.Coordinate} the selected coordinate
