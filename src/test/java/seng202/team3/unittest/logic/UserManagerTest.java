@@ -132,7 +132,7 @@ public class UserManagerTest {
 
     private static Stream<Arguments> negativeEmailTests() {
         return Stream.of(
-                // Arguments.of("abc-@mail.com"), // Test needs to pass but fails
+                Arguments.of("abc.@mail.com"),
                 Arguments.of("abc..def@mail.com"),
                 Arguments.of(".abc@mail.com"),
                 Arguments.of("abc#def@mail.com"),
@@ -152,4 +152,43 @@ public class UserManagerTest {
     public void testInvalidEmails(String email) {
         Assertions.assertFalse(UserManager.checkEmail(email));
     }
+
+    @Test
+    public void checkEncryptThisString() {
+        String original = "1234";
+        String encrypted = manager.encryptThisString(original);
+        Assertions.assertNotEquals(encrypted, original);
+    }
+
+    @Test
+    public void checkEncryption() {
+        String original = "1234";
+        String encrypted = manager.encryptThisString(original);
+        String toCheck = manager.encryptThisString(original);
+        Assertions.assertEquals(encrypted, toCheck);
+    }
+
+
+    private static Stream<Arguments> passwords() {
+        return Stream.of(
+                Arguments.of("1234", "1 2 3 4"),
+                Arguments.of("1234", " 1234"),
+                Arguments.of("1234", "1234 "),
+                Arguments.of("1234", "5678"),
+                Arguments.of("1234", "123$"),
+                Arguments.of("Supercalifragilisticexpialidocious", "Supercalifragilisticexpialidocious'"),
+                Arguments.of("password", "Password"),
+                Arguments.of("password", "PASSWORD"),
+                Arguments.of("password", "pass word"),
+                Arguments.of("''''", "''"),
+                Arguments.of(" ", ""));
+    }
+    @ParameterizedTest
+    @MethodSource("passwords")
+    public void checkDifferentEncryption(String original, String different ) {
+        String encrypted = manager.encryptThisString(original);
+        String toCheck = manager.encryptThisString(different);
+        Assertions.assertNotEquals(encrypted, toCheck);
+    }
 }
+

@@ -90,6 +90,7 @@ public class UserManager {
 
     /**
      * Checks the email if its valid
+     * From https://www.geeksforgeeks.org/sha-512-hash-in-java/
      * @param email the string of the email
      * @return the boolean of valid email.
      */
