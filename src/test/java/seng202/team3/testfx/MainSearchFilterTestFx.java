@@ -9,7 +9,6 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
-import org.testfx.framework.junit5.ApplicationTest;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
@@ -28,16 +27,6 @@ public class MainSearchFilterTestFx extends TestFxBase {
 
     private MainController controller;
     static SqlInterpreter db;
-
-    /**
-     * Implements the abstract method for this window
-     *
-     * @throws Exception if fail to launch
-     */
-    @Override
-    public void setUp() throws Exception {
-        ApplicationTest.launch(MainWindow.class);
-    }
 
     /**
      * Starts the main for testing
@@ -70,6 +59,7 @@ public class MainSearchFilterTestFx extends TestFxBase {
         BorderPane b = new BorderPane();
         controller = loader.getController();
         controller.init(stage, b);
+        MainWindow.setController(controller);
     }
 
     /**

@@ -6,7 +6,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit5.ApplicationTest;
 
@@ -17,9 +16,6 @@ import org.testfx.framework.junit5.ApplicationTest;
  * @version 1.0.0, Sep 22
  */
 public abstract class TestFxBase extends ApplicationTest {
-
-    @BeforeEach
-    public abstract void setUp() throws Exception;
 
     @Override
     public abstract void start(Stage stage) throws Exception;

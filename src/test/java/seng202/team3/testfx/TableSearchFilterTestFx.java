@@ -10,11 +10,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.testfx.api.FxRobotException;
-import org.testfx.framework.junit5.ApplicationTest;
-
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
-import seng202.team3.gui.MainWindow;
 import seng202.team3.gui.TableController;
 
 /**
@@ -29,10 +26,6 @@ public class TableSearchFilterTestFx extends TestFxBase {
 
     static SqlInterpreter db;
 
-    @Override
-    public void setUp() throws Exception {
-        ApplicationTest.launch(MainWindow.class);
-    }
 
     @Override
     public void start(Stage stage) throws Exception {

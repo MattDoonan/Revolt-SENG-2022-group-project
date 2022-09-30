@@ -8,12 +8,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import org.junit.jupiter.api.Test;
-import org.testfx.framework.junit5.ApplicationTest;
-import org.testfx.matcher.control.TextInputControlMatchers;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.testfx.matcher.control.TextInputControlMatchers;
 import seng202.team3.data.database.SqlInterpreter;
-import seng202.team3.gui.MainWindow;
 
 /**
  * Code designed to test the searching and filtering of the Main Window
@@ -43,9 +42,8 @@ public class NewEditVehicleTestFx extends TestFxBase {
      *
      * @throws Exception if fail to launch
      */
-    @Override
+    @BeforeEach
     public void setUp() throws Exception {
-        ApplicationTest.launch(MainWindow.class);
         db.defaultDatabase();
         db.addChargerCsvToData("csvtest/filtering");
     }

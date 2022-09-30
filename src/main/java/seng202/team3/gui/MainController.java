@@ -452,6 +452,7 @@ public class MainController {
             mapController.init(stage, mapManager);
 
             mainWindow.setCenter(mapViewParent);
+            MainWindow.setController(mapController);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -492,6 +493,7 @@ public class MainController {
             TableController controller = mainScene.getController();
             controller.init();
             menuWindow.setCenter(mainNode);
+            MainWindow.setController(controller);
         } catch (IOException e) {
             e.printStackTrace();
         }

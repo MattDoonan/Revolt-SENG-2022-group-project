@@ -145,7 +145,7 @@
                         </Menu>
                           </items>
                       </MenuButton>
-        <Button minWidth="140.0" mnemonicParsing="false" onAction="#loadTableView" prefHeight="40.0" prefWidth="55.0" text="Show Table">
+        <Button minWidth="140.0" mnemonicParsing="false" onAction="#loadTableView" prefHeight="40.0" prefWidth="55.0" text="Show Table" fx:id="showTable">
            <font>
               <Font size="17.0" />
            </font>

@@ -104,6 +104,7 @@ public class MenuController {
             controller = mainScene.getController();
             controller.init(stage, menuWindow);
             menuWindow.setCenter(mainNode);
+            MainWindow.setController(controller);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -137,6 +138,7 @@ public class MenuController {
             GarageController controller = garageLoader.getController();
             controller.init();
             menuWindow.setCenter(garageViewParent);
+            MainWindow.setController(controller);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -10,17 +10,16 @@ import org.junit.platform.suite.api.SelectClasspathResource;
 import org.junit.platform.suite.api.Suite;
 
 /**
- * Cucumber Main Page tests to run
+ * Cucumber Table Page tests to run
  *
  * @author Michelle Hsieh (based off Morgan English's code)
  * @version 1.0.0, Sep 22
  */
 @Suite
 @IncludeEngines("cucumber")
-@SelectClasspathResource("features/main_features")
+@SelectClasspathResource("features/table_features")
 @ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "pretty")
-@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "seng202.team3.cucumber.mainpagesteps")
+@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "seng202.team3.cucumber.tablepagesteps")
 @ConfigurationParameter(key = SNIPPET_TYPE_PROPERTY_NAME, value = "camelcase")
-public class RunCucumberTestMainPageTest {
-
+public class RunCucumberTestTablePageTest{
 }
