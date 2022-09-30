@@ -23,6 +23,11 @@ public class TableManager extends ChargerHandler implements ChargerInterface {
     private User user;
 
     /**
+     * A boolean where if getting owner, is true, else false
+     */
+    private boolean getOwner = false;
+
+    /**
      * unused constructor
      */
     public TableManager() {
@@ -36,6 +41,10 @@ public class TableManager extends ChargerHandler implements ChargerInterface {
      */
     public void setUser(User user) {
         this.user = user;
+        if ((UserManager.getUser().getLevel() == PermissionLevel.ADMIN)
+                && (user.getLevel() != PermissionLevel.ADMIN)) {
+            getOwner = true;
+        }
     }
 
     /**
@@ -87,7 +96,7 @@ public class TableManager extends ChargerHandler implements ChargerInterface {
     @Override
     public void resetQuery() {
         mainDataQuery = new QueryBuilderImpl().withSource("charger");
-        if (user.getLevel() == PermissionLevel.CHARGEROWNER) {
+        if (user.getLevel() == PermissionLevel.CHARGEROWNER || getOwner) {
             mainDataQuery.withFilter("owner",
                     Integer.toString(user.getUserid()), ComparisonType.EQUAL);
         }
