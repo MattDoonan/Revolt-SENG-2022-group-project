@@ -62,6 +62,7 @@
             addRoute,
             removeRoute,
             initMap,
+            changeZoom,
             clearMarkers,
             addLocationToRoute,
             addCoordinateName,
@@ -161,6 +162,14 @@
             return searchBar;
         }
 
+        /**
+         * Updates the zoom
+         *
+         * @param zoom an integer referencing the zoom level
+         */
+        function changeZoom() {
+            map.zoomIn(6)
+        }
 
         /**
          * Adds a charger marker to the map and stores it in the markers array for later use (e.g. removal)

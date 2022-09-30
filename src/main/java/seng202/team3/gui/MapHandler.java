@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 import netscape.javascript.JSObject;
 import seng202.team3.logic.GeoLocationHandler;
 import seng202.team3.logic.JavaScriptBridge;
+import seng202.team3.logic.UserManager;
 
 /**
  * An abstract class that has basic JS initialisation for the MapView and
@@ -52,7 +53,7 @@ public abstract class MapHandler {
     /**
      * Represents response to location services request
      */
-    private static Boolean locationAccepted = null;
+    protected static Boolean locationAccepted = null;
 
     /**
      * unused constructor
@@ -66,7 +67,9 @@ public abstract class MapHandler {
      */
     public void initMap() {
 
-        getUserLocation();
+        if (locationAccepted == null) {
+            getUserLocation();
+        }
 
         webEngine = webView.getEngine();
         webEngine.setJavaScriptEnabled(true);
@@ -93,7 +96,7 @@ public abstract class MapHandler {
     /**
      * Pop up to get the current users location for the map start point
      */
-    private void getUserLocation() {
+    public void getUserLocation() {
         if (locationAccepted == null) {
             Alert locationRequest = new Alert(Alert.AlertType.CONFIRMATION,
                     "Allow the program to access your location?",
@@ -106,6 +109,7 @@ public abstract class MapHandler {
             locationRequest.showAndWait();
 
             setLocationAccepted(locationRequest.getResult() == ButtonType.YES);
+
         }
 
         if (locationAccepted) {

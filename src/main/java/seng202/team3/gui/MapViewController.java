@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
 import seng202.team3.data.entity.PermissionLevel;
+import seng202.team3.logic.GeoLocationHandler;
 import seng202.team3.logic.JavaScriptBridge;
 import seng202.team3.logic.MapManager;
 import seng202.team3.logic.UserManager;
@@ -111,6 +112,10 @@ public class MapViewController extends MapHandler {
         javaScriptConnector.call("removeCoordinate");
         javaScriptConnector.call("addCoordinate", "Current Coordinate: ",
                 coordinate.getLat(), coordinate.getLon());
+        javaScriptConnector.call("addCoordinateName");
+        if (locationAccepted) {
+            javaScriptConnector.call("changeZoom");
+        }
         changePosition(coordinate);
         map.makeCoordinate(coordinate);
     }
@@ -180,6 +185,7 @@ public class MapViewController extends MapHandler {
     public void toggleRoute() {
         if (routeDisplayed) {
             removeRoute();
+
             if (UserManager.getUser().getLevel() == PermissionLevel.ADMIN
                     || UserManager.getUser().getLevel() == PermissionLevel.CHARGEROWNER) {
                 addButton.setOpacity(100.0);
@@ -245,6 +251,19 @@ public class MapViewController extends MapHandler {
             loadPromptScreens("Search an address or click on the map\n"
                     + "and confirm to add a charger: \n\n", "add");
         }
+    }
+
+    /**
+     * Toggles from the relocate position button
+     */
+    @FXML
+    public void getLocation() {
+        if (!locationAccepted) {
+            setLocationAccepted(null);
+        }
+        this.getUserLocation();
+        map.getController().setPosition();
+        makeCoordinate(map.getController().getPosition());
     }
 
 }

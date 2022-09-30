@@ -1,6 +1,9 @@
 package seng202.team3.logic;
 
 import java.io.IOException;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.regex.Pattern;
 import seng202.team3.data.database.SqlInterpreter;
@@ -87,6 +90,7 @@ public class UserManager {
 
     /**
      * Checks the email if its valid
+     * From https://www.geeksforgeeks.org/sha-512-hash-in-java/
      * @param email the string of the email
      * @return the boolean of valid email.
      */
@@ -111,6 +115,42 @@ public class UserManager {
      */
     public void updateUser(User user) throws IOException, SQLException {
         SqlInterpreter.getInstance().writeUser(user);
+    }
+
+    /**
+     * Hashes the user's password
+     * From https://www.geeksforgeeks.org/sha-512-hash-in-java/
+     * @param input the string to be encrypted
+     * @return the encrypted string
+     */
+    public static String encryptThisString(String input) {
+        try {
+            // getInstance() method is called with algorithm SHA-512
+            MessageDigest md = MessageDigest.getInstance("SHA-512");
+
+            // digest() method is called
+            // to calculate message digest of the input string
+            // returned as array of byte
+            byte[] messageDigest = md.digest(input.getBytes());
+
+            // Convert byte array into signum representation
+            BigInteger no = new BigInteger(1, messageDigest);
+
+            // Convert message digest into hex value
+            String hashtext = no.toString(16);
+
+            // Add preceding 0s to make it 32 bit
+            while (hashtext.length() < 32) {
+                hashtext = "0" + hashtext;
+            }
+
+            // return the HashText
+            return hashtext;
+
+        } catch (NoSuchAlgorithmException e) {
+            // For specifying wrong message digest algorithms
+            throw new RuntimeException(e);
+        }
     }
 
 }

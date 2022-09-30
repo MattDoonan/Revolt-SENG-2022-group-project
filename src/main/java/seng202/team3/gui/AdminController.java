@@ -142,32 +142,6 @@ public class AdminController {
     }
 
     /**
-     * Adds a new user
-     */
-    @FXML
-    public void addNewUser() {
-        try {
-            FXMLLoader popUp = new FXMLLoader(getClass().getResource(
-                    "/fxml/add_user.fxml"));
-            VBox root = popUp.load();
-            Scene modalScene = new Scene(root);
-            Stage modal = new Stage();
-            modal.setScene(modalScene);
-            modal.setResizable(false);
-            modal.setTitle("Add User");
-            modal.initModality(Modality.WINDOW_MODAL);
-            NewUserController newController = popUp.getController();
-            newController.init(manager);
-            newController.addPrompt("Input new user details: ");
-            modal.showAndWait();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            updateTable();
-        }
-    }
-
-    /**
      * Launches an error popup when trying to do illegal things
      */
     public void launchErrorPopUps() {

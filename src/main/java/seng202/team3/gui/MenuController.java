@@ -151,8 +151,8 @@ public class MenuController {
             FXMLLoader mainScene = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
             Parent mainNode = mainScene.load();
             controller = mainScene.getController();
-            controller.init(stage, menuWindow);
             menuWindow.setCenter(mainNode);
+            controller.init(stage, menuWindow);
         } catch (IOException e) {
             e.printStackTrace();
         }

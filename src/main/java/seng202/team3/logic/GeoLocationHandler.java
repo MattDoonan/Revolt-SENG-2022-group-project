@@ -24,7 +24,7 @@ public class GeoLocationHandler {
     /**
      * Singleton instance
      */
-    private static GeoLocationHandler instance = new GeoLocationHandler();
+    private static volatile GeoLocationHandler instance;
 
     /**
      * Coordinate to perform the geolocation with
@@ -49,19 +49,22 @@ public class GeoLocationHandler {
     }
 
     /**
-     * The way to get the instance of the geolocation handler
+     * The way to get the instance of the geolocation handler;
+     * Adjusted so hopefully thread-safe
      *
      * @return a GeoLocationHandler
      */
     public static GeoLocationHandler getInstance() {
+        GeoLocationHandler handler = instance;
         if (instance == null) {
             synchronized (GeoLocationHandler.class) {
+                handler = instance;
                 if (instance == null) {
-                    instance = new GeoLocationHandler();
+                    instance = handler = new GeoLocationHandler();
                 }
             }
         }
-        return instance;
+        return handler;
     }
 
     /**

@@ -284,6 +284,7 @@ public class ChargerController {
             Coordinate location = charger.getLocation();
             coordinate.setLat(location.getLat());
             coordinate.setLon(location.getLon());
+            newCharger.setOwnerId(charger.getOwnerId());
             newCharger.setDateOpened(charger.getDateOpened());
             newCharger.setChargerId(charger.getChargerId());
         }
