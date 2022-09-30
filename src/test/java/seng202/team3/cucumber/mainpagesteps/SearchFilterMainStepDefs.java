@@ -3,6 +3,8 @@ package seng202.team3.cucumber.mainpagesteps;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import javax.management.InstanceAlreadyExistsException;
+
 import io.cucumber.java.AfterAll;
 import io.cucumber.java.Before;
 import io.cucumber.java.BeforeAll;
@@ -43,7 +45,7 @@ public class SearchFilterMainStepDefs extends CucumberFxBase {
 
     /**
      * Calls Clean Up from static FxBase
-     * TODO: figure out why inheritDoc is not working here
+     * {@inheritDoc}
      */
     @AfterAll
     public static void cleanUp() {
@@ -56,16 +58,15 @@ public class SearchFilterMainStepDefs extends CucumberFxBase {
     @Before
     @Override
     public void init() throws Exception {
-        SqlInterpreter.removeInstance();
-        db = SqlInterpreter.initialiseInstanceWithUrl(
-                "jdbc:sqlite:./target/test-classes/test_database.db");
+        db = SqlInterpreter.getInstance();
+        db.defaultDatabase();
 
         db.addChargerCsvToData("csvtest/filtering");
     }
 
     @Given("I have the app open")
     public void iHaveTheAppOpen() {
-        assert (Stage.getWindows().size() > 0);
+        assertTrue(Stage.getWindows().size() > 0);
     }
 
     @When("I navigate to the home view")
@@ -96,7 +97,7 @@ public class SearchFilterMainStepDefs extends CucumberFxBase {
     }
 
     @When("The user inputs an invalid query {string}")
-    public void userTriesInValidQuery(String query) {
+    public void userTriesInvalidQuery(String query) {
         userTriesValidQuery(query);
 
     }

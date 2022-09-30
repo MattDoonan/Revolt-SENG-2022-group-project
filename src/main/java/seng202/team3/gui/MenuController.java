@@ -235,6 +235,7 @@ public class MenuController {
                 loginController.setStage(stage);
                 loginController.init(this);
                 loginController.setPane(base);
+                MainWindow.setController(loginController);
                 stage.showAndWait();
             } catch (IOException e) {
                 e.printStackTrace();

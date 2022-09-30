@@ -29,6 +29,8 @@ public abstract class CucumberFxBase extends ApplicationTest {
      * @throws Exception window fails to launch
      */
     public static void setup() throws Exception {
+        // Prevent application from loading with actual database
+        SqlInterpreter.removeInstance();
         SqlInterpreter.initialiseInstanceWithUrl(
                 "jdbc:sqlite:./target/test-classes/test_database.db");
         ApplicationTest.launch(MainWindow.class);
