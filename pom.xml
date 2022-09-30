@@ -146,14 +146,6 @@
       <version>3.39.2.1</version>
     </dependency>
 
-    
-    <dependency>
-      <groupId>org.bouncycastle</groupId>
-      <artifactId>bcpkix-jdk15on</artifactId>
-      <version>1.70</version>
-    </dependency>
-
-
     <dependency>
       <groupId>commons-logging</groupId>
       <artifactId>commons-logging</artifactId>
@@ -288,6 +280,7 @@
             <additionalJOption>-Xmaxwarns</additionalJOption>
             <additionalJOption>65536</additionalJOption>
           </additionalJOptions>
+          <sourcepath>${basedir}/src/main/java/seng202/team3</sourcepath>
         </configuration>
       </plugin>
 
