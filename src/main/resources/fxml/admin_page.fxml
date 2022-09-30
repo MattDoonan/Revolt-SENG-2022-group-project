@@ -38,10 +38,6 @@
                <font>
                   <Font size="14.0" />
                </font></Button>
-            <Button mnemonicParsing="false" onAction="#addNewUser" prefHeight="28.0" prefWidth="149.0" text="Add New User" textAlignment="CENTER" wrapText="true" VBox.vgrow="NEVER">
-               <font>
-                  <Font size="14.0" />
-               </font></Button>
             <Button mnemonicParsing="false" onAction="#deleteUser" prefHeight="28.0" prefWidth="158.0" text="Delete User" textAlignment="CENTER" wrapText="true">
                <font>
                   <Font size="14.0" />

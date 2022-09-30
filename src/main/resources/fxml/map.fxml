@@ -13,26 +13,26 @@
    <top>
       <AnchorPane maxHeight="0.0" maxWidth="400.0" minHeight="0.0" minWidth="400.0" prefHeight="0.0" prefWidth="400.0" BorderPane.alignment="CENTER_LEFT">
          <children>
-            <Button fx:id="addButton" layoutX="269.0" layoutY="9.0" mnemonicParsing="false" onMouseClicked="#addCharger" prefHeight="68.0" prefWidth="142.0" text="Add Charger">
+            <Button fx:id="addButton" layoutX="157.0" layoutY="9.0" mnemonicParsing="false" onMouseClicked="#addCharger" prefHeight="68.0" prefWidth="142.0" text="Add Charger">
                <font>
                   <Font size="18.0" />
                </font>
             </Button>
-            <Button fx:id="routing" layoutX="76.0" layoutY="9.0" mnemonicParsing="false" onAction="#toggleRoute" prefHeight="68.0" prefWidth="142.0" style="-fx-background-color:#3ea055;" text="Route To Charger" textAlignment="CENTER" wrapText="true">
+            <Button fx:id="routing" layoutY="9.0" mnemonicParsing="false" onAction="#toggleRoute" prefHeight="68.0" prefWidth="142.0" style="-fx-background-color:#3ea055;" text="Route To Charger" textAlignment="CENTER" wrapText="true">
                <font>
                   <Font size="18.0" />
                </font>
             </Button>
          </children>
          <BorderPane.margin>
-            <Insets />
+            <Insets left="50.0" />
          </BorderPane.margin>
       </AnchorPane>
    </top>
    <bottom>
       <AnchorPane maxHeight="0.0" minHeight="0.0" prefHeight="0.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <Button alignment="CENTER" layoutX="10.0" layoutY="-93.0" mnemonicParsing="false" prefHeight="86.0" prefWidth="103.0" text="RelocatePosition" textAlignment="CENTER" wrapText="true">
+            <Button onMouseClicked="#getLocation" alignment="CENTER" layoutX="10.0" layoutY="-93.0" mnemonicParsing="false" prefHeight="86.0" prefWidth="103.0" text="RelocatePosition" textAlignment="CENTER" wrapText="true">
                <font>
                   <Font size="18.0" />
                </font>
