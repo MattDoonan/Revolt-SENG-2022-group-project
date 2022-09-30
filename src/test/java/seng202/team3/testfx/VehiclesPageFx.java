@@ -85,7 +85,7 @@ public class VehiclesPageFx extends TestFxBase {
 
     @ParameterizedTest
     @MethodSource("importantInputs")
-    public void checkAllReqInputs(String node, String text) {
+    public void checkOnlyOneReqInputs(String node, String text) {
         clickOn("#openUpdate");
         clickOn(node);
         write(text);
@@ -93,6 +93,33 @@ public class VehiclesPageFx extends TestFxBase {
         verifyThat("#prompt", Node::isVisible);
     }
 
+    @Test
+    public void connectorOnlyInput() {
+        clickOn("#openUpdate");
+        clickOn("#connectorType");
+        moveBy(0, 40);
+        clickOn();
+        clickOn("#addConnectionBtn");
+        clickOn("#saveChanges");
+        verifyThat("#prompt", Node::isVisible);
+    }
 
+    @Test
+    public void minimalValidVeh() {
+        clickOn("#openUpdate");
+        clickOn("#makeText");
+        write("Tesla");
+        clickOn("#modelText");
+        write("Y");
+        clickOn("#maxRangeText");
+        write("500");
+        clickOn("#connectorType");
+        moveBy(0, 40);
+        clickOn();
+        clickOn("#addConnectionBtn");
+        clickOn("#saveChanges");
+        verifyThat("#editCarOne", Node::isVisible);
+        verifyThat("#deleteCarOne", Node::isVisible);
+    }
 
 }

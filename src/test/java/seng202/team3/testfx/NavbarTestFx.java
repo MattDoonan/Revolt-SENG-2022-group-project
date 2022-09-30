@@ -94,6 +94,7 @@ public class NavbarTestFx extends TestFxBase{
     @Test
     public void realSignUp() throws IOException {
         clickOn("#loginSignout");
+        clickOn("#loginSignout");
         clickOn("#signUpBtn");
         clickOn("#signupUsernameField");
         write("Test User");
