@@ -460,4 +460,12 @@ public class GarageController {
             setData();
         }
     }
+
+    /**
+     * Returns the manager for tests
+     * @return the manager class
+     */
+    public GarageManager getManage() {
+        return manage;
+    }
 }
