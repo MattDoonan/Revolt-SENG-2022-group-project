@@ -29,7 +29,7 @@ import java.util.stream.Stream;
 
 import static org.testfx.api.FxAssert.verifyThat;
 
-public class NavbarTestFx extends TestFxBase{
+public class NavbarTestFx extends TestFxBase {
 
     private MenuController controller;
 
@@ -52,11 +52,6 @@ public class NavbarTestFx extends TestFxBase{
         SqlInterpreter.getInstance().deleteData("user", user.getUserid());
     }
 
-    @Override
-    public void setUp() throws Exception {
-        ApplicationTest.launch(MainWindow.class);
-
-    }
     @Override
     public void start(Stage stage) throws Exception {
         MapHandler.resetPermission();
@@ -136,7 +131,7 @@ public class NavbarTestFx extends TestFxBase{
     }
 
     @ParameterizedTest
-    @MethodSource ("loadScreens")
+    @MethodSource("loadScreens")
     public void loadScreensTests(String accountPage, String toCheck) {
         clickOn("#loginSignout");
         clickOn("#loginSignout");

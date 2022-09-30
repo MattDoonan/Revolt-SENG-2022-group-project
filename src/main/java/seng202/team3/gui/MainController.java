@@ -481,6 +481,7 @@ public class MainController {
             mapController.init(stage, mapManager);
 
             mainWindow.setCenter(mapViewParent);
+            MainWindow.setController(mapController);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -522,7 +523,5 @@ public class MainController {
     public void onEnter(ActionEvent e) {
         executeSearch();
     }
-
-
 
 }

@@ -31,12 +31,6 @@ public class VehiclesPageFx extends TestFxBase {
     private GarageController controller;
 
     @Override
-    public void setUp() throws Exception {
-        ApplicationTest.launch(MainWindow.class);
-
-    }
-
-    @Override
     public void start(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/garage.fxml"));
         Parent page = loader.load();
@@ -58,7 +52,6 @@ public class VehiclesPageFx extends TestFxBase {
         controller = loader.getController();
         controller.init();
     }
-
 
     private static Stream<Arguments> nodesToCheck() {
         return Stream.of(

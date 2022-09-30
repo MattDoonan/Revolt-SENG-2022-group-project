@@ -17,6 +17,11 @@ import javafx.stage.Stage;
 public class MainWindow extends Application {
 
     /**
+     * Activce scene displayed in the window
+     */
+    private static Scene activeScene;
+
+    /**
      * unused constructor
      */
     public MainWindow() {
@@ -29,6 +34,7 @@ public class MainWindow extends Application {
      */
     @Override
     public void start(Stage primaryStage) throws IOException {
+
         FXMLLoader baseLoader = new FXMLLoader(getClass().getResource("/fxml/menu_bar.fxml"));
         Parent root = baseLoader.load();
         MenuController baseController = baseLoader.getController();
@@ -36,10 +42,35 @@ public class MainWindow extends Application {
         primaryStage.setTitle("Revolt App");
         double height = Screen.getPrimary().getBounds().getHeight() - 80;
         double width = Screen.getPrimary().getBounds().getWidth();
-        Scene scene = new Scene(root, width, height);
+        activeScene = new Scene(root, width, height);
         baseController.initHome();
-        primaryStage.setScene(scene);
+        primaryStage.setScene(activeScene);
         primaryStage.show();
+        MainWindow.setController(baseController);
+    }
+
+    /**
+     * Set controller stored in active scene
+     * 
+     * @param controller the active scene controller
+     */
+    public static void setController(Object controller) {
+        if (activeScene != null) {
+            activeScene.setUserData(controller);
+        }
+    }
+
+    /**
+     * Get the controller from the active scene
+     * 
+     * @return the active scene controller
+     */
+    public static Object getController() {
+        if (activeScene != null) {
+            return activeScene.getUserData();
+        } else {
+            return null;
+        }
     }
 
     /**

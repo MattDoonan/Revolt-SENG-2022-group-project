@@ -29,12 +29,6 @@ public class SignupTestFX extends TestFxBase {
     }
 
     @Override
-    public void setUp() throws Exception {
-        ApplicationTest.launch(MainWindow.class);
-
-    }
-
-    @Override
     public void start(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/signup.fxml"));
         Parent page = loader.load();

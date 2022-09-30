@@ -8,10 +8,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import org.junit.jupiter.api.Test;
-import org.testfx.framework.junit5.ApplicationTest;
-import org.testfx.matcher.control.TextInputControlMatchers;
 
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.testfx.matcher.control.TextInputControlMatchers;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.data.entity.User;
@@ -42,14 +43,22 @@ public class NewEditVehicleTestFx extends TestFxBase {
     static SqlInterpreter db;
     static User testUser;
 
+    @BeforeAll
+    public static void setUp() throws Exception {
+        SqlInterpreter.removeInstance();
+        db = SqlInterpreter.initialiseInstanceWithUrl(
+                "jdbc:sqlite:./target/test-classes/test_database.db");
+    }
+
     /**
      * Implements the abstract method for this window
      *
      * @throws Exception if fail to launch
      */
-    @Override
-    public void setUp() throws Exception {
-        ApplicationTest.launch(MainWindow.class);
+    @BeforeEach
+    public void init() throws Exception {
+        db.defaultDatabase();
+        db.addChargerCsvToData("csvtest/filtering");
     }
 
     /**

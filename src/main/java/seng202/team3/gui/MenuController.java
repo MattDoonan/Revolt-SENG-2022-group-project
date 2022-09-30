@@ -153,6 +153,7 @@ public class MenuController {
             controller = mainScene.getController();
             menuWindow.setCenter(mainNode);
             controller.init(stage, menuWindow);
+            MainWindow.setController(controller);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -164,7 +165,7 @@ public class MenuController {
      * @return {@link seng202.team3.gui.MainController} the main controller of this
      *         run
      */
-    public MainController getController() {
+    public static MainController getController() {
         return controller;
     }
 
@@ -191,6 +192,7 @@ public class MenuController {
                 GarageController controller = garageLoader.getController();
                 controller.init();
                 menuWindow.setCenter(garageViewParent);
+                MainWindow.setController(controller);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -274,6 +276,7 @@ public class MenuController {
                 AccountController controller = accountLoader.getController();
                 controller.init(menuWindow);
                 menuWindow.setCenter(accountViewParent);
+                MainWindow.setController(controller);
             }
         } catch (IOException e) {
             e.printStackTrace();
