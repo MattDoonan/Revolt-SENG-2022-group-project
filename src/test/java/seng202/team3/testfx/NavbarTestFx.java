@@ -9,18 +9,23 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.testfx.api.FxRobotException;
 import org.testfx.framework.junit5.ApplicationTest;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.data.entity.User;
 import seng202.team3.gui.MainWindow;
+import seng202.team3.gui.MapHandler;
 import seng202.team3.gui.MenuController;
 import seng202.team3.logic.UserManager;
 
 import javax.management.InstanceAlreadyExistsException;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.stream.Stream;
 
 import static org.testfx.api.FxAssert.verifyThat;
 
@@ -54,6 +59,8 @@ public class NavbarTestFx extends TestFxBase{
     }
     @Override
     public void start(Stage stage) throws Exception {
+        MapHandler.resetPermission();
+        MapHandler.setLocationAccepted(true);
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/menu_bar.fxml"));
         Parent page = loader.load();
         initState(loader, stage);
@@ -119,5 +126,38 @@ public class NavbarTestFx extends TestFxBase{
         clickOn("#loginSignout");
         clickOn("#loginSignout");
         verifyThat("#loginBtn", Node::isVisible);
+    }
+
+    private static Stream<Arguments> loadScreens() {
+        return Stream.of(
+                Arguments.of("#accountPage", "#editAccountButton"),
+                Arguments.of("#vehicleButton", "#openUpdate"));
+    }
+
+    @ParameterizedTest
+    @MethodSource ("loadScreens")
+    public void loadScreensTests(String accountPage, String toCheck) {
+        clickOn("#loginSignout");
+        clickOn("#loginSignout");
+        clickOn("#loginEmailField");
+        write(user.getAccountName());
+        clickOn("#loginPasswordField");
+        write(password);
+        clickOn("#loginBtn");
+        clickOn(accountPage);
+        verifyThat(toCheck, Node::isVisible);
+    }
+
+    @Test
+    public void screenThenBackToMain() {
+        clickOn("#loginSignout");
+        clickOn("#loginSignout");
+        clickOn("#loginEmailField");
+        write(user.getAccountName());
+        clickOn("#loginPasswordField");
+        write(password);
+        clickOn("#loginBtn");
+        clickOn("#accountPage");
+        clickOn("#menuButton");
     }
 }
