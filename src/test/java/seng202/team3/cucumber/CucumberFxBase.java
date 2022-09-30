@@ -17,7 +17,6 @@ import seng202.team3.gui.MainWindow;
  * @version 1.0.0, Sep 22
  */
 public abstract class CucumberFxBase extends ApplicationTest {
-    private static boolean atLocation = false;
 
     /**
      * Launches the test window
@@ -33,34 +32,11 @@ public abstract class CucumberFxBase extends ApplicationTest {
      * Environment setup for test. IMPORTANT: THE LOCAL CONTROLLER MUST BE SET WITH
      * MainWindow.getController()
      * TODO: Find a way to assign that here using inheritance abstraction
+     * Use with @Before
      * 
      * @throws Exception if test cannot be initialized
      */
     public abstract void init() throws Exception;
-
-    /**
-     * TestFx to navigate from start screen to testing location
-     */
-    public abstract void navigateToScreen();
-
-    /**
-     * Setup for testing
-     * Use with @Before
-     */
-    public void reset() {
-        // TestFx clicking cannot be used statically so instead of
-        // BeforeAll it is being handled in the Before with a boolean
-        if (!atLocation) {
-            atLocation = true;
-            navigateToScreen();
-        }
-
-        try {
-            init();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     /**
      * Free resources after tests
@@ -84,7 +60,6 @@ public abstract class CucumberFxBase extends ApplicationTest {
      * Use with @AfterAll
      */
     public static void cleanUp() {
-        atLocation = false;
         try {
             FxToolkit.cleanupStages();
         } catch (TimeoutException e) {

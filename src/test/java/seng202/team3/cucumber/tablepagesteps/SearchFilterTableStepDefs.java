@@ -39,17 +39,6 @@ public class SearchFilterTableStepDefs extends CucumberFxBase {
     }
 
     /**
-     * {@inheritDoc}
-     * Cucumber won't allow inheritence with tags
-     * This is a small work around
-     */
-    @Before
-    @Override
-    public void reset() {
-        super.reset();
-    }
-
-    /**
      * Calls Clean Up from static FxBase
      * TODO: figure out why inheritDoc is not working here
      */
@@ -61,6 +50,7 @@ public class SearchFilterTableStepDefs extends CucumberFxBase {
     /**
      * {@inheritDoc}
      */
+    @Before
     @Override
     public void init() throws Exception {
         SqlInterpreter.removeInstance();
@@ -68,16 +58,22 @@ public class SearchFilterTableStepDefs extends CucumberFxBase {
                 "jdbc:sqlite:./target/test-classes/test_database.db");
 
         db.addChargerCsvToData("csvtest/filtering");
-
-        controller = (TableController) MainWindow.getController();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void navigateToScreen() {
+    @Given("I am on the home screen")
+    public void iAmOnTheHomeScreen() {
+        clickOn("#menuButton");
+    }
+
+    @When("I navigate to the table view")
+    public void iNavigateToTheTableView() {
         clickOn("#showTable");
+    }
+
+    @Then("chargers are available")
+    public void chargersAreAvailable() {
+        controller = (TableController) MainWindow.getController();
+        assertTrue(controller.getManager().getData().size() > 0);
     }
 
     @Given("There is no current input given")
