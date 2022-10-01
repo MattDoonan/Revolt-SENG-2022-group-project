@@ -904,7 +904,8 @@ public class SqlInterpreter implements DataReader {
      */
     public void writeVehicle(Vehicle v) throws IOException {
         String toAdd = "INSERT INTO vehicle (vehicleid, make, model, rangekm, "
-                + "connectorType, batteryPercent, imgPath, owner, currVehicle) values(?,?,?,?,?,?,?,?,?)"
+                + "connectorType, batteryPercent, imgPath, owner, currVehicle) "
+                + "values(?,?,?,?,?,?,?,?,?)"
                 + "ON CONFLICT(vehicleid) DO UPDATE SET make = ?, model = ?, "
                 + "rangekm = ?, connectorType = ?, batteryPercent = ?, imgPath = ?, owner = ?, "
                 + "currVehicle = ?";

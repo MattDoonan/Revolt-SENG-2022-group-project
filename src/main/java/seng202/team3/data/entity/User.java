@@ -3,7 +3,6 @@ package seng202.team3.data.entity;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seng202.team3.data.database.ComparisonType;

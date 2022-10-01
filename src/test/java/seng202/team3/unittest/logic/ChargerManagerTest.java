@@ -41,9 +41,10 @@ public class ChargerManagerTest {
      * Makes a test database
      *
      * @throws InstanceAlreadyExistsException If already exists
+     * @throws IOException
      */
     @BeforeAll
-    static void intialize() throws InstanceAlreadyExistsException {
+    static void intialize() throws InstanceAlreadyExistsException, IOException {
         SqlInterpreter.removeInstance();
         db = SqlInterpreter.initialiseInstanceWithUrl(
                 "jdbc:sqlite:./target/test-classes/test_database.db");

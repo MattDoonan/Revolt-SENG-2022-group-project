@@ -94,7 +94,7 @@ public class SqlInterpreterTest {
     }
 
     @BeforeAll
-    static void setup() throws InstanceAlreadyExistsException {
+    static void setup() throws InstanceAlreadyExistsException, IOException {
         SqlInterpreter.removeInstance();
         db = SqlInterpreter.initialiseInstanceWithUrl(
                 "jdbc:sqlite:./target/test-classes/test_database.db");
@@ -134,7 +134,7 @@ public class SqlInterpreterTest {
     }
 
     @Test
-    public void testNullUrl() {
+    public void testNullUrl() throws IOException {
         assertNotNull(db);
         assertEquals(db, SqlInterpreter.getInstance());
     }

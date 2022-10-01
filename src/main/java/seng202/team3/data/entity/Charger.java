@@ -108,6 +108,7 @@ public class Charger {
      * @param availableParks number of available parks
      * @param timeLimit      maximum time limit for charging
      * @param operator       operator of the charger
+     * @param owner          owner of the charger
      * @param dateOpened     date the charger was opened
      * @param hasAttraction  bool indicating nearby tourist attraction
      * @param is24Hrs        bool indicating open 24 hours
@@ -115,7 +116,7 @@ public class Charger {
      * @param hasParkingCost bool indicating if it has a parking cost
      */
     public Charger(ArrayList<Connector> connectors, String name, Coordinate location,
-            int availableParks, Double timeLimit, String operator, String dateOpened,
+            int availableParks, Double timeLimit, String operator, String owner, String dateOpened,
             boolean hasAttraction, boolean is24Hrs, boolean hasChargeCost, boolean hasParkingCost) {
         this.connectors = connectors;
         setLocation(location);
@@ -125,14 +126,12 @@ public class Charger {
         setPublic(false); // TODO: retrieve from data once implemented
         setHasAttraction(hasAttraction);
         setName(name);
+        setOwner(owner);
         setDateOpened(dateOpened);
         setChargeCost(hasChargeCost);
         setParkingCost(hasParkingCost);
         setAvailable24Hrs(is24Hrs);
         setCurrentType();
-        setOwnerId(UserManager.getUser().getUserid());
-        setOwner(UserManager.getUser().getAccountName());
-        demoOwner = null;
     }
 
     /**

@@ -1,7 +1,6 @@
 package seng202.team3.data.entity;
 
 import java.util.ArrayList;
-
 import seng202.team3.logic.UserManager;
 
 /**
