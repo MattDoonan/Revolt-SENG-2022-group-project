@@ -4,13 +4,6 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.fail;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.management.InstanceAlreadyExistsException;
 
 import io.cucumber.java.AfterAll;
 import io.cucumber.java.Before;
@@ -19,26 +12,24 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import javafx.collections.ObservableList;
+import java.io.IOException;
+import java.util.List;
 import javafx.scene.control.Label;
-import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import seng202.team3.cucumber.CucumberFxBase;
 import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
-import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.User;
+import seng202.team3.gui.LoginSignupController;
 import seng202.team3.gui.MainWindow;
 import seng202.team3.gui.MapHandler;
 import seng202.team3.logic.UserManager;
-import seng202.team3.gui.LoginSignupController;
-import seng202.team3.gui.MainController;
 
 /**
- * Cucumber Tests designed to check acceptance tests of searching and filtering
+ * Cucumber Tests designed to check acceptance tests of loggin in
  *
- * @author Michelle Hsieh
- * @version 1.0.1, Sep 22
+ * @author Harrison Tyson
+ * @version 1.0.0, Oct 22
  */
 public class LoggingInStepDefs extends CucumberFxBase {
 

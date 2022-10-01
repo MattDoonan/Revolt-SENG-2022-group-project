@@ -23,6 +23,9 @@ import javax.management.InstanceAlreadyExistsException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.api.FxAssert.verifyThatIter;
 
@@ -68,9 +71,9 @@ public class VehiclesPageFx extends TestFxBase {
     public void checkDelete(String nodes) {
         try {
             clickOn(nodes);
-            Assertions.fail("Shouldn't be visible");
+            fail("Shouldn't be visible");
         } catch (FxRobotException e) {
-            Assertions.assertTrue(true);
+            assertTrue(true);
         }
     }
 
