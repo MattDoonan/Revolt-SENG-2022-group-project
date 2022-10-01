@@ -78,6 +78,7 @@ public class GarageManager {
      * @return vehicleData of the required vehicle
      */
     public ObservableList<Vehicle> getData() {
+        getAllVehicles();
         return vehicleData;
     }
 

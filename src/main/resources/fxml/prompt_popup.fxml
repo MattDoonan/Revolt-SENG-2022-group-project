@@ -9,7 +9,7 @@
         <Label fx:id="inputBox" />
         <HBox alignment="TOP_CENTER" prefHeight="31.0" prefWidth="303.0">
             <children>
-                <Button mnemonicParsing="false" onAction="#confirm" text="Confirm">
+                <Button mnemonicParsing="false" onAction="#confirm" text="Confirm" fx:id="confirm">
                <HBox.margin>
                   <Insets right="30.0" />
                </HBox.margin></Button>

@@ -42,6 +42,9 @@ import seng202.team3.logic.VehicleUpdateManager;
  */
 public class VehicleUpdateController {
 
+    /** The active stage */
+    private Stage stage;
+
     /**
      * The textfield for the vehicle's make
      */
@@ -154,10 +157,23 @@ public class VehicleUpdateController {
     private VehicleUpdateManager manage = new VehicleUpdateManager();
 
     /**
+     * Controller of the caller - USED FOR TESTING
+     */
+    private Object prevController = null;
+
+    /**
      * Initialises the Vehicle editing
      */
     public VehicleUpdateController() {
-        // Unused
+    }
+
+    /**
+     * Initialises the controller
+     */
+    public void init() {
+        stage = (Stage) inputBox.getScene().getWindow();
+        prevController = MainWindow.getController();
+        MainWindow.setController(this);
     }
 
     /**
@@ -450,6 +466,7 @@ public class VehicleUpdateController {
      * @param vehicle vehicle to display information for
      */
     public void displayInfo(Vehicle vehicle) {
+        init();
         selectedVehicle = vehicle;
         if (vehicle != null) {
             makeText.setText(vehicle.getMake());
@@ -516,7 +533,8 @@ public class VehicleUpdateController {
      */
     @FXML
     public void cancel() {
-        Stage stage = (Stage) inputBox.getScene().getWindow();
+        MainWindow.setController(prevController);
+        prevController = null;
         stage.close();
     }
 

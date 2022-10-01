@@ -294,8 +294,10 @@ public class GarageController {
             modal.setTitle("Delete Vehicle:");
             modal.initModality(Modality.APPLICATION_MODAL);
             VehicleUpdateController controller = vehicleDelete.getController();
+            controller.init();
             controller.setSelectedVehicle(vehicle);
             modal.setAlwaysOnTop(true);
+            MainWindow.setController(controller);
             modal.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();
@@ -463,6 +465,7 @@ public class GarageController {
 
     /**
      * Returns the manager for tests
+     * 
      * @return the manager class
      */
     public GarageManager getManage() {

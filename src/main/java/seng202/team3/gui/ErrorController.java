@@ -47,6 +47,11 @@ public class ErrorController {
     private TableView<String> table;
 
     /**
+     * Controller of the caller window - USED FOR TESTING
+     */
+    private Object prevController = null;
+
+    /**
      * Blank initialiser
      */
     public ErrorController() {
@@ -58,6 +63,8 @@ public class ErrorController {
      */
     public void init() {
         stage = (Stage) prompt.getScene().getWindow();
+        prevController = MainWindow.getController();
+        MainWindow.setController(this);
     }
 
     /**
@@ -76,6 +83,15 @@ public class ErrorController {
      */
     public void setErrors(ArrayList<String> errorsList) {
         errorList = FXCollections.observableList(errorsList);
+    }
+
+    /**
+     * Gets the list of errors
+     * 
+     * @return the list of errors
+     */
+    public ObservableList<String> getErrors() {
+        return errorList;
     }
 
     /**
@@ -104,6 +120,8 @@ public class ErrorController {
      */
     @FXML
     public void close() {
+        MainWindow.setController(prevController);
+        prevController = null;
         stage.close();
     }
 

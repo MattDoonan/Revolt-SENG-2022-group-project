@@ -33,6 +33,7 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
+         <Label fx:id="inputBox" />
             <Label text="Make:">
                <font>
                   <Font size="14.0" />
