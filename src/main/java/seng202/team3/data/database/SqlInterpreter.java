@@ -1,3 +1,4 @@
+
 package seng202.team3.data.database;
 
 import java.io.BufferedReader;
@@ -6,8 +7,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.math.BigInteger;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -27,7 +31,10 @@ import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
 import seng202.team3.data.entity.Journey;
+import seng202.team3.data.entity.PermissionLevel;
+import seng202.team3.data.entity.User;
 import seng202.team3.data.entity.Vehicle;
+import seng202.team3.logic.UserManager;
 
 /**
  * Class that interacts with the SQLite database
@@ -62,8 +69,9 @@ public class SqlInterpreter implements DataReader {
      * calls createAFile and defaultDatabase if the database doesn't exist
      * 
      * @param db the url sent through
+     * @throws IOException if default data cannot be populated
      */
-    private SqlInterpreter(String db) {
+    private SqlInterpreter(String db) throws IOException {
         if (db == null || db.isEmpty()) {
             url = getDatabasePath();
             logManager.info(getDatabasePath());
@@ -73,12 +81,12 @@ public class SqlInterpreter implements DataReader {
         if (!checkExist(url)) {
             createFile(url);
             defaultDatabase();
-            // TODO: remove this when import functionality is implemented
-            try {
-                addChargerCsvToData("charger");
-            } catch (IOException e) {
-                e.printStackTrace();
-                // Do Nothing TODO: send this to higher layer
+            if (db == null) {
+                try {
+                    importDemoData();
+                } catch (IOException e) {
+                    throw e;
+                }
             }
         }
     }
@@ -95,11 +103,51 @@ public class SqlInterpreter implements DataReader {
     }
 
     /**
+     * Imports default demo data from the CSV into the database
+     * Adds user stubs for each owner
+     * 
+     * @throws IOException db read/write fails
+     */
+    public void importDemoData() throws IOException {
+        List<Object> chargersToImport = new CsvInterpreter().readData(
+                new QueryBuilderImpl().withSource("charger").build(), Charger.class);
+        ArrayList<String> owners = new ArrayList<>();
+        for (Object o : chargersToImport) {
+            if (!owners.contains(((Charger) o).getDemoOwner())) {
+                owners.add(((Charger) o).getDemoOwner());
+            }
+        }
+
+        for (int i = 0; i < owners.size(); i++) {
+            writeUser(
+                    new User(
+                            "example" + i + "@fake.com", owners.get(i),
+                            PermissionLevel.CHARGEROWNER),
+                            UserManager.encryptThisString("demo"));
+        }
+
+        for (int i = 0; i < chargersToImport.size(); i++) {
+            Charger c = (Charger) chargersToImport.get(i);
+            // +2 to account for 0 index and default admin user at userid = 1
+            c.setOwnerId(owners.indexOf(c.getDemoOwner()) + 2);
+        }
+
+        // rewrites Admin with no deformed password
+        writeUser((User) readData(new QueryBuilderImpl().withSource("user")
+                .withFilter("username", "admin",
+                        ComparisonType.EQUAL)
+                .build(), User.class).get(0), UserManager.encryptThisString("admin"));
+
+        writeCharger(new ArrayList<>(chargersToImport));
+    }
+
+    /**
      * Returns the instance of the class
      *
      * @return the instance
+     * @throws IOException if the database cannot be reached/populated
      */
-    public static SqlInterpreter getInstance() {
+    public static SqlInterpreter getInstance() throws IOException {
         if (instance == null) {
             instance = new SqlInterpreter(null);
         }
@@ -119,9 +167,10 @@ public class SqlInterpreter implements DataReader {
      *                                                         singleton
      *                                                         instance
      * @author Morgan English, Dec 21
+     * @throws IOException if an error occurs connecting to the database
      */
     public static SqlInterpreter initialiseInstanceWithUrl(String url)
-            throws InstanceAlreadyExistsException {
+            throws InstanceAlreadyExistsException, IOException {
         if (instance == null) {
             instance = new SqlInterpreter(url);
         } else {
@@ -233,6 +282,8 @@ public class SqlInterpreter implements DataReader {
                 for (String single : state) {
                     statement.executeUpdate(single);
                 }
+                statement.close();
+                connection.close();
             }
         } catch (FileNotFoundException e) {
             logManager.error("File not found");
@@ -257,10 +308,8 @@ public class SqlInterpreter implements DataReader {
                 Statement stmt = connection.createStatement()) {
             switch (type) {
                 case "charger":
-                    connection.createStatement()
-                            .executeUpdate("DELETE FROM connector WHERE chargerid = " + id + ";");
-                    connection.createStatement()
-                            .executeUpdate("DELETE FROM stop WHERE chargerid = " + id + ";");
+                    stmt.executeUpdate("DELETE FROM connector WHERE chargerid = " + id + ";");
+                    stmt.executeUpdate("DELETE FROM stop WHERE chargerid = " + id + ";");
                     break;
                 case "connector":
                     if (readData(new QueryBuilderImpl().withSource("connector").build(),
@@ -271,18 +320,43 @@ public class SqlInterpreter implements DataReader {
                     }
                     break;
                 case "journey":
-                    connection.createStatement()
-                            .executeUpdate("DELETE FROM stop WHERE journeyid = " + id + ";");
+                    stmt.executeUpdate("DELETE FROM stop WHERE journeyid = " + id + ";");
                     break;
                 case "vehicle":
-                    connection.createStatement()
-                            .executeUpdate("DELETE FROM journey WHERE vehicleid = " + id + ";");
+                    stmt.executeUpdate("DELETE FROM journey WHERE vehicleid = " + id + ";");
                     break;
 
+                case "user":
+                    List<Object> charger = readData(new QueryBuilderImpl().withSource("charger")
+                            .withFilter("owner", " " + id + " ",
+                                    ComparisonType.EQUAL)
+                            .build(), Charger.class);
+                    for (Object o : charger) {
+                        deleteData("charger", ((Charger) o).getChargerId());
+                    }
+
+                    List<Object> journey = readData(new QueryBuilderImpl().withSource("journey")
+                            .withFilter("userid", "" + id + "",
+                                    ComparisonType.EQUAL)
+                            .build(), Journey.class);
+                    for (Object o : journey) {
+                        deleteData("journey", ((Journey) o).getJourneyId());
+                    }
+
+                    List<Object> vehicles = readData(new QueryBuilderImpl().withSource("vehicle")
+                            .withFilter("owner", "" + id + "",
+                                    ComparisonType.EQUAL)
+                            .build(), Vehicle.class);
+                    for (Object o : vehicles) {
+                        deleteData("vehicle", ((Vehicle) o).getVehicleId());
+                    }
+                    break;
                 default:
                     break;
             }
             stmt.executeUpdate(delete);
+            stmt.close();
+            connection.close();
         } catch (SQLException e) {
             throw new IOException(e.getMessage());
         }
@@ -311,7 +385,17 @@ public class SqlInterpreter implements DataReader {
                             + filter.getValue1() + "%')";
                     break;
                 case EQUAL:
-                    sql += filter.getValue0() + " = " + filter.getValue1();
+                    try {
+                        Integer.parseInt(filter.getValue1());
+                        sql += filter.getValue0() + " = " + filter.getValue1();
+                    } catch (NumberFormatException e) {
+                        if (filter.getValue1().equalsIgnoreCase("False")
+                                || filter.getValue1().equalsIgnoreCase("True")) {
+                            sql += filter.getValue0() + " = " + filter.getValue1();
+                        } else {
+                            sql += filter.getValue0() + " = " + "'" + filter.getValue1() + "'";
+                        }
+                    }
                     break;
                 case GREATER_THAN:
                     sql += filter.getValue0() + " > " + filter.getValue1();
@@ -349,6 +433,9 @@ public class SqlInterpreter implements DataReader {
                 case "Journey":
                     objects = asJourney(rs);
                     break;
+                case "User":
+                    objects = asUser(rs);
+                    break;
                 default: // Gets fields as list of strings
                     while (rs.next()) {
                         ArrayList<String> list = new ArrayList<>();
@@ -358,6 +445,10 @@ public class SqlInterpreter implements DataReader {
                         objects.add(list);
                     }
             }
+
+            rs.close();
+            stmt.close();
+            conn.close();
 
         } catch (SQLException e) {
             throw new IOException(e.getMessage());
@@ -383,13 +474,20 @@ public class SqlInterpreter implements DataReader {
             if (observedChargers.contains(rs.getInt("chargerid"))) {
                 continue;
             }
+            Statement additional = createConnection().createStatement();
 
-            // Get connectors
-            ResultSet connectorRs = createConnection().createStatement()
+            // // Get connectors
+            ResultSet connectorRs = additional
                     .executeQuery("SELECT * FROM connector WHERE chargerid = "
                             + rs.getInt("chargerid") + ";");
 
             connectors = asConnector(connectorRs);
+            connectorRs.close();
+
+            ResultSet userRs;
+            userRs = additional
+                    .executeQuery("SELECT username FROM user WHERE userid = "
+                            + rs.getInt("owner") + ";");
 
             // Make charger
             Charger charger = new Charger();
@@ -405,7 +503,8 @@ public class SqlInterpreter implements DataReader {
             charger.setAvailableParks(rs.getInt("carparkcount"));
             charger.setTimeLimit(rs.getDouble("maxtimelimit"));
             charger.setOperator(rs.getString("operator"));
-            charger.setOwner(rs.getString("owner"));
+            charger.setOwnerId(rs.getInt("owner"));
+            charger.setOwner(userRs.getString("username"));
             charger.setHasAttraction(rs.getBoolean("hastouristattraction"));
             charger.setAvailable24Hrs(rs.getBoolean("is24hours"));
             charger.setParkingCost(rs.getBoolean("hascarparkcost"));
@@ -414,8 +513,12 @@ public class SqlInterpreter implements DataReader {
                 charger.addConnector((Connector) c);
             }
             charger.setCurrentType();
+
+            userRs.close();
+            additional.close();
             observedChargers.add(charger.getChargerId());
             chargers.add(charger);
+
         }
 
         return chargers;
@@ -455,10 +558,12 @@ public class SqlInterpreter implements DataReader {
         List<Object> vehicles = new ArrayList<>();
         while (rs.next()) {
             Vehicle v = new Vehicle();
+            v.setOwner(rs.getInt("owner"));
             v.setMake(rs.getString("make"));
             v.setModel(rs.getString("model"));
             v.setBatteryPercent(rs.getDouble("batteryPercent"));
             v.setMaxRange(rs.getInt("rangeKM"));
+            v.setcurrVehicle(rs.getBoolean("currVehicle"));
             if (rs.getString("imgPath") == null) {
                 v.setImgPath(Vehicle.DEFAULTIMGPATH);
             } else {
@@ -467,7 +572,6 @@ public class SqlInterpreter implements DataReader {
             v.setVehicleId(rs.getInt("vehicleid"));
             v.setConnectors(
                     new ArrayList<String>(Arrays.asList(rs.getString("connectorType").split(","))));
-            v.setcurrVehicle(rs.getBoolean("currVehicle"));
             vehicles.add(v);
         }
 
@@ -488,6 +592,7 @@ public class SqlInterpreter implements DataReader {
 
         while (rs.next()) {
             Journey journey = new Journey();
+            journey.setUser(rs.getInt("userid"));
             journey.setJourneyId(rs.getInt("journeyid"));
             journey.setStartPosition(
                     new Coordinate(rs.getDouble("startX"), rs.getDouble("startY"),
@@ -504,6 +609,7 @@ public class SqlInterpreter implements DataReader {
                             + rs.getInt("vehicleid") + ";");
 
             List<Object> vehicles = asVehicle(vehicleRs);
+            vehicleRs.close();
             if (vehicles.size() == 1) {
                 journey.setVehicle((Vehicle) vehicles.get(0));
             } else {
@@ -519,6 +625,7 @@ public class SqlInterpreter implements DataReader {
                             + " ORDER BY position ASC;");
 
             List<Object> stops = asCharger(stopRs);
+            stopRs.close();
             for (Object c : stops) {
                 journey.addCharger((Charger) c);
             }
@@ -528,6 +635,45 @@ public class SqlInterpreter implements DataReader {
         }
 
         return journeys;
+    }
+
+    /**
+     * Reads ResultSet as user
+     * 
+     * @param rs ResultSet to read from
+     * 
+     * @return list of users
+     * @throws SQLException if sql interaction fails
+     */
+    private List<Object> asUser(ResultSet rs) throws SQLException {
+        List<Object> users = new ArrayList<>();
+        while (rs.next()) {
+            User user = new User();
+            user.setUserid(rs.getInt("userid"));
+            user.setAccountName(rs.getString("username"));
+            user.setEmail(rs.getString("email"));
+            user.setCarbonSaved(rs.getInt("carbonSaved"));
+            user.setLevel(PermissionLevel.fromValue(rs.getInt("permissions")));
+
+            users.add(user);
+        }
+        return users;
+    }
+
+    /**
+     * Gets the number of times a charger has been viewed
+     * 
+     * @param c the charger object
+     * @return the number of times viewed
+     * @throws SQLException if the database fails
+     */
+    public int getChargerViews(Charger c) throws SQLException {
+        ResultSet rs = createConnection().createStatement()
+                .executeQuery("Select SUM(times) FROM views "
+                        + "WHERE chargerid = " + c.getChargerId() + "");
+        int result = rs.getInt(1);
+        rs.close();
+        return result;
     }
 
     /**
@@ -564,7 +710,7 @@ public class SqlInterpreter implements DataReader {
             statement.setDouble(3, c.getLocation().getYpos());
             statement.setString(4, c.getName());
             statement.setString(5, c.getOperator());
-            statement.setString(6, c.getOwner());
+            statement.setInt(6, c.getOwnerId());
             statement.setString(7, c.getLocation().getAddress());
             statement.setBoolean(8, c.getAvailable24Hrs());
             statement.setInt(9, c.getAvailableParks());
@@ -580,7 +726,7 @@ public class SqlInterpreter implements DataReader {
             statement.setDouble(19, c.getLocation().getYpos());
             statement.setString(20, c.getName());
             statement.setString(21, c.getOperator());
-            statement.setString(22, c.getOwner());
+            statement.setInt(22, c.getOwnerId());
             statement.setString(23, c.getLocation().getAddress());
             statement.setBoolean(24, c.getAvailable24Hrs());
             statement.setInt(25, c.getAvailableParks());
@@ -598,6 +744,7 @@ public class SqlInterpreter implements DataReader {
                 c.setChargerId(statement.getGeneratedKeys().getInt(1));
             }
             writeConnector(connection, c.getConnectors(), c.getChargerId());
+
         } catch (SQLException | NullPointerException e) {
             throw new IOException(e.getMessage());
         }
@@ -757,9 +904,9 @@ public class SqlInterpreter implements DataReader {
      */
     public void writeVehicle(Vehicle v) throws IOException {
         String toAdd = "INSERT INTO vehicle (vehicleid, make, model, rangekm, "
-                + "connectorType, batteryPercent, imgPath, currVehicle) values(?,?,?,?,?,?,?,?)"
+                + "connectorType, batteryPercent, imgPath, owner, currVehicle) values(?,?,?,?,?,?,?,?,?)"
                 + "ON CONFLICT(vehicleid) DO UPDATE SET make = ?, model = ?, "
-                + "rangekm = ?, connectorType = ?, batteryPercent = ?, imgPath = ?, "
+                + "rangekm = ?, connectorType = ?, batteryPercent = ?, imgPath = ?, owner = ?, "
                 + "currVehicle = ?";
         try (Connection connection = createConnection();
                 PreparedStatement statement = connection.prepareStatement(toAdd)) {
@@ -780,14 +927,16 @@ public class SqlInterpreter implements DataReader {
             statement.setString(5, connectors);
             statement.setDouble(6, v.getBatteryPercent());
             statement.setString(7, v.getImgPath());
-            statement.setBoolean(8, v.getCurrVehicle());
-            statement.setString(9, v.getMake());
-            statement.setString(10, v.getModel());
-            statement.setInt(11, v.getMaxRange());
-            statement.setString(12, connectors);
-            statement.setDouble(13, v.getBatteryPercent());
-            statement.setString(14, v.getImgPath());
-            statement.setBoolean(15, v.getCurrVehicle());
+            statement.setInt(8, v.getOwner());
+            statement.setBoolean(9, v.getCurrVehicle());
+            statement.setString(10, v.getMake());
+            statement.setString(11, v.getModel());
+            statement.setInt(12, v.getMaxRange());
+            statement.setString(13, connectors);
+            statement.setDouble(14, v.getBatteryPercent());
+            statement.setString(15, v.getImgPath());
+            statement.setInt(16, v.getOwner());
+            statement.setBoolean(17, v.getCurrVehicle());
 
             statement.executeUpdate();
             if (v.getVehicleId() == 0) {
@@ -819,11 +968,11 @@ public class SqlInterpreter implements DataReader {
     public void writeJourney(Journey j) throws IOException {
         String toAdd = "INSERT INTO journey (journeyid, vehicleid, startLat, "
                 + "startLon, startX, startY, "
-                + "endLat, endLon, endX, endY, startDate, endDate) "
-                + "values(?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(journeyid) DO UPDATE SET "
+                + "endLat, endLon, endX, endY, startDate, endDate, userid) "
+                + "values(?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(journeyid) DO UPDATE SET "
                 + "vehicleid = ?, startLat = ?, startLon = ?, startX = ?,"
                 + " startY = ?, endLat = ?, endLon = ?, endX = ?, endY = ?, "
-                + "startDate = ?, endDate = ?";
+                + "startDate = ?, endDate = ?, userid = ?";
         if (j.getChargers().size() < 1) {
             throw new IOException("Error writing journey. No stops found.");
         } else if (j.getVehicle() == null) {
@@ -847,18 +996,19 @@ public class SqlInterpreter implements DataReader {
             addJourney.setDouble(10, j.getEndPosition().getYpos());
             addJourney.setString(11, j.getStartDate());
             addJourney.setString(12, j.getEndDate());
-            addJourney.setInt(13, j.getVehicle().getVehicleId());
-            addJourney.setDouble(14, j.getStartPosition().getLat());
-            addJourney.setDouble(15, j.getStartPosition().getLon());
-            addJourney.setDouble(16, j.getStartPosition().getXpos());
-            addJourney.setDouble(17, j.getStartPosition().getYpos());
-            addJourney.setDouble(18, j.getEndPosition().getLat());
-            addJourney.setDouble(19, j.getEndPosition().getLon());
-            addJourney.setDouble(20, j.getEndPosition().getXpos());
-            addJourney.setDouble(21, j.getEndPosition().getYpos());
-            addJourney.setString(22, j.getStartDate());
-            addJourney.setString(23, j.getEndDate());
-
+            addJourney.setInt(13, j.getUser());
+            addJourney.setInt(14, j.getVehicle().getVehicleId());
+            addJourney.setDouble(15, j.getStartPosition().getLat());
+            addJourney.setDouble(16, j.getStartPosition().getLon());
+            addJourney.setDouble(17, j.getStartPosition().getXpos());
+            addJourney.setDouble(18, j.getStartPosition().getYpos());
+            addJourney.setDouble(19, j.getEndPosition().getLat());
+            addJourney.setDouble(20, j.getEndPosition().getLon());
+            addJourney.setDouble(21, j.getEndPosition().getXpos());
+            addJourney.setDouble(22, j.getEndPosition().getYpos());
+            addJourney.setString(23, j.getStartDate());
+            addJourney.setString(24, j.getEndDate());
+            addJourney.setInt(25, j.getUser());
             addJourney.executeUpdate();
             if (j.getJourneyId() == 0) {
                 j.setJourneyId(addJourney.getGeneratedKeys().getInt(1));
@@ -875,7 +1025,9 @@ public class SqlInterpreter implements DataReader {
                         ResultSet rs = stmt.executeQuery("SELECT journeyid "
                                 + "FROM journey ORDER BY journeyid DESC LIMIT 0,1")) {
                     journeyIdForStop = rs.getInt("journeyid");
-
+                    rs.close();
+                    stmt.close();
+                    conn.close();
                 } catch (SQLException e) {
                     throw new IOException(e.getMessage());
                 }
@@ -897,6 +1049,109 @@ public class SqlInterpreter implements DataReader {
     }
 
     /**
+     * Adds object user to the database with password
+     * 
+     * @param user     the user object
+     * @param password the new password for the user
+     * @throws IOException to check for errors
+     */
+    public void writeUser(User user, String password) throws IOException {
+        String toAdd = "INSERT INTO user (userid, email, username, password, "
+                + "permissions, carbonSaved) "
+                + "values(?,?,?,?,?,?) ON CONFLICT(userid) DO UPDATE SET "
+                + "email = ?, username = ?, password = ?,"
+                + " permissions = ?, carbonSaved = ?";
+        try (Connection connection = createConnection();
+                PreparedStatement statement = connection.prepareStatement(toAdd)) {
+            if (user.getUserid() == 0) {
+                statement.setNull(1, 0);
+            } else {
+                statement.setInt(1, user.getUserid());
+            }
+            statement.setString(2, user.getEmail());
+            statement.setString(3, user.getAccountName());
+            statement.setString(4, password);
+            statement.setInt(5, user.getLevel().ordinal());
+            statement.setDouble(6, user.getCarbonSaved());
+            statement.setString(7, user.getEmail());
+            statement.setString(8, user.getAccountName());
+            statement.setString(9, password);
+            statement.setInt(10, user.getLevel().ordinal());
+            statement.setDouble(11, user.getCarbonSaved());
+            statement.executeUpdate();
+            if (user.getUserid() == 0) {
+                user.setUserid(statement.getGeneratedKeys().getInt(1));
+            }
+        } catch (SQLException | NullPointerException e) {
+            throw new IOException(e.getMessage());
+        }
+    }
+
+    /**
+     * Updates existing user (does not require password)
+     * 
+     * @param user the user object
+     * @throws SQLException to check for errors
+     */
+    public void writeUser(User user) throws SQLException {
+        String toAdd = "UPDATE user SET "
+                + "email = ?, username = ?,"
+                + " permissions = ?, carbonSaved = ? WHERE userid = ?;";
+        Connection connection = createConnection();
+        PreparedStatement statement = connection.prepareStatement(toAdd);
+        statement.setString(1, user.getEmail());
+        statement.setString(2, user.getAccountName());
+        statement.setInt(3, user.getLevel().ordinal());
+        statement.setDouble(4, user.getCarbonSaved());
+        statement.setInt(5, user.getUserid());
+        statement.executeUpdate();
+        if (user.getUserid() == 0) {
+            user.setUserid(statement.getGeneratedKeys().getInt(1));
+        }
+        statement.close();
+        connection.close();
+
+    }
+
+    /**
+     * Checks a password against the db for the login screen
+     * 
+     * @param username user to log in
+     * @param password requested password
+     * @return if passwords match
+     * @throws SQLException if the sql fails
+     * @throws IOException  if interaction fails
+     */
+    public User validatePassword(String username, String password)
+            throws SQLException, IOException {
+        String correctPassword = null;
+        try {
+            Connection conn = createConnection();
+            Statement stmt = conn.createStatement();
+            ResultSet userRs = stmt.executeQuery("SELECT password FROM user WHERE username = '"
+                    + username + "' ");
+            correctPassword = userRs.getString("password");
+            userRs.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            throw new SQLException(e.getMessage());
+        }
+        if (correctPassword == null) {
+            return null;
+        }
+        if (password.equals(correctPassword)) {
+            List<Object> result = readData(new QueryBuilderImpl().withSource("user")
+                    .withFilter("username", username, ComparisonType.EQUAL)
+                    .build(), User.class);
+            if (result.size() == 1) {
+                return (User) result.get(0);
+            }
+        }
+        return null;
+    }
+
+    /**
      * Allows threading for writing chargers to db to improve performance
      * 
      * @author Harrison Tyson
@@ -906,7 +1161,7 @@ public class SqlInterpreter implements DataReader {
         /**
          * Number of threads
          */
-        private static int threadCount = 4;
+        private static int threadCount = 1;
 
         /**
          * List of chargers to write
@@ -962,10 +1217,10 @@ public class SqlInterpreter implements DataReader {
                 mutex.acquire();
                 this.conn.commit();
                 mutex.release();
+                this.conn.close();
             } catch (SQLException | InterruptedException e) {
                 e.printStackTrace(); // TODO: handle exception
             }
-
         }
     }
 }

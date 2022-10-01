@@ -2,6 +2,8 @@ package seng202.team3.data.entity;
 
 import java.util.ArrayList;
 
+import seng202.team3.logic.UserManager;
+
 /**
  * Stores information about vehicles
  *
@@ -31,6 +33,12 @@ public class Vehicle {
     /** Path to vehicle image */
     private String imgPath;
 
+    /**
+     * userid of the vehicle owner
+     */
+    private int owner;
+
+
     /** Flag for if this vehicle is the user's currently-selected vehicle */
     private boolean currVehicle;
 
@@ -56,6 +64,7 @@ public class Vehicle {
         this.imgPath = DEFAULTIMGPATH;
         this.batteryPercent = 100.0;
         this.currVehicle = false;
+        setOwner(UserManager.getUser().getUserid());
     }
 
     /**
@@ -217,6 +226,35 @@ public class Vehicle {
     public boolean getCurrVehicle() {
         return currVehicle;
     }
+
+    /**
+     * Set the user id number
+     *
+     * @param number integer for the id
+     */
+    public void setOwner(int number) {
+        this.owner = number;
+    }
+
+    /**
+     * returns the user id number
+     *
+     * @return the id integer
+     */
+    public int getOwner() {
+        return owner;
+    }
+
+    /**
+     * toString function (mostly for debugging purposes)
+     * 
+     * @return string representation of vehicle
+     */
+    public String toString() {
+        return "MAKE: " + make + "  MODEL: " + model + "  MAXRANGE: " + maxRange 
+            + "  ID: " + vehicleId + "  OWNER: " + owner + "  CURR: " + currVehicle;
+    }
+
 
     /**
      * {@inheritDoc}}

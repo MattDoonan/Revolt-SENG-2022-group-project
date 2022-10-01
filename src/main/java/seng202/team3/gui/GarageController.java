@@ -232,6 +232,7 @@ public class GarageController {
             manage.saveCurrVehicle(vehicle);
         }
         String source = ((Button) event.getSource()).getId();
+        System.out.println("source: " + source);
         Vehicle currVehicle = new Vehicle();
         switch (source) {
             case "currEvOne":
@@ -249,6 +250,8 @@ public class GarageController {
             default:
                 break;
         }
+        System.out.println("currVehicle: " + currVehicle.toString());
+
         manage.saveCurrVehicle(currVehicle);
         refresh();
 
@@ -458,6 +461,9 @@ public class GarageController {
      * @param index     index of the vehicle to display
      */
     public void populateDisplays(String display, ImageView imageview, int index) {
+        for (Vehicle vehicle : vehicleData) {
+            System.out.println(vehicle.toString());
+        }
         if (vehicleData.size() > 0) {
             switch (display) {
                 case "one":
