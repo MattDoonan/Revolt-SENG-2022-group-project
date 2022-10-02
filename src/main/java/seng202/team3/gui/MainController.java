@@ -24,9 +24,11 @@ import javafx.stage.Stage;
 import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.logic.Calculations;
+import seng202.team3.logic.GarageManager;
 import seng202.team3.logic.GeoLocationHandler;
 import seng202.team3.logic.MainManager;
 import seng202.team3.logic.MapManager;
+import seng202.team3.logic.UserManager;
 
 /**
  * Controller for the main.fxml window (the home)
@@ -156,6 +158,10 @@ public class MainController {
     @FXML
     private CheckBox noNearbyAttraction;
 
+    /** The battery percentage box */
+    @FXML
+    private TextField batteryPercent;
+
     /**
      * The default image to be used
      */
@@ -181,6 +187,9 @@ public class MainController {
      */
     private MainManager manage;
 
+    /** the garage manager*/
+    private GarageManager garageManager;
+
     /**
      * unused constructor
      */
@@ -202,10 +211,11 @@ public class MainController {
         manage.resetQuery();
         manage.makeAllChargers();
         manage.setPosition();
+        initialRange();
         if (manage.getPosition() == GeoLocationHandler.DEFAULT_COORDINATE) {
             manage.setDistance(0);
         } else {
-            manage.setDistance(changeDistance.getValue());
+            manage.setDistance(changeDistance.getValue() * 0.8);
         }
         addChargersToDisplay(manage.getCloseChargerData());
         change();
@@ -223,6 +233,42 @@ public class MainController {
                             getClass().getResourceAsStream("/images/charger.png")));
         } catch (NullPointerException e) {
             image = null;
+        }
+    }
+
+    /**
+     * Checks the battery percentage text field on input for non Integers
+     * then changes the max range
+     */
+    public void checkForNumber() {
+        if (!batteryPercent.getText().isEmpty()) {
+            if (!batteryPercent.getText().matches("\\d*")) {
+                batteryPercent.setText(batteryPercent.getText().replaceAll("[^\\d]", ""));
+            } else if (Double.parseDouble(batteryPercent.getText()) > 100) {
+                batteryPercent.setText(batteryPercent.getText()
+                        .substring(batteryPercent.getText().length() - 1));
+            } else {
+                changeDistance.setValue(garageManager.getData().get(0).getMaxRange()
+                        * (Double.parseDouble(batteryPercent.getText()) / 100));
+            }
+        }
+    }
+
+    /**
+     * Sets the initial range of chargers in view to the vehicles range
+     */
+    public void initialRange() {
+        if (UserManager.getUser() == UserManager.getGuest()) {
+            batteryPercent.setVisible(false);
+        } else {
+            garageManager = new GarageManager();
+            garageManager.resetQuery();
+            garageManager.getAllVehicles();
+            if (garageManager.getData().size() > 0) {
+                changeDistance.setValue(garageManager.getData().get(0).getMaxRange());
+            } else {
+                batteryPercent.setVisible(false);
+            }
         }
     }
 
@@ -446,7 +492,7 @@ public class MainController {
 
         manage.makeAllChargers();
         if (distanceDisplay.isSelected()) {
-            manage.setDistance(changeDistance.getValue());
+            manage.setDistance(changeDistance.getValue() * 0.8);
         } else {
             manage.setDistance(0);
         }
