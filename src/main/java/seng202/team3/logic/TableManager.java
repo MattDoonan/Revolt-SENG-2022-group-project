@@ -57,7 +57,6 @@ public class TableManager extends ChargerHandler implements ChargerInterface {
         if (coordinate != null) {
             setPosition();
         }
-        GeoLocationHandler.getInstance().clearCoordinate();
     }
 
     /**

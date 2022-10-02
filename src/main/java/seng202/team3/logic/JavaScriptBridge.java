@@ -1,6 +1,10 @@
 package seng202.team3.logic;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.List;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -8,6 +12,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -48,6 +53,16 @@ public class JavaScriptBridge {
     }
 
     /**
+     * Makes a coordinate from a click and sets the GeoLocationHandler, and adds a name
+     *
+     * @param latlng the string created with latitude and longitude
+     */
+    public void addCoordinateWithName(String latlng) {
+        GeoLocationHandler.getInstance().setCoordinate(parseCoordinate(latlng), "Coordinate");
+        refreshCoordinates();
+    }
+
+    /**
      * Refreshes the coordinates for journey manager and main manager
      */
     private void refreshCoordinates() {
@@ -76,6 +91,7 @@ public class JavaScriptBridge {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+
         return coord;
     }
 
@@ -97,6 +113,36 @@ public class JavaScriptBridge {
         GeoLocationHandler.getInstance().setCoordinate(GeoLocationHandler
                 .getInstance().getCoordinate(), address);
         refreshCoordinates();
+    }
+
+    /**
+     * Makes the location name; returns a string of it
+     *
+     * @return a string of the name
+     */
+    public String makeLocationName() {
+        String address = "";
+        JSONParser parser = new JSONParser();
+        Coordinate coord = GeoLocationHandler.getInstance().getCoordinate();
+        try {
+            HttpClient client = HttpClient.newHttpClient();
+            HttpRequest request = HttpRequest.newBuilder(
+                    URI.create("https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat="
+                            + Double.toString(coord.getLat()) + "&lon="
+                            + Double.toString(coord.getLon()))
+            ).build();
+            HttpResponse<String> response = client.send(request,
+                    HttpResponse.BodyHandlers.ofString());
+            JSONObject result = (JSONObject) parser.parse(response.body());
+            address += (String) result.get("display_name");
+            addLocationName(address);
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            Thread.currentThread().interrupt();
+            e.printStackTrace();
+        }
+        return address;
     }
 
     /**
@@ -169,16 +215,6 @@ public class JavaScriptBridge {
         chargerHandler(id);
         MainManager main = MenuController.getController().getManager();
         loadChargerEdit(main.getSelectedCharger());
-    }
-
-    /**
-     * Sets the singleton ChargerManager Coordinate to the latlng
-     *
-     * @param latlng the string created with latitude and longitude
-     * @param name   the address of the coordinate to set
-     */
-    public void setCoordinate(String latlng, String name) {
-        GeoLocationHandler.getInstance().setCoordinate(parseCoordinate(latlng), name);
     }
 
     /**

@@ -6,6 +6,7 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import netscape.javascript.JSObject;
+import seng202.team3.logic.GeoLocationHandler;
 import seng202.team3.logic.JavaScriptBridge;
 import seng202.team3.logic.TableManager;
 
@@ -93,8 +94,10 @@ public class MiniMapController {
      */
     @FXML
     public void getCoordinateWithAddress() {
+        GeoLocationHandler.getInstance().setCoordinate(
+                GeoLocationHandler.getInstance().getCoordinate(),
+                javaScriptBridge.makeLocationName());
         manager.setPosition();
-        javaScriptConnector.call("setCoordinate");
         stage.close();
     }
 

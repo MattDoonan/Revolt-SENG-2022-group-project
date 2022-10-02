@@ -66,7 +66,6 @@
             changeZoom,
             clearMarkers,
             addLocationToRoute,
-            addCoordinateName,
         };
 
 
@@ -112,28 +111,8 @@
                 let latlng = map.mouseEventToLatLng(map_event.originalEvent)
                 if (!isRoute) {
                     javaScriptBridge.addCoordinateFromClick(`{"lat": ${latlng.lat}, "lng": ${latlng.lng}}`)
-                    removeCoordinate()
                     addCoordinate("Selected Coordinate", latlng.lat, latlng.lng)
                     javaScriptBridge.refreshTable()
-                }
-            })
-        }
-
-        /**
-         * Adds the coordinate name
-         */
-        function addCoordinateName() {
-            let latlng = coordinate.getLatLng()
-            new L.Control.Geocoder.Nominatim({
-                geocodingQueryParams: {
-                    countrycodes: 'nz'
-                }
-            }).reverse(latlng, 4, results => {
-                let r = results[0]
-                if (r) {
-                    removeCoordinate();
-                    addCoordinate(r.name, latlng.lat, latlng.lng)
-                    javaScriptBridge.addLocationName(r.name)
                 }
             })
         }
@@ -156,7 +135,6 @@
             }).on('markgeocode', function (e) {
                 let latlng = e.geocode.center
                 javaScriptBridge.addCoordinateFromClick(`{"lat": ${latlng.lat}, "lng": ${latlng.lng}}`)
-                removeCoordinate()
                 addCoordinate(e.geocode.name, latlng.lat, latlng.lng)
                 javaScriptBridge.addLocationName(e.geocode.name)
                 movePosition(latlng.lat, latlng.lng)
@@ -219,8 +197,9 @@
          * @param lng longitude to place coordinate marker at
          */
         function addCoordinate(title, lat, lng) {
+            removeCoordinate()
             coordinate = new L.Marker([lat, lng], { icon: redIcon })
-            coordinate.bindPopup(title + ": " + lat.toFixed(4) + " " + lng.toFixed(4))
+            coordinate.bindPopup(title + ": [" + lat.toFixed(4) + ", " + lng.toFixed(4) + "]")
             coordinate.on("click", function (ev) { coordinate.openPopup() })
             coordinate.addTo(map)
         }

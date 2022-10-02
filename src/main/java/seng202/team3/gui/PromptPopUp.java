@@ -2,6 +2,8 @@ package seng202.team3.gui;
 
 import javafx.fxml.FXML;
 import seng202.team3.logic.GeoLocationHandler;
+import seng202.team3.logic.JavaScriptBridge;
+import seng202.team3.logic.UserManager;
 
 /**
  * A prompt for clicking on the map or the charger list for information to
@@ -53,6 +55,10 @@ public class PromptPopUp extends PopUpWindow {
             }
             case "add" -> {
                 stage.setOpacity(0.0);
+                JavaScriptBridge bridge = new JavaScriptBridge();
+                GeoLocationHandler.getInstance().setCoordinate(
+                        GeoLocationHandler.getInstance().getCoordinate(),
+                        bridge.makeLocationName());
                 controller.getManager().addCharger();
                 cancel();
             }

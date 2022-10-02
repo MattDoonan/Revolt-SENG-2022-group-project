@@ -124,7 +124,10 @@ public class MapViewController extends MapHandler {
      * Adds the coordinate name to the selected point
      */
     public void addCoordinateName() {
-        javaScriptConnector.call("addCoordinateName");
+        javaScriptConnector.call("addCoordinate",
+                GeoLocationHandler.getInstance().getCoordinate().getAddress(),
+                GeoLocationHandler.getInstance().getCoordinate().getLat(),
+                GeoLocationHandler.getInstance().getCoordinate().getLon());
     }
 
     /**
@@ -224,7 +227,6 @@ public class MapViewController extends MapHandler {
      */
     public void loadPromptScreens(String prompt, String type) {
         try {
-            MenuController.getController().getMapController().addCoordinateName();
             FXMLLoader popUp = new FXMLLoader(getClass().getResource(
                     "/fxml/prompt_popup.fxml"));
             VBox root = popUp.load();
@@ -242,6 +244,7 @@ public class MapViewController extends MapHandler {
             e.printStackTrace();
         } finally {
             addChargersOnMap();
+            addCoordinateName();
             MenuController.getController().viewChargers(null);
         }
     }
