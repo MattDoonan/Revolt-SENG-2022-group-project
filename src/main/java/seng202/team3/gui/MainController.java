@@ -191,6 +191,8 @@ public class MainController {
     /** the garage manager */
     private GarageManager garageManager;
 
+    private Double buffer = 0.85;
+
     /**
      * unused constructor
      */
@@ -215,7 +217,7 @@ public class MainController {
         if (manage.getPosition() == GeoLocationHandler.DEFAULT_COORDINATE) {
             manage.setDistance(0);
         } else {
-            manage.setDistance(changeDistance.getValue() * 0.8);
+            manage.setDistance(changeDistance.getValue() * buffer);
         }
         addChargersToDisplay(manage.getCloseChargerData());
         change();
@@ -247,11 +249,13 @@ public class MainController {
                 batteryPercent.setText(batteryPercent.getText().replaceAll("[^\\d]", ""));
             } else if (Double.parseDouble(batteryPercent.getText()) > 100) {
                 batteryPercent.setText(batteryPercent.getText()
-                        .substring(batteryPercent.getText().length() - 1));
+                        .substring(0, batteryPercent.getText().length() - 1));
             } else {
                 changeDistance.setValue(garageManager.getData().get(0).getMaxRange()
                         * (Double.parseDouble(batteryPercent.getText()) / 100));
             }
+        } else {
+            changeDistance.setValue(garageManager.getData().get(0).getMaxRange());
         }
     }
 
@@ -494,7 +498,7 @@ public class MainController {
 
         manage.makeAllChargers();
         if (distanceDisplay.isSelected()) {
-            manage.setDistance(changeDistance.getValue() * 0.8);
+            manage.setDistance(changeDistance.getValue() * buffer);
         } else {
             manage.setDistance(0);
         }
