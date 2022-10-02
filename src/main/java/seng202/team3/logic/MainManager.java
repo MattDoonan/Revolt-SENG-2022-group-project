@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.PermissionLevel;
@@ -15,6 +17,10 @@ import seng202.team3.data.entity.PermissionLevel;
  * @version 1.0.1, Aug 22
  */
 public class MainManager extends ChargerHandler implements ChargerInterface {
+    /**
+     * Logger
+     */
+    private static final Logger logManager = LogManager.getLogger();
 
     /**
      * Distance between selected coordinate and specified charger
@@ -92,6 +98,7 @@ public class MainManager extends ChargerHandler implements ChargerInterface {
     public void addCharger() {
         new JavaScriptBridge().loadChargerEdit(null);
         makeAllChargers();
+        logManager.info("Charger has been added");
     }
 
     /**
@@ -104,9 +111,10 @@ public class MainManager extends ChargerHandler implements ChargerInterface {
             try {
                 SqlInterpreter.getInstance().deleteData("charger", selectedCharger.getChargerId());
                 selectedCharger = null;
+                logManager.info("Charger has been deleted");
                 makeAllChargers();
             } catch (IOException e) {
-                e.printStackTrace();
+                logManager.error(e.getMessage());
             }
         }
     }

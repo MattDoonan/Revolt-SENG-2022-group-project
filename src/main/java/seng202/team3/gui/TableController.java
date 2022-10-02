@@ -18,6 +18,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.User;
@@ -31,6 +33,10 @@ import seng202.team3.logic.TableManager;
  * @version 1.0.1, Sep 22
  */
 public class TableController {
+    /**
+     * Logger
+     */
+    private static final Logger logManager = LogManager.getLogger();
 
     /**
      * Manager for the table screen
@@ -629,7 +635,7 @@ public class TableController {
             modal.setAlwaysOnTop(true);
             modal.showAndWait();
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
         }
         manage.addCharger();
         if (manage.getPosition() != null) {
@@ -680,7 +686,7 @@ public class TableController {
                 manage.deleteCharger();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
         }
     }
 

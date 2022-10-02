@@ -21,6 +21,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.logic.Calculations;
@@ -37,6 +39,10 @@ import seng202.team3.logic.UserManager;
  * @version 1.0.1, Aug 22
  */
 public class MainController {
+    /**
+     * Logger
+     */
+    private static final Logger logManager = LogManager.getLogger();
 
     /**
      * An AC button checkbox
@@ -168,11 +174,6 @@ public class MainController {
     private Image image;
 
     /**
-     * The BorderPane containing entire application
-     */
-    private BorderPane menuWindow;
-
-    /**
      * A reflection of the routing state of mapcontroller
      */
     private Boolean routing;
@@ -187,7 +188,7 @@ public class MainController {
      */
     private MainManager manage;
 
-    /** the garage manager*/
+    /** the garage manager */
     private GarageManager garageManager;
 
     /**
@@ -204,7 +205,6 @@ public class MainController {
      * @param menuWindow a {@link BorderPane} object
      */
     public void init(Stage stage, BorderPane menuWindow) {
-        this.menuWindow = menuWindow;
         manage = new MainManager();
         fetchImage();
         loadMapView(stage);
@@ -233,6 +233,7 @@ public class MainController {
                             getClass().getResourceAsStream("/images/charger.png")));
         } catch (NullPointerException e) {
             image = null;
+            logManager.error(e.getMessage());
         }
     }
 
@@ -302,6 +303,7 @@ public class MainController {
             } catch (NullPointerException e) {
                 Label image = new Label("Image");
                 displayInfo.getChildren().add(image);
+                logManager.error(e.getMessage());
             }
             VBox display = new VBox(); // Creates Vbox to contain text
             display.getChildren().add(new Text("" + c.getName() + ""));
@@ -529,7 +531,7 @@ public class MainController {
             mainWindow.setCenter(mapViewParent);
             MainWindow.setController(mapController);
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
         }
     }
 

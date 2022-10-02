@@ -6,6 +6,8 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import netscape.javascript.JSObject;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import seng202.team3.logic.GeoLocationHandler;
 import seng202.team3.logic.JavaScriptBridge;
 import seng202.team3.logic.TableManager;
@@ -17,6 +19,10 @@ import seng202.team3.logic.TableManager;
  * @version 1.0.0, Sep 22
  */
 public class MiniMapController {
+    /**
+     * Logger
+     */
+    private static final Logger logManager = LogManager.getLogger();
 
     /**
      * WebView to host
@@ -76,7 +82,7 @@ public class MiniMapController {
         webEngine.setJavaScriptEnabled(true);
         webEngine.load(getClass().getClassLoader().getResource("html/mini_map.html")
                 .toExternalForm());
-
+        logManager.info("Loading mini map...");
         webEngine.getLoadWorker().stateProperty().addListener(
                 (ov, oldState, newState) -> {
                     if (newState == Worker.State.SUCCEEDED) {
@@ -84,7 +90,7 @@ public class MiniMapController {
                         window.setMember("javaScriptBridge", javaScriptBridge);
                         javaScriptConnector = (JSObject) webEngine.executeScript("jsConnector");
                         javaScriptConnector.call("initMap");
-
+                        logManager.info("Mini map loaded successfully");
                     }
                 });
     }

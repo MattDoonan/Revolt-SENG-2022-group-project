@@ -8,6 +8,8 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
 import seng202.team3.data.entity.PermissionLevel;
@@ -23,6 +25,11 @@ import seng202.team3.logic.UserManager;
  * @version 1.0.2, Aug 22
  */
 public class MapViewController extends MapHandler {
+
+    /**
+     * Logger
+     */
+    private static final Logger logManager = LogManager.getLogger();
 
     /**
      * The MapManager of this controller
@@ -118,6 +125,8 @@ public class MapViewController extends MapHandler {
         }
         changePosition(coordinate);
         map.makeCoordinate(coordinate);
+
+        logManager.info("Point created on map");
     }
 
     /**
@@ -169,6 +178,8 @@ public class MapViewController extends MapHandler {
             javaScriptConnector.call("addRoute");
         }
 
+        logManager.info("Route added to map");
+
     }
 
     /**
@@ -187,6 +198,7 @@ public class MapViewController extends MapHandler {
     public void addStopInRoute(Coordinate coordinate) {
         javaScriptConnector.call("addLocationToRoute", coordinate.getLat(), coordinate.getLon(),
                 "Stop", "p", 1);
+        logManager.info("Stop added to route");
     }
 
     /**
@@ -241,7 +253,7 @@ public class MapViewController extends MapHandler {
             popController.addPrompt(prompt);
             modal.showAndWait();
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
         } finally {
             addChargersOnMap();
             addCoordinateName();

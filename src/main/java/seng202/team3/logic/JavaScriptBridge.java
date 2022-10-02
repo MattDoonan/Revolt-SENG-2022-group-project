@@ -8,11 +8,11 @@ import java.net.http.HttpResponse;
 import java.util.List;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import org.json.simple.JSONArray;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -33,13 +33,16 @@ import seng202.team3.gui.MenuController;
  * @version 1.0.0, Aug 22
  */
 public class JavaScriptBridge {
-
+    /**
+     * Logger
+     */
+    private static final Logger logManager = LogManager.getLogger();
 
     /**
      * Unused constructor
      */
     public JavaScriptBridge() {
-        //Unused
+        // Unused
     }
 
     /**
@@ -53,7 +56,8 @@ public class JavaScriptBridge {
     }
 
     /**
-     * Makes a coordinate from a click and sets the GeoLocationHandler, and adds a name
+     * Makes a coordinate from a click and sets the GeoLocationHandler, and adds a
+     * name
      *
      * @param latlng the string created with latitude and longitude
      */
@@ -66,9 +70,8 @@ public class JavaScriptBridge {
      * Refreshes the coordinates for journey manager and main manager
      */
     private void refreshCoordinates() {
-        MenuController menu = new MenuController();
-        if (menu.getController() != null) {
-            menu.getController().getManager().setPosition();
+        if (MenuController.getController() != null) {
+            MenuController.getController().getManager().setPosition();
         }
     }
 
@@ -89,7 +92,7 @@ public class JavaScriptBridge {
             coord.setLat((double) lat);
             coord.setLon((double) lng);
         } catch (ParseException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
         }
 
         return coord;
@@ -129,8 +132,8 @@ public class JavaScriptBridge {
             HttpRequest request = HttpRequest.newBuilder(
                     URI.create("https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat="
                             + Double.toString(coord.getLat()) + "&lon="
-                            + Double.toString(coord.getLon()))
-            ).build();
+                            + Double.toString(coord.getLon())))
+                    .build();
             HttpResponse<String> response = client.send(request,
                     HttpResponse.BodyHandlers.ofString());
             JSONObject result = (JSONObject) parser.parse(response.body());
@@ -182,7 +185,7 @@ public class JavaScriptBridge {
                         .changePosition(charger.getLocation());
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
         }
     }
 
@@ -220,8 +223,8 @@ public class JavaScriptBridge {
     /**
      * Creates the charger adding/editing screen when necessary
      *
-     * @param charger    the {@link seng202.team3.data.entity.Charger} that is being
-     *                   selected
+     * @param charger the {@link seng202.team3.data.entity.Charger} that is being
+     *                selected
      */
     public void loadChargerEdit(Charger charger) {
         try {
@@ -244,11 +247,9 @@ public class JavaScriptBridge {
             MenuController.getController().getManager().makeAllChargers();
             MenuController.getController().refreshTable();
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
         }
 
     }
-
-
 
 }

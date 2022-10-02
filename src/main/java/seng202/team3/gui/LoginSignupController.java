@@ -7,7 +7,6 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -16,6 +15,8 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.data.entity.User;
 import seng202.team3.logic.UserManager;
@@ -27,6 +28,10 @@ import seng202.team3.logic.UserManager;
  * @version 1.0.0, Sep 23
  */
 public class LoginSignupController {
+    /**
+     * Logger
+     */
+    private static final Logger logManager = LogManager.getLogger();
 
     /**
      * The signup username field
@@ -99,11 +104,6 @@ public class LoginSignupController {
      */
     @FXML
     private Button showConfPassSignup;
-
-    /**
-     * List of user input errors for adding user / logging in
-     */
-    private ArrayList<String> errors = new ArrayList<>();
 
     /**
      * The current stage
@@ -208,6 +208,7 @@ public class LoginSignupController {
         }
         if (fail) {
             invalidSignup.setVisible(true);
+            logManager.warn("Incorrect user details");
             return;
         }
         User user = new User();
@@ -220,8 +221,10 @@ public class LoginSignupController {
             manage.saveUser(user, hashedPassword);
             menuControl.setUser(user);
             stage.close();
+            logManager.info("New user created");
         } catch (IOException e) {
             invalidSignup.setVisible(true);
+            logManager.error(e.getMessage());
         }
     }
 
@@ -237,14 +240,17 @@ public class LoginSignupController {
                 menuControl.setUser(user);
                 menuControl.initHome(); // refreshes main screen
                 stage.close();
+                logManager.info("Logged in successfully");
             } else {
                 loginPasswordField.clear();
                 loginEmailField.clear();
                 invalidLogin.setVisible(true);
+                logManager.info("Usernamed or password incorrect");
             }
         } catch (SQLException | IOException e) {
             loginPasswordField.clear();
             invalidLogin.setVisible(true);
+            logManager.error(e.getMessage());
         }
     }
 

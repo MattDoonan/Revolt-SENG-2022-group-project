@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import seng202.team3.data.database.QueryBuilder;
 import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
@@ -23,6 +25,10 @@ import seng202.team3.data.entity.User;
  * @version 1.0.0, Sep 22
  */
 public class AdminManager {
+    /**
+     * Logger
+     */
+    private static final Logger logManager = LogManager.getLogger();
 
     /**
      * The user who is the admin
@@ -69,7 +75,7 @@ public class AdminManager {
             this.userList = FXCollections
                     .observableList(userList);
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
         }
     }
 
@@ -115,8 +121,9 @@ public class AdminManager {
     public void deleteUser() {
         try {
             SqlInterpreter.getInstance().deleteData("user", selectedUser.getUserid());
+            logManager.info("User has been deleted");
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
         }
     }
 
@@ -129,12 +136,14 @@ public class AdminManager {
         try {
             if (selectedUser != admin) {
                 SqlInterpreter.getInstance().writeUser(selectedUser);
+                logManager.info("User has been updated");
+            } else {
+                logManager.warn("Admin cannot edit their own permissions");
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
         }
     }
-
 
     /**
      * Gets the permission as a string from the int value
@@ -147,7 +156,10 @@ public class AdminManager {
             case USER -> "User";
             case CHARGEROWNER -> "Charger Owner";
             case ADMIN -> "Administration";
-            default -> throw new IllegalStateException("No permisson allowed: " + permission);
+            default -> {
+                logManager.warn("Unknown permission level: " + permission);
+                throw new IllegalStateException("No permisson allowed: " + permission);
+            }
         };
     }
 
@@ -165,6 +177,5 @@ public class AdminManager {
             default -> null;
         };
     }
-
 
 }

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.database.QueryBuilder;
 import seng202.team3.data.database.QueryBuilderImpl;
@@ -20,6 +22,10 @@ import seng202.team3.data.entity.Vehicle;
  *
  */
 public class GarageManager {
+    /**
+     * Logger
+     */
+    private static final Logger logManager = LogManager.getLogger();
 
     /**
      * Query object to retrieve vehicles
@@ -41,8 +47,6 @@ public class GarageManager {
      */
     public GarageManager() {
         user = UserManager.getUser();
-        // System.out.println("GarageMan UserID: " + user.getUserid());
-        // resetQuery();
     }
 
     /**
@@ -68,7 +72,7 @@ public class GarageManager {
             vehicleData = FXCollections
                     .observableList(vehicleList);
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
         }
     }
 

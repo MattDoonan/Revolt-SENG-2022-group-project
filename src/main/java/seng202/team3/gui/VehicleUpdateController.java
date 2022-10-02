@@ -3,8 +3,6 @@ package seng202.team3.gui;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -30,6 +28,8 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.TilePane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import seng202.team3.data.entity.Vehicle;
 import seng202.team3.logic.UserManager;
 import seng202.team3.logic.VehicleUpdateManager;
@@ -41,6 +41,10 @@ import seng202.team3.logic.VehicleUpdateManager;
  * @version 1.0.0, Sep 13
  */
 public class VehicleUpdateController {
+    /**
+     * Logger
+     */
+    private static final Logger logManager = LogManager.getLogger();
 
     /** The active stage */
     private Stage stage;
@@ -390,8 +394,7 @@ public class VehicleUpdateController {
             }
             displayImgSelect();
         } catch (NullPointerException e) {
-            Logger logger = Logger.getLogger(getClass().getName());
-            logger.log(Level.SEVERE, "File not found.", e);
+            logManager.error(e.getMessage());
         }
     }
 
@@ -512,7 +515,7 @@ public class VehicleUpdateController {
             errorPopup.setAlwaysOnTop(true);
             errorPopup.showAndWait();
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
         }
     }
 

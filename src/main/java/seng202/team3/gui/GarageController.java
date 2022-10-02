@@ -16,6 +16,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import seng202.team3.data.entity.Vehicle;
 import seng202.team3.logic.GarageManager;
 
@@ -26,6 +28,10 @@ import seng202.team3.logic.GarageManager;
  * @version 1.0.0, Aug 21
  */
 public class GarageController {
+    /**
+     * Logger
+     */
+    private static final Logger logManager = LogManager.getLogger();
 
     /**
      * Make and model for the first vehicle
@@ -246,7 +252,7 @@ public class GarageController {
                 controller.displayInfo(vehicle);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
         } finally {
             refresh();
         }
@@ -300,7 +306,7 @@ public class GarageController {
             MainWindow.setController(controller);
             modal.showAndWait();
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
         } finally {
             refresh();
         }
@@ -428,7 +434,7 @@ public class GarageController {
                 }
 
             } catch (NullPointerException e) {
-                e.printStackTrace();
+                logManager.error(e.getMessage());
             }
         }
     }

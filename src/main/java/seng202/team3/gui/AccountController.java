@@ -9,6 +9,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.data.entity.User;
 import seng202.team3.logic.UserManager;
@@ -21,6 +23,10 @@ import seng202.team3.logic.UserManager;
  *
  */
 public class AccountController {
+    /**
+     * Logger
+     */
+    private static final Logger logManager = LogManager.getLogger();
 
     /**
      * Button for signout
@@ -99,11 +105,6 @@ public class AccountController {
      */
     private boolean isAdminView = false;
 
-    /**
-     * The borderpane containing this
-     */
-    private BorderPane border;
-
     /** the user manager */
     private UserManager manage = new UserManager();
 
@@ -127,7 +128,6 @@ public class AccountController {
         populateText(user);
         setChargerTable();
         editAdmin.setText("Administration Edit Page");
-        this.border = border;
         if (user.getLevel() == PermissionLevel.ADMIN) {
             editAdmin.setVisible(true);
         }
@@ -256,11 +256,13 @@ public class AccountController {
             }
             editDetails();
         } catch (IOException | SQLException e) {
+            logManager.error(e.getMessage());
             accountPassword.setStyle("-fx-border-color: #ff0000;");
             accountName.setStyle("-fx-border-color: #ff0000;");
             accountEmail.setStyle("-fx-border-color: #ff0000;");
         }
         tableRefresh();
+        logManager.info("User information updated");
     }
 
     /**

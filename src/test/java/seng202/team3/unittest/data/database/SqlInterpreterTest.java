@@ -855,7 +855,7 @@ public class SqlInterpreterTest {
      * Updates a valid user
      */
     @Test
-    public void updateValidUser(){
+    public void updateValidUser() {
         testUser = new User("test@gmail.com", "test", PermissionLevel.USER);
         try {
             db.writeUser(testUser, "1234");
@@ -865,7 +865,8 @@ public class SqlInterpreterTest {
             db.writeUser(testUser);
             List<Object> res = SqlInterpreter.getInstance().readData(new QueryBuilderImpl()
                     .withSource("user").withFilter("username", testUser.getAccountName(),
-                            ComparisonType.EQUAL).build(), User.class);
+                            ComparisonType.EQUAL)
+                    .build(), User.class);
             assertEquals(testUser, (User) res.get(0));
         } catch (SQLException | IOException e) {
             Assertions.fail("Database failed");
@@ -893,7 +894,8 @@ public class SqlInterpreterTest {
             db.writeUser(new User("fake@email", "fake", PermissionLevel.USER));
             List<Object> res = SqlInterpreter.getInstance().readData(new QueryBuilderImpl()
                     .withSource("user").withFilter("username", "fake",
-                            ComparisonType.EQUAL).build(), User.class);
+                            ComparisonType.EQUAL)
+                    .build(), User.class);
             Assertions.assertEquals(0, res.size());
         } catch (SQLException | IOException e) {
             Assertions.fail("Database Failed");
@@ -913,7 +915,7 @@ public class SqlInterpreterTest {
             db.writeUser(updatable, "5678");
             User login = db.validatePassword(updatable.getAccountName(), "5678");
             assertEquals(updatable, login);
-        } catch (SQLException | IOException e) {
+        } catch (IOException e) {
             Assertions.fail("Database failed");
         }
     }

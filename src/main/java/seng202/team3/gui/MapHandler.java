@@ -13,6 +13,8 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import netscape.javascript.JSObject;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import seng202.team3.logic.GeoLocationHandler;
 import seng202.team3.logic.JavaScriptBridge;
 
@@ -24,6 +26,10 @@ import seng202.team3.logic.JavaScriptBridge;
  * @version 1.0.0, Sep 22
  */
 public abstract class MapHandler {
+    /**
+     * Logger
+     */
+    private static final Logger logManager = LogManager.getLogger();
 
     /**
      * FXML components
@@ -75,7 +81,7 @@ public abstract class MapHandler {
         webEngine = webView.getEngine();
         webEngine.setJavaScriptEnabled(true);
         webEngine.load(getClass().getClassLoader().getResource("html/map.html").toExternalForm());
-
+        logManager.info("Loading map...");
         webEngine.getLoadWorker().stateProperty().addListener(
                 (ov, oldState, newState) -> {
                     if (newState == Worker.State.SUCCEEDED) {
@@ -83,12 +89,13 @@ public abstract class MapHandler {
                         window.setMember("javaScriptBridge", javaScriptBridge);
                         javaScriptConnector = (JSObject) webEngine.executeScript("jsConnector");
 
-                        //sleeps the thread until a JavaScriptConnector exists
+                        // sleeps the thread until a JavaScriptConnector exists
                         while (javaScriptConnector == null) {
                             try {
                                 sleep((long) 10.0);
+                                logManager.info("Waiting for JavaScript connector...");
                             } catch (InterruptedException e) {
-                                e.printStackTrace();
+                                logManager.error(e.getMessage());
                             }
                         }
 
@@ -97,7 +104,7 @@ public abstract class MapHandler {
                                 GeoLocationHandler.getInstance().getCoordinate().getLon(),
                                 GeoLocationHandler.getInstance()
                                         .getCoordinate() != GeoLocationHandler.DEFAULT_COORDINATE);
-
+                        logManager.info("Map loaded successfully");
                         addChargersOnMap();
                     }
                 });
@@ -125,9 +132,11 @@ public abstract class MapHandler {
         if (locationAccepted) {
             try {
                 GeoLocationHandler.setCurrentLocation();
+                logManager.info("Current user location has been set");
             } catch (IOException | GeoIp2Exception e) {
                 new Alert(Alert.AlertType.ERROR,
                         "Your location was unable to be found.");
+                logManager.error(e.getMessage());
             }
         }
 
@@ -152,5 +161,6 @@ public abstract class MapHandler {
      */
     public static void resetPermission() {
         locationAccepted = null;
+        logManager.info("User location permission setting cleared");
     }
 }

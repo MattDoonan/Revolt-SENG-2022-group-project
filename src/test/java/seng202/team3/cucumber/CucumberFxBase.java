@@ -7,11 +7,8 @@ import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit5.ApplicationTest;
-
 import seng202.team3.data.database.SqlInterpreter;
-import seng202.team3.gui.MainController;
 import seng202.team3.gui.MainWindow;
-import seng202.team3.gui.MenuController;
 
 /**
  * Allows TestFx to run through cucumber using static reference

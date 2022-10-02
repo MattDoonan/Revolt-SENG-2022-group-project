@@ -1,6 +1,8 @@
 package seng202.team3.logic;
 
 import java.io.IOException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
@@ -16,6 +18,10 @@ import seng202.team3.data.entity.User;
  * @version 1.0.0, Sep 22
  */
 public class TableManager extends ChargerHandler implements ChargerInterface {
+    /**
+     * Logger
+     */
+    private static final Logger logManager = LogManager.getLogger();
 
     /**
      * The current user of this table
@@ -70,8 +76,9 @@ public class TableManager extends ChargerHandler implements ChargerInterface {
                 SqlInterpreter.getInstance().deleteData("charger",
                         getSelectedCharger().getChargerId());
                 setSelectedCharger(null);
+                logManager.info("Charger has been deleted");
             } catch (IOException e) {
-                e.printStackTrace();
+                logManager.error(e.getMessage());
             }
         }
 
@@ -88,9 +95,9 @@ public class TableManager extends ChargerHandler implements ChargerInterface {
         }
     }
 
-
     /**
-     * Load the initial query; overwritten to have a filter according to permission level
+     * Load the initial query; overwritten to have a filter according to permission
+     * level
      */
     @Override
     public void resetQuery() {

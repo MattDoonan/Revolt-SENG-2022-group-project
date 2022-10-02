@@ -7,6 +7,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Class starts the javaFX application window
@@ -20,6 +22,11 @@ public class MainWindow extends Application {
      * Activce scene displayed in the window
      */
     private static Scene activeScene;
+
+    /**
+     * Logger
+     */
+    private static final Logger logManager = LogManager.getLogger();
 
     /**
      * unused constructor
@@ -47,6 +54,7 @@ public class MainWindow extends Application {
         primaryStage.setScene(activeScene);
         primaryStage.show();
         MainWindow.setController(baseController);
+        logManager.info("Application window initialized");
     }
 
     /**

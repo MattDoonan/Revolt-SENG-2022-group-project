@@ -9,6 +9,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * A class that pops up error messages can be hijacked for warnings
@@ -17,7 +19,10 @@ import javafx.stage.Stage;
  * @version 1.0.0, Sep 22
  */
 public class ErrorController {
-
+    /**
+     * Logger
+     */
+    private static final Logger logManager = LogManager.getLogger();
     /**
      * Active screen
      */
@@ -110,7 +115,9 @@ public class ErrorController {
                 prompt.setText("The following warnings are on these chargers: ");
                 errors.setText("Warnings:");
             }
-            default -> throw new IllegalStateException("Unexpected value: " + type);
+            default -> {
+                logManager.error("Unexpected value: " + type);
+            }
         }
 
     }

@@ -9,6 +9,8 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.data.entity.User;
 import seng202.team3.logic.UserManager;
@@ -20,6 +22,10 @@ import seng202.team3.logic.UserManager;
  * @version 1.0.0, Sep 22
  */
 public class MenuController {
+    /**
+     * Logger
+     */
+    private static final Logger logManager = LogManager.getLogger();
 
     /**
      * BorderPane of the menu window
@@ -154,8 +160,9 @@ public class MenuController {
             menuWindow.setCenter(mainNode);
             controller.init(stage, menuWindow);
             MainWindow.setController(controller);
+            logManager.info("Switched to Home Screen");
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
         }
     }
 
@@ -184,6 +191,7 @@ public class MenuController {
         try {
             if (UserManager.getUser() == UserManager.getGuest()) {
                 createLoginWindow("/fxml/login.fxml", "Login", null, null);
+                logManager.warn("Must be logged in to access this feature");
             }
             if (UserManager.getUser() != UserManager.getGuest()) {
                 FXMLLoader garageLoader = new FXMLLoader(getClass()
@@ -193,9 +201,10 @@ public class MenuController {
                 controller.init();
                 menuWindow.setCenter(garageViewParent);
                 MainWindow.setController(controller);
+                logManager.info("Switched to Garage screen");
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
         }
     }
 
@@ -238,7 +247,7 @@ public class MenuController {
                 MainWindow.setController(loginController);
                 stage.showAndWait();
             } catch (IOException e) {
-                e.printStackTrace();
+                logManager.error(e.getMessage());
             }
 
         } else {
@@ -253,7 +262,7 @@ public class MenuController {
                 loginController.setPane(pane);
                 loginController.setStage(stage);
             } catch (IOException e) {
-                e.printStackTrace();
+                logManager.error(e.getMessage());
             }
         }
         if (UserManager.getUser().getLevel() != PermissionLevel.GUEST) {
@@ -269,6 +278,7 @@ public class MenuController {
         try {
             if (UserManager.getUser() == UserManager.getGuest()) {
                 createLoginWindow("/fxml/login.fxml", "Login", null, null);
+                logManager.warn("Must be logged in to access this feature");
             }
             if (UserManager.getUser() != UserManager.getGuest()) {
                 FXMLLoader accountLoader = new FXMLLoader(getClass()
@@ -278,9 +288,10 @@ public class MenuController {
                 controller.init(menuWindow);
                 menuWindow.setCenter(accountViewParent);
                 MainWindow.setController(controller);
+                logManager.info("Switched to Account screen");
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
         }
     }
 
@@ -292,6 +303,7 @@ public class MenuController {
     public void setUser(User u) {
         UserManager.setUser(u);
         loginSignout.setText("Logout");
+        logManager.info("User has been successfully signed in");
         // TODO: kill pop up
     }
 
@@ -302,6 +314,7 @@ public class MenuController {
         UserManager.setUser(UserManager.getGuest());
         loginSignout.setText("Login");
         initHome();
+        logManager.info("The user has been successfully logged out");
         // TODO: display confirmation popup
     }
 

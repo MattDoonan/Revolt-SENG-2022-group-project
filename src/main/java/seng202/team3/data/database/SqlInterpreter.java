@@ -7,11 +7,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.math.BigInteger;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -50,7 +47,7 @@ public class SqlInterpreter implements DataReader {
     private final String url;
 
     /**
-     * Logger for SQL interpreter
+     * Logger
      */
     private static final Logger logManager = LogManager.getLogger();
 
@@ -82,11 +79,8 @@ public class SqlInterpreter implements DataReader {
             createFile(url);
             defaultDatabase();
             if (db == null) {
-                try {
-                    importDemoData();
-                } catch (IOException e) {
-                    throw e;
-                }
+                importDemoData();
+                logManager.info("Demo data has been imported successfully");
             }
         }
     }
@@ -123,7 +117,7 @@ public class SqlInterpreter implements DataReader {
                     new User(
                             "example" + i + "@fake.com", owners.get(i),
                             PermissionLevel.CHARGEROWNER),
-                            UserManager.encryptThisString("demo"));
+                    UserManager.encryptThisString("demo"));
         }
 
         for (int i = 0; i < chargersToImport.size(); i++) {
@@ -791,7 +785,8 @@ public class SqlInterpreter implements DataReader {
             try {
                 t.join();
             } catch (InterruptedException e) {
-                e.printStackTrace(); // TODO: handle exception
+                logManager.error("Charger write threads interrupted");
+                logManager.error(e.getMessage());
             }
         }
     }
@@ -1115,11 +1110,10 @@ public class SqlInterpreter implements DataReader {
      * @param username user to log in
      * @param password requested password
      * @return if passwords match
-     * @throws SQLException if the sql fails
-     * @throws IOException  if interaction fails
+     * @throws IOException if interaction fails
      */
     public User validatePassword(String username, String password)
-            throws SQLException, IOException {
+            throws IOException {
         String correctPassword = null;
         try {
             Connection conn = createConnection();
@@ -1131,7 +1125,7 @@ public class SqlInterpreter implements DataReader {
             stmt.close();
             conn.close();
         } catch (SQLException e) {
-            throw new SQLException(e.getMessage());
+            throw new IOException(e.getMessage());
         }
         if (correctPassword == null) {
             return null;

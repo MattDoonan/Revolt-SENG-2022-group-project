@@ -16,6 +16,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import seng202.team3.data.entity.User;
 import seng202.team3.logic.AdminManager;
 import seng202.team3.logic.UserManager;
@@ -27,6 +29,11 @@ import seng202.team3.logic.UserManager;
  * @version 1.0.0, Sep 22
  */
 public class AdminController {
+
+    /**
+     * Logger
+     */
+    private static final Logger logManager = LogManager.getLogger();
 
     /**
      * The Menu select part
@@ -138,7 +145,7 @@ public class AdminController {
                 manager.deleteUser();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
         }
     }
 
@@ -163,8 +170,11 @@ public class AdminController {
             errController.displayErrors();
             modal.setAlwaysOnTop(true);
             modal.showAndWait();
+            for (String e : errors) {
+                logManager.warn(e);
+            }
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
         }
     }
 
@@ -269,7 +279,7 @@ public class AdminController {
             border.setTop(mainNode);
             controller.setUser(UserManager.getUser());
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
         }
 
     }
@@ -289,7 +299,7 @@ public class AdminController {
             controller.setUser(table.getSelectionModel().getSelectedItem());
             controller.populateTable();
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
         }
     }
 

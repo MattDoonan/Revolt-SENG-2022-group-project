@@ -11,6 +11,8 @@ import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.URL;
 import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import seng202.team3.data.entity.Coordinate;
 
 /**
@@ -25,6 +27,11 @@ public class GeoLocationHandler {
      * Singleton instance
      */
     private static volatile GeoLocationHandler instance;
+
+    /**
+     * Logger
+     */
+    private static final Logger logManager = LogManager.getLogger();
 
     /**
      * Coordinate to perform the geolocation with
@@ -82,6 +89,7 @@ public class GeoLocationHandler {
     public Coordinate getCoordinate() {
         if (coordinate == null) {
             coordinate = DEFAULT_COORDINATE;
+            logManager.info("Location not set: set to default coordinate");
         }
         return coordinate;
     }
@@ -121,7 +129,9 @@ public class GeoLocationHandler {
     public static void setCurrentLocation() throws IOException, GeoIp2Exception {
         loadGeoLocationData(); // load in database if not already loaded
 
-        InetAddress userIp = InetAddress.getByName(getIp());
+        String ipStr = getIp();
+        InetAddress userIp = InetAddress.getByName(ipStr);
+        logManager.info("Retrieved users location using ip: " + ipStr);
         Coordinate location = new Coordinate();
         CityResponse response = dbReader.city(userIp);
 
@@ -129,6 +139,7 @@ public class GeoLocationHandler {
         location.setLon(response.getLocation().getLongitude());
         location.setAddress("My Position");
         GeoLocationHandler.getInstance().setCoordinate(location, location.getAddress());
+        logManager.info("Current position set: " + location.getLat() + ", " + location.getLon());
     }
 
     /**
@@ -138,12 +149,12 @@ public class GeoLocationHandler {
      */
     private static void loadGeoLocationData() throws IOException {
         if (dbReader == null) {
-
             File ipDb = File.createTempFile("geolocation", "db");
             FileUtils.copyInputStreamToFile(
                     getInstance().getClass().getResourceAsStream("/GeoLite2-City.mmdb"), ipDb);
 
             dbReader = new DatabaseReader.Builder(ipDb).build();
+            logManager.info("Loaded GeoLocation database from file");
         }
     }
 
@@ -156,7 +167,7 @@ public class GeoLocationHandler {
     private static String getIp() throws IOException {
         InputStream ip = new URL("http://checkip.amazonaws.com").openStream();
         BufferedReader input = new BufferedReader(new InputStreamReader(ip));
-
+        logManager.info("User ip retrieved from Amazon Web Services");
         return input.readLine(); // ip
     }
 }

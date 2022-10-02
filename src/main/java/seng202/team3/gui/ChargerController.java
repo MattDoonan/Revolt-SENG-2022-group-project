@@ -22,6 +22,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.database.QueryBuilder;
 import seng202.team3.data.database.QueryBuilderImpl;
@@ -39,6 +41,10 @@ import seng202.team3.logic.UserManager;
  * @version 1.0.0, Sep 22
  */
 public class ChargerController {
+    /**
+     * Logger
+     */
+    private static final Logger logManager = LogManager.getLogger();
 
     /**
      * True if is displaying
@@ -200,7 +206,7 @@ public class ChargerController {
      * Initialises the ChargerController, loading in the charger info
      */
     public ChargerController() {
-        //Unused
+        // Unused
     }
 
     /**
@@ -333,7 +339,7 @@ public class ChargerController {
                 SqlInterpreter.getInstance().writeCharger(newCharger);
                 stage.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                logManager.error(e.getMessage());
             }
         } else {
             launchErrorPopUps();
@@ -357,7 +363,7 @@ public class ChargerController {
                     connectArray.add((Connector) object);
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                logManager.error(e.getMessage());
             }
         }
         connectors = (FXCollections.observableList(connectArray));
@@ -403,8 +409,11 @@ public class ChargerController {
             controller.displayErrors();
             modal.setAlwaysOnTop(true);
             modal.showAndWait();
+            for (String e : errors) {
+                logManager.warn(e);
+            }
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
         }
     }
 
@@ -500,7 +509,7 @@ public class ChargerController {
             connectorEdit.setCenter(root);
             controller.displayInfo();
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
         }
     }
 
@@ -538,13 +547,10 @@ public class ChargerController {
                         + "\n charger? \n\n");
                 modal.showAndWait();
             } catch (IOException e) {
-                e.printStackTrace();
+                logManager.error(e.getMessage());
             } finally {
                 stage.close();
             }
         }
     }
 }
-
-
-

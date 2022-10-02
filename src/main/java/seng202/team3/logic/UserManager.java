@@ -6,6 +6,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.regex.Pattern;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.data.entity.User;
@@ -18,13 +20,15 @@ import seng202.team3.data.entity.User;
  *
  */
 public class UserManager {
-
+    /**
+     * Logger
+     */
+    private static final Logger logManager = LogManager.getLogger();
 
     /**
      * Guest user
      */
     private static User guest = new User("guest", "guest@gmail.com", PermissionLevel.GUEST);
-
 
     /**
      * Active user
@@ -86,11 +90,13 @@ public class UserManager {
      */
     public void saveUser(User user, String password) throws IOException {
         SqlInterpreter.getInstance().writeUser(user, password);
+        logManager.info("User has been saved");
     }
 
     /**
      * Checks the email if its valid
      * From https://www.geeksforgeeks.org/sha-512-hash-in-java/
+     * 
      * @param email the string of the email
      * @return the boolean of valid email.
      */
@@ -110,16 +116,18 @@ public class UserManager {
      * Updates a pre-existing user
      *
      * @param user the user to update
-     * @throws IOException on sql fail
+     * @throws IOException  on sql fail
      * @throws SQLException on sql fail
      */
     public void updateUser(User user) throws IOException, SQLException {
         SqlInterpreter.getInstance().writeUser(user);
+        logManager.info("User has been updated");
     }
 
     /**
      * Hashes the user's password
      * From https://www.geeksforgeeks.org/sha-512-hash-in-java/
+     * 
      * @param input the string to be encrypted
      * @return the encrypted string
      */

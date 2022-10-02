@@ -9,6 +9,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import seng202.team3.data.entity.Connector;
 
 /**
@@ -18,6 +20,10 @@ import seng202.team3.data.entity.Connector;
  * @version 1.0.0, Sep 22
  */
 public class ConnectorEditController {
+    /**
+     * Logger
+     */
+    private static final Logger logManager = LogManager.getLogger();
 
     /**
      * Field to contain the current of the connector
@@ -79,7 +85,8 @@ public class ConnectorEditController {
     /**
      * Initialises the ConnectorEditController with the selected connector
      *
-     * @param connector a {@link seng202.team3.data.entity.Connector} if it's preexisting
+     * @param connector a {@link seng202.team3.data.entity.Connector} if it's
+     *                  preexisting
      */
     public void addConnector(Connector connector) {
         this.connector = connector;
@@ -190,8 +197,12 @@ public class ConnectorEditController {
             errController.displayErrors();
             modal.setAlwaysOnTop(true);
             modal.showAndWait();
+
+            for (String e : errors) {
+                logManager.warn(e);
+            }
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
         }
     }
 
