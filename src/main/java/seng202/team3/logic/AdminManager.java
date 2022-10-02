@@ -123,6 +123,7 @@ public class AdminManager {
     /**
      * Updates the selected user's permission
      *
+     * @throws SQLException if not in database
      */
     public void updateUser() throws SQLException {
         try {
