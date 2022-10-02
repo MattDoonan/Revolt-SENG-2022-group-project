@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane prefHeight="236.0" prefWidth="549.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.ConnectorEditController">
+<BorderPane prefHeight="236.0" prefWidth="549.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.ConnectorEditController">
          <center>
                <GridPane prefHeight="187.0" prefWidth="392.0" BorderPane.alignment="CENTER">
                   <columnConstraints>

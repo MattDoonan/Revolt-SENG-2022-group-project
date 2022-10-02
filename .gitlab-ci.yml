@@ -1,7 +1,7 @@
 junit:
   stage: test
   script:
-    - mvn -B clean test -Dtest=\*Test -Dcheckstyle.skip=true
+    - mvn -B clean test -P headlessTests -Dcheckstyle.skip=true
 generate_artifacts:
   stage: deploy
   script:

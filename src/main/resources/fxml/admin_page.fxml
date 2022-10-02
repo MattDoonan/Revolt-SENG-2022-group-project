@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane prefHeight="488.0" prefWidth="808.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.AdminController">
+<BorderPane prefHeight="488.0" prefWidth="808.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.AdminController">
    <top>
       <Label text="Administration Page" BorderPane.alignment="CENTER">
          <BorderPane.margin>

@@ -17,6 +17,12 @@
     <maven.compiler.source>${javaVersion}</maven.compiler.source>
     <maven.compiler.target>${javaVersion}</maven.compiler.target>
     <checkstyle.config.location>src/main/resources/seng202-checkstyle.xml</checkstyle.config.location>
+    <testfx.robot>awt</testfx.robot>
+    <testfx.headless>false</testfx.headless>
+    <prism.order>sw</prism.order>
+    <prism.text>native</prism.text>
+    <java.awt.headless>false</java.awt.headless>
+    <headless.geometry>1600x1200-32</headless.geometry>
   </properties>
 
   <dependencies>
@@ -173,8 +179,29 @@
         <version>2.11.0</version>
     </dependency>
 
+    <!-- https://mvnrepository.com/artifact/org.testfx/openjfx-monocle -->
+    <dependency>
+      <groupId>org.testfx</groupId>
+      <artifactId>openjfx-monocle</artifactId>
+      <version>jdk-12.0.1+2</version>
+      <scope>test</scope>
+    </dependency>
 
   </dependencies>
+
+<profiles>
+  <profile>
+    <id>headlessTests</id>
+    <properties>
+      <testfx.robot>glass</testfx.robot>
+      <testfx.headless>true</testfx.headless>
+      <prism.order>sw</prism.order>
+      <prism.text>t2k</prism.text>
+      <java.awt.headless>true</java.awt.headless>
+      <headless.geometry>1600x1200-32</headless.geometry>
+    </properties>
+  </profile>
+</profiles>
 
   <build>
     <plugins>
@@ -197,6 +224,16 @@
             <include>**/*TestFx.java</include>
             <include>**/cucumber/**/*.java</include>
           </includes>
+
+          <systemPropertyVariables>
+            <testfx.robot>${testfx.robot}</testfx.robot>
+            <testfx.headless>${testfx.headless}</testfx.headless>
+            <prism.order>${prism.order}</prism.order>
+            <prism.text>${prism.text}</prism.text>
+            <java.awt.headless>${java.awt.headless}</java.awt.headless>
+            <headless.geometry>${headless.geometry}</headless.geometry>
+          </systemPropertyVariables>
+
           <properties>
             <!-- Work around. Surefire does not include enough information to
             disambiguate between different examples and scenarios. -->
