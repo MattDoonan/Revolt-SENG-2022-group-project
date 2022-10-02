@@ -5,6 +5,7 @@ import static seng202.team3.data.entity.PermissionLevel.CHARGEROWNER;
 import static seng202.team3.data.entity.PermissionLevel.USER;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.collections.FXCollections;
@@ -16,7 +17,7 @@ import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.data.entity.User;
 
 /**
- * The AdminManager stub
+ * The AdminManager class which deals with administration of users
  *
  * @author Michelle Hsieh
  * @version 1.0.0, Sep 22
@@ -120,13 +121,15 @@ public class AdminManager {
     }
 
     /**
-     * Adds a new user
+     * Updates the selected user's permission
      *
-     * @param user the {@link User} which will be added
+     * @throws SQLException if not in database
      */
-    public void addUser(User user) {
+    public void updateUser() throws SQLException {
         try {
-            SqlInterpreter.getInstance().writeUser(user, "password");
+            if (selectedUser != admin) {
+                SqlInterpreter.getInstance().writeUser(selectedUser);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -143,7 +146,7 @@ public class AdminManager {
         return switch (permission) {
             case USER -> "User";
             case CHARGEROWNER -> "Charger Owner";
-            case ADMIN -> "Admin";
+            case ADMIN -> "Administration";
             default -> throw new IllegalStateException("No permisson allowed: " + permission);
         };
     }
@@ -155,16 +158,12 @@ public class AdminManager {
      * @return {@link PermissionLevel} of permission level
      */
     public PermissionLevel permissionLevel(String permission) {
-        switch (permission) {
-            case "User":
-                return USER;
-            case "Charger Owner":
-                return CHARGEROWNER;
-            case "Administration":
-                return ADMIN;
-            default:
-                return null;
-        }
+        return switch (permission) {
+            case "User" -> USER;
+            case "Charger Owner" -> CHARGEROWNER;
+            case "Administration" -> ADMIN;
+            default -> null;
+        };
     }
 
 

@@ -1,6 +1,7 @@
 package seng202.team3.gui;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.fxml.FXML;
@@ -191,10 +192,12 @@ public class AdminController {
     }
 
     /**
-     * Edits the permissions of a user
+     * Updates the permissions of a user
+     *
+     * @throws SQLException if SQL error
      */
     @FXML
-    public void editPermissions() {
+    public void editPermissions() throws SQLException {
         setSelectedUser();
         if (manager.getSelectedUser() != null) {
             if (manager.getAdmin().getUserid() == manager.getSelectedUser().getUserid()) {
@@ -210,7 +213,7 @@ public class AdminController {
             errors.clear();
         } else {
             manager.getSelectedUser().setLevel(manager.permissionLevel(menu.getText()));
-            manager.addUser(manager.getSelectedUser());
+            manager.updateUser();
         }
         updateTable();
     }
