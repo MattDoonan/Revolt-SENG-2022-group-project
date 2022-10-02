@@ -36,7 +36,7 @@ import seng202.team3.logic.UserManager;
  * Controller for the main.fxml window (the home)
  *
  * @author Matthew Doonan, Michelle Hsieh
- * @version 1.0.1, Aug 22
+ * @version 1.0.2, Sep 22
  */
 public class MainController {
     /**

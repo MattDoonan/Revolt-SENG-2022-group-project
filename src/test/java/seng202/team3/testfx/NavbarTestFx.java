@@ -29,6 +29,13 @@ import java.util.stream.Stream;
 
 import static org.testfx.api.FxAssert.verifyThat;
 
+
+/**
+ * Runs the Nav bar testFX
+ *
+ * @author Matthew Doonan
+ * @version 1.0.0, Sep 22
+ */
 public class NavbarTestFx extends TestFxBase {
 
     private MenuController controller;

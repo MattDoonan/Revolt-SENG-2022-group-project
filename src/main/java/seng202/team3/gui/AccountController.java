@@ -18,7 +18,7 @@ import seng202.team3.logic.UserManager;
 /**
  * Logic layer for the user Controller
  *
- * @author Angus Kirtlan
+ * @author Angus Kirtlan, Matthew Doonan
  * @version 1.0.0, Sep 22
  *
  */

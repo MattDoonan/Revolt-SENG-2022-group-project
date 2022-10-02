@@ -15,7 +15,7 @@ import seng202.team3.data.entity.User;
 /**
  * Logic layer for the user Controller
  *
- * @author Celia Allen
+ * @author Celia Allen, Harrison Tyson
  * @version 1.0.0, Sep 23
  *
  */

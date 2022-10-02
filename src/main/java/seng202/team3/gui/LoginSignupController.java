@@ -24,7 +24,7 @@ import seng202.team3.logic.UserManager;
 /**
  * Controller for the signup.fxml window
  * 
- * @author Celia Allen
+ * @author Celia Allen, Michelle Hsieh
  * @version 1.0.0, Sep 23
  */
 public class LoginSignupController {
