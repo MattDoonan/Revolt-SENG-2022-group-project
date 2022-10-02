@@ -29,11 +29,12 @@ import seng202.team3.gui.MenuController;
  */
 public class JavaScriptBridge {
 
+
     /**
      * Unused constructor
      */
     public JavaScriptBridge() {
-        // Unused
+        //Unused
     }
 
     /**
@@ -102,7 +103,7 @@ public class JavaScriptBridge {
      * Refresh the menu table
      */
     public void refreshTable() {
-        MainController controller = new MenuController().getController();
+        MainController controller = MenuController.getController();
         controller.refreshTable();
     }
 
@@ -110,7 +111,7 @@ public class JavaScriptBridge {
      * Recalls a query with all the components at the new location
      */
     public void refreshQuery() {
-        MainController controller = new MenuController().getController();
+        MainController controller = MenuController.getController();
         controller.executeSearch();
     }
 
@@ -122,7 +123,6 @@ public class JavaScriptBridge {
      * @param id the charger id selected
      */
     public void chargerHandler(int id) {
-        MainController controller = new MenuController().getController();
         QueryBuilder query = new QueryBuilderImpl().withSource("charger")
                 .withFilter("charger.chargerId", Integer.toString(id), ComparisonType.EQUAL);
         try {
@@ -130,9 +130,10 @@ public class JavaScriptBridge {
                     .readData(query.build(), Charger.class);
             if (object.size() == 1) {
                 Charger charger = (Charger) object.get(0);
-                controller.getManager().setSelectedCharger(charger);
-                controller.viewChargers(charger);
-                controller.getMapController().changePosition(charger.getLocation());
+                MenuController.getController().getManager().setSelectedCharger(charger);
+                MenuController.getController().viewChargers(charger);
+                MenuController.getController().getMapController()
+                        .changePosition(charger.getLocation());
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -145,7 +146,7 @@ public class JavaScriptBridge {
      * @param latlng string representation of a physical coordinate
      */
     public void zoomToPoint(String latlng) {
-        MainController controller = new MenuController().getController();
+        MainController controller = MenuController.getController();
         controller.getMapController().changePosition(parseCoordinate(latlng));
     }
 
@@ -155,7 +156,7 @@ public class JavaScriptBridge {
      * @param latlng the String from the route.
      */
     public void addStopInRoute(String latlng) {
-        MainController controller = new MenuController().getController();
+        MainController controller = MenuController.getController();
         controller.getMapController().addStopInRoute(parseCoordinate(latlng));
     }
 
@@ -166,8 +167,8 @@ public class JavaScriptBridge {
      */
     public void loadMoreInfo(int id) {
         chargerHandler(id);
-        MainManager main = new MenuController().getController().getManager();
-        loadChargerEdit(main.getSelectedCharger(), main.getPosition());
+        MainManager main = MenuController.getController().getManager();
+        loadChargerEdit(main.getSelectedCharger());
     }
 
     /**
@@ -185,10 +186,8 @@ public class JavaScriptBridge {
      *
      * @param charger    the {@link seng202.team3.data.entity.Charger} that is being
      *                   selected
-     * @param coordinate the {@link seng202.team3.data.entity.Coordinate} that is
-     *                   being selected
      */
-    public void loadChargerEdit(Charger charger, Coordinate coordinate) {
+    public void loadChargerEdit(Charger charger) {
         try {
             FXMLLoader chargerCont = new FXMLLoader(getClass().getResource(
                     "/fxml/charger_info.fxml"));
@@ -202,21 +201,18 @@ public class JavaScriptBridge {
             modal.setTitle("Charger Information");
             modal.initModality(Modality.APPLICATION_MODAL);
             ChargerController controller = chargerCont.getController();
-            controller.setCoordinate(coordinate);
             controller.setCharger(charger);
-            controller.displayChargerInfo();
             controller.init(modal);
             modal.setAlwaysOnTop(true);
             modal.showAndWait();
-
+            MenuController.getController().getManager().makeAllChargers();
+            MenuController.getController().refreshTable();
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            MenuController menu = new MenuController();
-            menu.getController().getManager().makeAllChargers();
-            menu.getController().refreshTable();
         }
 
     }
+
+
 
 }

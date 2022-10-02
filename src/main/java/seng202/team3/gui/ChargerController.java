@@ -29,6 +29,7 @@ import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
+import seng202.team3.logic.GeoLocationHandler;
 import seng202.team3.logic.UserManager;
 
 /**
@@ -199,7 +200,7 @@ public class ChargerController {
      * Initialises the ChargerController, loading in the charger info
      */
     public ChargerController() {
-        // unused
+        //Unused
     }
 
     /**
@@ -262,6 +263,8 @@ public class ChargerController {
         this.stage = stage;
         makeConnectors();
         connectorTable.setItems(connectors);
+        prevCoordinate = GeoLocationHandler.getInstance().getCoordinate();
+        displayChargerInfo();
     }
 
     /**
@@ -537,16 +540,11 @@ public class ChargerController {
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
-                MainController controller = new MenuController().getController();
-                if (controller.getManager().getSelectedCharger() == null) {
-                    controller.getMapController().addChargersOnMap();
-                    controller.viewChargers(null);
-                    new MenuController().getController().viewChargers(null);
-                    stage.close();
-                }
+                stage.close();
             }
         }
     }
-
 }
+
+
 

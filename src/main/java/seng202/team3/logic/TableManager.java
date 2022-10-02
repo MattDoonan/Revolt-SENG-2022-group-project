@@ -85,7 +85,7 @@ public class TableManager extends ChargerHandler implements ChargerInterface {
     public void editCharger() {
         if (getSelectedCharger() != null) {
             JavaScriptBridge bridge = new JavaScriptBridge();
-            bridge.loadChargerEdit(selectedCharger, selectedCoordinate);
+            bridge.loadChargerEdit(selectedCharger);
         }
     }
 

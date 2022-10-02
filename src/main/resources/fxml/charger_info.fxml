@@ -192,7 +192,7 @@
          <bottom>
             <VBox alignment="TOP_CENTER" prefHeight="92.0" prefWidth="373.0" spacing="20.0" BorderPane.alignment="CENTER">
                <children>
-                      <Button alignment="CENTER" onAction="#saveChanges" prefHeight="30.0" prefWidth="167.0" text="Save Changes" />
+                      <Button fx:id="saveButton" alignment="CENTER" onAction="#saveChanges" prefHeight="30.0" prefWidth="167.0" text="Save Changes" />
                   <Button fx:id="deleteButton" mnemonicParsing="false" onMouseClicked="#launchConfirmation" prefHeight="28.0" prefWidth="136.0" text="DELETE Charger" />
                </children>
                <opaqueInsets>

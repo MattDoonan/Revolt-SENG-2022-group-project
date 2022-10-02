@@ -23,31 +23,31 @@ public class ConnectorEditController {
      * Field to contain the current of the connector
      */
     @FXML
-    private TextField current;
+    private TextField currentField;
 
     /**
      * Field to contain the power draw
      */
     @FXML
-    private TextField wattage;
+    private TextField wattageField;
 
     /**
      * Field to contain the number of connections
      */
     @FXML
-    private TextField chargingPoints;
+    private TextField chargingPointsField;
 
     /**
      * Field to contain the type of connector
      */
     @FXML
-    private TextField type;
+    private TextField typeField;
 
     /**
      * Field to contain the operative status
      */
     @FXML
-    private TextField status;
+    private TextField statusField;
 
     /**
      * Active connector being edited
@@ -90,11 +90,11 @@ public class ConnectorEditController {
      */
     public void displayInfo() {
         if (connector != null) {
-            current.setText(connector.getCurrent());
-            wattage.setText(connector.getPower());
-            chargingPoints.setText(Integer.toString(connector.getCount()));
-            type.setText(connector.getType());
-            status.setText(connector.getStatus());
+            currentField.setText(connector.getCurrent());
+            wattageField.setText(connector.getPower());
+            chargingPointsField.setText(Integer.toString(connector.getCount()));
+            typeField.setText(connector.getType());
+            statusField.setText(connector.getStatus());
         }
     }
 
@@ -113,11 +113,11 @@ public class ConnectorEditController {
     @FXML
     public void saveConnection() {
         Connector changedConnector;
-        String powerString = wattage.getText();
-        String currentString = current.getText();
+        String powerString = wattageField.getText();
+        String currentString = currentField.getText();
         int points = 0;
         try {
-            points = Integer.parseInt(chargingPoints.getText());
+            points = Integer.parseInt(chargingPointsField.getText());
         } catch (NumberFormatException e) {
             errors.add("Number of Charging Points needs to be an integer");
         }
@@ -127,11 +127,11 @@ public class ConnectorEditController {
         if (powerString.length() == 0) {
             errors.add("Must have a wattage, e.g. 24 kW");
         }
-        String statusString = status.getText();
+        String statusString = statusField.getText();
         if (statusString.length() == 0) {
             errors.add("Must have a status, e.g. Operative");
         }
-        String typeString = type.getText();
+        String typeString = typeField.getText();
         if (typeString.length() == 0) {
             errors.add("Must have a charger type e.g. CHAdeMO");
         }
@@ -152,7 +152,6 @@ public class ConnectorEditController {
             }
         }
         if (errors.isEmpty()) {
-            System.out.println(controller.getConnectors().size());
             controller.resetPage();
         } else {
             launchErrorPopUps();
@@ -172,7 +171,7 @@ public class ConnectorEditController {
      * Launches an error popup when trying to do illegal things
      */
     public void launchErrorPopUps() {
-        stage = (Stage) status.getScene().getWindow();
+        stage = (Stage) statusField.getScene().getWindow();
         try {
             stage.setAlwaysOnTop(false);
             FXMLLoader error = new FXMLLoader(getClass().getResource(

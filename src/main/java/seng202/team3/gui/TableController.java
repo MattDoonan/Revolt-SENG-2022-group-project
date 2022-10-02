@@ -633,7 +633,7 @@ public class TableController {
         }
         manage.addCharger();
         if (manage.getPosition() != null) {
-            new JavaScriptBridge().loadChargerEdit(null, manage.getPosition());
+            new JavaScriptBridge().loadChargerEdit(null);
             updateTable();
         }
     }

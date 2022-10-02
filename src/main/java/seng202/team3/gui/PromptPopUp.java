@@ -1,6 +1,7 @@
 package seng202.team3.gui;
 
 import javafx.fxml.FXML;
+import seng202.team3.logic.GeoLocationHandler;
 
 /**
  * A prompt for clicking on the map or the charger list for information to
@@ -39,7 +40,7 @@ public class PromptPopUp extends PopUpWindow {
     @Override
     @FXML
     public void confirm() {
-        MainController controller = new MenuController().getController();
+        MainController controller = MenuController.getController();
         stage.setAlwaysOnTop(false);
         switch (type) {
             case "edit" -> {

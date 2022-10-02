@@ -130,7 +130,7 @@ public class AdminController {
             modal.setScene(modalScene);
             modal.setResizable(false);
             modal.setTitle("Are you sure? ");
-            modal.initModality(Modality.WINDOW_MODAL);
+            modal.initModality(Modality.APPLICATION_MODAL);
             PopUpWindow popController = popUp.getController();
             popController.addPrompt(prompt);
             modal.showAndWait();
@@ -186,7 +186,7 @@ public class AdminController {
             errors.clear();
         } else {
             loadPromptScreen("Are you sure you'd like to \n"
-                    + "delete this user?\n\n");
+                    + "delete this user (and owned chargers)?\n\n");
         }
         updateTable();
     }
@@ -291,5 +291,14 @@ public class AdminController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Gets the {@link AdminManager} of the controller
+     *
+     * @return the AdminManager of this controller
+     */
+    public AdminManager getManager() {
+        return manager;
     }
 }

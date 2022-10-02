@@ -95,6 +95,11 @@ public class AccountController {
     private BorderPane chargerTable;
 
     /**
+     * Boolean on if it is in administration view
+     */
+    private boolean isAdminView = false;
+
+    /**
      * The borderpane containing this
      */
     private BorderPane border;
@@ -121,6 +126,7 @@ public class AccountController {
         User user = UserManager.getUser();
         populateText(user);
         setChargerTable();
+        editAdmin.setText("Administration Edit Page");
         this.border = border;
         if (user.getLevel() == PermissionLevel.ADMIN) {
             editAdmin.setVisible(true);
@@ -146,7 +152,9 @@ public class AccountController {
      */
     @FXML
     public void adminEditing() {
-        if (UserManager.getUser().getLevel() == PermissionLevel.ADMIN) {
+        if (UserManager.getUser().getLevel() == PermissionLevel.ADMIN && !isAdminView) {
+            editAdmin.setText("View All Chargers");
+            isAdminView = true;
             try {
                 FXMLLoader editor = new FXMLLoader(getClass()
                         .getResource("/fxml/admin_page.fxml"));
@@ -157,6 +165,10 @@ public class AccountController {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        } else {
+            setChargerTable();
+            isAdminView = false;
+            editAdmin.setText("Administration Edit Page");
         }
     }
 

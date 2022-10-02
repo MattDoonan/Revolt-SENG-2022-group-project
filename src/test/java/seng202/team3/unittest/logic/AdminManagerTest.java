@@ -54,11 +54,10 @@ public class AdminManagerTest {
      * Creates a test database
      *
      * @throws IOException I/O exceptions
-     * @throws SQLException for SQL errors
      * @throws InstanceAlreadyExistsException if database hasn't been cleaned off
      */
     @BeforeAll
-    public static void initialise() throws IOException, SQLException, InstanceAlreadyExistsException {
+    public static void initialise() throws IOException, InstanceAlreadyExistsException {
         SqlInterpreter.removeInstance();
         database = SqlInterpreter.initialiseInstanceWithUrl(
                 "jdbc:sqlite:./target/test-classes/test_database.db");

@@ -121,6 +121,13 @@ public class MapViewController extends MapHandler {
     }
 
     /**
+     * Adds the coordinate name to the selected point
+     */
+    public void addCoordinateName() {
+        javaScriptConnector.call("addCoordinateName");
+    }
+
+    /**
      * Takes one Coordinate {@link seng202.team3.data.entity.Coordinate} onto the
      * map, and moves
      * this map to this coordinate
@@ -217,6 +224,7 @@ public class MapViewController extends MapHandler {
      */
     public void loadPromptScreens(String prompt, String type) {
         try {
+            MenuController.getController().getMapController().addCoordinateName();
             FXMLLoader popUp = new FXMLLoader(getClass().getResource(
                     "/fxml/prompt_popup.fxml"));
             VBox root = popUp.load();
@@ -234,7 +242,7 @@ public class MapViewController extends MapHandler {
             e.printStackTrace();
         } finally {
             addChargersOnMap();
-            new MenuController().getController().viewChargers(null);
+            MenuController.getController().viewChargers(null);
         }
     }
 
@@ -244,10 +252,6 @@ public class MapViewController extends MapHandler {
     @FXML
     public void addCharger() {
         if (addButton.getOpacity() == 100.0) {
-            if (new MenuController().getController().getManager()
-                    .getPosition().getAddress().equals("Coordinate")) {
-                javaScriptConnector.call("addCoordinateName");
-            }
             loadPromptScreens("Search an address or click on the map\n"
                     + "and confirm to add a charger: \n\n", "add");
         }

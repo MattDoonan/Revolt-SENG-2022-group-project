@@ -44,11 +44,11 @@
                            <Insets left="6.0" />
                         </padding>
                   </Label>
-                     <TextField fx:id="current" GridPane.columnIndex="1" />
-                     <TextField fx:id="wattage" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                     <TextField fx:id="chargingPoints" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                     <TextField fx:id="type" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                     <TextField fx:id="status" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                     <TextField fx:id="currentField" GridPane.columnIndex="1" />
+                     <TextField fx:id="wattageField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                     <TextField fx:id="chargingPointsField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                     <TextField fx:id="typeField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                     <TextField fx:id="statusField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                      <Label text="*" textFill="RED" GridPane.rowIndex="4">
                         <padding>
                            <Insets bottom="2.0" />
@@ -83,7 +83,7 @@
    <bottom>
       <HBox prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-                     <Button contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#saveConnection" prefHeight="24.0" prefWidth="209.0" text="Save Connector Changes" />
+                     <Button fx:id="saveConnectors" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#saveConnection" prefHeight="24.0" prefWidth="209.0" text="Save Connector Changes" />
             <Button contentDisplay="RIGHT" mnemonicParsing="false" onMouseClicked="#cancel" text="Cancel">
                <HBox.margin>
                   <Insets left="245.0" />
