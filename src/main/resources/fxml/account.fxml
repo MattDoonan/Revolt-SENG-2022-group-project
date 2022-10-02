@@ -11,10 +11,10 @@
 <?import javafx.scene.text.Text?>
 
 
-<SplitPane dividerPositions="0.5" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" orientation="VERTICAL" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.AccountController">
-   <items>
-      <ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="200.0" prefHeight="800.0">
-         <content>
+<ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.AccountController">
+   <content>
+      <SplitPane dividerPositions="0.5" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" orientation="VERTICAL">
+         <items>
             <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="410.0">
                <children>
                   <Text layoutX="23.0" layoutY="302.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Distance Travelled:" textAlignment="CENTER" wrappingWidth="154.796875">
@@ -73,12 +73,12 @@
                   <Button fx:id="confirm" layoutX="544.0" layoutY="339.0" mnemonicParsing="false" onAction="#confirmChanges" prefHeight="45.0" prefWidth="125.0" text="Confirm" visible="false" />
                </children>
             </AnchorPane>
-         </content>
-      </ScrollPane>
-      <BorderPane fx:id="chargerTable" maxWidth="1.7976931348623157E308" prefWidth="600.0">
-         <cursor>
-            <Cursor fx:constant="DEFAULT" />
-         </cursor>
-      </BorderPane>
-   </items>
-</SplitPane>
+            <BorderPane fx:id="chargerTable" maxWidth="1.7976931348623157E308" prefWidth="600.0">
+               <cursor>
+                  <Cursor fx:constant="DEFAULT" />
+               </cursor>
+            </BorderPane>
+         </items>
+      </SplitPane>
+   </content>
+</ScrollPane>
