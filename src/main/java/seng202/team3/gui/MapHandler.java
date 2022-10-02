@@ -1,5 +1,7 @@
 package seng202.team3.gui;
 
+import static java.lang.Thread.sleep;
+
 import com.maxmind.geoip2.exception.GeoIp2Exception;
 import java.io.IOException;
 import javafx.concurrent.Worker;
@@ -13,7 +15,6 @@ import javafx.stage.Stage;
 import netscape.javascript.JSObject;
 import seng202.team3.logic.GeoLocationHandler;
 import seng202.team3.logic.JavaScriptBridge;
-import seng202.team3.logic.UserManager;
 
 /**
  * An abstract class that has basic JS initialisation for the MapView and
@@ -81,6 +82,15 @@ public abstract class MapHandler {
                         JSObject window = (JSObject) webEngine.executeScript("window");
                         window.setMember("javaScriptBridge", javaScriptBridge);
                         javaScriptConnector = (JSObject) webEngine.executeScript("jsConnector");
+
+                        //sleeps the thread until a JavaScriptConnector exists
+                        while (javaScriptConnector == null) {
+                            try {
+                                sleep((long) 10.0);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
 
                         javaScriptConnector.call("initMap",
                                 GeoLocationHandler.getInstance().getCoordinate().getLat(),
