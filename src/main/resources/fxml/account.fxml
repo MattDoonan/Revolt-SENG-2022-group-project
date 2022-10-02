@@ -13,9 +13,9 @@
 
 <SplitPane dividerPositions="0.5" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" orientation="VERTICAL" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.AccountController">
    <items>
-      <ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+      <ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="200.0" prefHeight="800.0">
          <content>
-            <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+            <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="410.0">
                <children>
                   <Text layoutX="23.0" layoutY="302.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Distance Travelled:" textAlignment="CENTER" wrappingWidth="154.796875">
                      <font>
@@ -64,7 +64,7 @@
                         <Font size="40.0" />
                      </font>
                   </TextField>
-                  <TextField fx:id="accountEmail" editable="false" layoutX="150.0" layoutY="89.0" prefHeight="53.0" prefWidth="800.0" style="-fx-background-color: transparent;" text="Account Email">
+                  <TextField fx:id="accountEmail" editable="false" layoutX="23.0" layoutY="89.0" prefHeight="53.0" prefWidth="800.0" style="-fx-background-color: transparent;" text="Account Email">
                      <font>
                         <Font size="28.0" />
                      </font>
@@ -75,7 +75,7 @@
             </AnchorPane>
          </content>
       </ScrollPane>
-      <BorderPane fx:id="chargerTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="600.0">
+      <BorderPane fx:id="chargerTable" maxWidth="1.7976931348623157E308" prefWidth="600.0">
          <cursor>
             <Cursor fx:constant="DEFAULT" />
          </cursor>
