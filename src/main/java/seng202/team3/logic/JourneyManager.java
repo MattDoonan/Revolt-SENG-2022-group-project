@@ -200,7 +200,7 @@ public class JourneyManager extends ChargerHandler {
         }
         coordinates.add(this.getEnd());
         boolean error = Calculations.calculateDistance(coordinates.get(0), coordinates.get(1))
-                //>= journeyManager.getSelectedJourney().getVehicle().getEffectiveRange()) {
+                //>= journeyManager.getSelectedJourney().getVehicle().getCurrentRange()) {
                 //TODO uncomment above when vehicles implemented
                 >= 10;
 
