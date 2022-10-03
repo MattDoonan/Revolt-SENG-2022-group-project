@@ -189,8 +189,9 @@ public class JourneyManager extends ChargerHandler {
     }
 
     /**
-     * Adds route to map, calling the underlying js function, from the currently
-     * selected start and end coordinates.
+     * Gets boolean for if there is an error or not
+     *
+     * @return boolean of error
      */
     public boolean checkDistanceBetweenChargers() {
         ArrayList<Coordinate> coordinates = new ArrayList<>();
