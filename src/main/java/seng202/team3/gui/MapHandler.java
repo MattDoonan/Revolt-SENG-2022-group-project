@@ -177,9 +177,6 @@ public abstract class MapHandler {
             promptForReattempt();
         } else {
             logManager.info("Map loaded successfully");
-            if (locationAccepted == null) {
-                getUserLocation();
-            }
             addChargersOnMap();
         }
     }

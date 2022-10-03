@@ -73,6 +73,7 @@ public class MapViewController extends MapHandler {
         addButton.setOpacity(0.0);
         initMap();
         this.stage.sizeToScene();
+
     }
 
     /**
@@ -110,6 +111,10 @@ public class MapViewController extends MapHandler {
             javaScriptConnector.call("addMarker", charger.getLocation().getAddress(),
                     charger.getLocation().getLat(), charger.getLocation().getLon(),
                     charger.getChargerId(), hasPermission);
+        }
+
+        if (locationAccepted == null) {
+            getLocation();
         }
     }
 
@@ -312,7 +317,7 @@ public class MapViewController extends MapHandler {
      */
     @FXML
     public void getLocation() {
-        if (!locationAccepted) {
+        if (locationAccepted == null || !locationAccepted) {
             setLocationAccepted(null);
         }
         this.getUserLocation();
