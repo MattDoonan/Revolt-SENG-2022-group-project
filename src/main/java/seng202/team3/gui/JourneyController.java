@@ -168,6 +168,8 @@ public class JourneyController {
         init(this.stage);
         makeStart.setDisable(false);
         makeEnd.setDisable(false);
+        journeyTable.getChildren().clear();
+        journeyManager.getSelectedJourney().getChargers().clear();
         startLabel.setText("Start not set");
         endLabel.setText("End not set");
     }
@@ -181,7 +183,7 @@ public class JourneyController {
 
         Button btn = new Button("Remove");
         btn.setId(Integer.toString(charger.getChargerId()));
-        btn.setOnAction(e -> removeFromDisplay(e));
+        btn.setOnAction(this::removeFromDisplay);
 
         VBox text = new VBox(new Text(charger.getName()),
                 new Text("\n" + Math.floor(Calculations.calculateDistance(charger.getLocation(),
@@ -214,6 +216,12 @@ public class JourneyController {
         int iid = Integer.parseInt(id);
         chargers.removeIf(charger -> charger.getChargerId() == iid);
         journeyTable.getChildren().removeIf(box -> Objects.equals(box.getId(), id));
+        calculateRoute();
+        if (chargers.size() == 0) {
+            mapController.addChargersAroundPoint(journeyManager.getStart());
+        } else {
+            mapController.addChargersAroundPoint(chargers.get(chargers.size() - 1).getLocation());
+        }
     }
 
     /**

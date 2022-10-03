@@ -188,6 +188,7 @@ public class JavaScriptBridge {
         journeyController.getMapController().addChargersAroundPoint(charger.getLocation());
         journeyController.addChargerToDisplay(charger);
         journeyManager.addCharger(charger);
+        journeyController.calculateRoute();
     }
 
     /**
