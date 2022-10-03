@@ -1,7 +1,6 @@
 package seng202.team3.gui;
 
 import java.io.IOException;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -199,7 +198,7 @@ public class JourneyController {
     /**
      * Button method which removes the charger/location from table
      * and removes from the journey
-     * @param e the evemt of button being clicked
+     * @param e the event of button being clicked
      */
     public void removeFromDisplay(ActionEvent e) {
 
