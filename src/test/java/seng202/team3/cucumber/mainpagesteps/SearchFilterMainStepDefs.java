@@ -125,7 +125,7 @@ public class SearchFilterMainStepDefs extends CucumberFxBase {
     public void userFiltersForNoChargingCost() {
         clickOn("#filters");
         clickOn("#chargingCost");
-        clickOn("#noChargingCost");
+        clickOn("#hasChargingCost");
         clickOn("#executeSearch");
     }
 
@@ -133,7 +133,7 @@ public class SearchFilterMainStepDefs extends CucumberFxBase {
     public void noChargersFound() {
         ObservableList<Charger> chargers = controller.getManager().getData();
         for (Charger charger : chargers) {
-            if (charger.getChargeCost()) {
+            if (!charger.getChargeCost()) {
                 fail();
             }
         }

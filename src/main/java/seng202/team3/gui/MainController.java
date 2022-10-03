@@ -388,6 +388,7 @@ public class MainController {
             add.setPadding(new Insets(10));
             add.setSpacing(10);
             int finalI = i;
+            add.setId("charger" + finalI + "");
             add.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
                 selectToView(finalI);
             });
