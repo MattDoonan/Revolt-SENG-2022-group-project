@@ -202,7 +202,7 @@ public class JourneyManager extends ChargerHandler {
         }
         coordinates.add(this.getEnd());
         boolean error = Calculations.calculateDistance(coordinates.get(0), coordinates.get(1))
-                >= this.getSelectedJourney().getVehicle().getEffectiveRange();
+                >= this.getSelectedJourney().getVehicle().getCurrentRange();
 
         for (int i = 1; i < coordinates.size() - 1; i++) {
             if (Calculations.calculateDistance(coordinates.get(i), coordinates.get(i + 1))
