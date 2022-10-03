@@ -67,6 +67,7 @@ public class MapViewController extends MapHandler {
      * @param stage a {@link javafx.stage.Stage} object
      */
     public void init(Stage stage, MapManager map) {
+        path = "html/map.html";
         this.stage = stage;
         javaScriptBridge = new JavaScriptBridge();
         this.map = map;

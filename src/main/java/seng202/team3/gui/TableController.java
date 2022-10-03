@@ -640,7 +640,7 @@ public class TableController {
         }
         manage.addCharger();
 
-        if (manage.getPosition() != null) {
+        if (!MapHandler.MAP_REQUEST && manage.getPosition() != null) {
             new JavaScriptBridge().loadChargerEdit(null);
             updateTable();
         }
@@ -696,7 +696,7 @@ public class TableController {
      * Refreshes the table info
      */
     public void refreshTable() {
-        updateTable();
+        populateTable();
     }
 
     /**
