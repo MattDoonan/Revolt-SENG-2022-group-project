@@ -74,6 +74,7 @@ DROP TABLE IF EXISTS journey;
 CREATE TABLE if not exists journey
 (
     journeyid INTEGER constraint dk_journey PRIMARY KEY AUTOINCREMENT,
+    userid INTEGER NOT NULL references user(userid),
     vehicleid INTEGER NOT NULL references Vehicle(vehicleid),
     startLat REAL NOT NULL,
     startLon REAL NOT NULL,
@@ -87,6 +88,7 @@ CREATE TABLE if not exists journey
     endDate TEXT
     );
 --SPLIT
+
 DROP TABLE IF EXISTS stop;
 --SPLIT
 CREATE TABLE if not exists stop

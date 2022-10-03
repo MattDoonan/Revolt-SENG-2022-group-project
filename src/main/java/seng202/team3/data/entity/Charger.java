@@ -539,8 +539,6 @@ public class Charger {
                 && c.getAvailableParks() == this.getAvailableParks()
                 && c.getTimeLimit().equals(this.getTimeLimit())
                 && c.getOperator().equals(this.getOperator())
-                && c.getOwnerId() == this.getOwnerId()
-                && c.getOwner().equals(this.getOwner())
                 && c.getPublic() == this.getPublic()
                 && c.getHasAttraction() == this.getHasAttraction()
                 && c.getParkingCost() == this.getParkingCost()
