@@ -188,4 +188,31 @@ public class JourneyManager extends ChargerHandler {
         }
     }
 
+    /**
+     * Adds route to map, calling the underlying js function, from the currently
+     * selected start and end coordinates.
+     */
+    public boolean checkDistanceBetweenChargers() {
+        ArrayList<Coordinate> coordinates = new ArrayList<>();
+        coordinates.add(this.getStart());
+        for (Charger charger : this.getSelectedJourney().getChargers()) {
+            coordinates.add(charger.getLocation());
+        }
+        coordinates.add(this.getEnd());
+        boolean error = Calculations.calculateDistance(coordinates.get(0), coordinates.get(1))
+                //>= journeyManager.getSelectedJourney().getVehicle().getEffectiveRange()) {
+                //TODO uncomment above when vehicles implemented
+                >= 10;
+
+        for (int i = 1; i < coordinates.size() - 1; i++) {
+            if (Calculations.calculateDistance(coordinates.get(i), coordinates.get(i + 1))
+                    //>= journeyManager.getSelectedJourney().getVehicle().getMaxRange()) {
+                    //TODO uncomment above when vehicles implemented
+                    >= 10) {
+                error = true;
+            }
+        }
+        return error;
+    }
+
 }
