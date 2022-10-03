@@ -191,6 +191,7 @@ public class MainController {
     /** the garage manager */
     private GarageManager garageManager;
 
+    /** Buffer for range*/
     private Double buffer = 0.85;
 
     /**
