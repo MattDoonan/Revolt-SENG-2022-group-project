@@ -197,13 +197,6 @@ public class Vehicle {
     }
 
     /**
-     * Gets the effective range of the Vehicle
-     */
-    public double getEffectiveRange() {
-        return this.getCurrentRange() * this.getBatteryPercent() / 100.0;
-    }
-
-    /**
      * {@inheritDoc}}
      */
     @Override
