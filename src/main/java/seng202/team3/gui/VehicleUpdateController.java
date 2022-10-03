@@ -181,7 +181,7 @@ public class VehicleUpdateController {
             if (selectedImg != null) {
                 selectedVehicle.setImgPath("/images/" + selectedImg);
             } else {
-                selectedVehicle.setImgPath("/images/null");
+                selectedVehicle.setImgPath("/images/car_one.png");
             }
             vehicle = selectedVehicle;
         } else {
@@ -232,7 +232,7 @@ public class VehicleUpdateController {
         if (selectedImg != null) {
             vehicle.setImgPath("/images/" + selectedImg);
         } else {
-            vehicle.setImgPath("/images/null");
+            vehicle.setImgPath("/images/car_one.png");
         }
 
         if (vehicle.getBatteryPercent() == null) {

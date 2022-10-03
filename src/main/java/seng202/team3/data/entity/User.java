@@ -49,7 +49,7 @@ public class User {
         this.level = level;
         this.carbonSaved = 0;
         setVehicle();
-        System.out.println(vehicle.toString());
+        // System.out.println(vehicle.toString());
     }
 
     /**
