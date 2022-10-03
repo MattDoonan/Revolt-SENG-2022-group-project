@@ -13,6 +13,8 @@ import javafx.stage.Stage;
 import org.junit.jupiter.api.Assertions;
 import seng202.team3.cucumber.CucumberFxBase;
 import seng202.team3.data.database.SqlInterpreter;
+import seng202.team3.data.entity.PermissionLevel;
+import seng202.team3.data.entity.User;
 import seng202.team3.gui.AccountController;
 import seng202.team3.gui.LoginSignupController;
 import seng202.team3.gui.MainWindow;
@@ -60,6 +62,8 @@ public class AccountPageStepDefs extends CucumberFxBase {
     public void init() throws Exception {
         db = SqlInterpreter.getInstance();
         db.defaultDatabase();
+        db.writeUser(new User("Tester@gmai.com",
+                "MrTest", PermissionLevel.USER), "1234");
     }
 
     @Given("I have the app open")
