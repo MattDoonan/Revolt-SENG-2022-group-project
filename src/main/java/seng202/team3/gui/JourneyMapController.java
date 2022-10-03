@@ -66,7 +66,7 @@ public class JourneyMapController extends MapHandler {
         ChargerManager chargerManager = new ChargerManager();
         ArrayList<Charger> arrayChargers = new ArrayList<>(journeyManager.getData());
         ArrayList<Charger> nearbyChargers = chargerManager.getNearbyChargers(arrayChargers,
-                    coord, 10.0);
+                    coord, journeyManager.getSelectedJourney().getVehicle().getEffectiveRange());
         //TODO implement vehiclular distance
 
         for (Charger charger : nearbyChargers) {
@@ -100,7 +100,8 @@ public class JourneyMapController extends MapHandler {
      * @param coord coordinate for centre of circle
      */
     public void addCircle(Coordinate coord) {
-        javaScriptConnector.call("addCircle", coord.getLat(), coord.getLon(), 10000);
+        javaScriptConnector.call("addCircle", coord.getLat(), coord.getLon(),
+                journeyManager.getSelectedJourney().getVehicle().getEffectiveRange() * 1000);
         //TODO vehicle distance for radius
     }
 

@@ -15,6 +15,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -23,7 +24,9 @@ import javafx.stage.Stage;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
+import seng202.team3.data.entity.Vehicle;
 import seng202.team3.logic.Calculations;
+import seng202.team3.logic.GarageManager;
 import seng202.team3.logic.JourneyManager;
 
 /**
@@ -74,7 +77,7 @@ public class JourneyController {
      * MenuButton containing user vehicles
      */
     @FXML
-    private MenuButton vehicleButton;
+    private MenuButton vehicles;
 
     /**
      * Error text if route is invalid
@@ -86,6 +89,11 @@ public class JourneyController {
      * Top level container for journey window
      */
     private Stage stage;
+
+    /**
+     * Garage manager for selecting vehicle
+     */
+    private GarageManager garageManager;
 
     /**
      * GUI controller for map
@@ -262,7 +270,14 @@ public class JourneyController {
      * Loads vehicles into the menuBox
      */
     public void loadVehicles() {
-        //vehicleButton.;
+        garageManager = new GarageManager();
+        garageManager.resetQuery();
+        garageManager.getAllVehicles();
+        for (Vehicle vehicle : garageManager.getData()) {
+            String title = vehicle.getMake() + ' ' + vehicle.getModel();
+            vehicles.getItems().add(new MenuItem(title));
+        }
+        journeyManager.selectVehicle(garageManager.getData().get(0));
     }
 
     /**

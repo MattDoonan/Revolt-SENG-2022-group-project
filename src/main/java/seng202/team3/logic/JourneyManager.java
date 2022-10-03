@@ -200,15 +200,11 @@ public class JourneyManager extends ChargerHandler {
         }
         coordinates.add(this.getEnd());
         boolean error = Calculations.calculateDistance(coordinates.get(0), coordinates.get(1))
-                //>= journeyManager.getSelectedJourney().getVehicle().getEffectiveRange()) {
-                //TODO uncomment above when vehicles implemented
-                >= 10;
+                >= this.getSelectedJourney().getVehicle().getEffectiveRange();
 
         for (int i = 1; i < coordinates.size() - 1; i++) {
             if (Calculations.calculateDistance(coordinates.get(i), coordinates.get(i + 1))
-                    //>= journeyManager.getSelectedJourney().getVehicle().getMaxRange()) {
-                    //TODO uncomment above when vehicles implemented
-                    >= 10) {
+                    >= this.getSelectedJourney().getVehicle().getMaxRange()) {
                 error = true;
             }
         }

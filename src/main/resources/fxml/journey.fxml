@@ -3,12 +3,12 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuButton?>
-<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
 <SplitPane dividerPositions="0.9350877192982456" maxHeight="Infinity" maxWidth="Infinity" minWidth="200.0" prefHeight="437.0" prefWidth="572.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.JourneyController">
@@ -25,13 +25,11 @@
                   <VBox fx:id="journeyTable" prefWidth="265.0" style="-fx-background-color: ffe5d4;" />
                </content></ScrollPane>
             <Button fx:id="saveJourney" layoutX="146.0" layoutY="391.0" mnemonicParsing="false" onAction="#saveJourney" style="-fx-background-color: e06666;" text="Save Journey" />
-            <MenuButton fx:id="vehicleButton" layoutX="64.0" layoutY="24.0" mnemonicParsing="false" style="-fx-background-color: e06666;" text="Select Vehicle">
-              <items>
-                <MenuItem mnemonicParsing="false" text="Action 1" />
-                <MenuItem mnemonicParsing="false" text="Action 2" />
-              </items>
-            </MenuButton>
-            <Text fx:id="errorText" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" text="Error" visible="false" />
+            <MenuButton fx:id="vehicles" layoutX="64.0" layoutY="24.0" mnemonicParsing="false" style="-fx-background-color: e06666;" text="Select Vehicle" />
+            <Text fx:id="errorText" fill="RED" layoutX="88.0" layoutY="309.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Error" visible="false" wrappingWidth="82.0">
+               <font>
+                  <Font size="32.0" />
+               </font></Text>
          </children>
       </AnchorPane>
        <BorderPane fx:id="mainWindow" maxHeight="Infinity" maxWidth="Infinity" minWidth="0.0" />
