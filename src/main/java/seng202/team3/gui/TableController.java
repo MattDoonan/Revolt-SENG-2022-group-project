@@ -630,7 +630,7 @@ public class TableController {
                 modal.setTitle("Charger Location");
                 modal.initModality(Modality.WINDOW_MODAL);
                 MiniMapController controller = miniMap.getController();
-                controller.init(modal);
+                controller.init(modal, manage);
                 controller.setManager(manage);
                 modal.setAlwaysOnTop(true);
                 modal.showAndWait();
@@ -640,7 +640,7 @@ public class TableController {
         }
         manage.addCharger();
 
-        if (!MapHandler.MAP_REQUEST && manage.getPosition() != null) {
+        if (manage.isAdding() || !MapHandler.MAP_REQUEST) {
             new JavaScriptBridge().loadChargerEdit(null);
             updateTable();
         }

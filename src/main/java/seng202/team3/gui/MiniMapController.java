@@ -39,11 +39,13 @@ public class MiniMapController extends MapHandler {
      *
      * @param stage the stage of this
      */
-    public void init(Stage stage) {
+    public void init(Stage stage, TableManager manager) {
         path = "html/mini_map.html";
+        this.manager = manager;
         this.stage = stage;
         javaScriptBridge = new JavaScriptBridge();
         this.stage.sizeToScene();
+        manager.setAdding(false);
         initMap();
     }
 
@@ -64,7 +66,7 @@ public class MiniMapController extends MapHandler {
         GeoLocationHandler.getInstance().setCoordinate(
                 GeoLocationHandler.getInstance().getCoordinate(),
                 javaScriptBridge.makeLocationName());
-        manager.setPosition();
+        manager.setAdding(true);
         stage.close();
     }
 

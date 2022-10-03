@@ -29,6 +29,11 @@ public class TableManager extends ChargerHandler implements ChargerInterface {
     private User user;
 
     /**
+     * Checks to see if it's adding or not
+     */
+    private boolean adding = false;
+
+    /**
      * A boolean where if getting owner, is true, else false
      */
     private boolean getOwner = false;
@@ -106,5 +111,23 @@ public class TableManager extends ChargerHandler implements ChargerInterface {
             mainDataQuery.withFilter("owner",
                     Integer.toString(user.getUserid()), ComparisonType.EQUAL);
         }
+    }
+
+    /**
+     * Gets it if it's adding
+     *
+     * @return boolean of adding, true if adding
+     */
+    public boolean isAdding() {
+        return adding;
+    }
+
+    /**
+     * Sets the adding parameter
+     *
+     * @param adding a boolean of adding or not
+     */
+    public void setAdding(boolean adding) {
+        this.adding = adding;
     }
 }

@@ -76,7 +76,8 @@
                         <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
                         <Label text="Name:" GridPane.rowIndex="1">
@@ -129,11 +130,6 @@
                               <Insets left="6.0" />
                            </padding>
                         </Label>
-                        <Label text="*required fields" textFill="RED" GridPane.rowIndex="11">
-                           <padding>
-                              <Insets left="6.0" />
-                           </padding>
-                        </Label>
                         <TextField fx:id="name" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <Label fx:id="owner" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         <TextField fx:id="operator" GridPane.columnIndex="1" GridPane.rowIndex="3" />
@@ -174,9 +170,13 @@
                               <Font size="17.0" />
                            </font>
                         </Label>
+                  <Label text=" Latitude:" GridPane.rowIndex="11" />
+                  <Label text=" Longitude:" GridPane.rowIndex="12" />
+                  <TextField fx:id="lat" GridPane.columnIndex="1" GridPane.rowIndex="11" />
+                  <TextField fx:id="lon" prefWidth="228.0" GridPane.columnIndex="1" GridPane.rowIndex="12" />
                      </children>
                <BorderPane.margin>
-                  <Insets bottom="70.0" />
+                  <Insets bottom="45.0" />
                </BorderPane.margin>
                <opaqueInsets>
                   <Insets bottom="20.0" />
@@ -199,7 +199,7 @@
                   <Insets />
                </opaqueInsets>
                <padding>
-                  <Insets bottom="60.0" />
+                  <Insets bottom="50.0" />
                </padding>
                <BorderPane.margin>
                   <Insets top="-20.0" />

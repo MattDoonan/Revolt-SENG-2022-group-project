@@ -143,6 +143,18 @@ public class ChargerController {
     private CheckBox attractions;
 
     /**
+     * The latitude of the coordinate
+     */
+    @FXML
+    private TextField lat;
+
+    /**
+     * The longitude of the coordinate
+     */
+    @FXML
+    private TextField lon;
+
+    /**
      * Column mapping connectors to their currents
      */
     @FXML
@@ -210,6 +222,20 @@ public class ChargerController {
     }
 
     /**
+     * Initialises this controller
+     *
+     * @param stage the stage this controller is on
+     */
+    public void init(Stage stage) {
+        this.stage = stage;
+        makeConnectors();
+        connectorTable.setItems(connectors);
+        prevCoordinate = GeoLocationHandler.getInstance().getCoordinate();
+        displayChargerInfo();
+    }
+
+
+    /**
      * Sets the current coordinate
      *
      * @param coordinate the current coordinate selected
@@ -240,6 +266,8 @@ public class ChargerController {
             time.setText(Double.toString(charger.getTimeLimit()));
             operator.setText(charger.getOperator());
             owner.setText(charger.getOwner());
+            lat.setText(Double.toString(charger.getLocation().getLat()));
+            lon.setText(Double.toString(charger.getLocation().getLon()));
             if (charger.getAvailable24Hrs()) {
                 open24.setSelected(true);
             }
@@ -254,22 +282,16 @@ public class ChargerController {
             }
         } else {
             address.setText(prevCoordinate.getAddress());
+            if (GeoLocationHandler.getInstance().getCoordinate()
+                    != GeoLocationHandler.DEFAULT_COORDINATE) {
+                lat.setText(Double.toString(GeoLocationHandler
+                        .getInstance().getCoordinate().getLat()));
+                lon.setText(Double.toString(GeoLocationHandler
+                        .getInstance().getCoordinate().getLon()));
+            }
             deleteButton.setOpacity(0.0);
         }
         displayConnectorInfo();
-    }
-
-    /**
-     * Initialises this controller
-     *
-     * @param stage the stage this controller is on
-     */
-    public void init(Stage stage) {
-        this.stage = stage;
-        makeConnectors();
-        connectorTable.setItems(connectors);
-        prevCoordinate = GeoLocationHandler.getInstance().getCoordinate();
-        displayChargerInfo();
     }
 
     /**
