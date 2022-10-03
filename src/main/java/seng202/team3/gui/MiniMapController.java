@@ -8,7 +8,6 @@ import seng202.team3.logic.GeoLocationHandler;
 import seng202.team3.logic.JavaScriptBridge;
 import seng202.team3.logic.TableManager;
 
-
 /**
  * This is the controller for the little map to allow you to add coordinates
  *
@@ -26,7 +25,6 @@ public class MiniMapController extends MapHandler {
      */
     private TableManager manager;
 
-
     /**
      * unused constructor
      */
@@ -37,7 +35,8 @@ public class MiniMapController extends MapHandler {
     /**
      * Initialise the map view
      *
-     * @param stage the stage of this
+     * @param stage   the stage of this
+     * @param manager the manager of table view
      */
     public void init(Stage stage, TableManager manager) {
         path = "html/mini_map.html";
@@ -56,7 +55,6 @@ public class MiniMapController extends MapHandler {
     public void addChargersOnMap() {
         logManager.info("No chargers to load");
     }
-
 
     /**
      * Updates the coordinate in the TableManager

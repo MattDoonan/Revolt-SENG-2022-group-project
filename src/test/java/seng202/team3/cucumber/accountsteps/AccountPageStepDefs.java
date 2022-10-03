@@ -9,15 +9,19 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.cucumber.java.mk_latn.No;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Assertions;
 import org.testfx.api.FxRobotException;
 import seng202.team3.cucumber.CucumberFxBase;
+import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.PermissionLevel;
@@ -30,8 +34,11 @@ import seng202.team3.logic.ChargerHandler;
 import seng202.team3.logic.UserManager;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.testfx.api.FxAssert.verifyThat;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Cucumber Tests designed to check acceptance tests for the account page
@@ -65,15 +72,24 @@ public class AccountPageStepDefs extends CucumberFxBase {
         CucumberFxBase.cleanUp();
     }
 
-
     @Before
     @Override
     public void init() throws Exception {
         db = SqlInterpreter.getInstance();
         db.defaultDatabase();
-        db.importDemoData();
-        db.writeUser(new User("Tester@gmai.com",
+        db.addChargerCsvToData("csvtest/filtering");
+        db.writeUser(new User("Tester@gmail.com",
                 "MrTest", PermissionLevel.USER), "1234");
+
+        List<Object> chargerObject = db.readData(new QueryBuilderImpl().withSource("charger")
+                .build(),
+                Charger.class);
+
+        for (Object o : chargerObject) {
+            ((Charger) o).setOwnerId(1); // Set owner to admin
+        }
+        db.writeCharger(new ArrayList<>(chargerObject));
+
     }
 
     @Given("I have the app open")
@@ -102,6 +118,7 @@ public class AccountPageStepDefs extends CucumberFxBase {
     @When("I navigate to the account screen")
     public void iNavigateToTheAccountScreen() {
         clickOn("#accountPage");
+        controller = (AccountController) MainWindow.getController();
     }
 
     @Given("I want to edit my information")
@@ -159,24 +176,24 @@ public class AccountPageStepDefs extends CucumberFxBase {
 
     @Given("There are chargers in the presentation")
     public void noCurrentInput() {
-        TableView table = (TableView) find("#mainTable");
-        if (table.getItems().size() == 0) {
-            fail("Should load chargers");
-        } else {
-            assertTrue(true);
-        }
+        TableView<Charger> table = (TableView<Charger>) this.find("#mainTable");
+        assertTrue(table.getItems().size() > 0);
     }
 
-    @When("The user clicks on the address table header")
-    public void clickAddressHeader() {
-        clickOn("#addressCol");
+    @When("The user clicks on the carparks table header")
+    public void clickCarParkHeader() {
+        clickOn("#carparkCol");
     }
 
-    @Then("The list of chargers is sorted by address")
-    public void sortedTableAddress() {
-        TableView table = (TableView) find("#mainTable");
-        Charger c = (Charger) table.getItems().get(0);
-        assertEquals("Wright St, Wellington 6021, NZ", c.getLocation().getAddress());
+    @Then("The list of chargers is sorted by carparks")
+    public void sortedTableCarParks() {
+        TableView<Charger> table = (TableView<Charger>) find("#mainTable");
+        List<Charger> chargers = table.getItems();
+        Collections.sort(chargers,
+                (o1, o2) -> Integer.compare(o1.getAvailableParks(), o2.getAvailableParks()));
+
+        assertArrayEquals(chargers.toArray(), table.getItems().toArray());
+
     }
 
     @When("The user click select columns and deselects 'Show address' and 'Show owner'")

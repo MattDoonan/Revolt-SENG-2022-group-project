@@ -35,8 +35,8 @@ Feature: User checking there account information
 
   Scenario: (AT_6) Admin or charger owner filters a list of shown chargers
     Given There are chargers in the presentation
-    When The user clicks on the address table header
-    Then The list of chargers is sorted by address
+    When The user clicks on the carparks table header
+    Then The list of chargers is sorted by carparks
 
   Scenario: (AT_7) Admin or charger owners hides info they do not need
     Given There are chargers in the presentation

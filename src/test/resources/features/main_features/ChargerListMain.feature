@@ -6,7 +6,7 @@ Feature: Browsing the Charger list on Home Screen
     When I navigate to the home view
     Then chargers are available
 
-  Scenario: : (AT_9) User wants to see more info about the charger
+  Scenario: (AT_9) User wants to see more info about the charger
     Given No charger has been selected
     When The user selects a charger
     Then More info of charger displayed

@@ -16,7 +16,7 @@ Feature: Searching/Filter Chargers on Home Screen
     When The user inputs an invalid query "xyxwqzgrezw"
     Then No results are listed
 
-  Scenario: (AT_4) User filters for only free charger stations
+  Scenario: (AT_4) User filters for only costing charger stations
     Given There is no current input given
-    When The user filters for no charging cost
-    Then The list of chargers found have no charging cost
+    When The user filters for charging cost
+    Then The list of chargers found have charging cost

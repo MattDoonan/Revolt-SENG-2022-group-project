@@ -52,7 +52,7 @@ public class MainSearchFilterTestFx extends TestFxBase {
         SqlInterpreter.removeInstance();
         db = SqlInterpreter.initialiseInstanceWithUrl(
                 "jdbc:sqlite:./target/test-classes/test_database.db");
-        // db.defaultDatabase();
+        db.defaultDatabase();
 
         db.addChargerCsvToData("csvtest/filtering");
 
@@ -189,7 +189,8 @@ public class MainSearchFilterTestFx extends TestFxBase {
         assertTrue(isValid);
     }
 
-    /** Can't test on other file
+    /**
+     * Can't test on other file
      *
      */
     @Test

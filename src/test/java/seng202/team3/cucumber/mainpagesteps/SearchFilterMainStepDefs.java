@@ -121,7 +121,7 @@ public class SearchFilterMainStepDefs extends CucumberFxBase {
         assertTrue(chargers.size() == 0);
     }
 
-    @When("The user filters for no charging cost")
+    @When("The user filters for charging cost")
     public void userFiltersForNoChargingCost() {
         clickOn("#filters");
         clickOn("#chargingCost");
@@ -129,7 +129,7 @@ public class SearchFilterMainStepDefs extends CucumberFxBase {
         clickOn("#executeSearch");
     }
 
-    @Then("The list of chargers found have no charging cost")
+    @Then("The list of chargers found have charging cost")
     public void noChargersFound() {
         ObservableList<Charger> chargers = controller.getManager().getData();
         for (Charger charger : chargers) {

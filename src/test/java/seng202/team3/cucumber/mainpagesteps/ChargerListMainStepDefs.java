@@ -13,14 +13,13 @@ import org.junit.jupiter.api.Assertions;
 import seng202.team3.cucumber.CucumberFxBase;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.gui.MainController;
+import seng202.team3.gui.MainWindow;
 import seng202.team3.gui.MapHandler;
 
-public class ChargerListMainStepDefs extends CucumberFxBase{
-
+public class ChargerListMainStepDefs extends CucumberFxBase {
 
     private static MainController controller;
     static SqlInterpreter db;
-
 
     /**
      * {@inheritDoc}
@@ -50,12 +49,13 @@ public class ChargerListMainStepDefs extends CucumberFxBase{
     public void init() throws Exception {
         db = SqlInterpreter.getInstance();
         db.defaultDatabase();
-        db.importDemoData();
+        db.addChargerCsvToData("csvtest/filtering");
     }
 
     @Given("No charger has been selected")
     public void refreshPage() {
         clickOn("#menuButton");
+        controller = (MainController) MainWindow.getController();
     }
 
     @When("The user selects a charger")
@@ -68,8 +68,11 @@ public class ChargerListMainStepDefs extends CucumberFxBase{
         HBox display = (HBox) find("#displayInfo");
         VBox information = (VBox) display.getChildren().get(1);
         Text addy = (Text) information.getChildren().get(1);
-        Assertions.assertEquals("100 Port Road, Seaview, Lower Hutt 5010\n", addy.getText());
+        Assertions.assertEquals(controller.getManager().getSelectedCharger()
+                .getLocation().getAddress() + "\n",
+                addy.getText());
         Text name = (Text) information.getChildren().get(0);
-        Assertions.assertEquals("SEAVIEW MARINA", name.getText());
+        Assertions.assertEquals(controller.getManager().getSelectedCharger().getName(),
+                name.getText());
     }
 }
