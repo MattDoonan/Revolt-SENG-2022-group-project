@@ -322,7 +322,7 @@ public class MapViewController extends MapHandler {
         }
         this.getUserLocation();
         map.getController().setPosition();
-        makeCoordinate(map.getController().getPosition());
+        makeCoordinate(GeoLocationHandler.getInstance().getCoordinate());
     }
 
 }
