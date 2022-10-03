@@ -7,22 +7,31 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import io.cucumber.java.mk_latn.No;
 import javafx.application.Platform;
+import javafx.scene.Node;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Slider;
+import javafx.scene.control.TableView;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Assertions;
+import org.testfx.api.FxRobotException;
 import seng202.team3.cucumber.CucumberFxBase;
 import seng202.team3.data.database.SqlInterpreter;
+import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.data.entity.User;
 import seng202.team3.gui.AccountController;
 import seng202.team3.gui.LoginSignupController;
 import seng202.team3.gui.MainWindow;
 import seng202.team3.gui.MapHandler;
+import seng202.team3.logic.ChargerHandler;
 import seng202.team3.logic.UserManager;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.testfx.api.FxAssert.verifyThat;
 
 /**
  * Cucumber Tests designed to check acceptance tests for the account page
@@ -62,6 +71,7 @@ public class AccountPageStepDefs extends CucumberFxBase {
     public void init() throws Exception {
         db = SqlInterpreter.getInstance();
         db.defaultDatabase();
+        db.importDemoData();
         db.writeUser(new User("Tester@gmai.com",
                 "MrTest", PermissionLevel.USER), "1234");
     }
@@ -145,6 +155,73 @@ public class AccountPageStepDefs extends CucumberFxBase {
     public void iSuccessfullyLoggedIn() {
         assertNotEquals(UserManager.getGuest(), UserManager.getUser());
         assertNotNull(UserManager.getUser());
+    }
+
+    @Given("There are chargers in the presentation")
+    public void noCurrentInput() {
+        TableView table = (TableView) find("#mainTable");
+        if (table.getItems().size() == 0) {
+            fail("Should load chargers");
+        } else {
+            assertTrue(true);
+        }
+    }
+
+    @When("The user clicks on the address table header")
+    public void clickAddressHeader() {
+        clickOn("#addressCol");
+    }
+
+    @Then("The list of chargers is sorted by address")
+    public void sortedTableAddress() {
+        TableView table = (TableView) find("#mainTable");
+        Charger c = (Charger) table.getItems().get(0);
+        assertEquals("Wright St, Wellington 6021, NZ", c.getLocation().getAddress());
+    }
+
+    @When("The user click select columns and deselects 'Show address' and 'Show owner'")
+    public void deselectColumns() {
+        clickOn("#columnEdit");
+        clickOn("#showAddress");
+        clickOn("#showOwner");
+        clickOn("#update");
+    }
+
+    @Then("The fields disappear")
+    public void fieldsNotThere() {
+        Boolean pass = true;
+        try {
+            clickOn("#showAddress");
+            pass = false;
+        } catch (FxRobotException e) {
+            // Do nothing
+        }
+        try {
+            clickOn("#showOwner");
+            pass = false;
+        } catch (FxRobotException e) {
+            // Do nothing
+        }
+        assertTrue(pass);
+    }
+
+    @Given("The time limit is hidden")
+    public void hideTimeLimit() {
+        clickOn("#columnEdit");
+        clickOn("#showTimeLimit");
+        clickOn("#update");
+    }
+
+    @When("The user click select columns and selects show time limit")
+    public void selectTimeLimit() {
+        clickOn("#columnEdit");
+        clickOn("#showTimeLimit");
+        clickOn("#update");
+    }
+
+    @Then("The time limit field appears")
+    public void checkTimeLimitField() {
+        verifyThat("#timeLimitCol", Node::isVisible);
     }
 
 }

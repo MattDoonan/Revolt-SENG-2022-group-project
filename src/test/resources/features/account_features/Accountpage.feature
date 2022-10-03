@@ -33,3 +33,18 @@ Feature: User checking there account information
     And I want to save my information
     Then My account name has changed to "admin"
 
+  Scenario: (AT_6) Admin or charger owner filters a list of shown chargers
+    Given There are chargers in the presentation
+    When The user clicks on the address table header
+    Then The list of chargers is sorted by address
+
+  Scenario: (AT_7) Admin or charger owners hides info they do not need
+    Given There are chargers in the presentation
+    When The user click select columns and deselects 'Show address' and 'Show owner'
+    Then The fields disappear
+
+  Scenario: (AT_8) Admin or charger owner wants to un-hide a field they want
+    Given There are chargers in the presentation
+    Given The time limit is hidden
+    When The user click select columns and selects show time limit
+    Then The time limit field appears

@@ -138,5 +138,4 @@ public class SearchFilterMainStepDefs extends CucumberFxBase {
             }
         }
     }
-
 }
