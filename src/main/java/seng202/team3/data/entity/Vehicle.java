@@ -198,6 +198,8 @@ public class Vehicle {
 
     /**
      * Gets the effective range of the Vehicle
+     *
+     * @return the effective range vaule
      */
     public double getEffectiveRange() {
         return this.getCurrentRange() * this.getBatteryPercent() / 100.0;
