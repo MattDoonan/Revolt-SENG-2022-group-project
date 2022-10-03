@@ -19,8 +19,8 @@ import seng202.team3.gui.MainWindow;
 import seng202.team3.gui.MapHandler;
 import seng202.team3.logic.UserManager;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Cucumber Tests designed to check acceptance tests for the account page
@@ -108,9 +108,39 @@ public class AccountPageStepDefs extends CucumberFxBase {
         clickOn("#confirm");
     }
 
-    @Then("My account name has changed")
-    public void differentAccountName() {
-        Assertions.assertEquals("Cool Guy", UserManager.getGuest().getAccountName());
+    @Then("My account name has changed to {string}")
+    public void differentAccountName(String actual) {
+        Assertions.assertEquals(actual, UserManager.getUser().getAccountName());
+    }
+
+    @When("I want to change my account email to {string}")
+    public void changeAccountEmail(String newEmail) {
+        doubleClickOn("#accountEmail");
+        press(KeyCode.BACK_SPACE).release(KeyCode.BACK_SPACE);
+        clickOn("#accountEmail");
+        write(newEmail);
+    }
+
+    @Then("My account email has changed to {string}")
+    public void differentAccountEmail(String actual) {
+        Assertions.assertEquals(actual, UserManager.getUser().getEmail());
+    }
+
+    @When("I want to change my password to {string}")
+    public void changeAccountPassword(String password) {
+        clickOn("#accountPassword");
+        write(password);
+    }
+
+    @Then("I logout of the app")
+    public void logout() {
+        clickOn("#loginSignout");
+    }
+
+    @Then("I am successfully logged in")
+    public void iSuccessfullyLoggedIn() {
+        assertNotEquals(UserManager.getGuest(), UserManager.getUser());
+        assertNotNull(UserManager.getUser());
     }
 
 }
