@@ -16,11 +16,15 @@ import seng202.team3.logic.JourneyManager;
  */
 public class JourneyMapController extends MapHandler {
 
+    /**
+     * The logic manager for journeys
+     */
     private JourneyManager journeyManager;
 
     /**
      * Initialise the map view
      *
+     * @param stage top level container for this window
      * @param journeyManager Manager to interact with
      */
     public void init(Stage stage, JourneyManager journeyManager) {

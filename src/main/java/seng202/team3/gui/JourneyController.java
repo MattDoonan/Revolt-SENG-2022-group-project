@@ -1,6 +1,8 @@
 package seng202.team3.gui;
 
 import java.io.IOException;
+
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -26,28 +28,55 @@ import seng202.team3.logic.JourneyManager;
  */
 public class JourneyController {
 
+    /**
+     * Button to set start point
+     */
     @FXML
     private Button makeStart;
 
+    /**
+     * Label of start address
+     */
     @FXML
     private Label startLabel;
 
+    /**
+     * Button to set end point
+     */
     @FXML
     private Button makeEnd;
 
+    /**
+     * Label of end address
+     */
     @FXML
     private Label endLabel;
 
+    /**
+     * Map border pane
+     */
     @FXML
     private BorderPane mainWindow;
 
+    /**
+     * Used to contain stops along route
+     */
     @FXML 
     private VBox journeyTable;
 
+    /**
+     * Top level container for journey window
+     */
     private Stage stage;
 
+    /**
+     * GUI controller for map
+     */
     private JourneyMapController mapController;
 
+    /**
+     * Logic manager for journeys
+     */
     private JourneyManager journeyManager;
 
     /**
@@ -61,6 +90,10 @@ public class JourneyController {
         loadMapView(stage);
     }
 
+    /**
+     * Gets the logic manager for journeys
+     * @return journeyManager
+     */
     public JourneyManager getManager() {
         return this.journeyManager;
     }
@@ -92,8 +125,8 @@ public class JourneyController {
     }
 
     /**
-     * Calls functions in {@Link JourneyMapController}
-     * and {@Link JourneyManager} for when Set Start button is clicked
+     * Calls functions in {@link JourneyMapController}
+     * and {@link JourneyManager} for when Set Start button is clicked
      */
     public void setStart() {
         mapController.addStartMarker();
@@ -104,8 +137,8 @@ public class JourneyController {
     }
 
     /**
-     * Calls functions in {@Link JourneyMapController}
-     * and {@Link JourneyManager} for when Set Destination button is clicked
+     * Calls functions in {@link JourneyMapController}
+     * and {@link JourneyManager} for when Set Destination button is clicked
      */
     public void setDestination() {
         mapController.addEndMarker();
@@ -144,14 +177,10 @@ public class JourneyController {
                 new Text("\n" + Math.floor(Calculations.calculateDistance(charger.getLocation(), 
                 journeyManager.getPosition()) * 100) / 100 + " km Distance"));
         //TODO fix the calculation or completley remove
+
         Button btn = new Button("Remove");
-        // btn.setOnAction(new EventHandler() {
- 
-        //     @Override
-        //     public void handle(ActionEvent event) {
-        //         removeFromDisplay();
-        //     }
-        // });
+        btn.setOnAction(e -> removeFromDisplay(e));
+
         VBox buttonBox = new VBox(btn);
         buttonBox.setAlignment(Pos.CENTER_RIGHT);
         HBox content = new HBox(text, buttonBox);
@@ -170,8 +199,9 @@ public class JourneyController {
     /**
      * Button method which removes the charger/location from table
      * and removes from the journey
+     * @param e the evemt of button being clicked
      */
-    public void removeFromDisplay() {
+    public void removeFromDisplay(ActionEvent e) {
 
     }
 
