@@ -76,6 +76,9 @@ public class JourneyController {
     @FXML
     private MenuButton vehicleButton;
 
+    /**
+     * Error text if route is invalid
+     */
     @FXML
     private Text errorText;
 
@@ -174,6 +177,7 @@ public class JourneyController {
      */
     public void calculateRoute() {
         mapController.addRouteToScreen();
+        errorTextCheck();
     }
 
     /**
@@ -190,6 +194,7 @@ public class JourneyController {
         journeyManager.getSelectedJourney().getChargers().clear();
         startLabel.setText("Start not set");
         endLabel.setText("End not set");
+        errorText.setVisible(false);
     }
 
     /**
@@ -246,7 +251,11 @@ public class JourneyController {
      * Saves journey
      */
     public void saveJourney() {
-        journeyManager.saveJourney();
+        if (!(errorText.isVisible())) {
+            journeyManager.saveJourney();
+        } else {
+            //TODO
+        }
     }
 
     /**
@@ -257,25 +266,14 @@ public class JourneyController {
     }
 
     /**
-     * Checks the distance between all chargers and shows an error if any connected chargers
-     * are out of range.
+     * Uses {@link JourneyManager JourneyManager} function to toggle
+     * error test based on calculations
      */
-    public void checkDistanceBetweenChargers() {
-        ArrayList<Coordinate> coordinates = new ArrayList<Coordinate>();
-        coordinates.add(journeyManager.getStart());
-        for (Charger charger : journeyManager.getSelectedJourney().getChargers()) {
-            coordinates.add(charger.getLocation());
-        }
-        coordinates.add(journeyManager.getEnd());
-        Boolean error = false;
-
-        for (Coordinate coordinate : coordinates) {
-        }
-
-
-        errorText.setVisible(true);
+    public void errorTextCheck() {
+        boolean error = journeyManager.checkDistanceBetweenChargers();
+        errorText.setVisible(false);
         if (error) {
-            errorText.setVisible(false);
+            errorText.setVisible(true);
         }
     }
 }
