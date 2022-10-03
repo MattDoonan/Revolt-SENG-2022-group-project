@@ -150,6 +150,9 @@ public class JourneyController {
         makeStart.setDisable(true);
         startLabel.setText("Start position: " + journeyManager.getPosition().getAddress());
         mapController.addChargersAroundPoint(journeyManager.getPosition());
+        if (journeyManager.getEnd() != null) {
+            calculateRoute();
+        }
     }
 
     /**
@@ -161,6 +164,9 @@ public class JourneyController {
         journeyManager.setEnd(journeyManager.getPosition());
         makeEnd.setDisable(true);
         endLabel.setText("End position: " + journeyManager.getPosition().getAddress());
+        if (journeyManager.getStart() != null) {
+            calculateRoute();
+        }
     }
 
     /**
