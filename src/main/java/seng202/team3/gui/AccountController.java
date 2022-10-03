@@ -18,7 +18,7 @@ import seng202.team3.logic.UserManager;
 /**
  * Logic layer for the user Controller
  *
- * @author Angus Kirtlan
+ * @author Angus Kirtlan, Matthew Doonan
  * @version 1.0.0, Sep 22
  *
  */
@@ -253,7 +253,8 @@ public class AccountController {
             } else if (accountPassword.getText().length() < 4) {
                 accountPassword.setStyle("-fx-border-color: #ff0000;");
             } else {
-                manage.saveUser(user, accountPassword.getText());
+                manage.saveUser(user, UserManager
+                        .encryptThisString(accountPassword.getText()));
                 UserManager.setUser(user);
             }
             editDetails();

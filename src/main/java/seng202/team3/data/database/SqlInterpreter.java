@@ -67,6 +67,7 @@ public class SqlInterpreter implements DataReader {
      * 
      * @param db the url sent through
      * @throws IOException if default data cannot be populated
+     * @author Morgan English
      */
     private SqlInterpreter(String db) throws IOException {
         if (db == null || db.isEmpty()) {
@@ -90,6 +91,7 @@ public class SqlInterpreter implements DataReader {
      *
      * @param source the name of the resource
      * @throws java.io.IOException if any chargers cannot be written.
+     * @author Morgan English
      */
     public void addChargerCsvToData(String source) throws IOException {
         Query q = new QueryBuilderImpl().withSource(source).build();
@@ -101,6 +103,7 @@ public class SqlInterpreter implements DataReader {
      * Adds user stubs for each owner
      * 
      * @throws IOException db read/write fails
+     * @author Morgan English
      */
     public void importDemoData() throws IOException {
         List<Object> chargersToImport = new CsvInterpreter().readData(
@@ -140,6 +143,7 @@ public class SqlInterpreter implements DataReader {
      *
      * @return the instance
      * @throws IOException if the database cannot be reached/populated
+     * @author Morgan English
      */
     public static SqlInterpreter getInstance() throws IOException {
         if (instance == null) {
@@ -178,6 +182,7 @@ public class SqlInterpreter implements DataReader {
      * Gets and then returns the path of the file name as a String
      * 
      * @return String of the file path
+     * @author Morgan English
      */
     private String getDatabasePath() {
         String path = SqlInterpreter.class.getProtectionDomain()
@@ -203,6 +208,7 @@ public class SqlInterpreter implements DataReader {
      * 
      * @param path the url
      * @return Boolean yes or no if it exists
+     * @author Morgan English
      */
     private Boolean checkExist(String path) {
         File file = new File(path.substring(12));
@@ -213,6 +219,7 @@ public class SqlInterpreter implements DataReader {
      * creates a new database file at a location specified
      * 
      * @param path the location specified
+     * @author Morgan English
      */
     private void createFile(String path) {
         try (Connection connection = DriverManager.getConnection(path)) {
@@ -232,6 +239,7 @@ public class SqlInterpreter implements DataReader {
     /**
      * Creates the database if it doesn't exist yet
      * does this by calling the SQL file in resources
+     * @author Morgan English
      */
     public void defaultDatabase() {
         try {
@@ -246,6 +254,7 @@ public class SqlInterpreter implements DataReader {
      * Creates connection to the database
      *
      * @return the new connection
+     * @author Morgan English
      */
     public Connection createConnection() {
         Connection connection = null;
@@ -262,6 +271,7 @@ public class SqlInterpreter implements DataReader {
      * It knows a line ends if it has --SPLIT
      * 
      * @param source the SQL file
+     * @author Morgan English
      */
     private void executeSql(InputStream source) {
         String line;

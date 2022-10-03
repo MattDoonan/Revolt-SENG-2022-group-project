@@ -21,6 +21,13 @@ import org.testfx.api.FxRobotException;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.gui.GarageController;
 
+
+/**
+ * Runs the vehicle testFX
+ *
+ * @author Matthew Doonan
+ * @version 1.0.0, Sep 22
+ */
 public class VehiclesPageFx extends TestFxBase {
 
     private GarageController controller;

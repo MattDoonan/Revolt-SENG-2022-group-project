@@ -17,6 +17,12 @@ import java.io.IOException;
 
 import static org.testfx.api.FxAssert.verifyThat;
 
+/**
+ * Runs the Signup testFX
+ *
+ * @author Matthew Doonan
+ * @version 1.0.0, Sep 22
+ */
 public class SignupTestFX extends TestFxBase {
 
     private LoginSignupController controller;
