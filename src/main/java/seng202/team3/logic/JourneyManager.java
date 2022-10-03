@@ -183,6 +183,7 @@ public class JourneyManager extends ChargerHandler {
     public void saveJourney() {
         try {
             SqlInterpreter.getInstance().writeJourney(selectedJourney);
+            //TODO fix vehicle stuff?
         } catch (IOException e) {
             e.printStackTrace();
         }

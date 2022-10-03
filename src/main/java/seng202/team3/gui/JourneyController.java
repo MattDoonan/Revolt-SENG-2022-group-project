@@ -12,13 +12,16 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
@@ -82,6 +85,15 @@ public class JourneyController {
     @FXML
     private Text errorText;
 
+    /**
+     * List of user input errors for adding/editing vehicles
+     */
+    private ArrayList<String> errors = new ArrayList<>();
+
+    /**
+     * Boolean if there is an error with the routing distances
+     */
+    private boolean distanceError = false;
     /**
      * Top level container for journey window
      */
@@ -189,6 +201,7 @@ public class JourneyController {
         startLabel.setText("Start not set");
         endLabel.setText("End not set");
         errorText.setVisible(false);
+        distanceError = false;
     }
 
     /**
@@ -242,13 +255,24 @@ public class JourneyController {
     }
 
     /**
-     * Saves journey
+     * Saves journey to database
      */
     public void saveJourney() {
-        if (!(errorText.isVisible())) {
+        if (!(distanceError) && (journeyManager.getStart() != null)
+                && (journeyManager.getEnd() != null)) {
             journeyManager.saveJourney();
         } else {
-            //TODO
+            if (journeyManager.getStart() == null) {
+                errors.add("No start location added");
+            }
+            if (journeyManager.getEnd() == null) {
+                errors.add("No end location added");
+            }
+            if (distanceError) {
+                errors.add("Some of your locations are out of range of eachother");
+            }
+            displayErrorPopups();
+            errors.clear();
         }
     }
 
@@ -264,10 +288,36 @@ public class JourneyController {
      * error test based on calculations
      */
     public void errorTextCheck() {
-        boolean error = journeyManager.checkDistanceBetweenChargers();
+        distanceError = journeyManager.checkDistanceBetweenChargers();
         errorText.setVisible(false);
-        if (error) {
+        if (distanceError) {
             errorText.setVisible(true);
+        }
+    }
+
+    /**
+     * Displays popup error message
+     */
+    public void displayErrorPopups() {
+        try {
+            FXMLLoader error = new FXMLLoader(getClass().getResource(
+                    "/fxml/error_popup.fxml"));
+            AnchorPane base = error.load();
+            Scene modalScene = new Scene(base);
+            Stage errorPopup = new Stage();
+            errorPopup.setScene(modalScene);
+            errorPopup.setResizable(false);
+            errorPopup.setTitle("Error With Journey:");
+            errorPopup.initModality(Modality.WINDOW_MODAL);
+            ErrorController controller = error.getController();
+            controller.init();
+            controller.setErrors(errors);
+            controller.setPromptType("error");
+            controller.displayErrors();
+            errorPopup.setAlwaysOnTop(true);
+            errorPopup.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
