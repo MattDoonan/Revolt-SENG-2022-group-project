@@ -23,6 +23,9 @@ import javax.management.InstanceAlreadyExistsException;
 
 import io.cucumber.java.bs.A;
 import io.cucumber.java.bs.I;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,6 +55,11 @@ import seng202.team3.logic.UserManager;
  * @version 1.0.0, Sep 2
  */
 public class SqlInterpreterTest {
+    /**
+     * Logger
+     */
+    private static final Logger logManager = LogManager.getLogger();
+
     static SqlInterpreter db;
     static Connector testConnector1;
     static Connector testConnector2;
@@ -123,7 +131,8 @@ public class SqlInterpreterTest {
                     .executeUpdate("DELETE FROM user;"); // remove default admin
             conn.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
+            ;
         }
 
         testUser = new User("admin@admin.com", "admin",
@@ -135,7 +144,8 @@ public class SqlInterpreterTest {
         try {
             db.writeUser(testUser, "admin");
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
+            ;
         }
 
         testConnector1 = new Connector("ChardaMo", "AC", "Available", "123", 3);
@@ -278,7 +288,8 @@ public class SqlInterpreterTest {
                 conn.createStatement().executeUpdate("DELETE FROM user"); // remove default admin
                 conn.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                logManager.error(e.getMessage());
+                ;
             }
         }
 
@@ -657,7 +668,8 @@ public class SqlInterpreterTest {
                     Statement stmt = conn.createStatement();
                     stmt.executeUpdate("DELETE FROM user"); // remove default admin
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    logManager.error(e.getMessage());
+                    ;
                 }
                 ((User) objectToTest).setAccountName(null);
                 break;

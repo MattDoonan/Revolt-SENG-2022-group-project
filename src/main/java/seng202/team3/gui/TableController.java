@@ -618,26 +618,28 @@ public class TableController {
      */
     @FXML
     private void addCharger() {
-
-        try {
-            FXMLLoader miniMap = new FXMLLoader(getClass().getResource(
-                    "/fxml/mini_map.fxml"));
-            BorderPane root = miniMap.load();
-            Scene modalScene = new Scene(root);
-            Stage modal = new Stage();
-            modal.setScene(modalScene);
-            modal.setResizable(false);
-            modal.setTitle("Charger Location");
-            modal.initModality(Modality.WINDOW_MODAL);
-            MiniMapController controller = miniMap.getController();
-            controller.init(modal);
-            controller.setManager(manage);
-            modal.setAlwaysOnTop(true);
-            modal.showAndWait();
-        } catch (IOException e) {
-            logManager.error(e.getMessage());
+        if (MapHandler.MAP_REQUEST) {
+            try {
+                FXMLLoader miniMap = new FXMLLoader(getClass().getResource(
+                        "/fxml/mini_map.fxml"));
+                BorderPane root = miniMap.load();
+                Scene modalScene = new Scene(root);
+                Stage modal = new Stage();
+                modal.setScene(modalScene);
+                modal.setResizable(false);
+                modal.setTitle("Charger Location");
+                modal.initModality(Modality.WINDOW_MODAL);
+                MiniMapController controller = miniMap.getController();
+                controller.init(modal);
+                controller.setManager(manage);
+                modal.setAlwaysOnTop(true);
+                modal.showAndWait();
+            } catch (IOException e) {
+                logManager.error(e.getMessage());
+            }
         }
         manage.addCharger();
+
         if (manage.getPosition() != null) {
             new JavaScriptBridge().loadChargerEdit(null);
             updateTable();

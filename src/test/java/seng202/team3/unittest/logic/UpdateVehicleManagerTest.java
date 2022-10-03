@@ -5,12 +5,14 @@ import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,6 +32,10 @@ import seng202.team3.logic.VehicleUpdateManager;
  * @version 1.0.0, Aug 22
  */
 public class UpdateVehicleManagerTest {
+    /**
+     * Logger
+     */
+    private static final Logger logManager = LogManager.getLogger();
 
     /**
      * Creates a {@link GarageManager GarageManager} to test
@@ -84,7 +90,8 @@ public class UpdateVehicleManagerTest {
                         vehicle.getVehicleId());
                 vehicle = null;
             } catch (IOException e) {
-                e.printStackTrace();
+                logManager.error(e.getMessage());
+                ;
             }
         }
 
@@ -120,9 +127,9 @@ public class UpdateVehicleManagerTest {
 
         if (vehicles.size() > 0) {
             assertTrue(testVehicleTwo.equals(vehicles.get(vehicles.size() - 1)));
-            assertTrue(testVehicle.equals(vehicles.get(vehicles.size() - 2)));    
+            assertTrue(testVehicle.equals(vehicles.get(vehicles.size() - 2)));
         }
-        
+
         // Test editing a vehicle
         testVehicle.setMake("NewTestMake");
         testVehicleTwo.setMake("NewTestMakeTwo");

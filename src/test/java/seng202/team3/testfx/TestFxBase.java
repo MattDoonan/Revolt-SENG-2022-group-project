@@ -6,7 +6,10 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
 import seng202.team3.gui.MainWindow;
+import seng202.team3.gui.MapHandler;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit5.ApplicationTest;
@@ -20,9 +23,15 @@ import io.cucumber.java.BeforeAll;
  * @version 1.0.0, Sep 22
  */
 public abstract class TestFxBase extends ApplicationTest {
+    /**
+     * Logger
+     */
+    private static final Logger logManager = LogManager.getLogger();
 
     @BeforeAll
     public static void setUp() throws Exception {
+        // Disable map by default
+        MapHandler.MAP_REQUEST = false;
         ApplicationTest.launch(MainWindow.class);
     }
 
@@ -39,7 +48,8 @@ public abstract class TestFxBase extends ApplicationTest {
         try {
             FxToolkit.cleanupStages();
         } catch (TimeoutException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
+            ;
         }
         FxToolkit.hideStage();
         release(new KeyCode[] {});

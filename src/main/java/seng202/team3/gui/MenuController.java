@@ -315,7 +315,6 @@ public class MenuController {
         loginSignout.setText("Login");
         initHome();
         logManager.info("The user has been successfully logged out");
-        // TODO: display confirmation popup
     }
 
 }

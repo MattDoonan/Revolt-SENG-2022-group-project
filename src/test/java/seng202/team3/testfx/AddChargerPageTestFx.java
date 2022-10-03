@@ -4,6 +4,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import seng202.team3.data.database.QueryBuilder;
@@ -30,6 +33,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @version 1.0.0, Sep 22
  */
 public class AddChargerPageTestFx extends TestFxBase {
+    /**
+     * Logger
+     */
+    private static final Logger logManager = LogManager.getLogger();
 
     private Charger charger;
     private static SqlInterpreter database;
@@ -83,7 +90,6 @@ public class AddChargerPageTestFx extends TestFxBase {
         database.writeCharger(charger);
     }
 
-
     /**
      * Checks if adding a charger without filling out throws errors
      */
@@ -132,7 +138,8 @@ public class AddChargerPageTestFx extends TestFxBase {
                 chargers.add((Charger) o);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
+            ;
         }
         assertEquals(2, chargers.size());
     }

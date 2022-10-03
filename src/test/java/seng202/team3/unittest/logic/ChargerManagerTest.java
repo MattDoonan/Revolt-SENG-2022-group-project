@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.management.InstanceAlreadyExistsException;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,6 +35,10 @@ import seng202.team3.logic.UserManager;
  * @version 1.0.1, Aug 22
  */
 public class ChargerManagerTest {
+    /**
+     * Logger
+     */
+    private static final Logger logManager = LogManager.getLogger();
 
     private ChargerManager manager;
     static Charger charge1;
@@ -131,7 +138,8 @@ public class ChargerManagerTest {
                     }
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                logManager.error(e.getMessage());
+                ;
             }
         }
 

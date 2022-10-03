@@ -397,7 +397,7 @@ public class MainController {
             // Adds the HBox to the main VBox
             chargerTable.getChildren().add(add);
         }
-        if (getMapController().getConnectorStatus()) {
+        if (MapHandler.MAP_REQUEST) {
             getMapController().addChargersOnMap();
         }
         if (chargerTable.getChildren().size() != 0) {
@@ -500,7 +500,7 @@ public class MainController {
         }
         ObservableList<Charger> chargers = manage.getCloseChargerData();
         addChargersToDisplay(chargers);
-        if (chargers.size() != 0) {
+        if (chargers.size() != 0 && MapHandler.MAP_REQUEST) {
             mapController.changePosition(chargers.get(0).getLocation());
         }
     }

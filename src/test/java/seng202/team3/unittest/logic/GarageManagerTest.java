@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,7 +29,10 @@ import seng202.team3.logic.UserManager;
  * @version 1.0.0, Aug 22
  */
 public class GarageManagerTest {
-
+    /**
+     * Logger
+     */
+    private static final Logger logManager = LogManager.getLogger();
     /**
      * Creates a {@link GarageManager GarageManager} to test
      * and three vehicles.
@@ -80,7 +86,8 @@ public class GarageManagerTest {
                         vehicle.getVehicleId());
                 vehicle = null;
             } catch (IOException e) {
-                e.printStackTrace();
+                logManager.error(e.getMessage());
+                ;
             }
         }
         manager.resetQuery();
@@ -109,7 +116,8 @@ public class GarageManagerTest {
             SqlInterpreter.getInstance().writeVehicle(testVehicle);
             SqlInterpreter.getInstance().writeVehicle(testVehicleTwo);
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
+            ;
         }
         manager.resetQuery();
         manager.getAllVehicles();
@@ -131,7 +139,8 @@ public class GarageManagerTest {
         try {
             SqlInterpreter.getInstance().writeVehicle(testVehicleDelete);
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
+            ;
         }
         manager.resetQuery();
         manager.getAllVehicles();
@@ -142,7 +151,8 @@ public class GarageManagerTest {
             SqlInterpreter.getInstance().deleteData("vehicle",
                     testVehicleDelete.getVehicleId());
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
+            ;
         }
 
         manager.resetQuery();

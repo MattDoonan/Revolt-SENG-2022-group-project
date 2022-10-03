@@ -93,6 +93,7 @@ public class JavaScriptBridge {
             coord.setLon((double) lng);
         } catch (ParseException e) {
             logManager.error(e.getMessage());
+            return null;
         }
 
         return coord;
@@ -140,10 +141,10 @@ public class JavaScriptBridge {
             address += (String) result.get("display_name");
             addLocationName(address);
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
         } catch (ParseException e) {
             Thread.currentThread().interrupt();
-            e.printStackTrace();
+            logManager.error(e.getMessage());
         }
         return address;
     }

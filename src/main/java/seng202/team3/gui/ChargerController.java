@@ -337,6 +337,7 @@ public class ChargerController {
         if (errors.size() == 0) {
             try {
                 SqlInterpreter.getInstance().writeCharger(newCharger);
+                logManager.info("Added new Charger");
                 stage.close();
             } catch (IOException e) {
                 logManager.error(e.getMessage());

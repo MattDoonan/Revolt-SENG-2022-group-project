@@ -1191,14 +1191,14 @@ public class SqlInterpreter implements DataReader {
             try {
                 this.conn.setAutoCommit(false);
             } catch (SQLException e) {
-                e.printStackTrace(); // TODO: handle exception
+                logManager.error(e.getMessage());
             }
 
             for (Object c : chargersToWrite) { // Create SQL write statements
                 try {
                     writeCharger(conn, (Charger) c);
                 } catch (IOException e) {
-                    e.printStackTrace(); // TODO: handle this exception
+                    logManager.error(e.getMessage());
                 }
             }
 
@@ -1209,7 +1209,7 @@ public class SqlInterpreter implements DataReader {
                 mutex.release();
                 this.conn.close();
             } catch (SQLException | InterruptedException e) {
-                e.printStackTrace(); // TODO: handle exception
+                logManager.error(e.getMessage());
             }
         }
     }

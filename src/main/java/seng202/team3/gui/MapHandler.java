@@ -7,11 +7,13 @@ import java.io.IOException;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
+import netscape.javascript.JSException;
 import netscape.javascript.JSObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -63,6 +65,21 @@ public abstract class MapHandler {
     protected static Boolean locationAccepted = null;
 
     /**
+     * Threshold for map connection reattempts
+     */
+    public static final int THRESHOLD = 10;
+
+    /**
+     * Time until next reattempt (ms)
+     */
+    public static final long REATTEMPT_TIME = (long) 100.0;
+
+    /**
+     * Represents users decision to load the map
+     */
+    public static boolean MAP_REQUEST = true;
+
+    /**
      * unused constructor
      */
     protected MapHandler() {
@@ -74,46 +91,107 @@ public abstract class MapHandler {
      */
     public void initMap() {
 
-        if (locationAccepted == null) {
-            getUserLocation();
+        if (!MAP_REQUEST) {
+            logManager.info("Map loading has been skipped");
+            addChargersOnMap();
+            return;
         }
 
         webEngine = webView.getEngine();
         webEngine.setJavaScriptEnabled(true);
+
         webEngine.load(getClass().getClassLoader().getResource("html/map.html").toExternalForm());
+
         logManager.info("Loading map...");
+
         webEngine.getLoadWorker().stateProperty().addListener(
+
                 (ov, oldState, newState) -> {
                     if (newState == Worker.State.SUCCEEDED) {
                         JSObject window = (JSObject) webEngine.executeScript("window");
                         window.setMember("javaScriptBridge", javaScriptBridge);
-                        javaScriptConnector = (JSObject) webEngine.executeScript("jsConnector");
 
-                        // sleeps the thread until a JavaScriptConnector exists
-                        while (javaScriptConnector == null) {
-                            try {
-                                sleep((long) 10.0);
-                                logManager.info("Waiting for JavaScript connector...");
-                            } catch (InterruptedException e) {
-                                logManager.error(e.getMessage());
-                            }
+                        while (MAP_REQUEST && javaScriptConnector == null) {
+                            connectMap();
                         }
 
-                        javaScriptConnector.call("initMap",
-                                GeoLocationHandler.getInstance().getCoordinate().getLat(),
-                                GeoLocationHandler.getInstance().getCoordinate().getLon(),
-                                GeoLocationHandler.getInstance()
-                                        .getCoordinate() != GeoLocationHandler.DEFAULT_COORDINATE);
-                        logManager.info("Map loaded successfully");
-                        addChargersOnMap();
                     }
                 });
+
+    }
+
+    /**
+     * Prompts User to reload the map
+     */
+    public void promptForReattempt() {
+        Alert reattemptPrompt = new Alert(AlertType.WARNING,
+                "Unstable Internet Connection: Unable to load map view"
+                        + "\n Would you like to try again?",
+                ButtonType.NO, ButtonType.YES);
+        reattemptPrompt.showAndWait();
+
+        MAP_REQUEST = reattemptPrompt.getResult() == ButtonType.YES;
+
+        if (MAP_REQUEST) {
+            logManager.info("Re-attempting to load map...");
+        } else {
+            logManager.info("User has disabled map view");
+            logManager.info("Loading screen without map");
+        }
+    }
+
+    /**
+     * Attempts to connect to the map
+     * Alerts user after a timeout period
+     */
+    private void connectMap() {
+        int count = 0;
+        while (count < THRESHOLD) {
+            try {
+                javaScriptConnector = (JSObject) webEngine.executeScript("jsConnector");
+
+                javaScriptConnector.call("initMap",
+                        GeoLocationHandler.getInstance().getCoordinate().getLat(),
+                        GeoLocationHandler.getInstance().getCoordinate().getLon(),
+                        GeoLocationHandler.getInstance()
+                                .getCoordinate() != GeoLocationHandler.DEFAULT_COORDINATE);
+                // throw new JSException("NO INTERNET"); // For 'no internet connection'
+            } catch (JSException e) {
+                if (javaScriptConnector != null) {
+                    break;
+                }
+                count += 1;
+                logManager.warn(e.getMessage());
+
+                try {
+                    sleep(REATTEMPT_TIME);
+                } catch (InterruptedException e1) {
+                    logManager.warn(e.getMessage());
+                }
+            }
+        }
+
+        if (javaScriptConnector == null) {
+            logManager.error("Unstable Connection: unable to connect to JavaScript");
+            logManager.error("Process Aborted");
+            promptForReattempt();
+        } else {
+            logManager.info("Map loaded successfully");
+            if (locationAccepted == null) {
+                getUserLocation();
+            }
+            addChargersOnMap();
+        }
     }
 
     /**
      * Pop up to get the current users location for the map start point
      */
     public void getUserLocation() {
+        if (!MapHandler.MAP_REQUEST) {
+            logManager.info("Current Location was aborted due to no map");
+            return;
+        }
         if (locationAccepted == null) {
             Alert locationRequest = new Alert(Alert.AlertType.CONFIRMATION,
                     "Allow the program to access your location?",

@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javax.management.InstanceAlreadyExistsException;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,6 +37,10 @@ import seng202.team3.logic.UserManager;
  * @version 1.0.0, Aug 28
  */
 public class MainManagerTest {
+    /**
+     * Logger
+     */
+    private static final Logger logManager = LogManager.getLogger();
 
     private MainManager manage;
     private ChargerManager charge;
@@ -240,7 +247,8 @@ public class MainManagerTest {
                 chargerList.add((Charger) o);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
+            ;
         }
         manage.resetQuery();
         manage.adjustQuery("connectorcurrent", "DC", ComparisonType.CONTAINS);
@@ -266,7 +274,8 @@ public class MainManagerTest {
                 chargerList.add((Charger) o);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
+            ;
         }
         manage.resetQuery();
         manage.adjustQuery("hastouristattraction", "True", ComparisonType.CONTAINS);
@@ -293,7 +302,8 @@ public class MainManagerTest {
                 chargerList.add((Charger) o);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
+            ;
         }
         manage.resetQuery();
         manage.adjustQuery("haschargingcost", "False", ComparisonType.CONTAINS);
@@ -320,7 +330,8 @@ public class MainManagerTest {
                 chargerList.add((Charger) o);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
+            ;
         }
         manage.resetQuery();
         manage.adjustQuery("haschargingcost", "False", ComparisonType.CONTAINS);
@@ -343,7 +354,8 @@ public class MainManagerTest {
                 chargerList.add((Charger) o);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
+            ;
         }
         manage.resetQuery();
         manage.adjustQuery("hastouristattraction", "True", ComparisonType.CONTAINS);
@@ -369,7 +381,8 @@ public class MainManagerTest {
                 chargerList.add((Charger) o);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
+            ;
         }
         manage.resetQuery();
         manage.makeAllChargers();

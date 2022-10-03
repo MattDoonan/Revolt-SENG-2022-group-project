@@ -163,7 +163,8 @@ public class AccountController {
                 controller.init(chargerTable);
                 chargerTable.setTop(editorParent);
             } catch (IOException e) {
-                e.printStackTrace();
+                logManager.error(e.getMessage());
+                ;
             }
         } else {
             setChargerTable();
@@ -188,7 +189,8 @@ public class AccountController {
                 controller.setUser(UserManager.getUser());
                 controller.populateTable();
             } catch (IOException e) {
-                e.printStackTrace();
+                logManager.error(e.getMessage());
+                ;
             }
         }
     }

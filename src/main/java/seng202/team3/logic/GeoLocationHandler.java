@@ -14,6 +14,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team3.data.entity.Coordinate;
+import seng202.team3.gui.MapHandler;
 
 /**
  * A Singleton Class to handle the geolocation parsing
@@ -87,10 +88,12 @@ public class GeoLocationHandler {
      * @return {@link seng202.team3.data.entity.Coordinate} the selected coordinate
      */
     public Coordinate getCoordinate() {
+
         if (coordinate == null) {
             coordinate = DEFAULT_COORDINATE;
             logManager.info("Location not set: set to default coordinate");
         }
+
         return coordinate;
     }
 

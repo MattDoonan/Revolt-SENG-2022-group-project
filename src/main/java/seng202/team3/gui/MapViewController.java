@@ -93,6 +93,11 @@ public class MapViewController extends MapHandler {
         } else if (UserManager.getUser().getLevel() == PermissionLevel.CHARGEROWNER) {
             userId = UserManager.getUser().getUserid();
         }
+
+        if (!MapHandler.MAP_REQUEST || javaScriptConnector == null) {
+            return;
+        }
+
         javaScriptConnector.call("clearMarkers");
         if (UserManager.getUser().getLevel() == PermissionLevel.ADMIN) {
             javaScriptConnector.call("givePermission");
@@ -116,27 +121,35 @@ public class MapViewController extends MapHandler {
      * @param coordinate the coordinate which is clicked
      */
     public void makeCoordinate(Coordinate coordinate) {
-        javaScriptConnector.call("removeCoordinate");
-        javaScriptConnector.call("addCoordinate", "Current Coordinate: ",
-                coordinate.getLat(), coordinate.getLon());
-        javaScriptConnector.call("addCoordinateName");
-        if (locationAccepted) {
-            javaScriptConnector.call("changeZoom");
-        }
-        changePosition(coordinate);
-        map.makeCoordinate(coordinate);
+        if (MapHandler.MAP_REQUEST) {
+            javaScriptConnector.call("removeCoordinate");
+            javaScriptConnector.call("addCoordinate", "Current Coordinate: ",
+                    coordinate.getLat(), coordinate.getLon());
+            javaScriptConnector.call("addCoordinateName");
+            if (locationAccepted) {
+                javaScriptConnector.call("changeZoom");
+            }
+            changePosition(coordinate);
+            map.makeCoordinate(coordinate);
 
-        logManager.info("Point created on map");
+            logManager.info("Point created on map");
+        } else {
+            logManager.info("Map Unavailable: Could not add point to map");
+        }
     }
 
     /**
      * Adds the coordinate name to the selected point
      */
     public void addCoordinateName() {
-        javaScriptConnector.call("addCoordinate",
-                GeoLocationHandler.getInstance().getCoordinate().getAddress(),
-                GeoLocationHandler.getInstance().getCoordinate().getLat(),
-                GeoLocationHandler.getInstance().getCoordinate().getLon());
+        if (MapHandler.MAP_REQUEST) {
+            javaScriptConnector.call("addCoordinate",
+                    GeoLocationHandler.getInstance().getCoordinate().getAddress(),
+                    GeoLocationHandler.getInstance().getCoordinate().getLat(),
+                    GeoLocationHandler.getInstance().getCoordinate().getLon());
+        } else {
+            logManager.info("Map Unavailable: Could not name point");
+        }
     }
 
     /**
@@ -147,8 +160,10 @@ public class MapViewController extends MapHandler {
      * @param coordinate a {@link seng202.team3.data.entity.Coordinate} object
      */
     public void changePosition(Coordinate coordinate) {
-        javaScriptConnector.call("movePosition",
-                coordinate.getLat(), coordinate.getLon());
+        if (MapHandler.MAP_REQUEST) {
+            javaScriptConnector.call("movePosition",
+                    coordinate.getLat(), coordinate.getLon());
+        }
     }
 
     /**
@@ -167,18 +182,22 @@ public class MapViewController extends MapHandler {
      */
     public void addRouteToCharger() {
         routeDisplayed = true;
-        Coordinate coord = map.getController().getPosition();
-        Charger charger = map.getController().getSelectedCharger();
-        if (charger != null) {
-            Coordinate chargerCoord = charger.getLocation();
-            javaScriptConnector.call("addLocationToRoute", coord.getLat(), coord.getLon(),
-                    coord.getAddress(), "p", 0);
-            javaScriptConnector.call("addLocationToRoute",
-                    chargerCoord.getLat(), chargerCoord.getLon(), charger.getChargerId(), "c", 1);
-            javaScriptConnector.call("addRoute");
+        if (MapHandler.MAP_REQUEST) {
+            Coordinate coord = map.getController().getPosition();
+            Charger charger = map.getController().getSelectedCharger();
+            if (charger != null) {
+                Coordinate chargerCoord = charger.getLocation();
+                javaScriptConnector.call("addLocationToRoute", coord.getLat(), coord.getLon(),
+                        coord.getAddress(), "p", 0);
+                javaScriptConnector.call("addLocationToRoute",
+                        chargerCoord.getLat(), chargerCoord.getLon(),
+                        charger.getChargerId(), "c", 1);
+                javaScriptConnector.call("addRoute");
+            }
+            logManager.info("Route added to map");
+        } else {
+            logManager.info("Map Unavailable: Could not add route");
         }
-
-        logManager.info("Route added to map");
 
     }
 
@@ -187,7 +206,11 @@ public class MapViewController extends MapHandler {
      */
     private void removeRoute() {
         routeDisplayed = false;
-        javaScriptConnector.call("removeRoute");
+        if (MapHandler.MAP_REQUEST) {
+            javaScriptConnector.call("removeRoute");
+        } else {
+            logManager.info("Map Unavailable: Could not remove route");
+        }
     }
 
     /**
@@ -196,9 +219,13 @@ public class MapViewController extends MapHandler {
      * @param coordinate the coordinate of the stop to add
      */
     public void addStopInRoute(Coordinate coordinate) {
-        javaScriptConnector.call("addLocationToRoute", coordinate.getLat(), coordinate.getLon(),
-                "Stop", "p", 1);
-        logManager.info("Stop added to route");
+        if (MapHandler.MAP_REQUEST) {
+            javaScriptConnector.call("addLocationToRoute", coordinate.getLat(), coordinate.getLon(),
+                    "Stop", "p", 1);
+            logManager.info("Stop added to route");
+        } else {
+            logManager.info("Map Unavailable: Could not add stop");
+        }
     }
 
     /**
@@ -255,8 +282,10 @@ public class MapViewController extends MapHandler {
         } catch (IOException e) {
             logManager.error(e.getMessage());
         } finally {
-            addChargersOnMap();
-            addCoordinateName();
+            if (MapHandler.MAP_REQUEST) {
+                addChargersOnMap();
+                addCoordinateName();
+            }
             MenuController.getController().viewChargers(null);
         }
     }
@@ -266,9 +295,15 @@ public class MapViewController extends MapHandler {
      */
     @FXML
     public void addCharger() {
-        if (addButton.getOpacity() == 100.0) {
+        if (addButton.getOpacity() != 100.0) {
+            return;
+        }
+
+        if (MapHandler.MAP_REQUEST) {
             loadPromptScreens("Search an address or click on the map\n"
                     + "and confirm to add a charger: \n\n", "add");
+        } else {
+            javaScriptBridge.loadChargerEdit(null);
         }
     }
 
