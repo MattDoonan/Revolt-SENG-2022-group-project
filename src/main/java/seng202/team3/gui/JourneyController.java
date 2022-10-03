@@ -1,6 +1,7 @@
 package seng202.team3.gui;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import javafx.collections.ObservableList;
@@ -13,6 +14,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -69,6 +71,15 @@ public class JourneyController {
     private VBox journeyTable;
 
     /**
+     * MenuButton containing user vehicles
+     */
+    @FXML
+    private MenuButton vehicleButton;
+
+    @FXML
+    private Text errorText;
+
+    /**
      * Top level container for journey window
      */
     private Stage stage;
@@ -92,6 +103,7 @@ public class JourneyController {
         this.stage = stage;
         journeyManager = new JourneyManager();
         loadMapView(stage);
+        loadVehicles();
     }
 
     /**
@@ -231,4 +243,33 @@ public class JourneyController {
         journeyManager.saveJourney();
     }
 
+    /**
+     * Loads vehicles into the menuBox
+     */
+    public void loadVehicles() {
+        //vehicleButton.;
+    }
+
+    /**
+     * Checks the distance between all chargers and shows an error if any connected chargers
+     * are out of range.
+     */
+    public void checkDistanceBetweenChargers() {
+        ArrayList<Coordinate> coordinates = new ArrayList<Coordinate>();
+        coordinates.add(journeyManager.getStart());
+        for (Charger charger : journeyManager.getSelectedJourney().getChargers()) {
+            coordinates.add(charger.getLocation());
+        }
+        coordinates.add(journeyManager.getEnd());
+        Boolean error = false;
+
+        for (Coordinate coordinate : coordinates) {
+        }
+
+
+        errorText.setVisible(true);
+        if (error) {
+            errorText.setVisible(false);
+        }
+    }
 }
