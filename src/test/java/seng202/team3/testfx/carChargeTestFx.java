@@ -28,7 +28,7 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.testfx.api.FxAssert.verifyThat;
 
-public class carChargeTestFx extends TestFxBase{
+public class CarChargeTestFx extends TestFxBase {
 
     private MainController controller;
     static SqlInterpreter db;
@@ -37,13 +37,13 @@ public class carChargeTestFx extends TestFxBase{
 
     static Stage stage;
 
-
     @Override
     public void start(Stage stage) throws Exception {
         this.stage = stage;
         SqlInterpreter.removeInstance();
         db = SqlInterpreter.initialiseInstanceWithUrl(
                 "jdbc:sqlite:./target/test-classes/test_database.db");
+        db.addChargerCsvToData("csvtest/filtering");
         testUser = new User("admin@admin.com", "admin",
                 PermissionLevel.ADMIN);
         db.writeUser(testUser);
@@ -55,9 +55,10 @@ public class carChargeTestFx extends TestFxBase{
         UserManager.setUser(testUser);
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
-        Parent page = loader.load();
+
         MapHandler.resetPermission();
         MapHandler.setLocationAccepted(true);
+        Parent page = loader.load();
         initState(loader, stage);
         Scene scene = new Scene(page);
         stage.setScene(scene);
@@ -69,7 +70,6 @@ public class carChargeTestFx extends TestFxBase{
         BorderPane b = new BorderPane();
         controller.init(stage, b);
     }
-
 
     @Test
     public void checkAppearOnUserWithCar() {

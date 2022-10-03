@@ -11,10 +11,9 @@ import seng202.team3.gui.MapHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit5.ApplicationTest;
-
-import io.cucumber.java.BeforeAll;
 
 /**
  * This is Morgan's Code designed to set up TestFX testing

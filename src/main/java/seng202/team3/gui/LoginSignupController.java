@@ -245,7 +245,7 @@ public class LoginSignupController {
                 loginPasswordField.clear();
                 loginEmailField.clear();
                 invalidLogin.setVisible(true);
-                logManager.info("Usernamed or password incorrect");
+                logManager.info("Username or password incorrect");
             }
         } catch (SQLException | IOException e) {
             loginPasswordField.clear();

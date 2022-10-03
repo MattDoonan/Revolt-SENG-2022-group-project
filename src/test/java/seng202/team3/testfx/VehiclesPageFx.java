@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.testfx.api.FxAssert.verifyThat;
 
 import java.io.IOException;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -20,7 +21,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.testfx.api.FxRobotException;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.gui.GarageController;
-
 
 /**
  * Runs the vehicle testFX
@@ -47,7 +47,9 @@ public class VehiclesPageFx extends TestFxBase {
         SqlInterpreter.removeInstance();
         SqlInterpreter.initialiseInstanceWithUrl(
                 "jdbc:sqlite:./target/test-classes/test_database.db");
+        SqlInterpreter.getInstance().defaultDatabase();
         SqlInterpreter.getInstance().deleteData("user", 0);
+        controller.refresh();
     }
 
     private void initState(FXMLLoader loader, Stage stage) {
@@ -70,7 +72,7 @@ public class VehiclesPageFx extends TestFxBase {
     public void checkDelete(String nodes) {
         try {
             clickOn(nodes);
-            fail("Shouldn't be visible");
+            fail(nodes + " Shouldn't be visible");
         } catch (FxRobotException e) {
             assertTrue(true);
         }
