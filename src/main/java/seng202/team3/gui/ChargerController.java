@@ -234,7 +234,6 @@ public class ChargerController {
     @FXML
     public void displayChargerInfo() {
         if (charger != null) {
-            connectors = FXCollections.observableList(charger.getConnectors());
             name.setText(charger.getName());
             parks.setText(Integer.toString(charger.getAvailableParks()));
             address.setText(charger.getLocation().getAddress());

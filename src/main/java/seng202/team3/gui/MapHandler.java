@@ -60,6 +60,11 @@ public abstract class MapHandler {
     protected JSObject javaScriptConnector;
 
     /**
+     * Path for the map
+     */
+    protected String path;
+
+    /**
      * Represents response to location services request
      */
     protected static Boolean locationAccepted = null;
@@ -97,10 +102,18 @@ public abstract class MapHandler {
             return;
         }
 
+        loadMap();
+
+    }
+
+    /**
+     * Loads the map and handles the javascript
+     */
+    private void loadMap() {
         webEngine = webView.getEngine();
         webEngine.setJavaScriptEnabled(true);
 
-        webEngine.load(getClass().getClassLoader().getResource("html/map.html").toExternalForm());
+        webEngine.load(getClass().getClassLoader().getResource(path).toExternalForm());
 
         logManager.info("Loading map...");
 
@@ -117,7 +130,6 @@ public abstract class MapHandler {
 
                     }
                 });
-
     }
 
     /**
@@ -177,9 +189,6 @@ public abstract class MapHandler {
             promptForReattempt();
         } else {
             logManager.info("Map loaded successfully");
-            if (locationAccepted == null) {
-                getUserLocation();
-            }
             addChargersOnMap();
         }
     }

@@ -34,6 +34,7 @@
     <script>
         let map;
         let defaultZoom = 6;
+        let zoomedIn = 13;
         let markers = [];
         let coordinate;
         var javaScriptBridge; // must be declared as var (will not be correctly assigned in java with let keyword)
@@ -96,7 +97,7 @@
             }
 
             if (zoomed) {
-                mapOptions.zoom = 13;
+                mapOptions.zoom = zoomedIn;
             }
 
             map = new L.map('map', mapOptions);
@@ -148,7 +149,7 @@
          * @param zoom an integer referencing the zoom level
          */
         function changeZoom() {
-            map.zoomIn(6)
+            map.setZoom(zoomedIn);
         }
 
         /**

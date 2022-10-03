@@ -67,12 +67,14 @@ public class MapViewController extends MapHandler {
      * @param stage a {@link javafx.stage.Stage} object
      */
     public void init(Stage stage, MapManager map) {
+        path = "html/map.html";
         this.stage = stage;
         javaScriptBridge = new JavaScriptBridge();
         this.map = map;
         addButton.setOpacity(0.0);
         initMap();
         this.stage.sizeToScene();
+
     }
 
     /**
@@ -110,6 +112,10 @@ public class MapViewController extends MapHandler {
             javaScriptConnector.call("addMarker", charger.getLocation().getAddress(),
                     charger.getLocation().getLat(), charger.getLocation().getLon(),
                     charger.getChargerId(), hasPermission);
+        }
+
+        if (locationAccepted == null) {
+            getLocation();
         }
     }
 
@@ -312,12 +318,12 @@ public class MapViewController extends MapHandler {
      */
     @FXML
     public void getLocation() {
-        if (!locationAccepted) {
+        if (locationAccepted == null || !locationAccepted) {
             setLocationAccepted(null);
         }
         this.getUserLocation();
         map.getController().setPosition();
-        makeCoordinate(map.getController().getPosition());
+        makeCoordinate(GeoLocationHandler.getInstance().getCoordinate());
     }
 
 }
