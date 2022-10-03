@@ -1,9 +1,11 @@
 package seng202.team3.logic;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
 import seng202.team3.data.entity.Journey;
@@ -173,6 +175,17 @@ public class JourneyManager extends ChargerHandler {
         selectedJourney = new Journey();
         setStart(null);
         setEnd(null);
+    }
+
+    /**
+     * Saves Journey
+     */
+    public void saveJourney() {
+        try {
+            SqlInterpreter.getInstance().writeJourney(selectedJourney);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

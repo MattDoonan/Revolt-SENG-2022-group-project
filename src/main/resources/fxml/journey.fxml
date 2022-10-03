@@ -26,6 +26,7 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
             <Label fx:id="startLabel" text="Start not set" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
@@ -34,11 +35,12 @@
              <Button fx:id="calculateRoute" mnemonicParsing="false" onAction="#calculateRoute" text="Calculate Route" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
             <Button fx:id="makeStart" mnemonicParsing="false" onAction="#setStart" text="Set Selected Point to Start" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
             <Button fx:id="resetJourney" mnemonicParsing="false" onAction="#resetJourney" text="Reset Journey" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
-            <ScrollPane prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.rowSpan="4" GridPane.valignment="CENTER">
+            <ScrollPane prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.rowSpan="4" GridPane.valignment="CENTER">
                <content>
                   <VBox fx:id="journeyTable" prefHeight="115.0" prefWidth="529.0" />
                </content>
             </ScrollPane>
+            <Button fx:id="saveJourney" mnemonicParsing="false" onAction="#saveJourney" text="Save Journey" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
          </children>
       </GridPane>
        <BorderPane fx:id="mainWindow" maxHeight="Infinity" maxWidth="Infinity" minWidth="0.0" />
