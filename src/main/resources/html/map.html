@@ -199,9 +199,9 @@
 					m.bindPopup(
 						"Address: " +
 							title +
-							"<br><button type='button' onclick='javaScriptBridge.addChargerToJourney(" +
+							"<br><center><button type='button' style='background: #4CAF50; color: white; border-radius: 5px;' onclick='javaScriptBridge.addChargerToJourney(" +
 							id +
-							")'>Add to Route</button>"
+							")'>Add to Route</button></center>"
 					);
 				}
 
@@ -295,6 +295,7 @@
 					waypoints: coordinates,
 					serviceUrl: "https://tile.csse.canterbury.ac.nz/route/v1",
 					routeWhileDragging: true,
+					show: false,
 					geocoder: new L.Control.Geocoder.Nominatim({
 						geocodingQueryParams: {
 							countrycodes: "nz",

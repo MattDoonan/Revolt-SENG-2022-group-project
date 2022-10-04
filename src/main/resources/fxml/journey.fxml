@@ -5,33 +5,38 @@
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<SplitPane dividerPositions="0.9350877192982456" maxHeight="Infinity" maxWidth="Infinity" minWidth="200.0" prefHeight="437.0" prefWidth="572.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.JourneyController">
+<SplitPane dividerPositions="0.9350877192982456" maxHeight="Infinity" maxWidth="Infinity" minWidth="200.0" prefHeight="437.0" prefWidth="572.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.JourneyController">
    <items>
-      <AnchorPane maxWidth="530.0" prefWidth="530.0" style="-fx-background-color: ffe5d4;">
-         <children>
-            <Label fx:id="startLabel" layoutX="87.0" layoutY="106.0" text="Start not set" />
-            <Button fx:id="makeEnd" layoutX="37.0" layoutY="133.0" mnemonicParsing="false" onAction="#setDestination" style="-fx-background-color: e06666;" text="Set Selected Point to End" />
-            <Label fx:id="endLabel" layoutX="91.0" layoutY="163.0" text="End not set" />
-            <Button fx:id="makeStart" layoutX="33.0" layoutY="73.0" mnemonicParsing="false" onAction="#setStart" style="-fx-background-color: e06666;" text="Set Selected Point to Start" />
-            <Button fx:id="resetJourney" layoutX="16.0" layoutY="391.0" mnemonicParsing="false" onAction="#resetJourney" prefWidth="109.0" style="-fx-background-color: e06666;" text="Reset Journey" />
-            <ScrollPane layoutX="265.0" layoutY="-5.0" prefWidth="265.0" style="-fx-background-color: ffe5d4;">
-               <content>
-                  <VBox fx:id="journeyTable" prefWidth="265.0" style="-fx-background-color: ffe5d4;" />
-               </content></ScrollPane>
-            <Button fx:id="saveJourney" layoutX="146.0" layoutY="391.0" mnemonicParsing="false" onAction="#saveJourney" style="-fx-background-color: e06666;" text="Save Journey" />
-            <MenuButton fx:id="vehicles" layoutX="64.0" layoutY="24.0" mnemonicParsing="false" style="-fx-background-color: e06666;" text="Select Vehicle" />
-            <Text fx:id="errorText" fill="RED" layoutX="88.0" layoutY="309.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Error" visible="false" wrappingWidth="82.0">
-               <font>
-                  <Font size="32.0" />
-               </font></Text>
-         </children>
-      </AnchorPane>
+      <ScrollPane maxWidth="530.0" prefWidth="530.0" style="-fx-background-color: white;">
+         <content>
+            <AnchorPane maxWidth="530.0" prefWidth="530.0" style="-fx-background-color: white;">
+               <children>
+                  <Label fx:id="startLabel" layoutX="88.0" layoutY="278.0" text="Start not set" />
+                  <Button fx:id="makeEnd" layoutX="38.0" layoutY="305.0" mnemonicParsing="false" onAction="#setDestination" text="Set Selected Point to End" />
+                  <Label fx:id="endLabel" layoutX="92.0" layoutY="335.0" text="End not set" />
+                  <Button fx:id="makeStart" layoutX="34.0" layoutY="245.0" mnemonicParsing="false" onAction="#setStart" text="Set Selected Point to Start" />
+                  <Button fx:id="resetJourney" layoutX="16.0" layoutY="391.0" mnemonicParsing="false" onAction="#resetJourney" prefWidth="109.0" text="Reset Journey" />
+                  <VBox fx:id="journeyTable" layoutX="238.0" layoutY="41.0" prefWidth="265.0" style="-fx-background-color: ffe5d4;" AnchorPane.topAnchor="41.0" />
+                  <Button fx:id="saveJourney" layoutX="146.0" layoutY="391.0" mnemonicParsing="false" onAction="#saveJourney" text="Save Journey" />
+                  <MenuButton fx:id="vehicles" layoutX="65.0" layoutY="196.0" mnemonicParsing="false" text="Select Vehicle" />
+                  <Text fx:id="errorText" fill="RED" layoutX="88.0" layoutY="309.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Error" visible="false" wrappingWidth="82.0">
+                     <font>
+                        <Font size="32.0" />
+                     </font>
+                  </Text>
+                  <TextField layoutX="45.0" layoutY="98.0" stylesheets="@style.css" AnchorPane.leftAnchor="45.0" />
+                  <Label layoutX="45.0" layoutY="81.0" text="Trip name" AnchorPane.leftAnchor="45.0" />
+               </children>
+            </AnchorPane>
+         </content>
+      </ScrollPane>
        <BorderPane fx:id="mainWindow" maxHeight="Infinity" maxWidth="Infinity" minWidth="0.0" />
    </items>
 </SplitPane>

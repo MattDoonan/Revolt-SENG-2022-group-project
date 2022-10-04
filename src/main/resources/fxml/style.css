@@ -1,0 +1,10 @@
+/* File style.css */
+
+.text-field {
+	-fx-background-color: transparent;
+	-fx-border-color: transparent transparent gray transparent;
+}
+
+.text-field:focused {
+	-fx-border-color: transparent transparent darkgray transparent;
+}
