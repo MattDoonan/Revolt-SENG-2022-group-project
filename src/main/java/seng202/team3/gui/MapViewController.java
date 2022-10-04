@@ -101,6 +101,7 @@ public class MapViewController extends MapHandler {
         }
 
         javaScriptConnector.call("clearMarkers");
+
         if (UserManager.getUser().getLevel() == PermissionLevel.ADMIN) {
             javaScriptConnector.call("givePermission");
         }
@@ -114,9 +115,6 @@ public class MapViewController extends MapHandler {
                     charger.getChargerId(), hasPermission);
         }
 
-        if (locationAccepted == null) {
-            getLocation();
-        }
     }
 
     /**
@@ -323,6 +321,7 @@ public class MapViewController extends MapHandler {
         }
         this.getUserLocation();
         map.getController().setPosition();
+
         makeCoordinate(GeoLocationHandler.getInstance().getCoordinate());
     }
 

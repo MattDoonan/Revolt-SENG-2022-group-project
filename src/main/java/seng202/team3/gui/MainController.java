@@ -191,7 +191,7 @@ public class MainController {
     /** the garage manager */
     private GarageManager garageManager;
 
-    /** Buffer for range*/
+    /** Buffer for range */
     private Double buffer = 0.85;
 
     /**
@@ -215,10 +215,17 @@ public class MainController {
         manage.makeAllChargers();
         manage.setPosition();
         initialRange();
-        if (manage.getPosition() == GeoLocationHandler.DEFAULT_COORDINATE) {
+        if (MapViewController.locationAccepted == null) {
+            getMapController().getLocation();
+        }
+
+        if (GeoLocationHandler.getInstance()
+                .getCoordinate() == GeoLocationHandler.DEFAULT_COORDINATE) {
             manage.setDistance(0);
+            distanceDisplay.setSelected(false);
         } else {
             manage.setDistance(changeDistance.getValue() * buffer);
+            distanceDisplay.setSelected(true);
         }
         addChargersToDisplay(manage.getCloseChargerData());
         change();
@@ -526,6 +533,7 @@ public class MainController {
      * @param stage stage to load with
      */
     private void loadMapView(Stage stage) {
+
         try {
             FXMLLoader webViewLoader = new FXMLLoader(getClass().getResource("/fxml/map.fxml"));
             Parent mapViewParent = webViewLoader.load();
