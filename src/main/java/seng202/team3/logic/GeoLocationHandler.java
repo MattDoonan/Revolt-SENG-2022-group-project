@@ -14,7 +14,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team3.data.entity.Coordinate;
-import seng202.team3.gui.MapHandler;
 
 /**
  * A Singleton Class to handle the geolocation parsing

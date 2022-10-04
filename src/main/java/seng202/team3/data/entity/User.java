@@ -149,4 +149,14 @@ public class User {
                 && u.getCarbonSaved() == this.getCarbonSaved()
                 && u.getLevel().equals(this.getLevel());
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public int hashCode() {
+        int result = (int) (userid ^ (userid >>> 32));
+        result = 31 * result + email.hashCode();
+        result = 31 * result + accountName.hashCode();
+
+        return result;
+    }
 }

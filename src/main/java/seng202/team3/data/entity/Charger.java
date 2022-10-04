@@ -549,4 +549,21 @@ public class Charger {
                 && c.getWarnings().equals(this.getWarnings())
                 && c.getCurrentType().equals(this.getCurrentType());
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public int hashCode() {
+        int result = (int) (chargerId ^ (chargerId >>> 32));
+        result = 31 * result + dateOpened.hashCode();
+        result = 31 * result + name.hashCode();
+        result = 31 * result + connectors.hashCode();
+        result = 31 * result + location.hashCode();
+        result = 31 * result + availableParks;
+        result = 31 * result + timeLimit.hashCode();
+        result = 31 * result + operator.hashCode();
+        result = 31 * result + owner.hashCode();
+        result = 31 * result + currentType.hashCode();
+
+        return result;
+    }
 }

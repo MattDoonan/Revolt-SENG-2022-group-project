@@ -1,17 +1,22 @@
 package seng202.team3.testfx;
 
+import static org.testfx.api.FxAssert.verifyThat;
+
+import java.io.IOException;
+
+import javax.management.InstanceAlreadyExistsException;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.junit.jupiter.api.*;
 import seng202.team3.data.database.SqlInterpreter;
-import seng202.team3.gui.*;
-import javax.management.InstanceAlreadyExistsException;
-import java.io.IOException;
-
-import static org.testfx.api.FxAssert.verifyThat;
+import seng202.team3.gui.LoginSignupController;
+import seng202.team3.gui.MenuController;
 
 /**
  * Runs the Login testFX

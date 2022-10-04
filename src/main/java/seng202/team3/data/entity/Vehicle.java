@@ -244,13 +244,26 @@ public class Vehicle {
                 && v.getOwner() == this.getOwner();
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public int hashCode() {
+        int result = (int) (vehicleId ^ (vehicleId >>> 32));
+        result = 31 * result + make.hashCode();
+        result = 31 * result + model.hashCode();
+        result = 31 * result + batteryPercent.hashCode();
+        result = 31 * result + connectors.hashCode();
+        result = 31 * result + imgPath.hashCode();
+
+        return result;
+    }
+
     /**
      * toString function (mostly for debugging purposes)
      * 
      * @return string representation of vehicle
      */
     public String toString() {
-        return "MAKE: " + make + "  MODEL: " + model + "  MAXRANGE: " + maxRange 
-            + "  ID: " + vehicleId + "  OWNER: " + owner;
+        return "MAKE: " + make + "  MODEL: " + model + "  MAXRANGE: " + maxRange
+                + "  ID: " + vehicleId + "  OWNER: " + owner;
     }
 }

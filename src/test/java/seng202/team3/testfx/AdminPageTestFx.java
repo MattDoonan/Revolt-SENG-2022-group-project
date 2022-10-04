@@ -1,25 +1,26 @@
 package seng202.team3.testfx;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.io.IOException;
+
+import javax.management.InstanceAlreadyExistsException;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.data.entity.User;
 import seng202.team3.gui.AdminController;
 import seng202.team3.logic.AdminManager;
-
-import javax.management.InstanceAlreadyExistsException;
-import java.io.IOException;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * AdminPageTestFx for {@link seng202.team3.gui.AdminController}
@@ -38,7 +39,7 @@ public class AdminPageTestFx extends TestFxBase {
     /**
      * Creates a test database, and sets an admin
      *
-     * @throws IOException I/O exceptions
+     * @throws IOException                    I/O exceptions
      * @throws InstanceAlreadyExistsException if database hasn't been cleaned off
      */
     @BeforeAll
@@ -99,7 +100,6 @@ public class AdminPageTestFx extends TestFxBase {
         manager.makeUsers();
         controller.updateTable();
     }
-
 
     /**
      * Checks the select item and change permissions works
