@@ -234,6 +234,7 @@ public class VehicleUpdateController {
         } else {
             vehicle = new Vehicle();
         }
+        checkForErrors(vehicle);
 
         try {
             vehicle.setMake(makeText.getText());
@@ -254,6 +255,37 @@ public class VehicleUpdateController {
         if (modelText.getText().equals("") && !errors.contains(MODEL_ERROR)) {
             errors.add(MODEL_ERROR);
         }
+
+        if (errors.isEmpty()) {
+            vehicle.setOwner(UserManager.getUser().getUserid());
+            manage.saveVehicle(vehicle);
+            makeText.setText(null);
+            modelText.setText(null);
+            maxRangeText.setText(null);
+            addedConnections.getItems().clear();
+            imgName.setText(null);
+            connections = new ArrayList<>();
+            connectorType.setPromptText("Connector Type");
+        } else {
+            launchErrorPopUps();
+            errors.clear();
+        }
+
+        if (errors.isEmpty()) {
+            selectedVehicle = null;
+            Stage popupStage = (Stage) saveChanges.getScene().getWindow();
+            popupStage.close();
+        }
+
+    }
+
+
+    /**
+     * Checks if there are any errors when a user adds/updates a vehicle.
+     * 
+     * @param vehicle the vehicle to be made
+     */
+    public void checkForErrors(Vehicle vehicle) {
 
         try {
             if (Integer.parseInt(maxRangeText.getText()) < 0) {
@@ -291,27 +323,6 @@ public class VehicleUpdateController {
 
         if (vehicle.getBatteryPercent() == null) {
             vehicle.setBatteryPercent(100.0);
-        }
-
-        if (errors.isEmpty()) {
-            vehicle.setOwner(UserManager.getUser().getUserid());
-            manage.saveVehicle(vehicle);
-            makeText.setText(null);
-            modelText.setText(null);
-            maxRangeText.setText(null);
-            addedConnections.getItems().clear();
-            imgName.setText(null);
-            connections = new ArrayList<>();
-            connectorType.setPromptText("Connector Type");
-        } else {
-            launchErrorPopUps();
-            errors.clear();
-        }
-
-        if (errors.isEmpty()) {
-            selectedVehicle = null;
-            Stage popupStage = (Stage) saveChanges.getScene().getWindow();
-            popupStage.close();
         }
 
     }
