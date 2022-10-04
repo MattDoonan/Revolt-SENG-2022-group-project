@@ -22,7 +22,7 @@ fx:controller="seng202.team3.gui.MiniMapController">
       </Label>
    </top>
    <bottom>
-      <Button onMouseClicked="#getCoordinateWithAddress" mnemonicParsing="false" text="Create" BorderPane.alignment="CENTER">
+      <Button onMouseClicked="#getCoordinateWithAddress" mnemonicParsing="false" text="Create" BorderPane.alignment="CENTER" fx:id="createCharger">
          <font>
             <Font size="17.0" />
          </font>

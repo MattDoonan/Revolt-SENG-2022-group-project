@@ -48,3 +48,8 @@ Feature: User checking there account information
     Given The time limit is hidden
     When The user click select columns and selects show time limit
     Then The time limit field appears
+
+  Scenario: (AT_51) A user 'Charger Owner' permissions wants to register a charger
+    Given The user has a charger they would like to add to the app
+    When the user inputs the charger’s details, and clicks the ‘add charger’ button
+    Then The charger is added to the table

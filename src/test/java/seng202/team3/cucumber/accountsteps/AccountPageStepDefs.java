@@ -21,6 +21,7 @@ import javafx.stage.Stage;
 import org.junit.jupiter.api.Assertions;
 import org.testfx.api.FxRobotException;
 import seng202.team3.cucumber.CucumberFxBase;
+import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
@@ -36,6 +37,7 @@ import seng202.team3.logic.UserManager;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.testfx.api.FxAssert.verifyThat;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -51,6 +53,8 @@ public class AccountPageStepDefs extends CucumberFxBase {
     private static AccountController controller;
 
     static SqlInterpreter db;
+
+    private static List<Object> chargerObject;
 
     /**
      * {@inheritDoc}
@@ -81,7 +85,7 @@ public class AccountPageStepDefs extends CucumberFxBase {
         db.writeUser(new User("Tester@gmail.com",
                 "MrTest", PermissionLevel.USER), "1234");
 
-        List<Object> chargerObject = db.readData(new QueryBuilderImpl().withSource("charger")
+        chargerObject = db.readData(new QueryBuilderImpl().withSource("charger")
                 .build(),
                 Charger.class);
 
@@ -239,6 +243,42 @@ public class AccountPageStepDefs extends CucumberFxBase {
     @Then("The time limit field appears")
     public void checkTimeLimitField() {
         verifyThat("#timeLimitCol", Node::isVisible);
+    }
+
+    @Given("The user has a charger they would like to add to the app")
+    public void goToAddCharger() throws InterruptedException {
+        clickOn("#modChargers");
+        clickOn("#addCharger");
+    }
+
+    @When("the user inputs the charger’s details, and clicks the ‘add charger’ button")
+    public void inputChargerInfo() {
+        clickOn("#name");
+        write("Test Charger");
+        clickOn("#operator");
+        write("Test Op");
+        clickOn("#address");
+        write("11 Test addy");
+        clickOn("#open24");
+        clickOn("#parks");
+        write("5");
+        clickOn("#time");
+        write("240");
+        clickOn("#lat");
+        write("1.1");
+        clickOn("#lon");
+        write("1.1");
+        clickOn("#saveButton");
+    }
+
+    @Then("The charger is added to the table")
+    public void checkTableForCharger() throws IOException {
+        List<Object> newCharger = db.readData(new QueryBuilderImpl().withSource("charger")
+                        .withFilter("name", "Test Charger", ComparisonType.EQUAL)
+                        .build(),
+                Charger.class);
+        assertFalse(chargerObject.contains(newCharger));
+
     }
 
 }
