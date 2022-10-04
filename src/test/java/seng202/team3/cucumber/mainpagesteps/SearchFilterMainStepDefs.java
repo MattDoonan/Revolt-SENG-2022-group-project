@@ -116,7 +116,7 @@ public class SearchFilterMainStepDefs extends CucumberFxBase {
     @Then("No results are listed")
     public void noResults() {
         ObservableList<Charger> chargers = controller.getManager().getData();
-        assertTrue(chargers.size() == 0);
+        assertTrue(chargers.isEmpty());
     }
 
     @When("The user filters for charging cost")

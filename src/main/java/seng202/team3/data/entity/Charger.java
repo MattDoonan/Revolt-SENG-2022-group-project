@@ -5,6 +5,7 @@ import com.opencsv.bean.CsvBindByName;
 import com.opencsv.bean.CsvCustomBindByName;
 import com.opencsv.bean.CsvRecurse;
 import java.util.ArrayList;
+import java.util.List;
 import seng202.team3.logic.UserManager;
 
 /**
@@ -31,7 +32,7 @@ public class Charger {
     @CsvBindAndSplitByName(column = "connectorsList", elementType = Connector.class, 
                             splitOn = ",(?=( )*\\{)", converter = ConnectorConverter.class, 
                             required = true)
-    private ArrayList<Connector> connectors;
+    private List<Connector> connectors;
 
     /** {@link Coordinate Coordinate} information for the charger */
     @CsvRecurse
@@ -114,7 +115,7 @@ public class Charger {
      * @param hasChargeCost  bool indicating if it has a charge cost
      * @param hasParkingCost bool indicating if it has a parking cost
      */
-    public Charger(ArrayList<Connector> connectors, String name, Coordinate location,
+    public Charger(List<Connector> connectors, String name, Coordinate location,
             int availableParks, Double timeLimit, String operator, String dateOpened,
             boolean hasAttraction, boolean is24Hrs, boolean hasChargeCost, boolean hasParkingCost) {
         this.connectors = connectors;
@@ -122,7 +123,6 @@ public class Charger {
         setAvailableParks(availableParks);
         setTimeLimit(timeLimit);
         setOperator(operator);
-        setPublic(false); // TODO: retrieve from data once implemented
         setHasAttraction(hasAttraction);
         setName(name);
         setDateOpened(dateOpened);
@@ -196,7 +196,7 @@ public class Charger {
      *
      * @return list of attached connectors
      */
-    public ArrayList<Connector> getConnectors() {
+    public List<Connector> getConnectors() {
         return connectors;
     }
 
@@ -452,8 +452,8 @@ public class Charger {
      *
      * @return ArrayList of boolean warnings
      */
-    public ArrayList<String> getWarnings() {
-        ArrayList<String> warnings = new ArrayList<String>();
+    public List<String> getWarnings() {
+        ArrayList<String> warnings = new ArrayList<>();
         if (this.warningHighCost) {
             warnings.add("high cost");
         }
@@ -494,15 +494,19 @@ public class Charger {
                 types.add(c.getCurrent());
             }
         }
-        currentType = "";
+
         if (types.size() > 1) {
+            StringBuilder str = new StringBuilder();
+
             for (String type : types) {
                 if (types.indexOf(type) == 0) {
-                    currentType += type;
+                    str.append(type);
                 } else {
-                    currentType += " " + type;
+                    str.append(" " + type);
                 }
             }
+
+            this.currentType = str.toString();
         } else {
             currentType = types.get(0);
         }
@@ -553,7 +557,7 @@ public class Charger {
     /** {@inheritDoc} */
     @Override
     public int hashCode() {
-        int result = (int) (chargerId ^ (chargerId >>> 32));
+        int result = (chargerId ^ (chargerId >>> 32));
         result = 31 * result + dateOpened.hashCode();
         result = 31 * result + name.hashCode();
         result = 31 * result + connectors.hashCode();

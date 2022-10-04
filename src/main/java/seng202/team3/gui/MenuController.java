@@ -69,6 +69,33 @@ public class MenuController {
     private static MainController controller;
 
     /**
+     * Action background style
+     */
+    private static final String ACTION_BCKGND_STYLE = "-fx-background-color: #e06666;";
+
+    /**
+     * Nav hover styling
+     */
+    private static final String HOVER_STYLE = "-fx-text-fill:#000000; -fx-font-size: 26px; "
+            + ACTION_BCKGND_STYLE;
+
+    /**
+     * Nav exit hover styling
+     */
+    private static final String EXIT_STYLE = "-fx-text-fill:#ffffff;-fx-font-size: 24px; "
+            + ACTION_BCKGND_STYLE;
+
+    /**
+     * Login Source path
+     */
+    private static final String LOGIN_PATH = "/fxml/login.fxml";
+
+    /**
+     * Login title text
+     */
+    private static final String LOGIN_TITLE = "Login";
+
+    /**
      * unused constructor
      */
     public MenuController() {
@@ -89,64 +116,56 @@ public class MenuController {
      * buttons
      */
     public void menuHover() {
-        menuButton.setStyle("-fx-text-fill:#000000; -fx-font-size: 26px; "
-                + "-fx-background-color: #e06666;");
+        menuButton.setStyle(HOVER_STYLE);
     }
 
     /**
      * menuExit.
      */
     public void menuExit() {
-        menuButton.setStyle("-fx-text-fill:#ffffff;-fx-font-size: 24px; "
-                + "-fx-background-color: #e06666;");
+        menuButton.setStyle(EXIT_STYLE);
     }
 
     /**
      * vehicleHover.
      */
     public void vehicleHover() {
-        vehicleButton.setStyle("-fx-text-fill:#000000;-fx-font-size: 26px; "
-                + "-fx-background-color: #e06666;");
+        vehicleButton.setStyle(HOVER_STYLE);
     }
 
     /**
      * vehicleExit.
      */
     public void vehicleExit() {
-        vehicleButton.setStyle("-fx-text-fill:#ffffff;-fx-font-size: 24px; "
-                + "-fx-background-color: #e06666;");
+        vehicleButton.setStyle(EXIT_STYLE);
     }
 
     /**
      * accountHover.
      */
     public void accountHover() {
-        accountPage.setStyle("-fx-text-fill:#000000;-fx-font-size: 26px; "
-                + "-fx-background-color: #e06666;");
+        accountPage.setStyle(HOVER_STYLE);
     }
 
     /**
      * accountExit.
      */
     public void accountExit() {
-        accountPage.setStyle("-fx-text-fill:#ffffff;-fx-font-size: 24px; "
-                + "-fx-background-color: #e06666;");
+        accountPage.setStyle(EXIT_STYLE);
     }
 
     /**
      * loginHover.
      */
     public void loginHover() {
-        loginSignout.setStyle("-fx-text-fill:#000000;-fx-font-size: 26px; "
-                + "-fx-background-color: #e06666;");
+        loginSignout.setStyle(HOVER_STYLE);
     }
 
     /**
      * loginExit.
      */
     public void loginExit() {
-        loginSignout.setStyle("-fx-text-fill:#ffffff;-fx-font-size: 24px; "
-                + "-fx-background-color: #e06666;");
+        loginSignout.setStyle(EXIT_STYLE);
     }
 
     /**
@@ -156,7 +175,7 @@ public class MenuController {
         try {
             FXMLLoader mainScene = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
             Parent mainNode = mainScene.load();
-            controller = mainScene.getController();
+            setController(mainScene.getController());
             menuWindow.setCenter(mainNode);
             controller.init(stage, menuWindow);
             MainWindow.setController(controller);
@@ -177,6 +196,15 @@ public class MenuController {
     }
 
     /**
+     * Sets the static Main Controller
+     *
+     * @param c controller to set static
+     */
+    private static void setController(MainController c) {
+        controller = c;
+    }
+
+    /**
      * Loads the home upon clicking
      */
     @FXML
@@ -190,17 +218,17 @@ public class MenuController {
     public void loadVehicleScreen() {
         try {
             if (UserManager.getUser() == UserManager.getGuest()) {
-                createLoginWindow("/fxml/login.fxml", "Login", null, null);
+                createLoginWindow(LOGIN_PATH, LOGIN_TITLE, null, null);
                 logManager.warn("Must be logged in to access this feature");
             }
             if (UserManager.getUser() != UserManager.getGuest()) {
                 FXMLLoader garageLoader = new FXMLLoader(getClass()
                         .getResource("/fxml/garage.fxml"));
                 Parent garageViewParent = garageLoader.load();
-                GarageController controller = garageLoader.getController();
-                controller.init();
+                GarageController garageController = garageLoader.getController();
+                garageController.init();
                 menuWindow.setCenter(garageViewParent);
-                MainWindow.setController(controller);
+                MainWindow.setController(garageController);
                 logManager.info("Switched to Garage screen");
             }
         } catch (IOException e) {
@@ -214,7 +242,7 @@ public class MenuController {
     @FXML
     public void loginOut() {
         if (UserManager.getUser() == UserManager.getGuest()) {
-            createLoginWindow("/fxml/login.fxml", "Login", null, null);
+            createLoginWindow(LOGIN_PATH, LOGIN_TITLE, null, null);
         } else {
             signOut();
         }
@@ -277,17 +305,17 @@ public class MenuController {
     public void loadAccountScreen() {
         try {
             if (UserManager.getUser() == UserManager.getGuest()) {
-                createLoginWindow("/fxml/login.fxml", "Login", null, null);
+                createLoginWindow(LOGIN_PATH, LOGIN_TITLE, null, null);
                 logManager.warn("Must be logged in to access this feature");
             }
             if (UserManager.getUser() != UserManager.getGuest()) {
                 FXMLLoader accountLoader = new FXMLLoader(getClass()
                         .getResource("/fxml/account.fxml"));
                 Parent accountViewParent = accountLoader.load();
-                AccountController controller = accountLoader.getController();
-                controller.init(menuWindow);
+                AccountController accController = accountLoader.getController();
+                accController.init(menuWindow);
                 menuWindow.setCenter(accountViewParent);
-                MainWindow.setController(controller);
+                MainWindow.setController(accController);
                 logManager.info("Switched to Account screen");
             }
         } catch (IOException e) {
@@ -304,7 +332,6 @@ public class MenuController {
         UserManager.setUser(u);
         loginSignout.setText("Logout");
         logManager.info("User has been successfully signed in");
-        // TODO: kill pop up
     }
 
     /**
@@ -312,7 +339,7 @@ public class MenuController {
      */
     public void signOut() {
         UserManager.setUser(UserManager.getGuest());
-        loginSignout.setText("Login");
+        loginSignout.setText(LOGIN_TITLE);
         initHome();
         logManager.info("The user has been successfully logged out");
     }

@@ -239,7 +239,7 @@ public class Journey {
     /** {@inheritDoc} */
     @Override
     public int hashCode() {
-        int result = (int) (journeyId ^ (journeyId >>> 32));
+        int result = (journeyId ^ (journeyId >>> 32));
         result = 31 * result + chargers.hashCode();
         result = 31 * result + vehicle.hashCode();
         result = 31 * result + startPosition.hashCode();

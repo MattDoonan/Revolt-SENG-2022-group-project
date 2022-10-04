@@ -153,7 +153,7 @@ public class User {
     /** {@inheritDoc} */
     @Override
     public int hashCode() {
-        int result = (int) (userid ^ (userid >>> 32));
+        int result = (userid ^ (userid >>> 32));
         result = 31 * result + email.hashCode();
         result = 31 * result + accountName.hashCode();
 

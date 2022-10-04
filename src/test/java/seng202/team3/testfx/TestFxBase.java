@@ -31,7 +31,7 @@ public abstract class TestFxBase extends ApplicationTest {
     @BeforeAll
     public static void setUp() throws Exception {
         // Disable map by default
-        MapHandler.MAP_REQUEST = false;
+        MapHandler.setMapRequested(false);
         ApplicationTest.launch(MainWindow.class);
     }
 

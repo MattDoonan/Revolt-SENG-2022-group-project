@@ -123,7 +123,7 @@ public class VehicleManagementStepDefs extends CucumberFxBase {
         }
 
         assertTrue(db.readData(q,
-                Vehicle.class).size() == 0);
+                Vehicle.class).isEmpty());
     }
 
     @When("I navigate to the vehicle screen")
@@ -134,7 +134,7 @@ public class VehicleManagementStepDefs extends CucumberFxBase {
     @Then("I am shown an empty garage")
     public void iAmShownAnEmptyGarage() {
         controller = (GarageController) MainWindow.getController();
-        assertTrue(controller.getManage().getData().size() == 0);
+        assertTrue(controller.getManage().getData().isEmpty());
     }
 
     @Given("I click add new vehicle")
@@ -203,7 +203,7 @@ public class VehicleManagementStepDefs extends CucumberFxBase {
     public void iCanNoLongerSeeTheVehicle() {
         iNavigateToTheVehicleScreen();
         controller = (GarageController) MainWindow.getController();
-        assertTrue(controller.getManage().getData().size() == 0);
+        assertTrue(controller.getManage().getData().isEmpty());
     }
 
     @When("I edit the vehicle")

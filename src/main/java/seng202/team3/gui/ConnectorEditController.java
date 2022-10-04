@@ -71,11 +71,6 @@ public class ConnectorEditController {
     private ArrayList<String> errors = new ArrayList<>();
 
     /**
-     * Active screen
-     */
-    private Stage stage;
-
-    /**
      * Initialises the Controller editing
      */
     public ConnectorEditController() {
@@ -157,8 +152,7 @@ public class ConnectorEditController {
                     controller.getConnectors().set(i, changedConnector);
                 }
             }
-        }
-        if (errors.isEmpty()) {
+
             controller.resetPage();
         } else {
             launchErrorPopUps();
@@ -178,7 +172,7 @@ public class ConnectorEditController {
      * Launches an error popup when trying to do illegal things
      */
     public void launchErrorPopUps() {
-        stage = (Stage) statusField.getScene().getWindow();
+        Stage stage = (Stage) statusField.getScene().getWindow();
         try {
             stage.setAlwaysOnTop(false);
             FXMLLoader error = new FXMLLoader(getClass().getResource(

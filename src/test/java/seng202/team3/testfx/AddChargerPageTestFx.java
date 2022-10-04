@@ -93,7 +93,7 @@ public class AddChargerPageTestFx extends TestFxBase {
      */
     @Test
     public void addChargerFail() {
-        GeoLocationHandler.getInstance().setCoordinate(new Coordinate(1.1, 2.3, -43.60, 172.572), "Trial location");
+        GeoLocationHandler.setCoordinate(new Coordinate(1.1, 2.3, -43.60, 172.572), "Trial location");
         clickOn("#saveButton");
         clickOn("#okay");
     }
@@ -103,7 +103,7 @@ public class AddChargerPageTestFx extends TestFxBase {
      */
     @Test
     public void addChargerSuccess() {
-        GeoLocationHandler.getInstance().setCoordinate(new Coordinate(1.1, 2.3, -43.60, 172.572), "Trial location");
+        GeoLocationHandler.setCoordinate(new Coordinate(1.1, 2.3, -43.60, 172.572), "Trial location");
         clickOn("#name");
         write("Trial");
         clickOn("#operator");

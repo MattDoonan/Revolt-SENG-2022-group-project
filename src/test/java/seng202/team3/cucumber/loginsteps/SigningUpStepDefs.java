@@ -96,7 +96,7 @@ public class SigningUpStepDefs extends CucumberFxBase {
                 .withSource("user")
                 .withFilter("username", username, ComparisonType.EQUAL).build(),
                 User.class);
-        assertTrue(users.size() == 0);
+        assertTrue(users.isEmpty());
     }
 
     @When("I enter my details username: {string} email: {string} password: {string}")

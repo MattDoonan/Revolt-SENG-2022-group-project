@@ -191,7 +191,7 @@ public class Connector {
     /** {@inheritDoc} */
     @Override
     public int hashCode() {
-        int result = (int) (connectorId ^ (connectorId >>> 32));
+        int result = (connectorId ^ (connectorId >>> 32));
         result = 31 * result + type.hashCode();
         result = 31 * result + current.hashCode();
         result = 31 * result + powerDraw.hashCode();

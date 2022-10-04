@@ -54,6 +54,11 @@ public class MapViewController extends MapHandler {
     private Button addButton;
 
     /**
+     * JavaScript function to add selected location to route
+     */
+    private static final String ADD_LOCATION_TO_ROUTE = "addLocationToRoute";
+
+    /**
      * unused constructor
      */
     public MapViewController() {
@@ -96,7 +101,7 @@ public class MapViewController extends MapHandler {
             userId = UserManager.getUser().getUserid();
         }
 
-        if (!MapHandler.MAP_REQUEST || javaScriptConnector == null) {
+        if (Boolean.TRUE.equals(!MapHandler.isMapRequested()) || javaScriptConnector == null) {
             return;
         }
 
@@ -125,12 +130,12 @@ public class MapViewController extends MapHandler {
      * @param coordinate the coordinate which is clicked
      */
     public void makeCoordinate(Coordinate coordinate) {
-        if (MapHandler.MAP_REQUEST) {
+        if (Boolean.TRUE.equals(MapHandler.isMapRequested())) {
             javaScriptConnector.call("removeCoordinate");
             javaScriptConnector.call("addCoordinate", "Current Coordinate: ",
                     coordinate.getLat(), coordinate.getLon());
             javaScriptConnector.call("addCoordinateName");
-            if (locationAccepted) {
+            if (Boolean.TRUE.equals(MapHandler.getLocationAccepted())) {
                 javaScriptConnector.call("changeZoom");
             }
             changePosition(coordinate);
@@ -146,11 +151,11 @@ public class MapViewController extends MapHandler {
      * Adds the coordinate name to the selected point
      */
     public void addCoordinateName() {
-        if (MapHandler.MAP_REQUEST) {
+        if (Boolean.TRUE.equals(MapHandler.isMapRequested())) {
             javaScriptConnector.call("addCoordinate",
-                    GeoLocationHandler.getInstance().getCoordinate().getAddress(),
-                    GeoLocationHandler.getInstance().getCoordinate().getLat(),
-                    GeoLocationHandler.getInstance().getCoordinate().getLon());
+                    GeoLocationHandler.getCoordinate().getAddress(),
+                    GeoLocationHandler.getCoordinate().getLat(),
+                    GeoLocationHandler.getCoordinate().getLon());
         } else {
             logManager.info("Map Unavailable: Could not name point");
         }
@@ -164,7 +169,7 @@ public class MapViewController extends MapHandler {
      * @param coordinate a {@link seng202.team3.data.entity.Coordinate} object
      */
     public void changePosition(Coordinate coordinate) {
-        if (MapHandler.MAP_REQUEST) {
+        if (Boolean.TRUE.equals(MapHandler.isMapRequested())) {
             javaScriptConnector.call("movePosition",
                     coordinate.getLat(), coordinate.getLon());
         }
@@ -186,14 +191,14 @@ public class MapViewController extends MapHandler {
      */
     public void addRouteToCharger() {
         routeDisplayed = true;
-        if (MapHandler.MAP_REQUEST) {
+        if (Boolean.TRUE.equals(MapHandler.isMapRequested())) {
             Coordinate coord = map.getController().getPosition();
             Charger charger = map.getController().getSelectedCharger();
             if (charger != null) {
                 Coordinate chargerCoord = charger.getLocation();
-                javaScriptConnector.call("addLocationToRoute", coord.getLat(), coord.getLon(),
+                javaScriptConnector.call(ADD_LOCATION_TO_ROUTE, coord.getLat(), coord.getLon(),
                         coord.getAddress(), "p", 0);
-                javaScriptConnector.call("addLocationToRoute",
+                javaScriptConnector.call(ADD_LOCATION_TO_ROUTE,
                         chargerCoord.getLat(), chargerCoord.getLon(),
                         charger.getChargerId(), "c", 1);
                 javaScriptConnector.call("addRoute");
@@ -210,7 +215,7 @@ public class MapViewController extends MapHandler {
      */
     private void removeRoute() {
         routeDisplayed = false;
-        if (MapHandler.MAP_REQUEST) {
+        if (Boolean.TRUE.equals(MapHandler.isMapRequested())) {
             javaScriptConnector.call("removeRoute");
         } else {
             logManager.info("Map Unavailable: Could not remove route");
@@ -223,9 +228,9 @@ public class MapViewController extends MapHandler {
      * @param coordinate the coordinate of the stop to add
      */
     public void addStopInRoute(Coordinate coordinate) {
-        if (MapHandler.MAP_REQUEST) {
-            javaScriptConnector.call("addLocationToRoute", coordinate.getLat(), coordinate.getLon(),
-                    "Stop", "p", 1);
+        if (Boolean.TRUE.equals(MapHandler.isMapRequested())) {
+            javaScriptConnector.call(ADD_LOCATION_TO_ROUTE, coordinate.getLat(),
+                    coordinate.getLon(), "Stop", "p", 1);
             logManager.info("Stop added to route");
         } else {
             logManager.info("Map Unavailable: Could not add stop");
@@ -286,7 +291,7 @@ public class MapViewController extends MapHandler {
         } catch (IOException e) {
             logManager.error(e.getMessage());
         } finally {
-            if (MapHandler.MAP_REQUEST) {
+            if (Boolean.TRUE.equals(MapHandler.isMapRequested())) {
                 addChargersOnMap();
                 addCoordinateName();
             }
@@ -303,7 +308,7 @@ public class MapViewController extends MapHandler {
             return;
         }
 
-        if (MapHandler.MAP_REQUEST) {
+        if (Boolean.TRUE.equals(MapHandler.isMapRequested())) {
             loadPromptScreens("Search an address or click on the map\n"
                     + "and confirm to add a charger: \n\n", "add");
         } else {
@@ -316,13 +321,13 @@ public class MapViewController extends MapHandler {
      */
     @FXML
     public void getLocation() {
-        if (locationAccepted == null || !locationAccepted) {
-            setLocationAccepted(null);
+        if (MapHandler.getLocationAccepted() == null || !MapHandler.getLocationAccepted()) {
+            MapHandler.setLocationAccepted(null);
         }
         this.getUserLocation();
         map.getController().setPosition();
 
-        makeCoordinate(GeoLocationHandler.getInstance().getCoordinate());
+        makeCoordinate(GeoLocationHandler.getCoordinate());
     }
 
 }

@@ -35,7 +35,7 @@ public abstract class CucumberFxBase extends ApplicationTest {
      */
     public static void setup() throws Exception {
         // Disable map by default
-        MapHandler.MAP_REQUEST = false;
+        MapHandler.setMapRequested(false);
 
         // Prevent application from loading with actual database
         SqlInterpreter.removeInstance();

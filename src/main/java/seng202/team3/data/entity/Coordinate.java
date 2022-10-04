@@ -176,7 +176,7 @@ public class Coordinate {
     /** {@inheritDoc} */
     @Override
     public int hashCode() {
-        int result = (int) (1 ^ (1 >>> 32));
+        int result = (1 ^ (1 >>> 32));
         result = 31 * result + xpos.hashCode();
         result = 31 * result + ypos.hashCode();
         result = 31 * result + lat.hashCode();

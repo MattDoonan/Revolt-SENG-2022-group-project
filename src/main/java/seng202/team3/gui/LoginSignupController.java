@@ -134,6 +134,26 @@ public class LoginSignupController {
     private Label invalidSignup;
 
     /**
+     * Styling for invalid fields
+     */
+    private static final String INVALID_STYLE = "-fx-border-color: #ff0000;";
+
+    /**
+     * Login label text
+     */
+    private static final String LOGIN_LABEL = "login";
+
+    /**
+     * Sign up label text
+     */
+    private static final String SIGNUP_LABEL = "signup";
+
+    /**
+     * Confirm label text
+     */
+    private static final String SIGNUP_CONFIRM_LABEL = "signupconf";
+
+    /**
      * Initialises the sign up
      */
     public LoginSignupController() {
@@ -175,10 +195,10 @@ public class LoginSignupController {
     public void init(MenuController menuControl) {
         this.menuControl = menuControl;
         if (showPassLogin != null) {
-            setIcon("login", "show");
+            setIcon(LOGIN_LABEL, "show");
         } else if (showPassSignup != null) {
-            setIcon("signup", "show");
-            setIcon("signupconf", "show");
+            setIcon(SIGNUP_LABEL, "show");
+            setIcon(SIGNUP_CONFIRM_LABEL, "show");
         }
     }
 
@@ -190,27 +210,28 @@ public class LoginSignupController {
     public void signUp() {
         Boolean fail = false;
         if (!UserManager.checkEmail(signupEmailField.getText())) {
-            signupEmailField.setStyle("-fx-border-color: #ff0000;");
+            signupEmailField.setStyle(INVALID_STYLE);
             fail = true;
         }
         if (signupUsernameField.getText().isEmpty()) {
-            signupUsernameField.setStyle("-fx-border-color: #ff0000;");
+            signupUsernameField.setStyle(INVALID_STYLE);
             fail = true;
         }
         if (signupPasswordField.getText().length() < 4) {
-            signupPasswordField.setStyle("-fx-border-color: #ff0000;");
-            confPassField.setStyle("-fx-border-color: #ff0000;");
+            signupPasswordField.setStyle(INVALID_STYLE);
+            confPassField.setStyle(INVALID_STYLE);
             fail = true;
         }
         if (!signupPasswordField.getText().equals(confPassField.getText())) {
-            confPassField.setStyle("-fx-border-color: #ff0000;");
+            confPassField.setStyle(INVALID_STYLE);
             fail = true;
         }
-        if (fail) {
+        if (Boolean.TRUE.equals(fail)) {
             invalidSignup.setVisible(true);
             logManager.warn("Incorrect user details");
             return;
         }
+
         User user = new User();
         user.setAccountName(signupUsernameField.getText());
         user.setEmail(signupEmailField.getText());
@@ -301,17 +322,17 @@ public class LoginSignupController {
             case "showLoginPassword":
                 passTextField = showPassLogin;
                 passField = loginPasswordField;
-                popup = "login";
+                popup = LOGIN_LABEL;
                 break;
             case "showPassSignup":
                 passTextField = showPassFieldSignup;
                 passField = signupPasswordField;
-                popup = "signup";
+                popup = SIGNUP_LABEL;
                 break;
             case "showConfPassSignup":
                 passTextField = showConfPassFieldSignup;
                 passField = confPassField;
-                popup = "signupconf";
+                popup = SIGNUP_CONFIRM_LABEL;
                 break;
             default:
                 break;
@@ -336,11 +357,11 @@ public class LoginSignupController {
      */
     public void setIcon(String popup, String type) {
         Button button = new Button();
-        if (popup.equals("login")) {
+        if (popup.equals(LOGIN_LABEL)) {
             button = showLoginPassword;
-        } else if (popup.equals("signup")) {
+        } else if (popup.equals(SIGNUP_LABEL)) {
             button = showPassSignup;
-        } else if (popup.equals("signupconf")) {
+        } else if (popup.equals(SIGNUP_CONFIRM_LABEL)) {
             button = showConfPassSignup;
         }
         if (type.equals("show")) {
@@ -391,19 +412,20 @@ public class LoginSignupController {
             BigInteger no = new BigInteger(1, messageDigest);
 
             // Convert message digest into hex value
-            String hashtext = no.toString(16);
-
+            StringBuilder hashtext = new StringBuilder();
+            hashtext.append(no.toString(16));
             // Add preceding 0s to make it 32 bit
             while (hashtext.length() < 32) {
-                hashtext = "0" + hashtext;
+                hashtext.insert(0, '0');
             }
 
             // return the HashText
-            return hashtext;
+            return hashtext.toString();
 
         } catch (NoSuchAlgorithmException e) {
             // For specifying wrong message digest algorithms
-            throw new RuntimeException(e);
+            logManager.error(e.getMessage());
+            return null;
         }
     }
 
