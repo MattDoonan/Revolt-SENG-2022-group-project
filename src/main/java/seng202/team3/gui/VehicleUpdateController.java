@@ -60,12 +60,6 @@ public class VehicleUpdateController {
     private TextField maxRangeText;
 
     /**
-     * The textfield for the vehicle's current charge
-     */
-    @FXML
-    private TextField currChargeText;
-
-    /**
      * Lable to display the name of the chosen vehicle image
      */
     @FXML
@@ -213,17 +207,6 @@ public class VehicleUpdateController {
         } catch (NumberFormatException e) {
             errors.add("A vehicle's maximum range must be a whole number.");
         }
-        try {
-            if (Double.parseDouble(currChargeText.getText()) < 0) {
-                errors.add("A vehicle's current charge cannot be negative.");
-            } else {
-                vehicle.setBatteryPercent(Double.parseDouble(currChargeText.getText()));
-            }
-        } catch (NumberFormatException e) {
-            if (!currChargeText.getText().equals("")) {
-                errors.add("A vehicle's current charge must be a number.");
-            }
-        }
         if (connections.isEmpty()) {
             errors.add("A vehicle must have at least one connector.");
         } else {
@@ -235,9 +218,7 @@ public class VehicleUpdateController {
             vehicle.setImgPath("/images/car_one.png");
         }
 
-        if (vehicle.getBatteryPercent() == null) {
-            vehicle.setBatteryPercent(100.0);
-        }
+        vehicle.setBatteryPercent(100.0);
 
         if (errors.isEmpty()) {
             manage.saveVehicle(vehicle);
@@ -453,7 +434,7 @@ public class VehicleUpdateController {
             makeText.setText(vehicle.getMake());
             modelText.setText(vehicle.getModel());
             maxRangeText.setText(Integer.toString(vehicle.getMaxRange()));
-            currChargeText.setText(vehicle.getBatteryPercent().toString());
+            // currChargeText.setText(vehicle.getBatteryPercent().toString());
             imgName.setText(vehicle.getImgPath().replace("/images/", ""));
             selectedImg = vehicle.getImgPath().replace("/images/", "");
             connections = vehicle.getConnectors();
