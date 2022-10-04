@@ -69,7 +69,7 @@
                   <Insets left="7.0" />
                </padding>
             </Label>
-            <ComboBox fx:id="connectorType" prefHeight="26.0" prefWidth="150.0" promptText="Connector Type" GridPane.columnIndex="1" GridPane.rowIndex="5">
+            <ComboBox fx:id="connectorType" onAction="#enableConnectorBtn" prefHeight="26.0" prefWidth="150.0" promptText="Connector Type" GridPane.columnIndex="1" GridPane.rowIndex="5">
                <items>
                   <FXCollections fx:factory="observableArrayList">
                      <String fx:id="Type_1_Teth" fx:value="Type 1 Tethered" />
@@ -83,7 +83,7 @@
                   </FXCollections>
                </items>
             </ComboBox>
-            <Button fx:id="addConnectionBtn" mnemonicParsing="false" onAction="#launchConnector" text="Add Connection" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <Button fx:id="addConnectionBtn" disable="true" mnemonicParsing="false" onAction="#launchConnector" text="Add Connection" GridPane.columnIndex="1" GridPane.rowIndex="6" />
             <Label fx:id="imgName" prefHeight="26.0" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <TextField fx:id="makeText" promptText="Make" GridPane.columnIndex="1" />
             <TextField fx:id="modelText" prefHeight="26.0" prefWidth="150.0" promptText="Model" GridPane.columnIndex="1" GridPane.rowIndex="1" />

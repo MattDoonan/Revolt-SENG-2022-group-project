@@ -76,6 +76,12 @@ public class VehicleUpdateController {
      */
     @FXML
     private ComboBox<String> connectorType;
+    
+    /**
+     * Button to save a connector
+     */
+    @FXML
+    private Button addConnectionBtn;
 
     /**
      * Button to save the changes to the database
@@ -240,9 +246,17 @@ public class VehicleUpdateController {
             Stage popupStage = (Stage) saveChanges.getScene().getWindow();
             popupStage.close();
         }
-
-        errorFlag = 0;
     }
+
+    /**
+     * Enables the addConnector button
+     */
+    @FXML
+    public void enableConnectorBtn() {
+        addConnectionBtn.setDisable(false);
+    }
+
+
 
     /**
      * Adds a new connection (for an EV) when the button is clicked
@@ -309,6 +323,7 @@ public class VehicleUpdateController {
                 connectorPopup.showAndWait();
             } finally {
                 connectorPopup = new Stage();
+                addConnectionBtn.setDisable(true);
                 // refresh();
             }
         }
