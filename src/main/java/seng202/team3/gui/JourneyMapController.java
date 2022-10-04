@@ -22,6 +22,13 @@ public class JourneyMapController extends MapHandler {
     private JourneyManager journeyManager;
 
     /**
+     * Constructor for this class
+     */
+    public JourneyMapController() {
+        // unused
+    }
+
+    /**
      * Initialise the map view
      *
      * @param stage top level container for this window
@@ -112,8 +119,8 @@ public class JourneyMapController extends MapHandler {
 
         javaScriptConnector.call("removeRoute");
 
-        Coordinate start = journeyManager.getStart();
-        Coordinate end = journeyManager.getEnd();
+        Coordinate start = journeyManager.getSelectedJourney().getStartPosition();
+        Coordinate end = journeyManager.getSelectedJourney().getEndPosition();
 
         if (start != null && end != null) {
 

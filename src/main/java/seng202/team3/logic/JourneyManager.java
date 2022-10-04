@@ -21,13 +21,6 @@ public class JourneyManager extends ChargerHandler {
     /** {@link Journey Journey} which is the currently selected journey */
     private Journey selectedJourney;
 
-    /** Staring {@link Coordinate coordinate} of journey */
-    private Coordinate start;
-
-    /** Ending {@link Coordinate coordinate} of journey */
-    private Coordinate end;
-
-
     // private Coordinate tempPosition;
 
     /** List of {@link Charger chargers} that are candidates for journey*/
@@ -78,46 +71,11 @@ public class JourneyManager extends ChargerHandler {
     // }
 
     /**
-     * Gets start position
-     *
-     * @return start of journey
-     */
-    public Coordinate getStart() {
-        return selectedJourney.getStartPosition();
-    }
-
-    /**
-     * Sets start point of journey
-     *
-     * @param start start of journey
-     */
-    public void setStart(Coordinate start) {
-        selectedJourney.setStartPosition(start);
-    }
-
-    /**
-     * Gets end position
-     *
-     * @return end of journey
-     */
-    public Coordinate getEnd() {
-        return selectedJourney.getEndPosition();
-    }
-
-    /**
-     * Sets end point of journey
-     *
-     * @param end end of journey
-     */
-    public void setEnd(Coordinate end) {
-        selectedJourney.setEndPosition(end);
-    }
-
-    /**
-     * Initialises a new Journey
+     * Initialises a new Journeymv
      */
     public void startNewJourney() {
-        if ((start != null) && (end != null)) {
+        if ((selectedJourney.getStartPosition() != null) 
+            && (selectedJourney.getEndPosition() != null)) {
             selectedJourney = new Journey();
         }
     }
@@ -173,8 +131,6 @@ public class JourneyManager extends ChargerHandler {
      */
     public void clearJourney() {
         selectedJourney = new Journey();
-        setStart(null);
-        setEnd(null);
     }
 
     /**
@@ -183,7 +139,6 @@ public class JourneyManager extends ChargerHandler {
     public void saveJourney() {
         try {
             SqlInterpreter.getInstance().writeJourney(selectedJourney);
-            //TODO fix vehicle stuff?
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -196,11 +151,11 @@ public class JourneyManager extends ChargerHandler {
      */
     public boolean checkDistanceBetweenChargers() {
         ArrayList<Coordinate> coordinates = new ArrayList<>();
-        coordinates.add(this.getStart());
+        coordinates.add(selectedJourney.getStartPosition());
         for (Charger charger : this.getSelectedJourney().getChargers()) {
             coordinates.add(charger.getLocation());
         }
-        coordinates.add(this.getEnd());
+        coordinates.add(selectedJourney.getEndPosition());
         boolean error = Calculations.calculateDistance(coordinates.get(0), coordinates.get(1))
                 >= this.getSelectedJourney().getVehicle().getCurrentRange();
 

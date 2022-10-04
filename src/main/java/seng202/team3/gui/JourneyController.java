@@ -118,6 +118,13 @@ public class JourneyController {
     private JourneyManager journeyManager;
 
     /**
+     * Constructor for this class
+     */
+    public JourneyController() {
+        // unused
+    }
+    
+    /**
      * Initialize the window
      *
      * @param stage Top level container for this window
@@ -169,11 +176,11 @@ public class JourneyController {
      */
     public void setStart() {
         mapController.addStartMarker();
-        journeyManager.setStart(journeyManager.getPosition());
+        journeyManager.getSelectedJourney().setStartPosition(journeyManager.getPosition());
         makeStart.setDisable(true);
         startLabel.setText("Start position: " + journeyManager.getPosition().getAddress());
         mapController.addChargersAroundPoint(journeyManager.getPosition());
-        if (journeyManager.getEnd() != null) {
+        if (journeyManager.getSelectedJourney().getEndPosition() != null) {
             calculateRoute();
         }
     }
@@ -184,10 +191,10 @@ public class JourneyController {
      */
     public void setDestination() {
         mapController.addEndMarker();
-        journeyManager.setEnd(journeyManager.getPosition());
+        journeyManager.getSelectedJourney().setEndPosition(journeyManager.getPosition());
         makeEnd.setDisable(true);
         endLabel.setText("End position: " + journeyManager.getPosition().getAddress());
-        if (journeyManager.getStart() != null) {
+        if (journeyManager.getSelectedJourney().getStartPosition() != null) {
             calculateRoute();
         }
     }
@@ -262,7 +269,8 @@ public class JourneyController {
         journeyTable.getChildren().removeIf(box -> Objects.equals(box.getId(), id));
         calculateRoute();
         if (chargers.size() == 0) {
-            mapController.addChargersAroundPoint(journeyManager.getStart());
+            mapController.addChargersAroundPoint(journeyManager.getSelectedJourney()
+                .getStartPosition());
         } else {
             mapController.addChargersAroundPoint(chargers.get(chargers.size() - 1).getLocation());
         }
@@ -272,14 +280,14 @@ public class JourneyController {
      * Saves journey to database
      */
     public void saveJourney() {
-        if (!(distanceError) && (journeyManager.getStart() != null)
-                && (journeyManager.getEnd() != null)) {
+        if (!(distanceError) && (journeyManager.getSelectedJourney().getStartPosition() != null)
+                && (journeyManager.getSelectedJourney().getEndPosition() != null)) {
             journeyManager.saveJourney();
         } else {
-            if (journeyManager.getStart() == null) {
+            if (journeyManager.getSelectedJourney().getStartPosition() == null) {
                 errors.add("No start location added");
             }
-            if (journeyManager.getEnd() == null) {
+            if (journeyManager.getSelectedJourney().getEndPosition() == null) {
                 errors.add("No end location added");
             }
             if (distanceError) {
