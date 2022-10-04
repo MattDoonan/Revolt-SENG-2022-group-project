@@ -424,10 +424,6 @@ public class MainController {
         } else {
             viewChargers(null);
         }
-
-        if (!chargersToAdd.isEmpty() && Boolean.TRUE.equals(MapHandler.isMapRequested())) {
-            mapController.changePosition(chargersToAdd.get(0).getLocation());
-        }
     }
 
     /**
@@ -520,6 +516,10 @@ public class MainController {
         }
         ObservableList<Charger> chargers = manage.getCloseChargerData();
         addChargersToDisplay(chargers);
+
+        if (!chargers.isEmpty() && Boolean.TRUE.equals(MapHandler.isMapRequested())) {
+            mapController.changePosition(chargers.get(0).getLocation());
+        }
 
     }
 
