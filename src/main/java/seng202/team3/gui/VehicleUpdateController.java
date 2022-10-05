@@ -10,7 +10,9 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -69,7 +71,7 @@ public class VehicleUpdateController {
      * Lable to display the currently added connections
      */
     @FXML
-    private ListView<HBox> addedConnections;
+    private ListView<GridPane> addedConnections;
 
     /**
      * Dropdown of the connector types
@@ -256,8 +258,6 @@ public class VehicleUpdateController {
         addConnectionBtn.setDisable(false);
     }
 
-
-
     /**
      * Adds a new connection (for an EV) when the button is clicked
      */
@@ -280,7 +280,16 @@ public class VehicleUpdateController {
                     HBox.setHgrow(filler, Priority.ALWAYS);
                     hbox.getChildren().addAll(label, filler, button);
                     connections.add(connector.getText());
-                    addedConnections.getItems().add(hbox);
+                    // addedConnections.getItems().add(hbox);
+                    
+                    GridPane gridpane = new GridPane();
+                    gridpane.add(label, 1, 0);
+                    gridpane.add(button, 2, 0); 
+                    // GridPane.setHalignment(button, HPos.RIGHT);
+                    button.setAlignment(Pos.CENTER_RIGHT);
+
+
+                    addedConnections.getItems().add(gridpane);
 
                     Stage connectorStage = (Stage) save.getScene().getWindow();
                     connectorStage.close();
@@ -291,7 +300,6 @@ public class VehicleUpdateController {
                 connectorPopup.setScene(new Scene(root, 300, 100));
                 // connectorPopup.showAndWait();
             } else {
-
                 connections.add(connectorType.getValue());
                 Button button = new Button("Delete");
                 button.setId(connectorType.getValue());
@@ -301,7 +309,15 @@ public class VehicleUpdateController {
                 Region filler = new Region();
                 HBox.setHgrow(filler, Priority.ALWAYS);
                 hbox.getChildren().addAll(label, filler, button);
-                addedConnections.getItems().add(hbox);
+
+                GridPane gridpane = new GridPane();
+                gridpane.add(label, 1, 0);
+                gridpane.add(button, 2, 0); 
+                // GridPane.setHalignment(button, HPos.RIGHT);
+                button.setAlignment(Pos.CENTER_RIGHT);
+                
+
+                addedConnections.getItems().add(gridpane);
 
             }
         }
@@ -462,7 +478,15 @@ public class VehicleUpdateController {
                 Region filler = new Region();
                 HBox.setHgrow(filler, Priority.ALWAYS);
                 hbox.getChildren().addAll(label, filler, button);
-                addedConnections.getItems().add(hbox);
+                // addedConnections.getItems().add(hbox);
+
+                
+                GridPane gridpane = new GridPane();
+                gridpane.add(label, 1, 0);
+                gridpane.add(button, 2, 0); 
+                GridPane.setHalignment(button, HPos.RIGHT);
+
+                addedConnections.getItems().add(gridpane);
             }
         }
     }
