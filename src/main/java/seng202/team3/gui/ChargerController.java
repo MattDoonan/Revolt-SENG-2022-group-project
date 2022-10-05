@@ -299,6 +299,14 @@ public class ChargerController {
         Coordinate coordinate = new Coordinate();
         coordinate.setXpos(0.0);
         coordinate.setYpos(0.0);
+
+        try {
+            coordinate.setLat(Double.parseDouble(lat.getText()));
+            coordinate.setLon(Double.parseDouble(lon.getText()));
+        } catch (NumberFormatException | NullPointerException e) {
+            errors.add("Coordinate is not valid number");
+        }
+
         if (charger == null) {
             Coordinate location = prevCoordinate;
             coordinate.setLon(location.getLon());
