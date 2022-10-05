@@ -259,7 +259,6 @@ public class LoginSignupController {
             User user = manage.login(loginEmailField.getText(), hashedPassword);
             if (user != null) {
                 menuControl.setUser(user);
-                menuControl.initHome(); // refreshes main screen
                 stage.close();
                 logManager.info("Logged in successfully");
             } else {
