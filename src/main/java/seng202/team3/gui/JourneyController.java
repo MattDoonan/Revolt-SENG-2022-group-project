@@ -322,6 +322,7 @@ public class JourneyController {
     /**
      * Configures the vehicles MenuItem
      * Adds text to vehicles MenuButton and selects vehicle
+     * @param e the event of menu item being selected
      */
     public void configureVehicleItem(ActionEvent e) {
         MenuItem item = ((MenuItem) e.getSource());
