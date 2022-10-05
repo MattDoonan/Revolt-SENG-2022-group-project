@@ -34,9 +34,7 @@ import seng202.team3.cucumber.CucumberFxBase;
 import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
-import seng202.team3.data.entity.Charger;
-import seng202.team3.data.entity.PermissionLevel;
-import seng202.team3.data.entity.User;
+import seng202.team3.data.entity.*;
 import seng202.team3.gui.AccountController;
 import seng202.team3.gui.MainWindow;
 import seng202.team3.gui.MapHandler;
@@ -94,6 +92,10 @@ public class AccountPageStepDefs extends CucumberFxBase {
         db.addChargerCsvToData("csvtest/filtering");
         db.writeUser(new User("Tester@gmail.com",
                 "MrTest", PermissionLevel.USER), "1234");
+        User chargerOwner = new User("chargerowner@gmail.com", "MrTestOwner",
+                PermissionLevel.CHARGEROWNER);
+        db.writeUser(chargerOwner, UserManager.encryptThisString("qwerty"));
+
         users = db.readData(new QueryBuilderImpl().withSource("user").build(), User.class);
 
         chargerObject = db.readData(new QueryBuilderImpl().withSource("charger")
@@ -104,6 +106,16 @@ public class AccountPageStepDefs extends CucumberFxBase {
             ((Charger) o).setOwnerId(1); // Set owner to admin
         }
         db.writeCharger(new ArrayList<>(chargerObject));
+
+        Connector dummyConnector1 = new Connector("ChardaMo", "AC", "Available", "123", 3);
+        Coordinate coord1 = new Coordinate(1.1, 2.3, -43.53418, 172.627572, "TestCity");
+        Charger testCharger = new Charger(
+                new ArrayList<>(List.of(dummyConnector1)), "Hosp", coord1, 1, 0.3, "Meridian",
+                "2020/1/1 00:00:00", true,
+                false, false, false);
+        testCharger.setOwnerId(chargerOwner.getUserid());
+        testCharger.setOwner("MrTestOwner");
+        db.writeCharger(testCharger);
 
     }
 
@@ -336,6 +348,65 @@ public class AccountPageStepDefs extends CucumberFxBase {
     public void checkDeletedAccount() throws IOException {
         List<Object> change = db.readData(new QueryBuilderImpl().withSource("user").build(), User.class);
         assertEquals(users.size()-1, change.size());
+    }
+
+    @Given("The user owns a charger")
+    public void ownsCharger() throws IOException {
+        List<Object> chargers =  db.readData(new QueryBuilderImpl().withSource("charger")
+                .withFilter("owner", "3", ComparisonType.EQUAL).build(), Charger.class);
+        assertTrue(chargers.size() > 0);
+        clickOn("#mainTable");
+    }
+
+    @When("The user edits the charger details")
+    public void editCharger() {
+        clickOn("#modChargers");
+        clickOn("#editCharger");
+        doubleClickOn("#name");
+        press(KeyCode.BACK_SPACE).release(KeyCode.BACK_SPACE);
+        write("NewName");
+        doubleClickOn("#parks");
+        press(KeyCode.BACK_SPACE).release(KeyCode.BACK_SPACE);
+        write("10");
+        clickOn("#saveButton");
+    }
+
+    @Then("The charger details are saved")
+    public void checkChargerDetails() throws IOException {
+        List<Object> chargers =  db.readData(new QueryBuilderImpl().withSource("charger")
+                .withFilter("name", "NewName", ComparisonType.EQUAL).build(), Charger.class);
+        assertEquals(10, ((Charger) chargers.get(0)).getAvailableParks());
+    }
+
+    @When("The user clicks delete charger")
+    public void deleteCharger() {
+        clickOn("#modChargers");
+        clickOn("#deleteCharger");
+        clickOn("#confirm");
+    }
+
+    @Then("The charger details are deleted")
+    public void noChargerExists() throws IOException {
+        List<Object> chargers =  db.readData(new QueryBuilderImpl().withSource("charger")
+                .withFilter("owner", "2", ComparisonType.EQUAL).build(), Charger.class);
+        assertEquals(0, chargers.size());
+    }
+
+    @Given("The user owns no chargers")
+    public void noOwnedChargers() throws IOException {
+        List<Object> chargers =  db.readData(new QueryBuilderImpl().withSource("charger")
+                .withFilter("owner", "3", ComparisonType.EQUAL).build(), Charger.class);
+        for (Object o : chargers) {
+            db.deleteData("charger", ((Charger) o).getChargerId());
+        }
+        clickOn("#menuButton");
+        clickOn("#accountPage");
+    }
+
+    @Then("The table is empty")
+    public void emptyTable() {
+        TableView<Charger> table = (TableView<Charger>) find("#mainTable");
+        assertTrue(table.getItems().isEmpty());
     }
 
 }
