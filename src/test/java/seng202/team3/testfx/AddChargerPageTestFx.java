@@ -125,6 +125,10 @@ public class AddChargerPageTestFx extends TestFxBase {
         clickOn("#statusField");
         write("operative");
         clickOn("#saveConnectors");
+        clickOn("#lat");
+        write("-53.00");
+        clickOn("#lon");
+        write("123.0");
         clickOn("#saveButton");
 
         ArrayList<Charger> chargers = new ArrayList<>();
