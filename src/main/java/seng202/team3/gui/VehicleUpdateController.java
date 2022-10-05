@@ -256,6 +256,7 @@ public class VehicleUpdateController {
             errors.add(MODEL_ERROR);
         }
 
+        boolean errorOccured = false;
         if (errors.isEmpty()) {
             vehicle.setOwner(UserManager.getUser().getUserid());
             manage.saveVehicle(vehicle);
@@ -269,16 +270,16 @@ public class VehicleUpdateController {
         } else {
             launchErrorPopUps();
             errors.clear();
+            errorOccured = true;
         }
 
-        if (errors.isEmpty()) {
+        if (!errorOccured) {
             selectedVehicle = null;
             Stage popupStage = (Stage) saveChanges.getScene().getWindow();
             popupStage.close();
         }
 
     }
-
 
     /**
      * Checks if there are any errors when a user adds/updates a vehicle.
