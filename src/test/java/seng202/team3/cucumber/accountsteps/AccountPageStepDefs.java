@@ -11,6 +11,7 @@ import io.cucumber.java.mk_latn.No;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
+import javafx.geometry.VerticalDirection;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
@@ -56,6 +57,8 @@ public class AccountPageStepDefs extends CucumberFxBase {
 
     private static List<Object> chargerObject;
 
+    private static List<Object> users;
+
     /**
      * {@inheritDoc}
      *
@@ -84,6 +87,7 @@ public class AccountPageStepDefs extends CucumberFxBase {
         db.addChargerCsvToData("csvtest/filtering");
         db.writeUser(new User("Tester@gmail.com",
                 "MrTest", PermissionLevel.USER), "1234");
+        users = db.readData(new QueryBuilderImpl().withSource("user").build(), User.class);
 
         chargerObject = db.readData(new QueryBuilderImpl().withSource("charger")
                 .build(),
@@ -268,6 +272,18 @@ public class AccountPageStepDefs extends CucumberFxBase {
         write("1.1");
         clickOn("#lon");
         write("1.1");
+        clickOn("#addConnectorButton");
+        clickOn("#currentField");
+        write("CURRENT");
+        clickOn("#wattageField");
+        write("TEEEEST");
+        clickOn("#chargingPointsField");
+        write("4");
+        clickOn("#typeField");
+        write("AC");
+        clickOn("#statusField");
+        write("operational");
+        clickOn("#saveConnectors");
         clickOn("#saveButton");
     }
 
@@ -278,7 +294,41 @@ public class AccountPageStepDefs extends CucumberFxBase {
                         .build(),
                 Charger.class);
         assertFalse(chargerObject.contains(newCharger));
+    }
 
+    @Given("There is sufficient reason to change a user’s status")
+    public void goToPermissions() {
+        clickOn("#editAdmin");
+        clickOn("#table");
+        press(KeyCode.DOWN);
+        release(KeyCode.DOWN);
+    }
+
+    @When("A user upgrades a user permission")
+    public void upgradePermission() {
+        clickOn("#menu");
+        clickOn("#chargerOwner");
+        scroll(10, VerticalDirection.DOWN);
+        clickOn("#updatePermissions");
+    }
+
+    @Then("The user now has access to different functionality of the app")
+    public void checkPermission() throws IOException {
+        List<Object> user = db.readData(new QueryBuilderImpl().withSource("user").build(), User.class);
+        assertEquals(PermissionLevel.CHARGEROWNER, ((User) user.get(1)).getLevel());
+    }
+
+    @When("The admin deletes an account")
+    public void deleteAccount() {
+        scroll(30, VerticalDirection.DOWN);
+        clickOn("#delete");
+        clickOn("#confirm");
+    }
+
+    @Then("The account is deleted")
+    public void checkDeletedAccount() throws IOException {
+        List<Object> change = db.readData(new QueryBuilderImpl().withSource("user").build(), User.class);
+        assertEquals(users.size()-1, change.size());
     }
 
 }
