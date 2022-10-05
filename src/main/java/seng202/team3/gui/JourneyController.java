@@ -230,15 +230,30 @@ public class JourneyController {
      * @param charger charger to add to table
      */
     public void addChargerToDisplay(Charger charger) {
-        //TODO fix the calculation or completley remove
-
         Button btn = new Button("Remove");
         btn.setId(Integer.toString(charger.getChargerId()));
         btn.setOnAction(this::removeFromDisplay);
-
+        double dist;
+        int i = 0;
+        Integer index = null;
+        for (Charger charg : journeyManager.getSelectedJourney().getChargers()) {
+            if (charg.getChargerId() == charger.getChargerId()) {
+                index = i;
+            }
+            i++;
+        }
+        if (index == 0) {
+            dist = Math.floor(Calculations.calculateDistance(charger.getLocation(),
+                    journeyManager.getSelectedJourney().getStartPosition()) * 100) / 100;
+        } else {
+            dist = Math.floor(Calculations.calculateDistance(charger.getLocation(),
+                    journeyManager.getSelectedJourney().getChargers()
+                            .get(index - 1).getLocation()) * 100) / 100;
+        }
         VBox text = new VBox(new Text(charger.getName()),
-                new Text("\n" + Math.floor(Calculations.calculateDistance(charger.getLocation(),
-                        journeyManager.getPosition()) * 100) / 100 + " km Distance"));
+                new Text("\n" + dist + " km Distance"),
+                new Text("\n" + (int) Math.ceil(dist / journeyManager.getSelectedJourney()
+                        .getVehicle().getMaxRange() * 100) + "% Battery Used"));
 
         VBox buttonBox = new VBox(btn);
         buttonBox.setAlignment(Pos.CENTER_RIGHT);
@@ -274,6 +289,7 @@ public class JourneyController {
         } else {
             mapController.addChargersAroundPoint(chargers.get(chargers.size() - 1).getLocation());
         }
+        //TODO remove all others and add to display again to recalculate distances
     }
 
     /**

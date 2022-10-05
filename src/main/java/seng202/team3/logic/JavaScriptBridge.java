@@ -186,8 +186,8 @@ public class JavaScriptBridge {
         Charger charger = mainManager.getSelectedCharger();
 
         journeyController.getMapController().addChargersAroundPoint(charger.getLocation());
-        journeyController.addChargerToDisplay(charger);
         journeyManager.addCharger(charger);
+        journeyController.addChargerToDisplay(charger);
         journeyController.calculateRoute();
     }
 
