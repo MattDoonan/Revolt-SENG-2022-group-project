@@ -135,11 +135,12 @@ public class MapViewController extends MapHandler {
             javaScriptConnector.call("addCoordinate", "Current Coordinate: ",
                     coordinate.getLat(), coordinate.getLon());
             javaScriptConnector.call("addCoordinateName");
+
+            changePosition(coordinate);
+            map.makeCoordinate(coordinate);
             if (Boolean.TRUE.equals(MapHandler.getLocationAccepted())) {
                 javaScriptConnector.call("changeZoom");
             }
-            changePosition(coordinate);
-            map.makeCoordinate(coordinate);
 
             logManager.info("Point created on map");
         } else {

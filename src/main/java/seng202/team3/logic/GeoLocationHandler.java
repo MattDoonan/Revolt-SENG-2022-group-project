@@ -109,7 +109,7 @@ public class GeoLocationHandler {
 
         String ipStr = getIp();
         InetAddress userIp = InetAddress.getByName(ipStr);
-        logManager.info("Retrieved users location using ip: %s", ipStr);
+        logManager.info("Retrieved users location using ip: {}", ipStr);
         Coordinate location = new Coordinate();
         CityResponse response = dbReader.city(userIp);
 
@@ -117,7 +117,7 @@ public class GeoLocationHandler {
         location.setLon(response.getLocation().getLongitude());
         location.setAddress("My Position");
         GeoLocationHandler.setCoordinate(location, location.getAddress());
-        logManager.info("Current position set: %s, %s", location.getLat(), location.getLon());
+        logManager.info("Current position set: {}, {}", location.getLat(), location.getLon());
     }
 
     /**

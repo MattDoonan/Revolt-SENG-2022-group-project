@@ -116,7 +116,7 @@ public class ErrorController {
                 errors.setText("Warnings:");
             }
             default -> {
-                logManager.error("Unexpected value: %s", type);
+                logManager.error("Unexpected value: {}", type);
             }
         }
 
