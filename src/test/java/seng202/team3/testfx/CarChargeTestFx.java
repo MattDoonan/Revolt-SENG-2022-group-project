@@ -1,6 +1,16 @@
 package seng202.team3.testfx;
 
-import io.cucumber.java.mk_latn.No;
+import static org.testfx.api.FxAssert.verifyThat;
+
+import java.util.ArrayList;
+import java.util.stream.Stream;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -8,12 +18,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-import org.testfx.api.FxRobotException;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.data.entity.User;
@@ -21,12 +25,6 @@ import seng202.team3.data.entity.Vehicle;
 import seng202.team3.gui.MainController;
 import seng202.team3.gui.MapHandler;
 import seng202.team3.logic.UserManager;
-
-import java.util.ArrayList;
-import java.util.stream.Stream;
-
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.testfx.api.FxAssert.verifyThat;
 
 public class CarChargeTestFx extends TestFxBase {
 

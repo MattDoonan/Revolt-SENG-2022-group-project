@@ -64,7 +64,7 @@ public class TableManager extends ChargerHandler implements ChargerInterface {
      */
     @Override
     public void addCharger() {
-        Coordinate coordinate = GeoLocationHandler.getInstance().getCoordinate();
+        Coordinate coordinate = GeoLocationHandler.getCoordinate();
         if (coordinate != null) {
             setPosition();
         }

@@ -1,6 +1,6 @@
 package seng202.team3.data.entity;
 
-import java.util.ArrayList;
+import java.util.List;
 import seng202.team3.logic.UserManager;
 
 /**
@@ -27,7 +27,7 @@ public class Vehicle {
     private int maxRange;
 
     /** List of connector types */
-    private ArrayList<String> connectors;
+    private List<String> connectors;
 
     /** Path to vehicle image */
     private String imgPath;
@@ -51,7 +51,7 @@ public class Vehicle {
      * @param connectors list of connectors supported by the vehicle
      */
     public Vehicle(String make, String model, int maxRange,
-            ArrayList<String> connectors) {
+            List<String> connectors) {
         this.make = make;
         this.model = model;
         this.maxRange = maxRange;
@@ -145,7 +145,7 @@ public class Vehicle {
      *
      * @return list of connecter types
      */
-    public ArrayList<String> getConnectors() {
+    public List<String> getConnectors() {
         return connectors;
     }
 
@@ -154,7 +154,7 @@ public class Vehicle {
      *
      * @param connectors list of connecter types
      */
-    public void setConnectors(ArrayList<String> connectors) {
+    public void setConnectors(List<String> connectors) {
         this.connectors = connectors;
     }
 
@@ -244,13 +244,26 @@ public class Vehicle {
                 && v.getOwner() == this.getOwner();
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public int hashCode() {
+        int result = (vehicleId ^ (vehicleId >>> 32));
+        result = 31 * result + make.hashCode();
+        result = 31 * result + model.hashCode();
+        result = 31 * result + batteryPercent.hashCode();
+        result = 31 * result + connectors.hashCode();
+        result = 31 * result + imgPath.hashCode();
+
+        return result;
+    }
+
     /**
      * toString function (mostly for debugging purposes)
      * 
      * @return string representation of vehicle
      */
     public String toString() {
-        return "MAKE: " + make + "  MODEL: " + model + "  MAXRANGE: " + maxRange 
-            + "  ID: " + vehicleId + "  OWNER: " + owner;
+        return "MAKE: " + make + "  MODEL: " + model + "  MAXRANGE: " + maxRange
+                + "  ID: " + vehicleId + "  OWNER: " + owner;
     }
 }

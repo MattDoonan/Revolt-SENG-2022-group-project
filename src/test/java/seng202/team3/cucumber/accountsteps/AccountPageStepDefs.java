@@ -1,5 +1,19 @@
 package seng202.team3.cucumber.accountsteps;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.testfx.api.FxAssert.verifyThat;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.junit.jupiter.api.Assertions;
+import org.testfx.api.FxRobotException;
+
 import io.cucumber.java.AfterAll;
 import io.cucumber.java.Before;
 import io.cucumber.java.BeforeAll;
@@ -13,14 +27,9 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.geometry.VerticalDirection;
 import javafx.scene.Node;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Slider;
-import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
-import org.junit.jupiter.api.Assertions;
-import org.testfx.api.FxRobotException;
 import seng202.team3.cucumber.CucumberFxBase;
 import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.database.QueryBuilderImpl;
@@ -29,10 +38,8 @@ import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.data.entity.User;
 import seng202.team3.gui.AccountController;
-import seng202.team3.gui.LoginSignupController;
 import seng202.team3.gui.MainWindow;
 import seng202.team3.gui.MapHandler;
-import seng202.team3.logic.ChargerHandler;
 import seng202.team3.logic.UserManager;
 
 import static org.junit.jupiter.api.Assertions.*;

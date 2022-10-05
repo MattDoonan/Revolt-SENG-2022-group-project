@@ -51,18 +51,7 @@ public class JavaScriptBridge {
      * @param latlng the string created with latitude and longitude
      */
     public void addCoordinateFromClick(String latlng) {
-        GeoLocationHandler.getInstance().setCoordinate(parseCoordinate(latlng), "Coordinate");
-        refreshCoordinates();
-    }
-
-    /**
-     * Makes a coordinate from a click and sets the GeoLocationHandler, and adds a
-     * name
-     *
-     * @param latlng the string created with latitude and longitude
-     */
-    public void addCoordinateWithName(String latlng) {
-        GeoLocationHandler.getInstance().setCoordinate(parseCoordinate(latlng), "Coordinate");
+        GeoLocationHandler.setCoordinate(parseCoordinate(latlng), "Coordinate");
         refreshCoordinates();
     }
 
@@ -106,7 +95,7 @@ public class JavaScriptBridge {
      * @param address String of the address
      */
     public void addLocationName(String address) {
-        String[] splitAddress = address.split("[,]", 10);
+        String[] splitAddress = address.split(",", 10);
         if (splitAddress.length > 6) {
             address = "";
             address += splitAddress[0] + splitAddress[1] + ", "
@@ -114,8 +103,7 @@ public class JavaScriptBridge {
                     + splitAddress[splitAddress.length - 2] + ", "
                     + splitAddress[splitAddress.length - 1];
         }
-        GeoLocationHandler.getInstance().setCoordinate(GeoLocationHandler
-                .getInstance().getCoordinate(), address);
+        GeoLocationHandler.setCoordinate(GeoLocationHandler.getCoordinate(), address);
         refreshCoordinates();
     }
 
@@ -127,7 +115,7 @@ public class JavaScriptBridge {
     public String makeLocationName() {
         String address = "";
         JSONParser parser = new JSONParser();
-        Coordinate coord = GeoLocationHandler.getInstance().getCoordinate();
+        Coordinate coord = GeoLocationHandler.getCoordinate();
         try {
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder(
@@ -140,12 +128,13 @@ public class JavaScriptBridge {
             JSONObject result = (JSONObject) parser.parse(response.body());
             address += (String) result.get("display_name");
             addLocationName(address);
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
             logManager.error(e.getMessage());
-        } catch (ParseException e) {
+        } catch (ParseException | InterruptedException e) {
             Thread.currentThread().interrupt();
             logManager.error(e.getMessage());
         }
+
         return address;
     }
 

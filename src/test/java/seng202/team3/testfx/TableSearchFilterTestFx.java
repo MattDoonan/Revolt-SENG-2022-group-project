@@ -3,18 +3,18 @@ package seng202.team3.testfx;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import org.junit.jupiter.api.Test;
+import org.testfx.api.FxRobotException;
+
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.junit.jupiter.api.Test;
-import org.testfx.api.FxRobotException;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.data.entity.User;
-import seng202.team3.gui.MainWindow;
 import seng202.team3.gui.TableController;
 import seng202.team3.logic.UserManager;
 

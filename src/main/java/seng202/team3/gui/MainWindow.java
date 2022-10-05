@@ -49,9 +49,9 @@ public class MainWindow extends Application {
         primaryStage.setTitle("Revolt App");
         double height = Screen.getPrimary().getBounds().getHeight() - 80;
         double width = Screen.getPrimary().getBounds().getWidth();
-        activeScene = new Scene(root, width, height);
+        setActiveScene(new Scene(root, width, height));
         baseController.initHome();
-        primaryStage.setScene(activeScene);
+        primaryStage.setScene(getActiveScene());
         primaryStage.show();
         MainWindow.setController(baseController);
         logManager.info("Application window initialized");
@@ -79,6 +79,24 @@ public class MainWindow extends Application {
         } else {
             return null;
         }
+    }
+
+    /**
+     * Sets the active scene of the application
+     * 
+     * @param scene scene to be set
+     */
+    private static void setActiveScene(Scene scene) {
+        MainWindow.activeScene = scene;
+    }
+
+    /**
+     * Gets the active scene of the application
+     * 
+     * @return active scene of the application
+     */
+    private static Scene getActiveScene() {
+        return MainWindow.activeScene;
     }
 
     /**

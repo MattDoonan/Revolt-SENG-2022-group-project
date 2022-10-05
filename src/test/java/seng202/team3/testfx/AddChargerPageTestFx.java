@@ -1,30 +1,28 @@
 package seng202.team3.testfx;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import seng202.team3.data.database.QueryBuilder;
-import seng202.team3.data.database.QueryBuilderImpl;
-import seng202.team3.data.database.SqlInterpreter;
-import seng202.team3.data.entity.Charger;
-
-import seng202.team3.data.entity.Connector;
-import seng202.team3.data.entity.Coordinate;
-import seng202.team3.gui.ChargerController;
-import seng202.team3.logic.GeoLocationHandler;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import seng202.team3.data.database.QueryBuilder;
+import seng202.team3.data.database.QueryBuilderImpl;
+import seng202.team3.data.database.SqlInterpreter;
+import seng202.team3.data.entity.Charger;
+import seng202.team3.data.entity.Connector;
+import seng202.team3.data.entity.Coordinate;
+import seng202.team3.gui.ChargerController;
+import seng202.team3.logic.GeoLocationHandler;
 
 /**
  * TestFx to test adding a charger
@@ -95,7 +93,7 @@ public class AddChargerPageTestFx extends TestFxBase {
      */
     @Test
     public void addChargerFail() {
-        GeoLocationHandler.getInstance().setCoordinate(new Coordinate(1.1, 2.3, -43.60, 172.572), "Trial location");
+        GeoLocationHandler.setCoordinate(new Coordinate(1.1, 2.3, -43.60, 172.572), "Trial location");
         clickOn("#saveButton");
         clickOn("#okay");
     }
@@ -105,7 +103,7 @@ public class AddChargerPageTestFx extends TestFxBase {
      */
     @Test
     public void addChargerSuccess() {
-        GeoLocationHandler.getInstance().setCoordinate(new Coordinate(1.1, 2.3, -43.60, 172.572), "Trial location");
+        GeoLocationHandler.setCoordinate(new Coordinate(1.1, 2.3, -43.60, 172.572), "Trial location");
         clickOn("#name");
         write("Trial");
         clickOn("#operator");

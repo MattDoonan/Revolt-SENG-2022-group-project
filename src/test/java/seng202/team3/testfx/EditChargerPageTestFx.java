@@ -1,28 +1,22 @@
 package seng202.team3.testfx;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import seng202.team3.data.database.QueryBuilder;
-import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
 import seng202.team3.gui.ChargerController;
-import seng202.team3.gui.MainController;
-import seng202.team3.gui.MenuController;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Runs the editcharger testFX
@@ -30,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @author Michelle Hsieh
  * @version 1.0.0, Sep 22
  */
-public class EditChargerPageTestFx extends TestFxBase{
+public class EditChargerPageTestFx extends TestFxBase {
 
     private Charger charger;
     private static SqlInterpreter database;
@@ -84,7 +78,6 @@ public class EditChargerPageTestFx extends TestFxBase{
                 false, false, false);
         database.writeCharger(charger);
     }
-
 
     /**
      * Checks if editing a charger after deleting a connector fails

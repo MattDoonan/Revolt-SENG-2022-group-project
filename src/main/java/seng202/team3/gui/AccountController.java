@@ -112,6 +112,11 @@ public class AccountController {
     private TableController controller;
 
     /**
+     * Styling for invalid input
+     */
+    private static final String INVALID_STYLE = "-fx-border-color: #ff0000;";
+
+    /**
      * Unused constructor
      */
     public AccountController() {
@@ -139,12 +144,13 @@ public class AccountController {
      * @param user User to get data from
      */
     private void populateText(User user) {
+        String notImplementedYet = "Not implemented yet";
         accountName.setText(user.getAccountName());
         accountEmail.setText(user.getEmail());
-        distanceTravelled.setText("Not implemented yet");
-        numberStops.setText("Not implemented yet");
-        carbonSaved.setText("Not implemented yet");
-        mostViewed.setText("Not implemented yet");
+        distanceTravelled.setText(notImplementedYet);
+        numberStops.setText(notImplementedYet);
+        carbonSaved.setText(notImplementedYet);
+        mostViewed.setText(notImplementedYet);
     }
 
     /**
@@ -159,12 +165,11 @@ public class AccountController {
                 FXMLLoader editor = new FXMLLoader(getClass()
                         .getResource("/fxml/admin_page.fxml"));
                 Parent editorParent = editor.load();
-                AdminController controller = editor.getController();
-                controller.init(chargerTable);
+                AdminController adminCtrl = editor.getController();
+                adminCtrl.init(chargerTable);
                 chargerTable.setTop(editorParent);
             } catch (IOException e) {
                 logManager.error(e.getMessage());
-                ;
             }
         } else {
             setChargerTable();
@@ -190,7 +195,6 @@ public class AccountController {
                 controller.populateTable();
             } catch (IOException e) {
                 logManager.error(e.getMessage());
-                ;
             }
         }
     }
@@ -226,18 +230,15 @@ public class AccountController {
      * Confirms the changes made from the user
      */
     public void confirmChanges() {
-        Boolean fail = false;
         if (!UserManager.checkEmail(accountEmail.getText())) {
-            accountEmail.setStyle("-fx-border-color: #ff0000;");
-            fail = true;
-        }
-        if (accountName.getText().isEmpty()) {
-            accountName.setStyle("-fx-border-color: #ff0000;");
-            fail = true;
-        }
-        if (fail) {
+            accountEmail.setStyle(INVALID_STYLE);
             return;
         }
+        if (accountName.getText().isEmpty()) {
+            accountName.setStyle(INVALID_STYLE);
+            return;
+        }
+
         User user = new User();
         user.setAccountName(accountName.getText());
         user.setEmail(accountEmail.getText());
@@ -251,7 +252,7 @@ public class AccountController {
                 UserManager.setUser(user);
 
             } else if (accountPassword.getText().length() < 4) {
-                accountPassword.setStyle("-fx-border-color: #ff0000;");
+                accountPassword.setStyle(INVALID_STYLE);
             } else {
                 manage.saveUser(user, UserManager
                         .encryptThisString(accountPassword.getText()));
@@ -260,9 +261,9 @@ public class AccountController {
             editDetails();
         } catch (IOException | SQLException e) {
             logManager.error(e.getMessage());
-            accountPassword.setStyle("-fx-border-color: #ff0000;");
-            accountName.setStyle("-fx-border-color: #ff0000;");
-            accountEmail.setStyle("-fx-border-color: #ff0000;");
+            accountPassword.setStyle(INVALID_STYLE);
+            accountName.setStyle(INVALID_STYLE);
+            accountEmail.setStyle(INVALID_STYLE);
         }
         tableRefresh();
         logManager.info("User information updated");

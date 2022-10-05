@@ -2,21 +2,20 @@ package seng202.team3.testfx;
 
 import static org.junit.Assert.assertThat;
 
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.testfx.matcher.control.TextInputControlMatchers;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.testfx.matcher.control.TextInputControlMatchers;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.data.entity.User;
-import seng202.team3.gui.MainWindow;
 import seng202.team3.logic.UserManager;
 
 /**

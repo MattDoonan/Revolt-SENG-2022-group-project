@@ -236,4 +236,18 @@ public class Journey {
                 && j.getUser() == this.getUser();
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public int hashCode() {
+        int result = (journeyId ^ (journeyId >>> 32));
+        result = 31 * result + chargers.hashCode();
+        result = 31 * result + vehicle.hashCode();
+        result = 31 * result + startPosition.hashCode();
+        result = 31 * result + endPosition.hashCode();
+        result = 31 * result + startDate.hashCode();
+        result = 31 * result + endDate.hashCode();
+
+        return result;
+    }
+
 }

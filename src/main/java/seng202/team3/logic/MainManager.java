@@ -36,7 +36,7 @@ public class MainManager extends ChargerHandler implements ChargerInterface {
      * Saves the MainController to call later
      */
     public MainManager() {
-        selectedCoordinate = GeoLocationHandler.getInstance().getCoordinate();
+        selectedCoordinate = GeoLocationHandler.getCoordinate();
     }
 
     /**
@@ -73,8 +73,7 @@ public class MainManager extends ChargerHandler implements ChargerInterface {
             arrayChargers = chargerManager.getNearbyChargers(
                     arrayChargers, selectedCoordinate, 2000); // Enough to cover NZ
         }
-        ObservableList<Charger> closerChargers = FXCollections.observableList(arrayChargers);
-        return closerChargers;
+        return FXCollections.observableList(arrayChargers);
     }
 
     /**
@@ -126,13 +125,13 @@ public class MainManager extends ChargerHandler implements ChargerInterface {
      */
     @Override
     public void editCharger() {
-        if (getSelectedCharger() != null) {
-            if ((UserManager.getUser().getLevel() == PermissionLevel.ADMIN)
-                    || (getSelectedCharger().getOwnerId() == UserManager.getUser().getUserid())) {
-                JavaScriptBridge bridge = new JavaScriptBridge();
-                bridge.loadMoreInfo(getSelectedCharger().getChargerId());
-                makeAllChargers();
-            }
+        if (getSelectedCharger() == null) {
+            // Do nothing
+        } else if ((UserManager.getUser().getLevel() == PermissionLevel.ADMIN)
+                || (getSelectedCharger().getOwnerId() == UserManager.getUser().getUserid())) {
+            JavaScriptBridge bridge = new JavaScriptBridge();
+            bridge.loadMoreInfo(getSelectedCharger().getChargerId());
+            makeAllChargers();
         }
     }
 

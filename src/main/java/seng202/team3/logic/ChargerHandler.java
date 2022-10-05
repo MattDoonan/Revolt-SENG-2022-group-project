@@ -78,7 +78,7 @@ public class ChargerHandler {
      * GeolocationHandler
      */
     public void setPosition() {
-        selectedCoordinate = GeoLocationHandler.getInstance().getCoordinate();
+        selectedCoordinate = GeoLocationHandler.getCoordinate();
     }
 
     /**

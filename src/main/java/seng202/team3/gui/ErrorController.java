@@ -1,6 +1,6 @@
 package seng202.team3.gui;
 
-import java.util.ArrayList;
+import java.util.List;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -86,7 +86,7 @@ public class ErrorController {
      *
      * @param errorsList sets the list of errors (String)
      */
-    public void setErrors(ArrayList<String> errorsList) {
+    public void setErrors(List<String> errorsList) {
         errorList = FXCollections.observableList(errorsList);
     }
 
@@ -116,7 +116,7 @@ public class ErrorController {
                 errors.setText("Warnings:");
             }
             default -> {
-                logManager.error("Unexpected value: " + type);
+                logManager.error("Unexpected value: %s", type);
             }
         }
 

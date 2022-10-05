@@ -3,8 +3,6 @@ package seng202.team3.cucumber.mainpagesteps;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import javax.management.InstanceAlreadyExistsException;
-
 import io.cucumber.java.AfterAll;
 import io.cucumber.java.Before;
 import io.cucumber.java.BeforeAll;
@@ -17,9 +15,9 @@ import javafx.stage.Stage;
 import seng202.team3.cucumber.CucumberFxBase;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
+import seng202.team3.gui.MainController;
 import seng202.team3.gui.MainWindow;
 import seng202.team3.gui.MapHandler;
-import seng202.team3.gui.MainController;
 
 /**
  * Cucumber Tests designed to check acceptance tests of searching and filtering
@@ -118,7 +116,7 @@ public class SearchFilterMainStepDefs extends CucumberFxBase {
     @Then("No results are listed")
     public void noResults() {
         ObservableList<Charger> chargers = controller.getManager().getData();
-        assertTrue(chargers.size() == 0);
+        assertTrue(chargers.isEmpty());
     }
 
     @When("The user filters for charging cost")

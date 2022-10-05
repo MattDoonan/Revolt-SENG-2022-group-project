@@ -17,10 +17,7 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
 import javafx.scene.Node;
-import javafx.stage.Stage;
-import javafx.stage.Window;
 import seng202.team3.cucumber.CucumberFxBase;
 import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.database.QueryBuilderImpl;
@@ -99,7 +96,7 @@ public class SigningUpStepDefs extends CucumberFxBase {
                 .withSource("user")
                 .withFilter("username", username, ComparisonType.EQUAL).build(),
                 User.class);
-        assertTrue(users.size() == 0);
+        assertTrue(users.isEmpty());
     }
 
     @When("I enter my details username: {string} email: {string} password: {string}")

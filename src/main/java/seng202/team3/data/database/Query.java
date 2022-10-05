@@ -1,6 +1,6 @@
 package seng202.team3.data.database;
 
-import java.util.ArrayList;
+import java.util.List;
 import org.javatuples.Triplet;
 
 /**
@@ -17,7 +17,7 @@ public class Query {
      * Filter criteria for the query
      * In the form: Triplet(Field, Criteria, ComparisonMethod)
      */
-    ArrayList<Triplet<String, String, ComparisonType>> filters;
+    List<Triplet<String, String, ComparisonType>> filters;
 
     /**
      * Constructor for the query
@@ -25,7 +25,7 @@ public class Query {
      * @param source  Location to get information from
      * @param filters Filter criteria for the query
      */
-    public Query(String source, ArrayList<Triplet<String, String, ComparisonType>> filters) {
+    public Query(String source, List<Triplet<String, String, ComparisonType>> filters) {
         this.source = source;
         this.filters = filters;
     }
@@ -44,7 +44,7 @@ public class Query {
      *
      * @return list of filters for the query
      */
-    public ArrayList<Triplet<String, String, ComparisonType>> getFilters() {
+    public List<Triplet<String, String, ComparisonType>> getFilters() {
         return filters;
     }
 

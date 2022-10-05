@@ -1,12 +1,6 @@
 package seng202.team3.testfx;
 
 import java.util.concurrent.TimeoutException;
-import javafx.scene.Node;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseButton;
-import javafx.stage.Stage;
-import seng202.team3.gui.MainWindow;
-import seng202.team3.gui.MapHandler;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,6 +8,13 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit5.ApplicationTest;
+
+import javafx.scene.Node;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
+import javafx.stage.Stage;
+import seng202.team3.gui.MainWindow;
+import seng202.team3.gui.MapHandler;
 
 /**
  * This is Morgan's Code designed to set up TestFX testing
@@ -30,7 +31,7 @@ public abstract class TestFxBase extends ApplicationTest {
     @BeforeAll
     public static void setUp() throws Exception {
         // Disable map by default
-        MapHandler.MAP_REQUEST = false;
+        MapHandler.setMapRequested(false);
         ApplicationTest.launch(MainWindow.class);
     }
 

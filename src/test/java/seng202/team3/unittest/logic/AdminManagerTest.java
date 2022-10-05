@@ -1,21 +1,27 @@
 package seng202.team3.unittest.logic;
 
-import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.management.InstanceAlreadyExistsException;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import seng202.team3.data.database.QueryBuilder;
 import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.data.entity.User;
 import seng202.team3.logic.AdminManager;
-
-import javax.management.InstanceAlreadyExistsException;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * Unit tests for the {@link seng202.team3.logic.AdminManager} class
@@ -49,11 +55,10 @@ public class AdminManagerTest {
      */
     private static User admin;
 
-
     /**
      * Creates a test database
      *
-     * @throws IOException I/O exceptions
+     * @throws IOException                    I/O exceptions
      * @throws InstanceAlreadyExistsException if database hasn't been cleaned off
      */
     @BeforeAll
@@ -71,7 +76,7 @@ public class AdminManagerTest {
     /**
      * Sets up the test scenario with the default admin, and a few charger owners
      *
-     * @throws IOException if I/O faulty
+     * @throws IOException  if I/O faulty
      * @throws SQLException if SQL issue
      */
     @BeforeEach
@@ -182,7 +187,6 @@ public class AdminManagerTest {
         manager.makeUsers();
         assertEquals(PermissionLevel.USER, manager.getUserList().get(5).getLevel());
     }
-
 
     /**
      * Checks if permissions strings look correct

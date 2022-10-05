@@ -3,6 +3,10 @@ package seng202.team3.testfx;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.testfx.api.FxRobotException;
+
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -10,9 +14,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.testfx.api.FxRobotException;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;

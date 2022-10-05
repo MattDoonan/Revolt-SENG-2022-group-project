@@ -230,10 +230,9 @@ public class ChargerController {
         this.stage = stage;
         makeConnectors();
         connectorTable.setItems(connectors);
-        prevCoordinate = GeoLocationHandler.getInstance().getCoordinate();
+        prevCoordinate = GeoLocationHandler.getCoordinate();
         displayChargerInfo();
     }
-
 
     /**
      * Sets the current coordinate
@@ -282,12 +281,9 @@ public class ChargerController {
             }
         } else {
             address.setText(prevCoordinate.getAddress());
-            if (GeoLocationHandler.getInstance().getCoordinate()
-                    != GeoLocationHandler.DEFAULT_COORDINATE) {
-                lat.setText(Double.toString(GeoLocationHandler
-                        .getInstance().getCoordinate().getLat()));
-                lon.setText(Double.toString(GeoLocationHandler
-                        .getInstance().getCoordinate().getLon()));
+            if (GeoLocationHandler.getCoordinate() != GeoLocationHandler.DEFAULT_COORDINATE) {
+                lat.setText(Double.toString(GeoLocationHandler.getCoordinate().getLat()));
+                lon.setText(Double.toString(GeoLocationHandler.getCoordinate().getLon()));
             }
             deleteButton.setOpacity(0.0);
         }
@@ -351,11 +347,11 @@ public class ChargerController {
             newCharger.addConnector(connector);
         }
 
-        if (connectors.size() == 0) {
+        if (connectors.isEmpty()) {
             errors.add("A Charger must have at least one Connector!");
         }
 
-        if (errors.size() == 0) {
+        if (errors.isEmpty()) {
             try {
                 SqlInterpreter.getInstance().writeCharger(newCharger);
                 logManager.info("Added new Charger");
@@ -495,12 +491,10 @@ public class ChargerController {
     public void editConnector() {
 
         Connector connector = connectorTable.getSelectionModel().getSelectedItem();
-        if (!isDisplay) {
-            if (connector != null) {
-                hideButtons();
-                isDisplay = true;
-                launchEditable(connector);
-            }
+        if (!isDisplay && connector != null) {
+            hideButtons();
+            isDisplay = true;
+            launchEditable(connector);
         }
     }
 

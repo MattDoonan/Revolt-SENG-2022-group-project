@@ -156,10 +156,45 @@ public class GarageController {
     private GarageManager manage = new GarageManager();
 
     /**
+     * Current Charger label text
+     */
+    private static final String CURR_CHARG_TXT = "Current Charge: ";
+
+    /**
+     * Max Range label text
+     */
+    private static final String MAX_RANGE_TXT = "Max Range: ";
+
+    /**
+     * Distance unit label text
+     */
+    private static final String DISTANCE_UNIT_TXT = "km";
+
+    /**
+     * Connections label text
+     */
+    private static final String CONNECTIONS_TXT = "Connections: ";
+
+    /**
+     * Vehicle One Display
+     */
+    private static final String VEHICLE_ONE = "one";
+
+    /**
+     * Vehicle Two Display
+     */
+    private static final String VEHICLE_TWO = "two";
+
+    /**
+     * Vehicle Three Display
+     */
+    private static final String VEHICLE_THREE = "three";
+
+    /**
      * Initialize the GarageController
      */
     public GarageController() {
-        // init();
+        // Ununsed
     }
 
     /**
@@ -317,32 +352,32 @@ public class GarageController {
      * Disables next and prev buttons if less than three vehicles to display
      */
     public void setData() {
-        if (vehicleData.size() > 0) {
-            populateDisplays("one", vehicleImageOne, 0);
+        if (!vehicleData.isEmpty()) {
+            populateDisplays(VEHICLE_ONE, vehicleImageOne, 0);
             editCarOne.setVisible(true);
             deleteCarOne.setVisible(true);
         } else {
             editCarOne.setVisible(false);
             deleteCarOne.setVisible(false);
-            clearDisplay("one", vehicleImageOne);
+            clearDisplay(VEHICLE_ONE, vehicleImageOne);
         }
         if (vehicleData.size() > 1) {
-            populateDisplays("two", vehicleImageTwo, 1);
+            populateDisplays(VEHICLE_TWO, vehicleImageTwo, 1);
             editCarTwo.setVisible(true);
             deleteCarTwo.setVisible(true);
         } else {
             editCarTwo.setVisible(false);
             deleteCarTwo.setVisible(false);
-            clearDisplay("two", vehicleImageTwo);
+            clearDisplay(VEHICLE_TWO, vehicleImageTwo);
         }
         if (vehicleData.size() > 2) {
-            populateDisplays("three", vehicleImageThree, 2);
+            populateDisplays(VEHICLE_THREE, vehicleImageThree, 2);
             editCarThree.setVisible(true);
             deleteCarThree.setVisible(true);
         } else {
             editCarThree.setVisible(false);
             deleteCarThree.setVisible(false);
-            clearDisplay("three", vehicleImageThree);
+            clearDisplay(VEHICLE_THREE, vehicleImageThree);
         }
         if (vehicleData.size() <= 3) {
             nextBtn.setDisable(true);
@@ -361,15 +396,15 @@ public class GarageController {
      */
     public void clearDisplay(String display, ImageView imageview) {
         switch (display) {
-            case "one":
+            case VEHICLE_ONE:
                 makeModelOne.setText("");
                 carDetailsOne.setText("");
                 break;
-            case "two":
+            case VEHICLE_TWO:
                 makeModelTwo.setText("");
                 carDetailsTwo.setText("");
                 break;
-            case "three":
+            case VEHICLE_THREE:
                 makeModelThree.setText("");
                 carDetailsThree.setText("");
                 break;
@@ -387,37 +422,37 @@ public class GarageController {
      * @param index     index of the vehicle to display
      */
     public void populateDisplays(String display, ImageView imageview, int index) {
-        if (vehicleData.size() > 0) {
+        if (!vehicleData.isEmpty()) {
             switch (display) {
-                case "one":
+                case VEHICLE_ONE:
                     makeModelOne.setText(vehicleData.get(index).getMake() + " "
                             + vehicleData.get(index).getModel());
                     carDetailsOne.setText(
-                            "Current Charge: " + vehicleData.get(index).getBatteryPercent() + "%\n"
-                                    + "Max. Range: " + vehicleData.get(index).getMaxRange()
-                                    + " km\n"
-                                    + "Connections: "
+                            CURR_CHARG_TXT + vehicleData.get(index).getBatteryPercent() + "%\n"
+                                    + MAX_RANGE_TXT + vehicleData.get(index).getMaxRange()
+                                    + DISTANCE_UNIT_TXT + "\n"
+                                    + CONNECTIONS_TXT
                                     + vehicleData.get(index).getConnectors().toString());
                     break;
-                case "two":
+                case VEHICLE_TWO:
                     makeModelTwo.setText(vehicleData.get(index).getMake() + " "
                             + vehicleData.get(index).getModel());
                     carDetailsTwo.setText(
-                            "Current Charge: " + vehicleData.get(index).getBatteryPercent() + "%\n"
-                                    + "Max. Range: " + vehicleData.get(index).getMaxRange()
-                                    + " km\n"
-                                    + "Connections: "
+                            CURR_CHARG_TXT + vehicleData.get(index).getBatteryPercent() + "%\n"
+                                    + MAX_RANGE_TXT + vehicleData.get(index).getMaxRange()
+                                    + DISTANCE_UNIT_TXT + "\n"
+                                    + CONNECTIONS_TXT
                                     + vehicleData.get(index).getConnectors().toString());
                     break;
-                case "three":
+                case VEHICLE_THREE:
                     makeModelThree.setText(vehicleData.get(index).getMake() + " "
                             + vehicleData.get(index).getModel());
                     carDetailsThree.setText(
-                            "Current Charge: " + vehicleData.get(index).getBatteryPercent()
+                            CURR_CHARG_TXT + vehicleData.get(index).getBatteryPercent()
                                     + "%\n"
-                                    + "Max. Range: " + vehicleData.get(index).getMaxRange()
-                                    + " km\n"
-                                    + "Connections: "
+                                    + MAX_RANGE_TXT + vehicleData.get(index).getMaxRange()
+                                    + DISTANCE_UNIT_TXT + "\n"
+                                    + CONNECTIONS_TXT
                                     + vehicleData.get(index).getConnectors().toString());
                     break;
                 default:
@@ -446,7 +481,7 @@ public class GarageController {
      */
     @FXML
     public void nextBtnClicked() {
-        if (vehicleData.size() > 0) {
+        if (!vehicleData.isEmpty()) {
             Vehicle vehicle = vehicleData.get(0);
             vehicleData.remove(vehicle);
             vehicleData.add(vehicle);
@@ -461,7 +496,7 @@ public class GarageController {
      */
     @FXML
     public void prevBtnClicked() {
-        if (vehicleData.size() > 0) {
+        if (!vehicleData.isEmpty()) {
             Vehicle vehicle = vehicleData.get(vehicleData.size() - 1);
             vehicleData.remove(vehicle);
             vehicleData.add(0, vehicle);

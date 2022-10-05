@@ -84,6 +84,7 @@ public class AdminController {
      * To create the admin controller
      */
     public AdminController() {
+        // Unused
     }
 
     /**
@@ -141,7 +142,7 @@ public class AdminController {
             PopUpWindow popController = popUp.getController();
             popController.addPrompt(prompt);
             modal.showAndWait();
-            if (popController.getClicked()) {
+            if (Boolean.TRUE.equals(popController.getClicked())) {
                 manager.deleteUser();
             }
         } catch (IOException e) {

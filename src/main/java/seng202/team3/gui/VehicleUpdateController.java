@@ -3,6 +3,7 @@ package seng202.team3.gui;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -126,7 +127,7 @@ public class VehicleUpdateController {
     /**
      * The vehicles connections
      */
-    private ArrayList<String> connections = new ArrayList<String>();
+    private List<String> connections = new ArrayList<>();
 
     /**
      * The images that the user can choose from (button form)
@@ -138,6 +139,31 @@ public class VehicleUpdateController {
      */
     private String[] imgNames = { "car_one.png", "car_two.png", "car_three.png",
         "truck_one.png", "truck_two.png" };
+
+    /**
+     * Default path for images
+     */
+    private static final String IMGPATH = "/images/";
+
+    /**
+     * Error message for invalid make
+     */
+    private static final String MAKE_ERROR = "Vehicle make required.";
+
+    /**
+     * Error message for invalid model
+     */
+    private static final String MODEL_ERROR = "Vehicle model required.";
+
+    /**
+     * Delete button text
+     */
+    private static final String DELETE_BUTTON_TEXT = "Delete";
+
+    /**
+     * Connection prompt text
+     */
+    private static final String CONN_PROMPT_TEXT = "Connection: ";
 
     /**
      * List of user input errors for adding/editing vehicles
@@ -169,6 +195,7 @@ public class VehicleUpdateController {
      * Initialises the Vehicle editing
      */
     public VehicleUpdateController() {
+        // Unused
     }
 
     /**
@@ -196,68 +223,37 @@ public class VehicleUpdateController {
     @FXML
     public void saveChanges() {
         Vehicle vehicle;
-        int errorFlag = 0;
 
         if (selectedVehicle != null) {
             if (selectedImg != null) {
-                selectedVehicle.setImgPath("/images/" + selectedImg);
+                selectedVehicle.setImgPath(IMGPATH + selectedImg);
             } else {
-                selectedVehicle.setImgPath("/images/null");
+                selectedVehicle.setImgPath(IMGPATH + "null");
             }
             vehicle = selectedVehicle;
         } else {
             vehicle = new Vehicle();
         }
+        checkForErrors(vehicle);
 
         try {
             vehicle.setMake(makeText.getText());
         } catch (NullPointerException e) {
-            errors.add("Vehicle make required.");
+            errors.add(MAKE_ERROR);
         }
-        if (makeText.getText().equals("") && !errors.contains("Vehicle make required.")) {
-            errors.add("Vehicle make required.");
+
+        if (makeText.getText().equals("") && !errors.contains(MAKE_ERROR)) {
+            errors.add(MAKE_ERROR);
         }
+
         try {
             vehicle.setModel(modelText.getText());
         } catch (NullPointerException e) {
-            errors.add("Vehicle model required.");
-        }
-        if (modelText.getText().equals("") && !errors.contains("Vehicle model required.")) {
-            errors.add("Vehicle model required.");
-        }
-        try {
-            if (Integer.parseInt(maxRangeText.getText()) < 0) {
-                errors.add("A vehicle's maximum range cannot be negative.");
-            } else {
-                vehicle.setMaxRange(Integer.parseInt(maxRangeText.getText()));
-            }
-        } catch (NumberFormatException e) {
-            errors.add("A vehicle's maximum range must be a whole number.");
-        }
-        try {
-            if (Double.parseDouble(currChargeText.getText()) < 0) {
-                errors.add("A vehicle's current charge cannot be negative.");
-            } else {
-                vehicle.setBatteryPercent(Double.parseDouble(currChargeText.getText()));
-            }
-        } catch (NumberFormatException e) {
-            if (!currChargeText.getText().equals("")) {
-                errors.add("A vehicle's current charge must be a number.");
-            }
-        }
-        if (connections.isEmpty()) {
-            errors.add("A vehicle must have at least one connector.");
-        } else {
-            vehicle.setConnectors(connections);
-        }
-        if (selectedImg != null) {
-            vehicle.setImgPath("/images/" + selectedImg);
-        } else {
-            vehicle.setImgPath("/images/null");
+            errors.add(MODEL_ERROR);
         }
 
-        if (vehicle.getBatteryPercent() == null) {
-            vehicle.setBatteryPercent(100.0);
+        if (modelText.getText().equals("") && !errors.contains(MODEL_ERROR)) {
+            errors.add(MODEL_ERROR);
         }
 
         if (errors.isEmpty()) {
@@ -271,18 +267,64 @@ public class VehicleUpdateController {
             connections = new ArrayList<>();
             connectorType.setPromptText("Connector Type");
         } else {
-            errorFlag = 1;
             launchErrorPopUps();
             errors.clear();
         }
 
-        if (errorFlag == 0) {
+        if (errors.isEmpty()) {
             selectedVehicle = null;
             Stage popupStage = (Stage) saveChanges.getScene().getWindow();
             popupStage.close();
         }
 
-        errorFlag = 0;
+    }
+
+
+    /**
+     * Checks if there are any errors when a user adds/updates a vehicle.
+     * 
+     * @param vehicle the vehicle to be made
+     */
+    public void checkForErrors(Vehicle vehicle) {
+
+        try {
+            if (Integer.parseInt(maxRangeText.getText()) < 0) {
+                errors.add("A vehicle's maximum range cannot be negative.");
+            } else {
+                vehicle.setMaxRange(Integer.parseInt(maxRangeText.getText()));
+            }
+        } catch (NumberFormatException e) {
+            errors.add("A vehicle's maximum range must be a whole number.");
+        }
+
+        try {
+            if (Double.parseDouble(currChargeText.getText()) < 0) {
+                errors.add("A vehicle's current charge cannot be negative.");
+            } else {
+                vehicle.setBatteryPercent(Double.parseDouble(currChargeText.getText()));
+            }
+        } catch (NumberFormatException e) {
+            if (!currChargeText.getText().equals("")) {
+                errors.add("A vehicle's current charge must be a number.");
+            }
+        }
+
+        if (connections.isEmpty()) {
+            errors.add("A vehicle must have at least one connector.");
+        } else {
+            vehicle.setConnectors(connections);
+        }
+
+        if (selectedImg != null) {
+            vehicle.setImgPath(IMGPATH + selectedImg);
+        } else {
+            vehicle.setImgPath(IMGPATH + "null");
+        }
+
+        if (vehicle.getBatteryPercent() == null) {
+            vehicle.setBatteryPercent(100.0);
+        }
+
     }
 
     /**
@@ -298,10 +340,10 @@ public class VehicleUpdateController {
                 root.addRow(1, save);
                 root.setStyle("-fx-padding: 20;");
                 save.setOnMouseClicked((MouseEvent event) -> {
-                    Button button = new Button("Delete");
+                    Button button = new Button(DELETE_BUTTON_TEXT);
                     button.setId(connector.getText());
-                    button.setOnAction(e -> deleteConnection(e));
-                    Label label = new Label("Connection: " + connector.getText());
+                    button.setOnAction(this::deleteConnection);
+                    Label label = new Label(CONN_PROMPT_TEXT + connector.getText());
                     HBox hbox = new HBox();
                     Region filler = new Region();
                     HBox.setHgrow(filler, Priority.ALWAYS);
@@ -316,14 +358,13 @@ public class VehicleUpdateController {
                 connectorPopup.setResizable(false);
                 connectorPopup.setTitle("Other Connector");
                 connectorPopup.setScene(new Scene(root, 300, 100));
-                // connectorPopup.showAndWait();
             } else {
 
                 connections.add(connectorType.getValue());
-                Button button = new Button("Delete");
+                Button button = new Button(DELETE_BUTTON_TEXT);
                 button.setId(connectorType.getValue());
-                button.setOnAction(e -> deleteConnection(e));
-                Label label = new Label("Connection: " + connectorType.getValue());
+                button.setOnAction(this::deleteConnection);
+                Label label = new Label(CONN_PROMPT_TEXT + connectorType.getValue());
                 HBox hbox = new HBox();
                 Region filler = new Region();
                 HBox.setHgrow(filler, Priority.ALWAYS);
@@ -350,7 +391,6 @@ public class VehicleUpdateController {
                 connectorPopup.showAndWait();
             } finally {
                 connectorPopup = new Stage();
-                // refresh();
             }
         }
     }
@@ -362,7 +402,6 @@ public class VehicleUpdateController {
      */
     public void deleteConnection(ActionEvent e) {
         int index = connections.indexOf(((Node) e.getSource()).getId());
-        // System.out.println(((Node) e.getSource()).getId());
         connections.remove(((Node) e.getSource()).getId());
         addedConnections.getItems().remove(index);
 
@@ -384,13 +423,13 @@ public class VehicleUpdateController {
             for (int i = 0; i < imgNames.length; i++) {
                 Image img = new Image(
                         new BufferedInputStream(
-                                getClass().getResourceAsStream("/images/" + imgNames[i])));
+                                getClass().getResourceAsStream(IMGPATH + imgNames[i])));
                 ImageView view = new ImageView(img);
                 Button button = new Button();
                 button.setGraphic(view);
                 button.setId(imgNames[i]);
                 imgBtns.add(button);
-                button.setOnAction(e -> imgSelected(e));
+                button.setOnAction(this::imgSelected);
             }
             displayImgSelect();
         } catch (NullPointerException e) {
@@ -459,8 +498,8 @@ public class VehicleUpdateController {
      */
     public void cancelImg() {
         selectedImg = null;
-        Stage stage = (Stage) saveImg.getScene().getWindow();
-        stage.close();
+        Stage temp = (Stage) saveImg.getScene().getWindow();
+        temp.close();
     }
 
     /**
@@ -476,14 +515,14 @@ public class VehicleUpdateController {
             modelText.setText(vehicle.getModel());
             maxRangeText.setText(Integer.toString(vehicle.getMaxRange()));
             currChargeText.setText(vehicle.getBatteryPercent().toString());
-            imgName.setText(vehicle.getImgPath().replace("/images/", ""));
-            selectedImg = vehicle.getImgPath().replace("/images/", "");
+            imgName.setText(vehicle.getImgPath().replace(IMGPATH, ""));
+            selectedImg = vehicle.getImgPath().replace(IMGPATH, "");
             connections = vehicle.getConnectors();
             for (String connection : connections) {
-                Button button = new Button("Delete");
+                Button button = new Button(DELETE_BUTTON_TEXT);
                 button.setId(connection);
-                button.setOnAction(e -> deleteConnection(e));
-                Label label = new Label("Connection: " + connection);
+                button.setOnAction(this::deleteConnection);
+                Label label = new Label(CONN_PROMPT_TEXT + connection);
                 HBox hbox = new HBox();
                 Region filler = new Region();
                 HBox.setHgrow(filler, Priority.ALWAYS);

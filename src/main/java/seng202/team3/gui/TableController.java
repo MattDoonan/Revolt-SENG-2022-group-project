@@ -1,6 +1,8 @@
 package seng202.team3.gui;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map.Entry;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.ReadOnlyDoubleWrapper;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
@@ -348,10 +350,37 @@ public class TableController {
             "Current types");
 
     /**
-     * Unused constructor
+     * Maps visibility checkboxes to the columns
+     */
+    private HashMap<CheckBox, TableColumn<Charger, ?>> colSelectionMap = null;
+
+    /**
+     * Sets mapping for columns to check boxes
      */
     public TableController() {
-        // unused
+        // Unused
+    }
+
+    /**
+     * Populates the hashmap with checkboxes -> columns
+     * for visibility toggles
+     */
+    private void mapCheckBoxes() {
+        colSelectionMap.put(showId, idCol);
+        colSelectionMap.put(showXpos, xposCol);
+        colSelectionMap.put(showYpos, yposCol);
+        colSelectionMap.put(showOperator, operatorCol);
+        colSelectionMap.put(showAddress, addressCol);
+        colSelectionMap.put(showOwner, ownerCol);
+        colSelectionMap.put(showHoursOpen, hoursCol);
+        colSelectionMap.put(showCarparks, carparkCol);
+        colSelectionMap.put(showTimeLimit, timeLimitCol);
+        colSelectionMap.put(showAttraction, attractionCol);
+        colSelectionMap.put(showLat, latitudeCol);
+        colSelectionMap.put(showLon, longitudeCol);
+        colSelectionMap.put(showOpening, openCol);
+        colSelectionMap.put(showChargingCost, chargcostCol);
+        colSelectionMap.put(showCurrent, currentsCol);
     }
 
     /**
@@ -409,74 +438,47 @@ public class TableController {
      */
     private void tableMaker() {
         mainTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        idCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
-        xposCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
-        yposCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
-        operatorCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
-        addressCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
-        ownerCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
-        hoursCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
-        carparkCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
-        carparkCostCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
-        timeLimitCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
-        attractionCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
-        latitudeCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
-        longitudeCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
-        openCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
-        chargcostCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
-        currentsCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);
+        setColWidths(1f * Integer.MAX_VALUE * 10);
         mainTable.getColumns().removeAll(mainTable.getColumns());
 
+        // Set up mapping between columns and checkboxes
+        if (colSelectionMap == null) {
+            colSelectionMap = new HashMap<>();
+            mapCheckBoxes();
+        }
+
         // Checks if the user wants to view the column
-        if (showId.isSelected()) {
-            mainTable.getColumns().add(idCol);
+        for (Entry<CheckBox, TableColumn<Charger, ?>> check : colSelectionMap.entrySet()) {
+            if (check.getKey().isSelected()) {
+                mainTable.getColumns().add(check.getValue());
+            }
         }
-        if (showXpos.isSelected()) {
-            mainTable.getColumns().add(xposCol);
-        }
-        if (showYpos.isSelected()) {
-            mainTable.getColumns().add(yposCol);
-        }
-        if (showOperator.isSelected()) {
-            mainTable.getColumns().add(operatorCol);
-        }
-        if (showAddress.isSelected()) {
-            mainTable.getColumns().add(addressCol);
-        }
-        if (showOwner.isSelected()) {
-            mainTable.getColumns().add(ownerCol);
-        }
-        if (showHoursOpen.isSelected()) {
-            mainTable.getColumns().add(hoursCol);
-        }
-        if (showCarparks.isSelected()) {
-            mainTable.getColumns().add(carparkCol);
-        }
-        if (showCarparkCost.isSelected()) {
-            mainTable.getColumns().add(carparkCostCol);
-        }
-        if (showTimeLimit.isSelected()) {
-            mainTable.getColumns().add(timeLimitCol);
-        }
-        if (showAttraction.isSelected()) {
-            mainTable.getColumns().add(attractionCol);
-        }
-        if (showLat.isSelected()) {
-            mainTable.getColumns().add(latitudeCol);
-        }
-        if (showLon.isSelected()) {
-            mainTable.getColumns().add(longitudeCol);
-        }
-        if (showOpening.isSelected()) {
-            mainTable.getColumns().add(openCol);
-        }
-        if (showChargingCost.isSelected()) {
-            mainTable.getColumns().add(chargcostCol);
-        }
-        if (showCurrent.isSelected()) {
-            mainTable.getColumns().add(currentsCol);
-        }
+
         mainTable.requestFocus();
+    }
+
+    /**
+     * Sets max width of all columns
+     * 
+     * @param width width to set to
+     */
+    private void setColWidths(float width) {
+        idCol.setMaxWidth(width);
+        xposCol.setMaxWidth(width);
+        yposCol.setMaxWidth(width);
+        operatorCol.setMaxWidth(width);
+        addressCol.setMaxWidth(width);
+        ownerCol.setMaxWidth(width);
+        hoursCol.setMaxWidth(width);
+        carparkCol.setMaxWidth(width);
+        carparkCostCol.setMaxWidth(width);
+        timeLimitCol.setMaxWidth(width);
+        attractionCol.setMaxWidth(width);
+        latitudeCol.setMaxWidth(width);
+        longitudeCol.setMaxWidth(width);
+        openCol.setMaxWidth(width);
+        chargcostCol.setMaxWidth(width);
+        currentsCol.setMaxWidth(width);
     }
 
     /**
@@ -592,16 +594,16 @@ public class TableController {
         toggleTimeLimit.textProperty()
                 .setValue("Minimum time limit of ("
                         + Math.round(timeLimit.getValue()) + " minutes)");
-        parkingLot.valueProperty().addListener((observableValue, number, t1) -> {
-            onParkingFilter.textProperty()
-                    .setValue("Minimum number of spaces ("
-                            + Math.round(parkingLot.getValue()) + ")");
-        });
-        timeLimit.valueProperty().addListener((observableValue, number, t1) -> {
-            toggleTimeLimit.textProperty()
-                    .setValue("Minimum time limit of ("
-                            + Math.round(timeLimit.getValue()) + " minutes)");
-        });
+
+        parkingLot.valueProperty().addListener(
+                (observableValue, number, t1) -> onParkingFilter.textProperty()
+                        .setValue("Minimum number of spaces ("
+                                + Math.round(parkingLot.getValue()) + ")"));
+
+        timeLimit.valueProperty().addListener(
+                (observableValue, number, t1) -> toggleTimeLimit.textProperty()
+                        .setValue("Minimum time limit of ("
+                                + Math.round(timeLimit.getValue()) + " minutes)"));
     }
 
     /**
@@ -618,7 +620,7 @@ public class TableController {
      */
     @FXML
     private void addCharger() {
-        if (MapHandler.MAP_REQUEST) {
+        if (Boolean.TRUE.equals(MapHandler.isMapRequested())) {
             try {
                 FXMLLoader miniMap = new FXMLLoader(getClass().getResource(
                         "/fxml/mini_map.fxml"));
@@ -640,7 +642,7 @@ public class TableController {
         }
         manage.addCharger();
 
-        if (manage.isAdding() || !MapHandler.MAP_REQUEST) {
+        if (manage.isAdding() || Boolean.TRUE.equals(!MapHandler.isMapRequested())) {
             new JavaScriptBridge().loadChargerEdit(null);
             updateTable();
         }
@@ -684,7 +686,7 @@ public class TableController {
             PopUpWindow popController = popUp.getController();
             popController.addPrompt(prompt);
             modal.showAndWait();
-            if (popController.getClicked()) {
+            if (Boolean.TRUE.equals(popController.getClicked())) {
                 manage.deleteCharger();
             }
         } catch (IOException e) {

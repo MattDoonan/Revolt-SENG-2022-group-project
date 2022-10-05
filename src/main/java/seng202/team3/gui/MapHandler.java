@@ -67,7 +67,7 @@ public abstract class MapHandler {
     /**
      * Represents response to location services request
      */
-    protected static Boolean locationAccepted = null;
+    private static Boolean locationAccepted = null;
 
     /**
      * Threshold for map connection reattempts
@@ -82,7 +82,7 @@ public abstract class MapHandler {
     /**
      * Represents users decision to load the map
      */
-    public static boolean MAP_REQUEST = true;
+    private static boolean mapRequest = true;
 
     /**
      * unused constructor
@@ -96,7 +96,7 @@ public abstract class MapHandler {
      */
     public void initMap() {
 
-        if (!MAP_REQUEST) {
+        if (Boolean.FALSE.equals(isMapRequested())) {
             logManager.info("Map loading has been skipped");
             addChargersOnMap();
             return;
@@ -124,7 +124,7 @@ public abstract class MapHandler {
                         JSObject window = (JSObject) webEngine.executeScript("window");
                         window.setMember("javaScriptBridge", javaScriptBridge);
 
-                        while (MAP_REQUEST && javaScriptConnector == null) {
+                        while (mapRequest && javaScriptConnector == null) {
                             connectMap();
                         }
 
@@ -142,9 +142,9 @@ public abstract class MapHandler {
                 ButtonType.NO, ButtonType.YES);
         reattemptPrompt.showAndWait();
 
-        MAP_REQUEST = reattemptPrompt.getResult() == ButtonType.YES;
+        setMapRequested(reattemptPrompt.getResult() == ButtonType.YES);
 
-        if (MAP_REQUEST) {
+        if (Boolean.TRUE.equals(isMapRequested())) {
             logManager.info("Re-attempting to load map...");
         } else {
             logManager.info("User has disabled map view");
@@ -163,9 +163,9 @@ public abstract class MapHandler {
                 javaScriptConnector = (JSObject) webEngine.executeScript("jsConnector");
 
                 javaScriptConnector.call("initMap",
-                        GeoLocationHandler.getInstance().getCoordinate().getLat(),
-                        GeoLocationHandler.getInstance().getCoordinate().getLon(),
-                        GeoLocationHandler.getInstance()
+                        GeoLocationHandler.getCoordinate().getLat(),
+                        GeoLocationHandler.getCoordinate().getLon(),
+                        GeoLocationHandler
                                 .getCoordinate() != GeoLocationHandler.DEFAULT_COORDINATE);
                 // throw new JSException("NO INTERNET"); // For 'no internet connection'
             } catch (JSException e) {
@@ -178,6 +178,7 @@ public abstract class MapHandler {
                 try {
                     sleep(REATTEMPT_TIME);
                 } catch (InterruptedException e1) {
+                    Thread.currentThread().interrupt();
                     logManager.warn(e.getMessage());
                 }
             }
@@ -197,7 +198,7 @@ public abstract class MapHandler {
      * Pop up to get the current users location for the map start point
      */
     public void getUserLocation() {
-        if (!MapHandler.MAP_REQUEST) {
+        if (Boolean.FALSE.equals(MapHandler.isMapRequested())) {
             logManager.info("Current Location was aborted due to no map");
             return;
         }
@@ -239,6 +240,15 @@ public abstract class MapHandler {
     }
 
     /**
+     * Gets the location permission setting
+     * 
+     * @return true if permission granted, else false
+     */
+    public static Boolean getLocationAccepted() {
+        return locationAccepted;
+    }
+
+    /**
      * Adds all chargers on the map
      */
     public abstract void addChargersOnMap();
@@ -249,5 +259,23 @@ public abstract class MapHandler {
     public static void resetPermission() {
         locationAccepted = null;
         logManager.info("User location permission setting cleared");
+    }
+
+    /**
+     * Sets map request state
+     * 
+     * @param mapRequested true to load map
+     */
+    public static void setMapRequested(boolean mapRequested) {
+        MapHandler.mapRequest = mapRequested;
+    }
+
+    /**
+     * Gets bool represented if map features should be loaded
+     * 
+     * @return if map features should be loaded
+     */
+    public static Boolean isMapRequested() {
+        return MapHandler.mapRequest;
     }
 }

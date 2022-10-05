@@ -239,6 +239,7 @@ public class SqlInterpreter implements DataReader {
     /**
      * Creates the database if it doesn't exist yet
      * does this by calling the SQL file in resources
+     * 
      * @author Morgan English
      */
     public void defaultDatabase() {
@@ -868,7 +869,7 @@ public class SqlInterpreter implements DataReader {
      * @param connection a Connection object
      * @throws java.io.IOException if any.
      */
-    public void writeConnector(Connection connection, ArrayList<Connector> connectors,
+    public void writeConnector(Connection connection, List<Connector> connectors,
             int chargerId)
             throws IOException {
         for (Connector connector : connectors) {

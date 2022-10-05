@@ -81,7 +81,7 @@ public class ChargerHandlerTest {
     public void makeAllChargersTestSizeGreater() {
         mainManager.resetQuery();
         mainManager.setDistance(0);
-        GeoLocationHandler.getInstance().setCoordinate(
+        GeoLocationHandler.setCoordinate(
                 new Coordinate(null, null, -43.522518157958984, 172.5811767578125),
                 "Test Position");
         mainManager.makeAllChargers();
