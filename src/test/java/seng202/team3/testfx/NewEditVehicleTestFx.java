@@ -2,17 +2,21 @@ package seng202.team3.testfx;
 
 import static org.junit.Assert.assertThat;
 
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.testfx.matcher.control.TextInputControlMatchers;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.testfx.matcher.control.TextInputControlMatchers;
 import seng202.team3.data.database.SqlInterpreter;
+import seng202.team3.data.entity.PermissionLevel;
+import seng202.team3.data.entity.User;
+import seng202.team3.logic.UserManager;
 
 /**
  * Code designed to test the searching and filtering of the Main Window
@@ -36,6 +40,14 @@ public class NewEditVehicleTestFx extends TestFxBase {
     private TextField currChargeText;
 
     static SqlInterpreter db;
+    static User testUser;
+
+    @BeforeAll
+    public static void setUp() throws Exception {
+        SqlInterpreter.removeInstance();
+        db = SqlInterpreter.initialiseInstanceWithUrl(
+                "jdbc:sqlite:./target/test-classes/test_database.db");
+    }
 
     /**
      * Implements the abstract method for this window
@@ -43,7 +55,7 @@ public class NewEditVehicleTestFx extends TestFxBase {
      * @throws Exception if fail to launch
      */
     @BeforeEach
-    public void setUp() throws Exception {
+    public void init() throws Exception {
         db.defaultDatabase();
         db.addChargerCsvToData("csvtest/filtering");
     }
@@ -56,9 +68,15 @@ public class NewEditVehicleTestFx extends TestFxBase {
      */
     @Override
     public void start(Stage stage) throws Exception {
+        testUser = new User("admin@admin.com", "admin",
+                PermissionLevel.ADMIN);
+        testUser.setUserid(1);
+
+        UserManager.setUser(testUser);
         SqlInterpreter.removeInstance();
         db = SqlInterpreter.initialiseInstanceWithUrl(
                 "jdbc:sqlite:./target/test-classes/test_database.db");
+        db.defaultDatabase();
         db.addChargerCsvToData("csvtest/filtering");
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/vehicle_update.fxml"));

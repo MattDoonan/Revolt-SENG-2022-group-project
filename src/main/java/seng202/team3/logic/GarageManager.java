@@ -5,9 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.database.QueryBuilder;
 import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
+import seng202.team3.data.entity.User;
 import seng202.team3.data.entity.Vehicle;
 
 /**
@@ -18,6 +22,10 @@ import seng202.team3.data.entity.Vehicle;
  *
  */
 public class GarageManager {
+    /**
+     * Logger
+     */
+    private static final Logger logManager = LogManager.getLogger();
 
     /**
      * Query object to retrieve vehicles
@@ -30,17 +38,23 @@ public class GarageManager {
     private ObservableList<Vehicle> vehicleData;
 
     /**
+     * The current user
+     */
+    private User user;
+
+    /**
      * Initialize GarageManager
      */
     public GarageManager() {
-        // resetQuery();
+        user = UserManager.getUser();
     }
 
     /**
      * Load the initial query
      */
     public void resetQuery() {
-        vehicleDataQuery = new QueryBuilderImpl().withSource("vehicle");
+        vehicleDataQuery = new QueryBuilderImpl().withSource("vehicle")
+                .withFilter("owner", Integer.toString(user.getUserid()), ComparisonType.EQUAL);
     }
 
     /**
@@ -58,7 +72,7 @@ public class GarageManager {
             vehicleData = FXCollections
                     .observableList(vehicleList);
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
         }
     }
 
@@ -68,6 +82,7 @@ public class GarageManager {
      * @return vehicleData of the required vehicle
      */
     public ObservableList<Vehicle> getData() {
+        getAllVehicles();
         return vehicleData;
     }
 

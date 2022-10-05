@@ -19,6 +19,9 @@ import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
+import seng202.team3.data.entity.PermissionLevel;
+import seng202.team3.data.entity.User;
+import seng202.team3.logic.UserManager;
 
 /**
  * Testing suite for CSV importing and parsing
@@ -33,16 +36,23 @@ public class CsvInterpreterTest {
      */
     Query query;
     List<Object> result;
+    static User testUser;
 
     /**
      * Before each set-up a valid version
      */
     @BeforeEach
     public void setUp() throws IOException {
+        testUser = new User("admin@admin.com", "admin",
+                PermissionLevel.ADMIN); // TODO: get user from db
+        testUser.setUserid(1);
+
+        UserManager.setUser(testUser);
         query = new QueryBuilderImpl()
                 .withSource("csvtest/validChargers")
                 .build();
         result = new CsvInterpreter().readData(query, Charger.class);
+
     }
 
     /**
@@ -180,7 +190,7 @@ public class CsvInterpreterTest {
                         170.100913,
                         "4 Kitchener Dr, Mount Cook National Park 7999, New Zealand"),
                 1, 0.0, "MERIDIAN ENERGY LIMITED",
-                "MERIDIAN ENERGY LIMITED", "2020/05/01 00:00:00+00",
+                "2020/05/01 00:00:00+00",
                 false, true, true, false);
         c.setChargerId(1);
         assertEquals(c, (Charger) result.get(0));

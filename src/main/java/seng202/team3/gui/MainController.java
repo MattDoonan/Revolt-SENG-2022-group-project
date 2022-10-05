@@ -3,6 +3,7 @@ package seng202.team3.gui;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -20,19 +21,28 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.logic.Calculations;
+import seng202.team3.logic.GarageManager;
+import seng202.team3.logic.GeoLocationHandler;
 import seng202.team3.logic.MainManager;
 import seng202.team3.logic.MapManager;
+import seng202.team3.logic.UserManager;
 
 /**
  * Controller for the main.fxml window (the home)
  *
  * @author Matthew Doonan, Michelle Hsieh
- * @version 1.0.1, Aug 22
+ * @version 1.0.2, Sep 22
  */
 public class MainController {
+    /**
+     * Logger
+     */
+    private static final Logger logManager = LogManager.getLogger();
 
     /**
      * An AC button checkbox
@@ -154,10 +164,19 @@ public class MainController {
     @FXML
     private CheckBox noNearbyAttraction;
 
+    /** The battery percentage box */
+    @FXML
+    private TextField batteryPercent;
+
     /**
-     * The BorderPane containing entire application
+     * The default image to be used
      */
-    private BorderPane menuWindow;
+    private Image image;
+
+    /**
+     * A reflection of the routing state of mapcontroller
+     */
+    private Boolean routing;
 
     /**
      * The map controller
@@ -168,6 +187,12 @@ public class MainController {
      * The map manager
      */
     private MainManager manage;
+
+    /** the garage manager */
+    private GarageManager garageManager;
+
+    /** Buffer for range */
+    private Double buffer = 0.85;
 
     /**
      * unused constructor
@@ -180,18 +205,84 @@ public class MainController {
      * Initialize the window
      *
      * @param stage      Top level container for this window
-     * @param menuWindow a {@link javafx.scene.layout.BorderPane} object
+     * @param menuWindow a {@link BorderPane} object
      */
     public void init(Stage stage, BorderPane menuWindow) {
-        this.menuWindow = menuWindow;
         manage = new MainManager();
+        fetchImage();
         loadMapView(stage);
         manage.resetQuery();
         manage.makeAllChargers();
-        manage.setDistance(changeDistance.getValue());
+        manage.setPosition();
+        initialRange();
+        if (MapHandler.getLocationAccepted() == null) {
+            getMapController().getLocation();
+        }
+
+        if (GeoLocationHandler
+                .getCoordinate() == GeoLocationHandler.DEFAULT_COORDINATE) {
+            manage.setDistance(0);
+            distanceDisplay.setSelected(false);
+        } else {
+            manage.setDistance(changeDistance.getValue() * buffer);
+            distanceDisplay.setSelected(true);
+        }
         addChargersToDisplay(manage.getCloseChargerData());
         change();
 
+    }
+
+    /**
+     * Tries to fetch the image
+     */
+    public void fetchImage() {
+        try {
+            // Gets image and adds it to an Image View
+            image = new Image(
+                    new BufferedInputStream(
+                            getClass().getResourceAsStream("/images/charger.png")));
+        } catch (NullPointerException e) {
+            image = null;
+            logManager.error(e.getMessage());
+        }
+    }
+
+    /**
+     * Checks the battery percentage text field on input for non Integers
+     * then changes the max range
+     */
+    public void checkForNumber() {
+        if (!batteryPercent.getText().isEmpty()) {
+            if (!batteryPercent.getText().matches("\\d*")) {
+                batteryPercent.setText(batteryPercent.getText().replaceAll("[^\\d]", ""));
+            } else if (Double.parseDouble(batteryPercent.getText()) > 100) {
+                batteryPercent.setText(batteryPercent.getText()
+                        .substring(0, batteryPercent.getText().length() - 1));
+            } else {
+                changeDistance.setValue(garageManager.getData().get(0).getMaxRange()
+                        * (Double.parseDouble(batteryPercent.getText()) / 100));
+            }
+        } else {
+            changeDistance.setValue(garageManager.getData().get(0).getMaxRange());
+        }
+    }
+
+    /**
+     * Sets the initial range of chargers in view to the vehicles range
+     */
+    public void initialRange() {
+        if (UserManager.getUser() == UserManager.getGuest()) {
+            batteryPercent.setVisible(false);
+        } else {
+            garageManager = new GarageManager();
+            garageManager.resetQuery();
+            garageManager.getAllVehicles();
+            if (!garageManager.getData().isEmpty()) {
+                changeDistance.setValue(garageManager.getData().get(0).getMaxRange());
+            } else {
+                batteryPercent.setVisible(false);
+            }
+        }
     }
 
     /**
@@ -204,7 +295,7 @@ public class MainController {
         displayInfo.getChildren().removeAll(displayInfo.getChildren());
         // Check if there is no charger
         if (c == null) {
-            if (manage.getCloseChargerData().size() != 0) {
+            if (!manage.getCloseChargerData().isEmpty()) {
                 manage.setSelectedCharger(manage.getCloseChargerData().get(0));
                 viewChargers(manage.getCloseChargerData().get(0));
             } else {
@@ -212,52 +303,63 @@ public class MainController {
                 displayInfo.setAlignment(Pos.CENTER);
             }
         } else {
-            try {
-                // Gets image for charger
-                ImageView image = new ImageView(new Image(
-                        new BufferedInputStream(
-                                getClass().getResourceAsStream("/images/charger.png"))));
-                // Edits the width and height to 150px
-                image.setFitHeight(150);
-                image.setFitWidth(150);
-                displayInfo.getChildren().add(image); // adds to the HBox
-            } catch (NullPointerException e) {
-                Label image = new Label("Image");
-                displayInfo.getChildren().add(image);
-            }
-            VBox display = new VBox(); // Creates Vbox to contain text
-            display.getChildren().add(new Text("" + c.getName() + ""));
-            display.getChildren().add(new Text("" + c.getLocation().getAddress() + "\n"));
-            String word = manage.getConnectors(c);
-            display.getChildren().add(new Text("Current types " + word + ""));
-            // If statements are there to make different text depending on the charger info
-            if (c.getOperator() != null) {
-                display.getChildren().add(new Text("Operator is: " + c.getOperator() + ""));
-            }
-            display.getChildren().add(new Text("Owner is: " + c.getOwner() + ""));
-            if (c.getChargeCost()) {
-                display.getChildren().add(new Text("Charger has a cost"));
-            } else {
-                display.getChildren().add(new Text("Charger has no cost"));
-            }
-            if (c.getAvailable24Hrs()) {
-                display.getChildren().add(new Text("Open 24"));
-            } else {
-                display.getChildren().add(new Text("Open 24 hours"));
-            }
-            display.getChildren().add(new Text("Has " + c.getAvailableParks() + " parking spaces"));
-            if (c.getTimeLimit() == Double.POSITIVE_INFINITY) {
-                display.getChildren().add(new Text("Has no time limit"));
-            } else {
-                display.getChildren().add(new Text("Has " + c.getTimeLimit() + " minute limit"));
-            }
-            if (c.getHasAttraction()) {
-                display.getChildren().add(new Text("Has near by attraction"));
-            }
-            // Adds the charger info to the HBox
-            displayInfo.getChildren().add(display);
-            getManager().setSelectedCharger(c);
+            loadSelectedPreview(c);
         }
+    }
+
+    /**
+     * Load selected charger preview
+     *
+     * @param c Charger to load in
+     */
+    private void loadSelectedPreview(Charger c) {
+
+        try {
+            // Gets image for charger
+            ImageView chargerImg = new ImageView(new Image(
+                    new BufferedInputStream(
+                            getClass().getResourceAsStream("/images/charger.png"))));
+            // Edits the width and height to 150px
+            chargerImg.setFitHeight(150);
+            chargerImg.setFitWidth(150);
+            displayInfo.getChildren().add(chargerImg); // adds to the HBox
+        } catch (NullPointerException e) {
+            Label chargerImg = new Label("Image");
+            displayInfo.getChildren().add(chargerImg);
+            logManager.error(e.getMessage());
+        }
+        VBox display = new VBox(); // Creates Vbox to contain text
+        display.getChildren().add(new Text("" + c.getName() + ""));
+        display.getChildren().add(new Text("" + c.getLocation().getAddress() + "\n"));
+        String word = manage.getConnectors(c);
+        display.getChildren().add(new Text("Current types " + word + ""));
+        // If statements are there to make different text depending on the charger info
+        if (c.getOperator() != null) {
+            display.getChildren().add(new Text("Operator is: " + c.getOperator() + ""));
+        }
+        display.getChildren().add(new Text("Owner is: " + c.getOwner() + ""));
+        if (c.getChargeCost()) {
+            display.getChildren().add(new Text("Charger has a cost"));
+        } else {
+            display.getChildren().add(new Text("Charger has no cost"));
+        }
+        if (c.getAvailable24Hrs()) {
+            display.getChildren().add(new Text("Open 24"));
+        } else {
+            display.getChildren().add(new Text("Open 24 hours"));
+        }
+        display.getChildren().add(new Text("Has " + c.getAvailableParks() + " parking spaces"));
+        if (c.getTimeLimit() == Double.POSITIVE_INFINITY) {
+            display.getChildren().add(new Text("Has no time limit"));
+        } else {
+            display.getChildren().add(new Text("Has " + c.getTimeLimit() + " minute limit"));
+        }
+        if (c.getHasAttraction()) {
+            display.getChildren().add(new Text("Has near by attraction"));
+        }
+        // Adds the charger info to the HBox
+        displayInfo.getChildren().add(display);
+        getManager().setSelectedCharger(c);
     }
 
     /**
@@ -277,22 +379,20 @@ public class MainController {
     /**
      * Adds every charger in charger list to the vbox
      *
-     * @param chargersToAdd a {@link javafx.collections.ObservableList} object
+     * @param chargersToAdd a {@link ObservableList} object
      */
     public void addChargersToDisplay(ObservableList<Charger> chargersToAdd) {
 
         chargerTable.getChildren().removeAll(chargerTable.getChildren()); // clears vbox
         for (int i = 0; i < chargersToAdd.size(); i++) {
             HBox add = new HBox(); // creates HBox that will contain the changer info
-            try {
-                // Gets image and adds it to an Image View
-                ImageView image = new ImageView(new Image(
-                        new BufferedInputStream(
-                                getClass().getResourceAsStream("/images/charger.png"))));
-                add.getChildren().add(image);
-            } catch (NullPointerException e) {
-                Label image = new Label("Image");
-                add.getChildren().add(image); // adds to the HBox
+
+            // adds the cached image
+            if (image != null) {
+                add.getChildren().add(new ImageView(image));
+            } else {
+                Label substitueText = new Label("Image");
+                add.getChildren().add(substitueText); // adds to the HBox
             }
             // Create Vbox to contain the charger info
             VBox content = new VBox(new Text(chargersToAdd.get(i).getName()),
@@ -305,25 +405,21 @@ public class MainController {
             add.setPadding(new Insets(10));
             add.setSpacing(10);
             int finalI = i;
-            // Sets on click functionally
-            add.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, event -> {
-                selectToView(finalI);
-            });
+            add.setId("charger" + finalI + "");
+            add.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> selectToView(finalI));
             // Changes Hover style
-            add.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, event -> {
-                add.setStyle("-fx-background-color:#FFF8EB;");
-            });
+            add.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET,
+                    event -> add.setStyle("-fx-background-color:#FFF8EB;"));
             // Changes off hover style
-            add.addEventHandler(MouseEvent.MOUSE_EXITED_TARGET, event -> {
-                add.setStyle("-fx-background-color:#FFFFFF;");
-            });
+            add.addEventHandler(MouseEvent.MOUSE_EXITED_TARGET,
+                    event -> add.setStyle("-fx-background-color:#FFFFFF;"));
             // Adds the HBox to the main VBox
             chargerTable.getChildren().add(add);
         }
-        if (getMapController().getConnectorStatus()) {
+        if (Boolean.TRUE.equals(MapHandler.isMapRequested())) {
             getMapController().addChargersOnMap();
         }
-        if (chargerTable.getChildren().size() != 0) {
+        if (!chargerTable.getChildren().isEmpty()) {
             viewChargers(chargersToAdd.get(0));
         } else {
             viewChargers(null);
@@ -351,21 +447,18 @@ public class MainController {
                 .setValue("Minimum time limit of ("
                         + Math.round(timeLimit.getValue()) + " minutes)");
 
-        changeDistance.valueProperty().addListener((observableValue, number, t1) -> {
-            distanceDisplay.textProperty()
-                    .setValue("Minimum distance ("
-                            + Math.round(changeDistance.getValue()) + " km)");
-        });
-        parkingLot.valueProperty().addListener((observableValue, number, t1) -> {
-            onParkingFilter.textProperty()
-                    .setValue("Minimum number of spaces ("
-                            + Math.round(parkingLot.getValue()) + ")");
-        });
-        timeLimit.valueProperty().addListener((observableValue, number, t1) -> {
-            toggleTimeLimit.textProperty()
-                    .setValue("Minimum time limit of ("
-                            + Math.round(timeLimit.getValue()) + " minutes)");
-        });
+        changeDistance.valueProperty().addListener(
+                (observableValue, number, t1) -> distanceDisplay.textProperty()
+                        .setValue("Minimum distance ("
+                                + Math.round(changeDistance.getValue()) + " km)"));
+        parkingLot.valueProperty().addListener(
+                (observableValue, number, t1) -> onParkingFilter.textProperty()
+                        .setValue("Minimum number of spaces ("
+                                + Math.round(parkingLot.getValue()) + ")"));
+        timeLimit.valueProperty().addListener(
+                (observableValue, number, t1) -> toggleTimeLimit.textProperty()
+                        .setValue("Minimum time limit of ("
+                                + Math.round(timeLimit.getValue()) + " minutes)"));
     }
 
     /**
@@ -417,15 +510,17 @@ public class MainController {
 
         manage.makeAllChargers();
         if (distanceDisplay.isSelected()) {
-            manage.setDistance(changeDistance.getValue());
+            manage.setDistance(changeDistance.getValue() * buffer);
         } else {
             manage.setDistance(0);
         }
         ObservableList<Charger> chargers = manage.getCloseChargerData();
         addChargersToDisplay(chargers);
-        if (chargers.size() != 0) {
+
+        if (!chargers.isEmpty() && Boolean.TRUE.equals(MapHandler.isMapRequested())) {
             mapController.changePosition(chargers.get(0).getLocation());
         }
+
     }
 
     /**
@@ -443,6 +538,7 @@ public class MainController {
      * @param stage stage to load with
      */
     private void loadMapView(Stage stage) {
+
         try {
             FXMLLoader webViewLoader = new FXMLLoader(getClass().getResource("/fxml/map.fxml"));
             Parent mapViewParent = webViewLoader.load();
@@ -454,14 +550,14 @@ public class MainController {
             mainWindow.setCenter(mapViewParent);
             MainWindow.setController(mapController);
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
         }
     }
 
     /**
      * Gets the MainManager created by the MainController
      *
-     * @return {@link seng202.team3.logic.MainManager} the manager of this
+     * @return {@link MainManager} the manager of this
      *         controller
      */
     public MainManager getManager() {
@@ -472,30 +568,27 @@ public class MainController {
      * Gets the manager to edit the charger
      */
     public void editCharger() {
-        manage.editCharger();
-    }
-
-    /**
-     * Toggles the route view on.
-     */
-    public void toggleRoute() {
-        mapController.toggleRoute();
-    }
-
-    /**
-     * Initialises the welcome page;
-     */
-    public void loadTableView() {
-        try {
-            FXMLLoader mainScene = new FXMLLoader(getClass()
-                    .getResource("/fxml/main_table.fxml"));
-            Parent mainNode = mainScene.load();
-            TableController controller = mainScene.getController();
-            controller.init();
-            menuWindow.setCenter(mainNode);
-            MainWindow.setController(controller);
-        } catch (IOException e) {
-            e.printStackTrace();
+        checkRouting();
+        if (Boolean.FALSE.equals(routing)) {
+            manage.editCharger();
         }
     }
+
+    /**
+     * Checks if routing. If routing, sets editable to
+     */
+    public void checkRouting() {
+        routing = mapController.isRouteDisplayed();
+    }
+
+    /**
+     * Searches on enter
+     *
+     * @param e the event handler
+     */
+    @FXML
+    public void onEnter(ActionEvent e) {
+        executeSearch();
+    }
+
 }

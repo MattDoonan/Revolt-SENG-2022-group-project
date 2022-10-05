@@ -8,7 +8,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<SplitPane dividerPositions="0.10552763819095477" minHeight="100" minWidth="300" orientation="VERTICAL" prefHeight="461.0" prefWidth="701.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.MenuController">
+<SplitPane dividerPositions="0.10552763819095477" minHeight="100" minWidth="300" orientation="VERTICAL" prefHeight="461.0" prefWidth="701.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.MenuController">
     <items>
       <HBox fx:id="menuBar" alignment="CENTER" maxHeight="60.0" style="-fx-background-color: #e06666;">
          <children>
@@ -29,7 +29,17 @@
             </HBox>
             <HBox alignment="CENTER_LEFT" nodeOrientation="RIGHT_TO_LEFT" prefHeight="60.0" prefWidth="1920.0">
                <children>
-                  <Button fx:id="vehicleButton" maxHeight="60.0" minHeight="60.0" minWidth="150.0" mnemonicParsing="false" onAction="#loadVehicleScreen" onMouseEntered="#vehicleHover" onMouseExited="#vehicleExit" prefHeight="60.0" prefWidth="200.0" style="-fx-background-color: #e06666;" text="My Vehicles" textFill="WHITE">
+                  <Button fx:id="loginSignout" maxHeight="60.0" minHeight="60.0" minWidth="150.0" mnemonicParsing="false" onAction="#loginOut" onMouseEntered="#loginHover" onMouseExited="#loginExit" prefHeight="60.0" prefWidth="200.0" style="-fx-background-color: #e06666;" text="Login" textFill="WHITE">
+                     <font>
+                        <Font name="FreeSans" size="24.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="accountPage" maxHeight="60.0" minHeight="60.0" minWidth="150.0" mnemonicParsing="false" onAction="#loadAccountScreen" onMouseEntered="#accountHover" onMouseExited="#accountExit" prefHeight="60.0" prefWidth="200.0" style="-fx-background-color: #e06666;" text="Account" textFill="WHITE">
+                     <font>
+                        <Font name="FreeSans" size="24.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="vehicleButton" maxHeight="60.0" minHeight="60.0" minWidth="150.0" mnemonicParsing="false" onAction="#loadVehicleScreen" onMouseEntered="#vehicleHover" onMouseExited="#vehicleExit" prefHeight="60.0" prefWidth="200.0" style="-fx-background-color: #e06666;" text="Vehicles" textFill="WHITE">
                      <font>
                         <Font name="FreeSans" size="24.0" />
                      </font>

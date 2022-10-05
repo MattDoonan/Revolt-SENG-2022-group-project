@@ -4,13 +4,19 @@ import java.io.IOException;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
+import seng202.team3.data.entity.PermissionLevel;
+import seng202.team3.logic.GeoLocationHandler;
 import seng202.team3.logic.JavaScriptBridge;
 import seng202.team3.logic.MapManager;
+import seng202.team3.logic.UserManager;
 
 /**
  * A start into a MapViewController which uses the University UC OSM viewer
@@ -21,6 +27,11 @@ import seng202.team3.logic.MapManager;
 public class MapViewController extends MapHandler {
 
     /**
+     * Logger
+     */
+    private static final Logger logManager = LogManager.getLogger();
+
+    /**
      * The MapManager of this controller
      */
     private MapManager map;
@@ -29,6 +40,23 @@ public class MapViewController extends MapHandler {
      * Boolean; true if the route is displayed; false if not
      */
     private boolean routeDisplayed = false;
+
+    /**
+     * The routing button
+     */
+    @FXML
+    private Button routing;
+
+    /**
+     * The add Charger button
+     */
+    @FXML
+    private Button addButton;
+
+    /**
+     * JavaScript function to add selected location to route
+     */
+    private static final String ADD_LOCATION_TO_ROUTE = "addLocationToRoute";
 
     /**
      * unused constructor
@@ -44,11 +72,14 @@ public class MapViewController extends MapHandler {
      * @param stage a {@link javafx.stage.Stage} object
      */
     public void init(Stage stage, MapManager map) {
+        path = "html/map.html";
         this.stage = stage;
         javaScriptBridge = new JavaScriptBridge();
         this.map = map;
+        addButton.setOpacity(0.0);
         initMap();
         this.stage.sizeToScene();
+
     }
 
     /**
@@ -57,12 +88,38 @@ public class MapViewController extends MapHandler {
      */
     @Override
     public void addChargersOnMap() {
+        if (UserManager.getUser().getLevel() != PermissionLevel.ADMIN
+                && UserManager.getUser().getLevel() != PermissionLevel.CHARGEROWNER) {
+            addButton.setOpacity(0.0);
+        } else {
+            addButton.setOpacity(100.0);
+        }
+        int userId = 0;
+        if (UserManager.getUser().getLevel() == PermissionLevel.ADMIN) {
+            userId = -1;
+        } else if (UserManager.getUser().getLevel() == PermissionLevel.CHARGEROWNER) {
+            userId = UserManager.getUser().getUserid();
+        }
+
+        if (Boolean.TRUE.equals(!MapHandler.isMapRequested()) || javaScriptConnector == null) {
+            return;
+        }
+
         javaScriptConnector.call("clearMarkers");
+
+        if (UserManager.getUser().getLevel() == PermissionLevel.ADMIN) {
+            javaScriptConnector.call("givePermission");
+        }
         for (Charger charger : map.getController().getCloseChargerData()) {
+            boolean hasPermission = false;
+            if (userId == -1 || userId == charger.getOwnerId()) {
+                hasPermission = true;
+            }
             javaScriptConnector.call("addMarker", charger.getLocation().getAddress(),
                     charger.getLocation().getLat(), charger.getLocation().getLon(),
-                    charger.getChargerId());
+                    charger.getChargerId(), hasPermission);
         }
+
     }
 
     /**
@@ -73,9 +130,36 @@ public class MapViewController extends MapHandler {
      * @param coordinate the coordinate which is clicked
      */
     public void makeCoordinate(Coordinate coordinate) {
-        javaScriptConnector.call("addCoordinate", "Current Coordinate: ",
-                coordinate.getLat(), coordinate.getLon());
-        map.makeCoordinate(coordinate);
+        if (Boolean.TRUE.equals(MapHandler.isMapRequested())) {
+            javaScriptConnector.call("removeCoordinate");
+            javaScriptConnector.call("addCoordinate", "Current Coordinate: ",
+                    coordinate.getLat(), coordinate.getLon());
+            javaScriptConnector.call("addCoordinateName");
+
+            changePosition(coordinate);
+            map.makeCoordinate(coordinate);
+            if (Boolean.TRUE.equals(MapHandler.getLocationAccepted())) {
+                javaScriptConnector.call("changeZoom");
+            }
+
+            logManager.info("Point created on map");
+        } else {
+            logManager.info("Map Unavailable: Could not add point to map");
+        }
+    }
+
+    /**
+     * Adds the coordinate name to the selected point
+     */
+    public void addCoordinateName() {
+        if (Boolean.TRUE.equals(MapHandler.isMapRequested())) {
+            javaScriptConnector.call("addCoordinate",
+                    GeoLocationHandler.getCoordinate().getAddress(),
+                    GeoLocationHandler.getCoordinate().getLat(),
+                    GeoLocationHandler.getCoordinate().getLon());
+        } else {
+            logManager.info("Map Unavailable: Could not name point");
+        }
     }
 
     /**
@@ -86,8 +170,10 @@ public class MapViewController extends MapHandler {
      * @param coordinate a {@link seng202.team3.data.entity.Coordinate} object
      */
     public void changePosition(Coordinate coordinate) {
-        javaScriptConnector.call("movePosition",
-                coordinate.getLat(), coordinate.getLon());
+        if (Boolean.TRUE.equals(MapHandler.isMapRequested())) {
+            javaScriptConnector.call("movePosition",
+                    coordinate.getLat(), coordinate.getLon());
+        }
     }
 
     /**
@@ -106,16 +192,23 @@ public class MapViewController extends MapHandler {
      */
     public void addRouteToCharger() {
         routeDisplayed = true;
-        Coordinate coord = map.getController().getPosition();
-        Charger charger = map.getController().getSelectedCharger();
-        if (charger != null) {
-            Coordinate chargerCoord = charger.getLocation();
-            javaScriptConnector.call("addLocationToRoute", coord.getLat(), coord.getLon(),
-                    coord.getAddress(), "p", 0);
-            javaScriptConnector.call("addLocationToRoute",
-                    chargerCoord.getLat(), chargerCoord.getLon(), charger.getChargerId(), "c", 1);
-            javaScriptConnector.call("addRoute");
+        if (Boolean.TRUE.equals(MapHandler.isMapRequested())) {
+            Coordinate coord = map.getController().getPosition();
+            Charger charger = map.getController().getSelectedCharger();
+            if (charger != null) {
+                Coordinate chargerCoord = charger.getLocation();
+                javaScriptConnector.call(ADD_LOCATION_TO_ROUTE, coord.getLat(), coord.getLon(),
+                        coord.getAddress(), "p", 0);
+                javaScriptConnector.call(ADD_LOCATION_TO_ROUTE,
+                        chargerCoord.getLat(), chargerCoord.getLon(),
+                        charger.getChargerId(), "c", 1);
+                javaScriptConnector.call("addRoute");
+            }
+            logManager.info("Route added to map");
+        } else {
+            logManager.info("Map Unavailable: Could not add route");
         }
+
     }
 
     /**
@@ -123,7 +216,11 @@ public class MapViewController extends MapHandler {
      */
     private void removeRoute() {
         routeDisplayed = false;
-        javaScriptConnector.call("removeRoute");
+        if (Boolean.TRUE.equals(MapHandler.isMapRequested())) {
+            javaScriptConnector.call("removeRoute");
+        } else {
+            logManager.info("Map Unavailable: Could not remove route");
+        }
     }
 
     /**
@@ -132,8 +229,13 @@ public class MapViewController extends MapHandler {
      * @param coordinate the coordinate of the stop to add
      */
     public void addStopInRoute(Coordinate coordinate) {
-        javaScriptConnector.call("addLocationToRoute", coordinate.getLat(), coordinate.getLon(),
-                "Stop", "p", 1);
+        if (Boolean.TRUE.equals(MapHandler.isMapRequested())) {
+            javaScriptConnector.call(ADD_LOCATION_TO_ROUTE, coordinate.getLat(),
+                    coordinate.getLon(), "Stop", "p", 1);
+            logManager.info("Stop added to route");
+        } else {
+            logManager.info("Map Unavailable: Could not add stop");
+        }
     }
 
     /**
@@ -142,9 +244,28 @@ public class MapViewController extends MapHandler {
     public void toggleRoute() {
         if (routeDisplayed) {
             removeRoute();
+
+            if (UserManager.getUser().getLevel() == PermissionLevel.ADMIN
+                    || UserManager.getUser().getLevel() == PermissionLevel.CHARGEROWNER) {
+                addButton.setOpacity(100.0);
+            }
+            routing.setText("Route To Charger");
+            routing.setStyle("-fx-background-color:#3ea055;");
         } else {
+            addButton.setOpacity(0.0);
             addRouteToCharger();
+            routing.setText("Stop Routing");
+            routing.setStyle("-fx-background-color:#FF3131;");
         }
+    }
+
+    /**
+     * Gets the routeDisplayed field
+     *
+     * @return a boolean of true, if route is displayed, else false.
+     */
+    public boolean isRouteDisplayed() {
+        return routeDisplayed;
     }
 
     /**
@@ -169,10 +290,13 @@ public class MapViewController extends MapHandler {
             popController.addPrompt(prompt);
             modal.showAndWait();
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
         } finally {
-            addChargersOnMap();
-            new MenuController().getController().viewChargers(null);
+            if (Boolean.TRUE.equals(MapHandler.isMapRequested())) {
+                addChargersOnMap();
+                addCoordinateName();
+            }
+            MenuController.getController().viewChargers(null);
         }
     }
 
@@ -181,30 +305,30 @@ public class MapViewController extends MapHandler {
      */
     @FXML
     public void addCharger() {
-        if (new MenuController().getController().getManager()
-                .getPosition().getAddress().equals("Coordinate")) {
-            javaScriptConnector.call("addCoordinateName");
+        if (addButton.getOpacity() != 100.0) {
+            return;
         }
-        loadPromptScreens("Search an address or click on the map\n"
-                + "and confirm to add a charger: \n\n", "add");
+
+        if (Boolean.TRUE.equals(MapHandler.isMapRequested())) {
+            loadPromptScreens("Search an address or click on the map\n"
+                    + "and confirm to add a charger: \n\n", "add");
+        } else {
+            javaScriptBridge.loadChargerEdit(null);
+        }
     }
 
     /**
-     * Executes an edit prompt
+     * Toggles from the relocate position button
      */
     @FXML
-    public void editCharger() {
-        loadPromptScreens("Click on a charger on the map and\n"
-                + "confirm to edit a charger: \n\n", "edit");
-    }
+    public void getLocation() {
+        if (MapHandler.getLocationAccepted() == null || !MapHandler.getLocationAccepted()) {
+            MapHandler.setLocationAccepted(null);
+        }
+        this.getUserLocation();
+        map.getController().setPosition();
 
-    /**
-     * Executes a delete prompt
-     */
-    @FXML
-    public void deleteCharger() {
-        loadPromptScreens("Click on a charger on the map and\n"
-                + "confirm to DELETE a charger: \n\n", "delete");
+        makeCoordinate(GeoLocationHandler.getCoordinate());
     }
 
 }

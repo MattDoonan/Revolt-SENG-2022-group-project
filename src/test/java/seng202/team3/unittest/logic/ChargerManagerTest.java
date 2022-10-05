@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.management.InstanceAlreadyExistsException;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +23,10 @@ import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
+import seng202.team3.data.entity.PermissionLevel;
+import seng202.team3.data.entity.User;
 import seng202.team3.logic.ChargerManager;
+import seng202.team3.logic.UserManager;
 
 /**
  * Unit tests for {@link ChargerManager} ChargerManager Class in Logic
@@ -29,6 +35,10 @@ import seng202.team3.logic.ChargerManager;
  * @version 1.0.1, Aug 22
  */
 public class ChargerManagerTest {
+    /**
+     * Logger
+     */
+    private static final Logger logManager = LogManager.getLogger();
 
     private ChargerManager manager;
     static Charger charge1;
@@ -36,6 +46,7 @@ public class ChargerManagerTest {
     static Charger charge3;
     static Charger charge4;
     static SqlInterpreter db;
+    static User testUser;
 
     /**
      * Makes a test database
@@ -43,7 +54,13 @@ public class ChargerManagerTest {
      * @throws InstanceAlreadyExistsException If already exists
      */
     @BeforeAll
-    static void intialize() throws InstanceAlreadyExistsException {
+    static void intialize() throws InstanceAlreadyExistsException, IOException {
+        testUser = new User("admin@admin.com", "admin",
+                PermissionLevel.USER);
+        testUser.setUserid(1);
+
+        UserManager.setUser(testUser);
+
         SqlInterpreter.removeInstance();
         db = SqlInterpreter.initialiseInstanceWithUrl(
                 "jdbc:sqlite:./target/test-classes/test_database.db");
@@ -55,7 +72,7 @@ public class ChargerManagerTest {
         Coordinate coord1 = new Coordinate(1.1, 2.3, -43.53418, 172.627572);
         charge1 = new Charger(
                 new ArrayList<>(List.of(dummyConnector1)), "Hosp", coord1, 1, 0.3, "Meridian",
-                "Meridian", "2020/1/1 00:00:00", true,
+                "2020/1/1 00:00:00", true,
                 false, false, false);
 
         Connector dummyConnector2 = new Connector("ChardaMo", "AC", "Available", "123", 3);
@@ -64,7 +81,7 @@ public class ChargerManagerTest {
         Coordinate coord2 = new Coordinate(3.5, 4.4, -43.52425, 172.60019);
         charge2 = new Charger(
                 new ArrayList<>(List.of(dummyConnector2)), "Boys", coord2, 2, 3.5, "Someone",
-                "Someone", "2020/1/1 00:00:00", true,
+                "2020/1/1 00:00:00", true,
                 false, false, false);
 
         Connector dummyConnector3 = new Connector("ChardaMo", "AC", "Available", "123", 3);
@@ -73,7 +90,7 @@ public class ChargerManagerTest {
         Coordinate coord3 = new Coordinate(4.5, 5.7, -36.85918, 174.76602);
         charge3 = new Charger(
                 new ArrayList<>(List.of(dummyConnector3)), "Grammar", coord3, 5, 1.2, "Else",
-                "Else", "2020/1/1 00:00:00", true,
+                "2020/1/1 00:00:00", true,
                 false, false, false);
 
         Connector dummyConnector4 = new Connector("ChardaMo", "AC", "Available", "123", 3);
@@ -82,7 +99,7 @@ public class ChargerManagerTest {
         Coordinate coord4 = new Coordinate(4.8, 7.7, -45.87135, 170.49551);
         charge4 = new Charger(
                 new ArrayList<>(List.of(dummyConnector4)), "Otago", coord4, 2, 35.1, "Us",
-                "Us", "2020/1/1 00:00:00", true, false,
+                "2020/1/1 00:00:00", true, false,
                 false, false);
 
         ArrayList<Object> chargers = new ArrayList<>();
@@ -121,7 +138,8 @@ public class ChargerManagerTest {
                     }
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                logManager.error(e.getMessage());
+                ;
             }
         }
 

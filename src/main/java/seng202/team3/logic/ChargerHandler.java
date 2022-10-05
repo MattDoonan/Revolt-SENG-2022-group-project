@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.database.QueryBuilder;
 import seng202.team3.data.database.QueryBuilderImpl;
@@ -19,6 +21,10 @@ import seng202.team3.data.entity.Coordinate;
  * @version 1.0.0, Sep 22
  */
 public class ChargerHandler {
+    /**
+     * Logger
+     */
+    private static final Logger logManager = LogManager.getLogger();
 
     /**
      * Main query to be modified to retrieve chargers
@@ -72,7 +78,7 @@ public class ChargerHandler {
      * GeolocationHandler
      */
     public void setPosition() {
-        selectedCoordinate = GeoLocationHandler.getInstance().getCoordinate();
+        selectedCoordinate = GeoLocationHandler.getCoordinate();
     }
 
     /**
@@ -114,7 +120,7 @@ public class ChargerHandler {
             chargerData = FXCollections
                     .observableList(chargerList);
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
         }
     }
 

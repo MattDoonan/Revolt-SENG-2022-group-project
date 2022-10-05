@@ -1,6 +1,7 @@
 package seng202.team3.data.entity;
 
-import java.util.ArrayList;
+import java.util.List;
+import seng202.team3.logic.UserManager;
 
 /**
  * Stores information about vehicles
@@ -26,10 +27,15 @@ public class Vehicle {
     private int maxRange;
 
     /** List of connector types */
-    private ArrayList<String> connectors;
+    private List<String> connectors;
 
     /** Path to vehicle image */
     private String imgPath;
+
+    /**
+     * userid of the vehicle owner
+     */
+    private int owner;
 
     /**
      * Default filepath for missing images
@@ -45,13 +51,14 @@ public class Vehicle {
      * @param connectors list of connectors supported by the vehicle
      */
     public Vehicle(String make, String model, int maxRange,
-            ArrayList<String> connectors) {
+            List<String> connectors) {
         this.make = make;
         this.model = model;
         this.maxRange = maxRange;
         this.connectors = connectors;
         this.imgPath = DEFAULTIMGPATH;
         this.batteryPercent = 100.0;
+        setOwner(UserManager.getUser().getUserid());
     }
 
     /**
@@ -138,7 +145,7 @@ public class Vehicle {
      *
      * @return list of connecter types
      */
-    public ArrayList<String> getConnectors() {
+    public List<String> getConnectors() {
         return connectors;
     }
 
@@ -147,7 +154,7 @@ public class Vehicle {
      *
      * @param connectors list of connecter types
      */
-    public void setConnectors(ArrayList<String> connectors) {
+    public void setConnectors(List<String> connectors) {
         this.connectors = connectors;
     }
 
@@ -197,6 +204,24 @@ public class Vehicle {
     }
 
     /**
+     * Set the user id number
+     *
+     * @param number integer for the id
+     */
+    public void setOwner(int number) {
+        this.owner = number;
+    }
+
+    /**
+     * returns the user id number
+     *
+     * @return the id integer
+     */
+    public int getOwner() {
+        return owner;
+    }
+
+    /**
      * {@inheritDoc}}
      */
     @Override
@@ -215,6 +240,30 @@ public class Vehicle {
                 && v.getConnectors().equals(this.getConnectors())
                 && v.getCurrentRange().equals(this.getCurrentRange())
                 && v.getImgPath().equals(this.getImgPath())
-                && v.getVehicleId() == this.getVehicleId();
+                && v.getVehicleId() == this.getVehicleId()
+                && v.getOwner() == this.getOwner();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public int hashCode() {
+        int result = (vehicleId ^ (vehicleId >>> 32));
+        result = 31 * result + make.hashCode();
+        result = 31 * result + model.hashCode();
+        result = 31 * result + batteryPercent.hashCode();
+        result = 31 * result + connectors.hashCode();
+        result = 31 * result + imgPath.hashCode();
+
+        return result;
+    }
+
+    /**
+     * toString function (mostly for debugging purposes)
+     * 
+     * @return string representation of vehicle
+     */
+    public String toString() {
+        return "MAKE: " + make + "  MODEL: " + model + "  MAXRANGE: " + maxRange
+                + "  ID: " + vehicleId + "  OWNER: " + owner;
     }
 }

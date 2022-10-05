@@ -9,6 +9,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import seng202.team3.data.entity.Connector;
 
 /**
@@ -18,36 +20,40 @@ import seng202.team3.data.entity.Connector;
  * @version 1.0.0, Sep 22
  */
 public class ConnectorEditController {
+    /**
+     * Logger
+     */
+    private static final Logger logManager = LogManager.getLogger();
 
     /**
      * Field to contain the current of the connector
      */
     @FXML
-    private TextField current;
+    private TextField currentField;
 
     /**
      * Field to contain the power draw
      */
     @FXML
-    private TextField wattage;
+    private TextField wattageField;
 
     /**
      * Field to contain the number of connections
      */
     @FXML
-    private TextField chargingPoints;
+    private TextField chargingPointsField;
 
     /**
      * Field to contain the type of connector
      */
     @FXML
-    private TextField type;
+    private TextField typeField;
 
     /**
      * Field to contain the operative status
      */
     @FXML
-    private TextField status;
+    private TextField statusField;
 
     /**
      * Active connector being edited
@@ -55,19 +61,14 @@ public class ConnectorEditController {
     private Connector connector;
 
     /**
-     * Controller managing the connectors
+     * Controller managing the chargers
      */
-    private ConnectorController controller;
+    private ChargerController controller;
 
     /**
      * List of errors to display
      */
     private ArrayList<String> errors = new ArrayList<>();
-
-    /**
-     * Active screen
-     */
-    private Stage stage;
 
     /**
      * Initialises the Controller editing
@@ -79,7 +80,8 @@ public class ConnectorEditController {
     /**
      * Initialises the ConnectorEditController with the selected connector
      *
-     * @param connector a {@link seng202.team3.data.entity.Connector} if it's preexisting
+     * @param connector a {@link seng202.team3.data.entity.Connector} if it's
+     *                  preexisting
      */
     public void addConnector(Connector connector) {
         this.connector = connector;
@@ -90,20 +92,20 @@ public class ConnectorEditController {
      */
     public void displayInfo() {
         if (connector != null) {
-            current.setText(connector.getCurrent());
-            wattage.setText(connector.getPower());
-            chargingPoints.setText(Integer.toString(connector.getCount()));
-            type.setText(connector.getType());
-            status.setText(connector.getStatus());
+            currentField.setText(connector.getCurrent());
+            wattageField.setText(connector.getPower());
+            chargingPointsField.setText(Integer.toString(connector.getCount()));
+            typeField.setText(connector.getType());
+            statusField.setText(connector.getStatus());
         }
     }
 
     /**
-     * Sets the ConnectorController holding all the controllers
+     * Sets the ChargerController associated with this
      *
-     * @param controller ConnectorController controller
+     * @param controller ChargerController controller
      */
-    public void setController(ConnectorController controller) {
+    public void setController(ChargerController controller) {
         this.controller = controller;
     }
 
@@ -111,13 +113,13 @@ public class ConnectorEditController {
      * Saves the changes and closes this window if necessary
      */
     @FXML
-    public void saveChanges() {
+    public void saveConnection() {
         Connector changedConnector;
-        String powerString = wattage.getText();
-        String currentString = current.getText();
+        String powerString = wattageField.getText();
+        String currentString = currentField.getText();
         int points = 0;
         try {
-            points = Integer.parseInt(chargingPoints.getText());
+            points = Integer.parseInt(chargingPointsField.getText());
         } catch (NumberFormatException e) {
             errors.add("Number of Charging Points needs to be an integer");
         }
@@ -127,11 +129,11 @@ public class ConnectorEditController {
         if (powerString.length() == 0) {
             errors.add("Must have a wattage, e.g. 24 kW");
         }
-        String statusString = status.getText();
+        String statusString = statusField.getText();
         if (statusString.length() == 0) {
             errors.add("Must have a status, e.g. Operative");
         }
-        String typeString = type.getText();
+        String typeString = typeField.getText();
         if (typeString.length() == 0) {
             errors.add("Must have a charger type e.g. CHAdeMO");
         }
@@ -139,21 +141,19 @@ public class ConnectorEditController {
             if (connector == null) {
                 changedConnector = new Connector(typeString, powerString,
                         statusString, currentString, points);
-                controller.getConnectorList().add(changedConnector);
+                controller.getConnectors().add(changedConnector);
             } else {
                 changedConnector = new Connector(typeString,
                         powerString, statusString, currentString, points, connector.getId());
             }
 
-            for (int i = 0; i < controller.getConnectorList().size(); i++) {
-                if (controller.getConnectorList().get(i) == connector) {
-                    controller.getConnectorList().set(i, changedConnector);
+            for (int i = 0; i < controller.getConnectors().size(); i++) {
+                if (controller.getConnectors().get(i) == connector) {
+                    controller.getConnectors().set(i, changedConnector);
                 }
             }
-        }
-        if (errors.isEmpty()) {
-            stage = (Stage) status.getScene().getWindow();
-            stage.close();
+
+            controller.resetPage();
         } else {
             launchErrorPopUps();
             errors.clear();
@@ -161,10 +161,18 @@ public class ConnectorEditController {
     }
 
     /**
+     * Cancels the edit connector portion
+     */
+    @FXML
+    public void cancel() {
+        controller.resetPage();
+    }
+
+    /**
      * Launches an error popup when trying to do illegal things
      */
     public void launchErrorPopUps() {
-        stage = (Stage) status.getScene().getWindow();
+        Stage stage = (Stage) statusField.getScene().getWindow();
         try {
             stage.setAlwaysOnTop(false);
             FXMLLoader error = new FXMLLoader(getClass().getResource(
@@ -175,7 +183,7 @@ public class ConnectorEditController {
             modal.setScene(modalScene);
             modal.setResizable(false);
             modal.setTitle("Error With Connectors:");
-            modal.initModality(Modality.WINDOW_MODAL);
+            modal.initModality(Modality.APPLICATION_MODAL);
             ErrorController errController = error.getController();
             errController.init();
             errController.setErrors(errors);
@@ -183,8 +191,13 @@ public class ConnectorEditController {
             errController.displayErrors();
             modal.setAlwaysOnTop(true);
             modal.showAndWait();
+
+            for (String e : errors) {
+                logManager.warn(e);
+            }
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
         }
     }
+
 }

@@ -4,9 +4,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
-import seng202.team3.data.entity.Coordinate;
+import seng202.team3.data.entity.PermissionLevel;
 
 /**
  * Logic layer for the main Controller
@@ -15,6 +17,10 @@ import seng202.team3.data.entity.Coordinate;
  * @version 1.0.1, Aug 22
  */
 public class MainManager extends ChargerHandler implements ChargerInterface {
+    /**
+     * Logger
+     */
+    private static final Logger logManager = LogManager.getLogger();
 
     /**
      * Distance between selected coordinate and specified charger
@@ -30,7 +36,7 @@ public class MainManager extends ChargerHandler implements ChargerInterface {
      * Saves the MainController to call later
      */
     public MainManager() {
-        selectedCoordinate = new Coordinate(null, null, -43.522518157958984, 172.5811767578125);
+        selectedCoordinate = GeoLocationHandler.getCoordinate();
     }
 
     /**
@@ -63,9 +69,11 @@ public class MainManager extends ChargerHandler implements ChargerInterface {
         if (distance != 0) {
             arrayChargers = chargerManager.getNearbyChargers(
                     arrayChargers, selectedCoordinate, distance);
+        } else {
+            arrayChargers = chargerManager.getNearbyChargers(
+                    arrayChargers, selectedCoordinate, 2000); // Enough to cover NZ
         }
-        ObservableList<Charger> closerChargers = FXCollections.observableList(arrayChargers);
-        return closerChargers;
+        return FXCollections.observableList(arrayChargers);
     }
 
     /**
@@ -87,8 +95,9 @@ public class MainManager extends ChargerHandler implements ChargerInterface {
      */
     @Override
     public void addCharger() {
-        new JavaScriptBridge().loadChargerEdit(null, selectedCoordinate);
+        new JavaScriptBridge().loadChargerEdit(null);
         makeAllChargers();
+        logManager.info("Charger has been added");
     }
 
     /**
@@ -101,9 +110,10 @@ public class MainManager extends ChargerHandler implements ChargerInterface {
             try {
                 SqlInterpreter.getInstance().deleteData("charger", selectedCharger.getChargerId());
                 selectedCharger = null;
+                logManager.info("Charger has been deleted");
                 makeAllChargers();
             } catch (IOException e) {
-                e.printStackTrace();
+                logManager.error(e.getMessage());
             }
         }
     }
@@ -115,7 +125,10 @@ public class MainManager extends ChargerHandler implements ChargerInterface {
      */
     @Override
     public void editCharger() {
-        if (getSelectedCharger() != null) {
+        if (getSelectedCharger() == null) {
+            // Do nothing
+        } else if ((UserManager.getUser().getLevel() == PermissionLevel.ADMIN)
+                || (getSelectedCharger().getOwnerId() == UserManager.getUser().getUserid())) {
             JavaScriptBridge bridge = new JavaScriptBridge();
             bridge.loadMoreInfo(getSelectedCharger().getChargerId());
             makeAllChargers();

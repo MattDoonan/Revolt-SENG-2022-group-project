@@ -5,6 +5,8 @@ import com.opencsv.bean.CsvBindByName;
 import com.opencsv.bean.CsvCustomBindByName;
 import com.opencsv.bean.CsvRecurse;
 import java.util.ArrayList;
+import java.util.List;
+import seng202.team3.logic.UserManager;
 
 /**
  * Representation of chargers that users can find and connect vehicles to
@@ -27,9 +29,10 @@ public class Charger {
     private String name;
 
     /** {@link Connector Connectors} available on charger */
-    @CsvBindAndSplitByName(column = "connectorsList", elementType = Connector.class,
-            splitOn = ",(?=( )*\\{)", converter = ConnectorConverter.class, required = true)
-    private ArrayList<Connector> connectors;
+    @CsvBindAndSplitByName(column = "connectorsList", elementType = Connector.class, 
+                            splitOn = ",(?=( )*\\{)", converter = ConnectorConverter.class, 
+                            required = true)
+    private List<Connector> connectors;
 
     /** {@link Coordinate Coordinate} information for the charger */
     @CsvRecurse
@@ -48,8 +51,14 @@ public class Charger {
     private String operator;
 
     /** Business that owns the charger */
-    @CsvBindByName(column = "owner", required = true)
     private String owner;
+
+    /** userid of the charger owner */
+    private int ownerId;
+
+    /** Name of the user to map ownership to for demo data */
+    @CsvBindByName(column = "owner")
+    private String demoOwner;
 
     /** Accessible to the public */
     private boolean isPublic;
@@ -78,6 +87,8 @@ public class Charger {
      */
     public Charger() {
         connectors = new ArrayList<>();
+        setOwnerId(UserManager.getUser().getUserid());
+        setOwner(UserManager.getUser().getAccountName());
     }
 
     /** Has warning for charger high cost */
@@ -98,30 +109,30 @@ public class Charger {
      * @param availableParks number of available parks
      * @param timeLimit      maximum time limit for charging
      * @param operator       operator of the charger
-     * @param owner          owner of the charger
      * @param dateOpened     date the charger was opened
      * @param hasAttraction  bool indicating nearby tourist attraction
      * @param is24Hrs        bool indicating open 24 hours
      * @param hasChargeCost  bool indicating if it has a charge cost
      * @param hasParkingCost bool indicating if it has a parking cost
      */
-    public Charger(ArrayList<Connector> connectors, String name, Coordinate location,
-            int availableParks, Double timeLimit, String operator, String owner, String dateOpened,
+    public Charger(List<Connector> connectors, String name, Coordinate location,
+            int availableParks, Double timeLimit, String operator, String dateOpened,
             boolean hasAttraction, boolean is24Hrs, boolean hasChargeCost, boolean hasParkingCost) {
         this.connectors = connectors;
         setLocation(location);
         setAvailableParks(availableParks);
         setTimeLimit(timeLimit);
         setOperator(operator);
-        setPublic(false); // TODO: retrieve from data once implemented
         setHasAttraction(hasAttraction);
         setName(name);
-        setOwner(owner);
         setDateOpened(dateOpened);
         setChargeCost(hasChargeCost);
         setParkingCost(hasParkingCost);
         setAvailable24Hrs(is24Hrs);
         setCurrentType();
+        setOwnerId(UserManager.getUser().getUserid());
+        setOwner(UserManager.getUser().getAccountName());
+        demoOwner = null;
     }
 
     /**
@@ -185,7 +196,7 @@ public class Charger {
      *
      * @return list of attached connectors
      */
-    public ArrayList<Connector> getConnectors() {
+    public List<Connector> getConnectors() {
         return connectors;
     }
 
@@ -266,6 +277,24 @@ public class Charger {
     }
 
     /**
+     * Gets the demo owner of the charger
+     *
+     * @return the demo owner of the charger
+     */
+    public String getDemoOwner() {
+        return demoOwner;
+    }
+
+    /**
+     * Sets the demo owner of the charger
+     *
+     * @param owner new demo owner of the charger
+     */
+    public void setDemoOwner(String owner) {
+        this.demoOwner = owner;
+    }
+
+    /**
      * Gets the owner of the charger
      *
      * @return the owner of the charger
@@ -281,6 +310,24 @@ public class Charger {
      */
     public void setOwner(String owner) {
         this.owner = owner;
+    }
+
+    /**
+     * Get unique identifier for the owner
+     *
+     * @return unique identification number
+     */
+    public int getOwnerId() {
+        return ownerId;
+    }
+
+    /**
+     * Set unique identifier for the owner
+     *
+     * @param ownerId unique identifier for the charger
+     */
+    public void setOwnerId(int ownerId) {
+        this.ownerId = ownerId;
     }
 
     /**
@@ -405,8 +452,8 @@ public class Charger {
      *
      * @return ArrayList of boolean warnings
      */
-    public ArrayList<String> getWarnings() {
-        ArrayList<String> warnings = new ArrayList<String>();
+    public List<String> getWarnings() {
+        ArrayList<String> warnings = new ArrayList<>();
         if (this.warningHighCost) {
             warnings.add("high cost");
         }
@@ -447,15 +494,19 @@ public class Charger {
                 types.add(c.getCurrent());
             }
         }
-        currentType = "";
+
         if (types.size() > 1) {
+            StringBuilder str = new StringBuilder();
+
             for (String type : types) {
                 if (types.indexOf(type) == 0) {
-                    currentType += type;
+                    str.append(type);
                 } else {
-                    currentType += " " + type;
+                    str.append(" " + type);
                 }
             }
+
+            this.currentType = str.toString();
         } else {
             currentType = types.get(0);
         }
@@ -493,6 +544,7 @@ public class Charger {
                 && c.getAvailableParks() == this.getAvailableParks()
                 && c.getTimeLimit().equals(this.getTimeLimit())
                 && c.getOperator().equals(this.getOperator())
+                && c.getOwnerId() == this.getOwnerId()
                 && c.getOwner().equals(this.getOwner())
                 && c.getPublic() == this.getPublic()
                 && c.getHasAttraction() == this.getHasAttraction()
@@ -500,5 +552,22 @@ public class Charger {
                 && c.getChargeCost() == this.getChargeCost()
                 && c.getWarnings().equals(this.getWarnings())
                 && c.getCurrentType().equals(this.getCurrentType());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public int hashCode() {
+        int result = (chargerId ^ (chargerId >>> 32));
+        result = 31 * result + dateOpened.hashCode();
+        result = 31 * result + name.hashCode();
+        result = 31 * result + connectors.hashCode();
+        result = 31 * result + location.hashCode();
+        result = 31 * result + availableParks;
+        result = 31 * result + timeLimit.hashCode();
+        result = 31 * result + operator.hashCode();
+        result = 31 * result + owner.hashCode();
+        result = 31 * result + currentType.hashCode();
+
+        return result;
     }
 }

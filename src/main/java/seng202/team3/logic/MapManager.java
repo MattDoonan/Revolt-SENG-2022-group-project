@@ -1,6 +1,7 @@
 package seng202.team3.logic;
 
 import seng202.team3.data.entity.Coordinate;
+import seng202.team3.gui.MenuController;
 
 /**
  * Manages Map-related functionality
@@ -34,16 +35,17 @@ public class MapManager {
     }
 
     /**
-     * Associates this map with the geolocation coordinate
+     * Associates this map with the geolocation coordinate, refreshes the Main table
      * {@link seng202.team3.data.entity.Coordinate}
      * 
      * @param coordinate the coordinate associated
      */
     public void makeCoordinate(Coordinate coordinate) {
-        GeoLocationHandler.getInstance().setCoordinate(coordinate,
+        GeoLocationHandler.setCoordinate(coordinate,
                 coordinate.getAddress());
+
         manager.setPosition();
-        manager.getCloseChargerData();
+        MenuController.getController().refreshTable();
     }
 
 }

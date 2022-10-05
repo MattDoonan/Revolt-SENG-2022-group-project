@@ -5,7 +5,10 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Class starts the javaFX application window
@@ -19,6 +22,11 @@ public class MainWindow extends Application {
      * Activce scene displayed in the window
      */
     private static Scene activeScene;
+
+    /**
+     * Logger
+     */
+    private static final Logger logManager = LogManager.getLogger();
 
     /**
      * unused constructor
@@ -39,11 +47,14 @@ public class MainWindow extends Application {
         MenuController baseController = baseLoader.getController();
         baseController.init(primaryStage);
         primaryStage.setTitle("Revolt App");
-        activeScene = new Scene(root, 1500, 820);
+        double height = Screen.getPrimary().getBounds().getHeight() - 80;
+        double width = Screen.getPrimary().getBounds().getWidth();
+        setActiveScene(new Scene(root, width, height));
         baseController.initHome();
-        primaryStage.setScene(activeScene);
+        primaryStage.setScene(getActiveScene());
         primaryStage.show();
         MainWindow.setController(baseController);
+        logManager.info("Application window initialized");
     }
 
     /**
@@ -68,6 +79,24 @@ public class MainWindow extends Application {
         } else {
             return null;
         }
+    }
+
+    /**
+     * Sets the active scene of the application
+     * 
+     * @param scene scene to be set
+     */
+    private static void setActiveScene(Scene scene) {
+        MainWindow.activeScene = scene;
+    }
+
+    /**
+     * Gets the active scene of the application
+     * 
+     * @return active scene of the application
+     */
+    private static Scene getActiveScene() {
+        return MainWindow.activeScene;
     }
 
     /**
