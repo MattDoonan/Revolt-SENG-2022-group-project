@@ -166,9 +166,7 @@ public class Coordinate {
             return false;
         }
 
-        return c.getXpos().equals(this.getXpos())
-                && c.getYpos().equals(this.getYpos())
-                && c.getLat().equals(this.getLat())
+        return c.getLat().equals(this.getLat())
                 && c.getLon().equals(this.getLon())
                 && c.getAddress().equals(this.getAddress());
     }

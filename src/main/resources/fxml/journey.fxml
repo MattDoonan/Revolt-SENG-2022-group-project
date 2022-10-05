@@ -25,7 +25,7 @@
                   <Button fx:id="resetJourney" layoutX="16.0" layoutY="391.0" mnemonicParsing="false" onAction="#resetJourney" prefWidth="109.0" text="Reset Journey" />
                   <VBox fx:id="journeyTable" layoutX="238.0" layoutY="41.0" prefWidth="265.0" style="-fx-background-color: ffe5d4;" AnchorPane.topAnchor="41.0" />
                   <Button fx:id="saveJourney" layoutX="146.0" layoutY="391.0" mnemonicParsing="false" onAction="#saveJourney" text="Save Journey" />
-                  <MenuButton fx:id="vehicles" layoutX="65.0" layoutY="196.0" mnemonicParsing="false" text="Select Vehicle" />
+                  <MenuButton fx:id="vehicles" layoutX="65.0" layoutY="196.0" mnemonicParsing="false" text="Select Vehicle"/>
                   <Text fx:id="errorText" fill="RED" layoutX="88.0" layoutY="309.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Error" visible="false" wrappingWidth="82.0">
                      <font>
                         <Font size="32.0" />

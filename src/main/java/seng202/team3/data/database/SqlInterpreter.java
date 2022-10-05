@@ -489,10 +489,10 @@ public class SqlInterpreter implements DataReader {
             Journey journey = new Journey();
             journey.setJourneyId(rs.getInt("journeyid"));
             journey.setStartPosition(
-                    new Coordinate(rs.getDouble("startX"), rs.getDouble("startY"),
+                    new Coordinate(null, null,
                             rs.getDouble("startLat"), rs.getDouble("startLon")));
             journey.setEndPosition(
-                    new Coordinate(rs.getDouble("endX"), rs.getDouble("endY"),
+                    new Coordinate(null, null,
                             rs.getDouble("endLat"), rs.getDouble("endLon")));
             journey.setStartDate(rs.getString("startDate"));
             journey.setEndDate(rs.getString("endDate"));
@@ -814,11 +814,10 @@ public class SqlInterpreter implements DataReader {
      */
     public void writeJourney(Journey j) throws IOException {
         String toAdd = "INSERT INTO journey (journeyid, vehicleid, startLat, "
-                + "startLon, startX, startY, "
-                + "endLat, endLon, endX, endY, startDate, endDate) "
-                + "values(?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(journeyid) DO UPDATE SET "
-                + "vehicleid = ?, startLat = ?, startLon = ?, startX = ?,"
-                + " startY = ?, endLat = ?, endLon = ?, endX = ?, endY = ?, "
+                + "startLon, "
+                + "endLat, endLon, startDate, endDate) "
+                + "values(?,?,?,?,?,?,?,?) ON CONFLICT(journeyid) DO UPDATE SET "
+                + "vehicleid = ?, startLat = ?, startLon = ?, endLat = ?, endLon = ?, "
                 + "startDate = ?, endDate = ?";
         if (j.getChargers().size() < 1) {
             throw new IOException("Error writing journey. No stops found.");
@@ -835,25 +834,17 @@ public class SqlInterpreter implements DataReader {
             addJourney.setInt(2, j.getVehicle().getVehicleId());
             addJourney.setDouble(3, j.getStartPosition().getLat());
             addJourney.setDouble(4, j.getStartPosition().getLon());
-            addJourney.setDouble(5, j.getStartPosition().getXpos());
-            addJourney.setDouble(6, j.getStartPosition().getYpos());
-            addJourney.setDouble(7, j.getEndPosition().getLat());
-            addJourney.setDouble(8, j.getEndPosition().getLon());
-            addJourney.setDouble(9, j.getEndPosition().getXpos());
-            addJourney.setDouble(10, j.getEndPosition().getYpos());
-            addJourney.setString(11, j.getStartDate());
-            addJourney.setString(12, j.getEndDate());
-            addJourney.setInt(13, j.getVehicle().getVehicleId());
-            addJourney.setDouble(14, j.getStartPosition().getLat());
-            addJourney.setDouble(15, j.getStartPosition().getLon());
-            addJourney.setDouble(16, j.getStartPosition().getXpos());
-            addJourney.setDouble(17, j.getStartPosition().getYpos());
-            addJourney.setDouble(18, j.getEndPosition().getLat());
-            addJourney.setDouble(19, j.getEndPosition().getLon());
-            addJourney.setDouble(20, j.getEndPosition().getXpos());
-            addJourney.setDouble(21, j.getEndPosition().getYpos());
-            addJourney.setString(22, j.getStartDate());
-            addJourney.setString(23, j.getEndDate());
+            addJourney.setDouble(5, j.getEndPosition().getLat());
+            addJourney.setDouble(6, j.getEndPosition().getLon());
+            addJourney.setString(7, j.getStartDate());
+            addJourney.setString(8, j.getEndDate());
+            addJourney.setInt(9, j.getVehicle().getVehicleId());
+            addJourney.setDouble(10, j.getStartPosition().getLat());
+            addJourney.setDouble(11, j.getStartPosition().getLon());
+            addJourney.setDouble(12, j.getEndPosition().getLat());
+            addJourney.setDouble(13, j.getEndPosition().getLon());
+            addJourney.setString(14, j.getStartDate());
+            addJourney.setString(15, j.getEndDate());
 
             addJourney.executeUpdate();
             if (j.getJourneyId() == 0) {

@@ -294,7 +294,6 @@ public class JourneyController {
                 errors.add("Some of your locations are out of range of eachother");
             }
             displayErrorPopups();
-            errors.clear();
         }
     }
 
@@ -305,11 +304,36 @@ public class JourneyController {
         garageManager = new GarageManager();
         garageManager.resetQuery();
         garageManager.getAllVehicles();
+        vehicles.getItems().clear();
         for (Vehicle vehicle : garageManager.getData()) {
             String title = vehicle.getMake() + ' ' + vehicle.getModel();
-            vehicles.getItems().add(new MenuItem(title));
+            MenuItem item = new MenuItem(title);
+            item.setId(Integer.toString(vehicle.getVehicleId()));
+            item.setOnAction(this::configureVehicleItem);
+            vehicles.getItems().add(item);
         }
+        //if (vehicles.getText() == "") { //Only runs first time
+        vehicles.setText(garageManager.getData().get(0).getMake()
+                + " " + garageManager.getData().get(0).getModel());
         journeyManager.selectVehicle(garageManager.getData().get(0));
+        //}
+    }
+
+    /**
+     * Configures the vehicles MenuItem
+     * Adds text to vehicles MenuButton and selects vehicle
+     */
+    public void configureVehicleItem(ActionEvent e) {
+        MenuItem item = ((MenuItem) e.getSource());
+        vehicles.setText(item.getText());
+        int i = 0;
+        for (Vehicle vehicle : garageManager.getData()) {
+            if (vehicle.getVehicleId() == Integer.parseInt(item.getId())) {
+                journeyManager.selectVehicle(
+                        garageManager.getData().get(i));
+            }
+            i++;
+        }
     }
 
     /**
@@ -345,6 +369,7 @@ public class JourneyController {
             controller.displayErrors();
             errorPopup.setAlwaysOnTop(true);
             errorPopup.showAndWait();
+            //TODO stop errors piling up when clicking multiple times
         } catch (IOException e) {
             e.printStackTrace();
         }

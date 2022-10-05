@@ -126,8 +126,8 @@ public class SqlInterpreterTest {
                 100,
                 new ArrayList<String>(Arrays.asList("ChardaMo", "Type 2 Socketed")));
         testJourney = new Journey(testVehicle,
-                new Coordinate(5.6, 7.7, -36.6543, 174.74532),
-                new Coordinate(5.8, 7.2, -37.45543, 176.45652),
+                new Coordinate(null, null, -36.6543, 174.74532),
+                new Coordinate(null, null, -37.45543, 176.45652),
                 "2020/1/1 00:00:00", "2020/1/3 00:00:00");
         testJourney.addCharger(testCharger);
 

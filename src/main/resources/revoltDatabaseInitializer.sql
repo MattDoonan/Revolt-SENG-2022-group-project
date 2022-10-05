@@ -55,12 +55,8 @@ CREATE TABLE if not exists journey
     vehicleid INTEGER NOT NULL references Vehicle(vehicleid),
     startLat REAL NOT NULL,
     startLon REAL NOT NULL,
-    startX REAL,
-    startY REAL,
     endLat REAL NOT NULL,
     endLon REAL NOT NULL,
-    endX REAL,
-    endY REAL,
     startDate TEXT,
     endDate TEXT
     );

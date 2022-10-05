@@ -21,7 +21,8 @@ public class JourneyManager extends ChargerHandler {
     /** {@link Journey Journey} which is the currently selected journey */
     private Journey selectedJourney;
 
-    // private Coordinate tempPosition;
+    ///** Coordinate*/
+    //private Coordinate tempPosition;
 
     /** List of {@link Charger chargers} that are candidates for journey*/
     private ObservableList<Charger> candidateChargers;
@@ -52,23 +53,23 @@ public class JourneyManager extends ChargerHandler {
         return selectedJourney;
     }
 
-    // /**
-    //  * Gets temporary position
-    //  *
-    //  * @return temporary position
-    //  */
-    // public Coordinate getPosition() {
-    //     return tempPosition;
-    // }
+    ///**
+    // * Gets temporary position
+    // *
+    // * @return temporary position
+    // */
+    //public Coordinate getPosition() {
+    //    return tempPosition;
+    //}
 
-    // /**
-    //  * Sets temporary position
-    //  *
-    //  * @param tempPosition temporary position
-    //  */
-    // public void setPosition(Coordinate tempPosition) {
-    //     this.tempPosition = tempPosition;
-    // }
+    ///**
+    // * Sets temporary position
+    // *
+    // * @param tempPosition temporary position
+    // */
+    //public void setPosition(Coordinate tempPosition) {
+    //    this.tempPosition = tempPosition;
+    //}
 
     /**
      * Initialises a new Journeymv
@@ -139,6 +140,7 @@ public class JourneyManager extends ChargerHandler {
     public void saveJourney() {
         try {
             SqlInterpreter.getInstance().writeJourney(selectedJourney);
+            //TODO give feedback to user, reset journey so no accidental duplicate?
         } catch (IOException e) {
             e.printStackTrace();
         }
