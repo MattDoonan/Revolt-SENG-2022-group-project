@@ -1,25 +1,40 @@
 package seng202.team3.cucumber.mainpagesteps;
 
+import com.maxmind.geoip2.exception.GeoIp2Exception;
 import io.cucumber.java.AfterAll;
 import io.cucumber.java.Before;
 import io.cucumber.java.BeforeAll;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import javafx.collections.FXCollections;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import org.junit.jupiter.api.Assertions;
 import seng202.team3.cucumber.CucumberFxBase;
+import seng202.team3.data.database.ComparisonType;
+import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
+import seng202.team3.data.entity.Charger;
+import seng202.team3.data.entity.Coordinate;
 import seng202.team3.gui.MainController;
 import seng202.team3.gui.MainWindow;
 import seng202.team3.gui.MapHandler;
+import seng202.team3.logic.ChargerManager;
+import seng202.team3.logic.GeoLocationHandler;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ChargerListMainStepDefs extends CucumberFxBase {
 
     private static MainController controller;
     static SqlInterpreter db;
+
+    private static List<Object> chargerObject;
+
 
     /**
      * {@inheritDoc}
@@ -74,5 +89,55 @@ public class ChargerListMainStepDefs extends CucumberFxBase {
         Text name = (Text) information.getChildren().get(0);
         Assertions.assertEquals(controller.getManager().getSelectedCharger().getName(),
                 name.getText());
+    }
+
+    @Given("The user has the correct tab open")
+    public void correctTab() throws IOException, GeoIp2Exception {
+        chargerObject = db.readData(new QueryBuilderImpl().withSource("charger")
+                .build(), Charger.class);
+
+        for (Object o : chargerObject) {
+            ((Charger) o).setOwnerId(1); // Set owner to admin
+        }
+        db.writeCharger(new ArrayList<>(chargerObject));
+
+        clickOn("#menuButton");
+        controller = (MainController) MainWindow.getController();
+        GeoLocationHandler.setCoordinate(new Coordinate(1366541.2354,5153202.1642,
+                        -43.52246856689453, 172.5812225341797),
+                "University of Canterbury Waimairi Road, ChristChurch 8041, New Zealand Aotearoa");
+        controller.getManager().setPosition();
+        controller.getManager().setDistance(100.0);
+    }
+
+    @Given("The user has a location tracking on")
+    public void locationTracking() {
+        Assertions.assertFalse(GeoLocationHandler.getCoordinate()
+                == GeoLocationHandler.DEFAULT_COORDINATE);
+    }
+
+    @Then("The user is told the distance (in km) between the given location and closest chargers")
+    public void checkClosestChargers() throws IOException {
+        List<Object> o = db.readData(new QueryBuilderImpl().withSource("charger")
+                .build(), Charger.class);
+        ArrayList<Charger> chargers = (ArrayList<Charger>)(Object) o;
+        ChargerManager chargerManager = new ChargerManager();
+        chargers = chargerManager.getNearbyChargers(chargers,
+                GeoLocationHandler.getCoordinate(), 100.0);
+        Assertions.assertEquals(FXCollections.observableList(chargers),
+                controller.getManager().getCloseChargerData());
+    }
+
+    @When("There are possible chargers to list")
+    public void chargersInRange() {
+        Assertions.assertTrue(controller.getManager()
+                .getCloseChargerData().size() > 0);
+    }
+
+    @Then("The chargers are shown on the list")
+    public void chargersOnList() {
+        VBox chargerList = (VBox) find("#chargerTable");
+        Assertions.assertEquals(controller.getManager().getCloseChargerData().size(),
+                chargerList.getChildren().size());
     }
 }

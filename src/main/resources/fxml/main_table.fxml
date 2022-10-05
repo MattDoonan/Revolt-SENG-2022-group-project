@@ -209,11 +209,11 @@
                   </CustomMenuItem>
                </items>
             </MenuButton>
-            <MenuButton minHeight="30.0" mnemonicParsing="false" prefWidth="250.0" style="-fx-font-size: 20;" text="Modify Chargers">
+            <MenuButton minHeight="30.0" mnemonicParsing="false" prefWidth="250.0" style="-fx-font-size: 20;" text="Modify Chargers" fx:id="modChargers">
                <items>
-                  <MenuItem mnemonicParsing="false" onAction="#addCharger" text="Add Charger" />
-                  <MenuItem mnemonicParsing="false" onAction="#editCharger" text="Edit Charger" />
-                  <MenuItem mnemonicParsing="false" onAction="#deleteCharger" text="Delete Charger" />
+                  <MenuItem mnemonicParsing="false" onAction="#addCharger" text="Add Charger" fx:id="addCharger"/>
+                  <MenuItem mnemonicParsing="false" onAction="#editCharger" text="Edit Charger" fx:id="editCharger"/>
+                  <MenuItem mnemonicParsing="false" onAction="#deleteCharger" text="Delete Charger" fx:id="deleteCharger"/>
                </items>
             </MenuButton>
             <Button fx:id="update" minHeight="30.0" mnemonicParsing="false" onAction="#updateTable" prefWidth="240.0" style="-fx-font-size: 20;" text="Update table" />
