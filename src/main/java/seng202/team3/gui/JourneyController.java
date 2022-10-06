@@ -422,7 +422,7 @@ public class JourneyController {
         int i = 0;
         if (item.getText() == "Custom") {
             rangeSlider.setDisable(false);
-            journeyManager.getSelectedJourney().setVehicle(null);
+            journeyManager.selectVehicle(null);
         } else {
             for (Vehicle vehicle : garageManager.getData()) {
                 if (vehicle.getVehicleId() == Integer.parseInt(item.getId())) {
