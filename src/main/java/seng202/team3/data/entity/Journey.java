@@ -31,6 +31,10 @@ public class Journey {
     /** the journeys id number **/
     private int journeyId;
 
+    /** Range of vehicle */
+    private double vehicleRange;
+
+
     /**
      * Constructor for the Journey
      *
@@ -190,6 +194,22 @@ public class Journey {
      */
     public int getJourneyId() {
         return this.journeyId;
+    }
+
+    /**
+     * Gets range of vehicle
+     * @return range of vehicle
+     */
+    public double getVehicleRange() {
+        return vehicleRange;
+    }
+
+    /**
+     * Sets range of vehicle
+     * @param vehicleRange range of vehicle
+     */
+    public void setVehicleRange(double vehicleRange) {
+        this.vehicleRange = vehicleRange;
     }
 
     /** {@inheritDoc} */

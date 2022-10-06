@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -17,6 +19,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -96,6 +99,12 @@ public class JourneyController {
     private TextField tripName;
 
     /**
+     * Slider for selecting vehicle range
+     */
+    @FXML
+    private Slider rangeSlider;
+
+    /**
      * List of user input errors for adding/editing vehicles
      */
     private ArrayList<String> errors = new ArrayList<>();
@@ -130,18 +139,6 @@ public class JourneyController {
     public JourneyController() {
         // unused
     }
-    
-    /**
-     * Initialize the window
-     *
-     * @param stage Top level container for this window
-     */
-    public void init(Stage stage) {
-        this.stage = stage;
-        journeyManager = new JourneyManager();
-        loadMapView(stage);
-        loadVehicles();
-    }
 
     /**
      * Gets the logic manager for journeys
@@ -160,8 +157,28 @@ public class JourneyController {
     }
 
     /**
-     * Loads the map view into the main part of the main window
+     * Gets the range slider for circle radius
+     * @return Slider rangeSlider
+     */
+    public Slider getRangeSlider() {
+        return this.rangeSlider;
+    }
+    
+    /**
+     * Initialize the window
      *
+     * @param stage Top level container for this window
+     */
+    public void init(Stage stage) {
+        this.stage = stage;
+        journeyManager = new JourneyManager();
+        loadMapView(stage);
+        populateVehicles();
+        configureSlider();
+    }
+
+    /**
+     * Loads the map view into the main part of the main window
      * @param stage stage to load with
      */
     private void loadMapView(Stage stage) {
@@ -170,11 +187,28 @@ public class JourneyController {
                     .getResource("/fxml/journeyMap.fxml"));
             Parent mapViewParent = webViewLoader.load();
             mapController = webViewLoader.getController();
-            mapController.init(stage, journeyManager);
+            mapController.init(stage, journeyManager, this);
             mainWindow.setCenter(mapViewParent);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Sets an action listener for the range slider
+     */
+    private void configureSlider() {
+        rangeSlider.valueChangingProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(
+                ObservableValue<? extends Boolean> observableValue,
+                Boolean wasChanging,
+                Boolean changing) {
+                if (!rangeSlider.isValueChanging()) {
+                    sliderUpdated();
+                }
+            }
+        });
     }
 
     /**
@@ -183,18 +217,20 @@ public class JourneyController {
      */
     public void setStart() {
         Coordinate position = journeyManager.getPosition();
-        String address = position.getAddress();
-        mapController.addStartMarker();
-        journeyManager.getSelectedJourney().setStartPosition(position);
-        makeStart.setDisable(true);
-        if (address.contains(",")) {
-            startLabel.setText(address.substring(0, address.indexOf(",")));
-        } else {
-            startLabel.setText(address);
-        }     
-        mapController.addChargersAroundPoint(journeyManager.getPosition());
-        if (journeyManager.getSelectedJourney().getEndPosition() != null) {
-            calculateRoute();
+        if (position != null) {
+            mapController.addStartMarker();
+            journeyManager.getSelectedJourney().setStartPosition(position);
+            makeStart.setDisable(true);
+            String address = position.getAddress();
+            if (address.contains(",")) {
+                startLabel.setText(address.substring(0, address.indexOf(",")));
+            } else {
+                startLabel.setText(address);
+            }     
+            mapController.addChargersAroundPoint(journeyManager.getPosition());
+            if (journeyManager.getSelectedJourney().getEndPosition() != null) {
+                calculateRoute();
+            }
         }
     }
 
@@ -204,19 +240,24 @@ public class JourneyController {
      */
     public void setDestination() {
         Coordinate position = journeyManager.getPosition();
-        String address = position.getAddress();
-        journeyManager.getSelectedJourney().setEndPosition(journeyManager.getPosition());
-        makeEnd.setDisable(true);
-        if (address.contains(",")) {
-            endLabel.setText(address.substring(0, address.indexOf(",")));
-        } else {
-            endLabel.setText(address);
-        }        
-        if (journeyManager.getSelectedJourney().getStartPosition() != null) {
-            calculateRoute();
-        }
-        if (tripName.getText() == "") {
-            tripName.setText("Trip to " + position.getAddress());
+        if (position != null) {
+            String address = position.getAddress();
+            journeyManager.getSelectedJourney().setEndPosition(journeyManager.getPosition());
+            makeEnd.setDisable(true);
+            if (address.contains(",")) {
+                endLabel.setText(address.substring(0, address.indexOf(",")));
+                if (tripName.getText() == "") {
+                    tripName.setText("Trip to " + address.substring(0, address.indexOf(",")));
+                }
+            } else {
+                endLabel.setText(address);
+                tripName.setText("Trip to " + address);
+            }        
+            if (journeyManager.getSelectedJourney().getStartPosition() != null) {
+                if (tripName.getText() == "") {
+                    calculateRoute();
+                }
+            }
         }
     }
 
@@ -274,9 +315,13 @@ public class JourneyController {
                             .get(index - 1).getLocation()) * 100) / 100;
         }
         VBox text = new VBox(new Text(charger.getName()),
-                new Text("\n" + dist + " km Distance"),
+                new Text("\n" + dist + " km Distance"));
+
+        if (journeyManager.getSelectedJourney().getVehicle() != null) {
+            text.getChildren().add(
                 new Text("\n" + (int) Math.ceil(dist / journeyManager.getSelectedJourney()
-                        .getVehicle().getMaxRange() * 100) + "% Battery Used"));
+                    .getVehicle().getMaxRange() * 100) + "% Battery Used"));
+        }
 
         VBox buttonBox = new VBox(btn);
         buttonBox.setAlignment(Pos.CENTER_RIGHT);
@@ -301,10 +346,10 @@ public class JourneyController {
      */
     public void removeFromDisplay(ActionEvent e) {
         List<Charger> chargers = journeyManager.getSelectedJourney().getChargers();
-        String id = ((Node) e.getSource()).getId();
-        int iid = Integer.parseInt(id);
-        chargers.removeIf(charger -> charger.getChargerId() == iid);
-        journeyTable.getChildren().removeIf(box -> Objects.equals(box.getId(), id));
+        String ids = ((Node) e.getSource()).getId();
+        int idi = Integer.parseInt(ids);
+        chargers.removeIf(charger -> charger.getChargerId() == idi);
+        journeyTable.getChildren().removeIf(box -> Objects.equals(box.getId(), ids));
         calculateRoute();
         if (chargers.size() == 0) {
             mapController.addChargersAroundPoint(journeyManager.getSelectedJourney()
@@ -313,7 +358,7 @@ public class JourneyController {
             mapController.addChargersAroundPoint(chargers.get(chargers.size() - 1).getLocation());
         }
         //TODO remove all others and add to display again to recalculate distances
-    }
+    } 
 
     /**
      * Saves journey to database
@@ -339,11 +384,18 @@ public class JourneyController {
     /**
      * Loads vehicles into the menuBox
      */
-    public void loadVehicles() {
+    public void populateVehicles() {
         garageManager = new GarageManager();
         garageManager.resetQuery();
         garageManager.getAllVehicles();
         vehicles.getItems().clear();
+        
+        MenuItem custom = new MenuItem("Custom");
+        custom.setOnAction(this::configureVehicleItem);
+        vehicles.getItems().add(custom);
+
+        vehicles.setText("Custom");
+
         for (Vehicle vehicle : garageManager.getData()) {
             String title = vehicle.getMake() + ' ' + vehicle.getModel();
             MenuItem item = new MenuItem(title);
@@ -351,10 +403,11 @@ public class JourneyController {
             item.setOnAction(this::configureVehicleItem);
             vehicles.getItems().add(item);
         }
+
         //if (vehicles.getText() == "") { //Only runs first time
-        vehicles.setText(garageManager.getData().get(0).getMake()
-                + " " + garageManager.getData().get(0).getModel());
-        journeyManager.selectVehicle(garageManager.getData().get(0));
+        //vehicles.setText(garageManager.getData().get(0).getMake()
+        //+ " " + garageManager.getData().get(0).getModel());
+        //journeyManager.selectVehicle(garageManager.getData().get(0));
         //}
     }
 
@@ -367,12 +420,19 @@ public class JourneyController {
         MenuItem item = ((MenuItem) e.getSource());
         vehicles.setText(item.getText());
         int i = 0;
-        for (Vehicle vehicle : garageManager.getData()) {
-            if (vehicle.getVehicleId() == Integer.parseInt(item.getId())) {
-                journeyManager.selectVehicle(
-                        garageManager.getData().get(i));
+        if (item.getText() == "Custom") {
+            rangeSlider.setDisable(false);
+            journeyManager.getSelectedJourney().setVehicle(null);
+        } else {
+            for (Vehicle vehicle : garageManager.getData()) {
+                if (vehicle.getVehicleId() == Integer.parseInt(item.getId())) {
+                    journeyManager.selectVehicle(vehicle);
+                    rangeSlider.setValue(vehicle.getMaxRange());
+                    rangeSlider.setDisable(true);
+                    sliderUpdated();
+                }
+                i++;
             }
-            i++;
         }
     }
 
@@ -412,6 +472,23 @@ public class JourneyController {
             //TODO stop errors piling up when clicking multiple times
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Handles updates of vehicle range slider
+     */
+    public void sliderUpdated() {
+        journeyManager.getSelectedJourney().setVehicleRange(rangeSlider.getValue());
+        if (journeyManager.getSelectedJourney().getStartPosition() != null) {
+            List<Charger> chargers = journeyManager.getSelectedJourney().getChargers();
+            if (chargers.size() == 0) {
+                mapController.addChargersAroundPoint(journeyManager.getSelectedJourney()
+                    .getStartPosition());
+            } else {
+                mapController.addChargersAroundPoint(
+                    chargers.get(chargers.size() - 1).getLocation());
+            }
         }
     }
 }

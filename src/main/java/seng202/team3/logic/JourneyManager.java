@@ -151,7 +151,7 @@ public class JourneyManager extends ChargerHandler {
      *
      * @return boolean of error
      */
-    public boolean checkDistanceBetweenChargers() {
+    public boolean checkDistanceBetweenChargers() { //TODO possibly needs fixing
         ArrayList<Coordinate> coordinates = new ArrayList<>();
         coordinates.add(selectedJourney.getStartPosition());
         for (Charger charger : this.getSelectedJourney().getChargers()) {
@@ -159,11 +159,11 @@ public class JourneyManager extends ChargerHandler {
         }
         coordinates.add(selectedJourney.getEndPosition());
         boolean error = Calculations.calculateDistance(coordinates.get(0), coordinates.get(1))
-                >= this.getSelectedJourney().getVehicle().getCurrentRange();
+                >= selectedJourney.getVehicleRange();
 
         for (int i = 1; i < coordinates.size() - 1; i++) {
             if (Calculations.calculateDistance(coordinates.get(i), coordinates.get(i + 1))
-                    >= this.getSelectedJourney().getVehicle().getMaxRange()) {
+                    >= selectedJourney.getVehicleRange()) {
                 error = true;
             }
         }

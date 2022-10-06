@@ -17,6 +17,11 @@ import seng202.team3.logic.JourneyManager;
 public class JourneyMapController extends MapHandler {
 
     /**
+     * Controller for journey sidebar
+     */
+    private JourneyController journeyController;
+
+    /**
      * The logic manager for journeys
      */
     private JourneyManager journeyManager;
@@ -34,10 +39,12 @@ public class JourneyMapController extends MapHandler {
      * @param stage top level container for this window
      * @param journeyManager Manager to interact with
      */
-    public void init(Stage stage, JourneyManager journeyManager) {
+    public void init(Stage stage, JourneyManager journeyManager, 
+        JourneyController journeyController) {
         this.stage = stage;
         javaScriptBridge = new JavaScriptBridge();
         this.journeyManager = journeyManager;
+        this.journeyController = journeyController;
         initMap();
         this.stage.sizeToScene();
     }
@@ -73,7 +80,7 @@ public class JourneyMapController extends MapHandler {
         ChargerManager chargerManager = new ChargerManager();
         ArrayList<Charger> arrayChargers = new ArrayList<>(journeyManager.getData());
         ArrayList<Charger> nearbyChargers = chargerManager.getNearbyChargers(arrayChargers,
-                    coord, journeyManager.getSelectedJourney().getVehicle().getCurrentRange());
+                    coord, journeyController.getRangeSlider().getValue());
 
         for (Charger charger : nearbyChargers) {
             javaScriptConnector.call("addMarker", charger.getLocation().getAddress(),
@@ -107,7 +114,8 @@ public class JourneyMapController extends MapHandler {
      */
     public void addCircle(Coordinate coord) {
         javaScriptConnector.call("addCircle", coord.getLat(), coord.getLon(),
-                journeyManager.getSelectedJourney().getVehicle().getCurrentRange() * 1000);
+            journeyController.getRangeSlider().getValue() * 1000);
+                                
     }
 
 
