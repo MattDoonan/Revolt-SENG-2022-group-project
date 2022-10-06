@@ -2,11 +2,15 @@ package seng202.team3.logic;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import seng202.team3.data.database.QueryBuilder;
+import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
+import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
 import seng202.team3.data.entity.Journey;
 import seng202.team3.data.entity.Vehicle;
@@ -128,6 +132,35 @@ public class JourneyManager extends ChargerHandler {
     }
 
     /**
+     * TODO Docstring
+     */
+    public void makeDefaultVehicle() {
+        ArrayList<String> connectorArray = new ArrayList<>();
+        QueryBuilder query = new QueryBuilderImpl().withSource("connector");
+        try {
+            List<Connector> connectorList = new ArrayList<>();
+            for (Object o : SqlInterpreter.getInstance()
+                    .readData(query.build(), Connector.class)) {
+                connectorList.add((Connector) o);
+            }
+
+            List<String> connectorStrings = connectorList.stream()
+                    .map(Connector::getType)
+                    .distinct().toList();
+
+            connectorArray.addAll(connectorStrings);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Vehicle vehicle = new Vehicle("Default", "Default", 0, connectorArray);
+        vehicle.setBatteryPercent(100.0);
+
+        getSelectedJourney().setVehicle(vehicle);
+    }
+
+
+    /**
      * Clears the current journey
      */
     public void clearJourney() {
@@ -157,7 +190,9 @@ public class JourneyManager extends ChargerHandler {
         for (Charger charger : this.getSelectedJourney().getChargers()) {
             coordinates.add(charger.getLocation());
         }
-        coordinates.add(selectedJourney.getEndPosition());
+        if (selectedJourney.getEndPosition() != null) {
+            coordinates.add(selectedJourney.getEndPosition());
+        }
         boolean error = Calculations.calculateDistance(coordinates.get(0), coordinates.get(1))
                 >= selectedJourney.getVehicleRange();
 

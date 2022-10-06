@@ -31,6 +31,7 @@ public class Journey {
     /** the journeys id number **/
     private int journeyId;
 
+    //TODO: This not associate with the vehicle or the database
     /** Range of vehicle */
     private double vehicleRange;
 
@@ -196,6 +197,7 @@ public class Journey {
         return this.journeyId;
     }
 
+    //TODO: This not associate with the vehicle or the database
     /**
      * Gets range of vehicle
      * @return range of vehicle
@@ -204,6 +206,7 @@ public class Journey {
         return vehicleRange;
     }
 
+    //TODO: This not associate with the vehicle or the database
     /**
      * Sets range of vehicle
      * @param vehicleRange range of vehicle

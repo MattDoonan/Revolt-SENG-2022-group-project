@@ -215,6 +215,7 @@ public class JourneyController {
      * Calls functions in {@link JourneyMapController}
      * and {@link JourneyManager} for when Set Start button is clicked
      */
+    @FXML
     public void setStart() {
         Coordinate position = journeyManager.getPosition();
         if (position != null) {
@@ -232,12 +233,16 @@ public class JourneyController {
                 calculateRoute();
             }
         }
+        //TODO disable the rangeslider once the custom vehicle has set the range
+        rangeSlider.setDisable(true);
+        vehicles.setDisable(true);
     }
 
     /**
      * Calls functions in {@link JourneyMapController}
      * and {@link JourneyManager} for when Set Destination button is clicked
      */
+    @FXML
     public void setDestination() {
         Coordinate position = journeyManager.getPosition();
         if (position != null) {
@@ -246,6 +251,7 @@ public class JourneyController {
             makeEnd.setDisable(true);
             if (address.contains(",")) {
                 endLabel.setText(address.substring(0, address.indexOf(",")));
+                //TODO strings should be all equals()
                 if (tripName.getText() == "") {
                     tripName.setText("Trip to " + address.substring(0, address.indexOf(",")));
                 }
@@ -254,9 +260,7 @@ public class JourneyController {
                 tripName.setText("Trip to " + address);
             }        
             if (journeyManager.getSelectedJourney().getStartPosition() != null) {
-                if (tripName.getText() == "") {
-                    calculateRoute();
-                }
+                calculateRoute();
             }
         }
     }
@@ -287,6 +291,7 @@ public class JourneyController {
         endLabel.setText("End not set");
         errorText.setVisible(false);
         distanceError = false;
+        vehicles.setDisable(false);
     }
 
     /**
@@ -317,6 +322,7 @@ public class JourneyController {
         VBox text = new VBox(new Text(charger.getName()),
                 new Text("\n" + dist + " km Distance"));
 
+        //TODO removable as will always have a vehicle?
         if (journeyManager.getSelectedJourney().getVehicle() != null) {
             text.getChildren().add(
                 new Text("\n" + (int) Math.ceil(dist / journeyManager.getSelectedJourney()
@@ -325,6 +331,7 @@ public class JourneyController {
 
         VBox buttonBox = new VBox(btn);
         buttonBox.setAlignment(Pos.CENTER_RIGHT);
+        //TODO make remove button accessable always
         HBox content = new HBox(text, buttonBox);
         content.setPadding(new Insets(15));
         content.setId(Integer.toString(charger.getChargerId()));
@@ -349,6 +356,8 @@ public class JourneyController {
         String ids = ((Node) e.getSource()).getId();
         int idi = Integer.parseInt(ids);
         chargers.removeIf(charger -> charger.getChargerId() == idi);
+        journeyManager.getSelectedJourney().getChargers().removeIf(charger
+                -> charger.getChargerId() == idi);
         journeyTable.getChildren().removeIf(box -> Objects.equals(box.getId(), ids));
         calculateRoute();
         if (chargers.size() == 0) {
@@ -404,11 +413,6 @@ public class JourneyController {
             vehicles.getItems().add(item);
         }
 
-        //if (vehicles.getText() == "") { //Only runs first time
-        //vehicles.setText(garageManager.getData().get(0).getMake()
-        //+ " " + garageManager.getData().get(0).getModel());
-        //journeyManager.selectVehicle(garageManager.getData().get(0));
-        //}
     }
 
     /**
@@ -420,9 +424,13 @@ public class JourneyController {
         MenuItem item = ((MenuItem) e.getSource());
         vehicles.setText(item.getText());
         int i = 0;
-        if (item.getText() == "Custom") {
+        if (item.getText().equals("Custom")) {
             rangeSlider.setDisable(false);
-            journeyManager.selectVehicle(null);
+            //TODO Make a default vehicle in the journeymanager
+            journeyManager.makeDefaultVehicle();
+            //TODO set the slider value to the vehicle's range
+            sliderUpdated();
+
         } else {
             for (Vehicle vehicle : garageManager.getData()) {
                 if (vehicle.getVehicleId() == Integer.parseInt(item.getId())) {
@@ -461,7 +469,7 @@ public class JourneyController {
             errorPopup.setScene(modalScene);
             errorPopup.setResizable(false);
             errorPopup.setTitle("Error With Journey:");
-            errorPopup.initModality(Modality.WINDOW_MODAL);
+            errorPopup.initModality(Modality.APPLICATION_MODAL);
             ErrorController controller = error.getController();
             controller.init();
             controller.setErrors(errors);
@@ -469,7 +477,7 @@ public class JourneyController {
             controller.displayErrors();
             errorPopup.setAlwaysOnTop(true);
             errorPopup.showAndWait();
-            //TODO stop errors piling up when clicking multiple times
+            //TODO Done: Michelle
         } catch (IOException e) {
             e.printStackTrace();
         }
