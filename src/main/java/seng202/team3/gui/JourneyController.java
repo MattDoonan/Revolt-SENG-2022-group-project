@@ -17,6 +17,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -87,6 +88,12 @@ public class JourneyController {
      */
     @FXML
     private Text errorText;
+
+    /**
+     * Name for trip
+     */
+    @FXML
+    private TextField tripName;
 
     /**
      * List of user input errors for adding/editing vehicles
@@ -175,10 +182,16 @@ public class JourneyController {
      * and {@link JourneyManager} for when Set Start button is clicked
      */
     public void setStart() {
+        Coordinate position = journeyManager.getPosition();
+        String address = position.getAddress();
         mapController.addStartMarker();
-        journeyManager.getSelectedJourney().setStartPosition(journeyManager.getPosition());
+        journeyManager.getSelectedJourney().setStartPosition(position);
         makeStart.setDisable(true);
-        startLabel.setText("Start position: " + journeyManager.getPosition().getAddress());
+        if (address.contains(",")) {
+            startLabel.setText(address.substring(0, address.indexOf(",")));
+        } else {
+            startLabel.setText(address);
+        }     
         mapController.addChargersAroundPoint(journeyManager.getPosition());
         if (journeyManager.getSelectedJourney().getEndPosition() != null) {
             calculateRoute();
@@ -190,12 +203,20 @@ public class JourneyController {
      * and {@link JourneyManager} for when Set Destination button is clicked
      */
     public void setDestination() {
-        mapController.addEndMarker();
+        Coordinate position = journeyManager.getPosition();
+        String address = position.getAddress();
         journeyManager.getSelectedJourney().setEndPosition(journeyManager.getPosition());
         makeEnd.setDisable(true);
-        endLabel.setText("End position: " + journeyManager.getPosition().getAddress());
+        if (address.contains(",")) {
+            endLabel.setText(address.substring(0, address.indexOf(",")));
+        } else {
+            endLabel.setText(address);
+        }        
         if (journeyManager.getSelectedJourney().getStartPosition() != null) {
             calculateRoute();
+        }
+        if (tripName.getText() == "") {
+            tripName.setText("Trip to " + position.getAddress());
         }
     }
 
@@ -217,7 +238,9 @@ public class JourneyController {
         init(this.stage);
         makeStart.setDisable(false);
         makeEnd.setDisable(false);
-        journeyTable.getChildren().clear();
+        for (int i = 1; i < journeyTable.getChildren().size() - 1; i++) {
+            journeyTable.getChildren().remove(i);
+        }
         journeyManager.getSelectedJourney().getChargers().clear();
         startLabel.setText("Start not set");
         endLabel.setText("End not set");
@@ -236,8 +259,8 @@ public class JourneyController {
         double dist;
         int i = 0;
         Integer index = null;
-        for (Charger charg : journeyManager.getSelectedJourney().getChargers()) {
-            if (charg.getChargerId() == charger.getChargerId()) {
+        for (Charger c : journeyManager.getSelectedJourney().getChargers()) {
+            if (c.getChargerId() == charger.getChargerId()) {
                 index = i;
             }
             i++;
@@ -260,7 +283,7 @@ public class JourneyController {
         HBox content = new HBox(text, buttonBox);
         content.setPadding(new Insets(15));
         content.setId(Integer.toString(charger.getChargerId()));
-        journeyTable.getChildren().add(content);
+        journeyTable.getChildren().add((journeyTable.getChildren()).size() - 1, content);
     }
 
     /**

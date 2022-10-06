@@ -4,35 +4,58 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<SplitPane dividerPositions="0.9350877192982456" maxHeight="Infinity" maxWidth="Infinity" minWidth="200.0" prefHeight="437.0" prefWidth="572.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.JourneyController">
+<SplitPane dividerPositions="0.9350877192982456" maxHeight="Infinity" maxWidth="Infinity" minWidth="200.0" prefHeight="437.0" prefWidth="572.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.JourneyController">
    <items>
       <ScrollPane maxWidth="530.0" prefWidth="530.0" style="-fx-background-color: white;">
          <content>
-            <AnchorPane maxWidth="530.0" prefWidth="530.0" style="-fx-background-color: white;">
+            <AnchorPane maxWidth="530.0" prefHeight="435.0" prefWidth="530.0" style="-fx-background-color: white;">
                <children>
-                  <Label fx:id="startLabel" layoutX="88.0" layoutY="278.0" text="Start not set" />
-                  <Button fx:id="makeEnd" layoutX="38.0" layoutY="305.0" mnemonicParsing="false" onAction="#setDestination" text="Set Selected Point to End" />
-                  <Label fx:id="endLabel" layoutX="92.0" layoutY="335.0" text="End not set" />
-                  <Button fx:id="makeStart" layoutX="34.0" layoutY="245.0" mnemonicParsing="false" onAction="#setStart" text="Set Selected Point to Start" />
-                  <Button fx:id="resetJourney" layoutX="16.0" layoutY="391.0" mnemonicParsing="false" onAction="#resetJourney" prefWidth="109.0" text="Reset Journey" />
-                  <VBox fx:id="journeyTable" layoutX="238.0" layoutY="41.0" prefWidth="265.0" style="-fx-background-color: ffe5d4;" AnchorPane.topAnchor="41.0" />
-                  <Button fx:id="saveJourney" layoutX="146.0" layoutY="391.0" mnemonicParsing="false" onAction="#saveJourney" text="Save Journey" />
-                  <MenuButton fx:id="vehicles" layoutX="65.0" layoutY="196.0" mnemonicParsing="false" text="Select Vehicle"/>
+                  <Button fx:id="makeEnd" layoutX="44.0" layoutY="273.0" mnemonicParsing="false" onAction="#setDestination" text="Set Selected Point to End" />
+                  <Button fx:id="makeStart" layoutX="40.0" layoutY="213.0" mnemonicParsing="false" onAction="#setStart" text="Set Selected Point to Start" />
+                  <Button fx:id="resetJourney" layoutX="34.0" layoutY="363.0" mnemonicParsing="false" onAction="#resetJourney" prefHeight="30.0" prefWidth="80.0" styleClass="btn-danger" stylesheets="@style.css" text="Reset" />
+                  <VBox fx:id="journeyTable" layoutX="238.0" layoutY="41.0" prefWidth="265.0" AnchorPane.topAnchor="41.0">
+                     <children>
+                        <HBox id="start-box" prefHeight="75.0" prefWidth="200.0" stylesheets="@style.css">
+                           <children>
+                              <AnchorPane>
+                                 <children>
+                                    <Label fx:id="startLabel" layoutX="68.0" layoutY="42.0" text="Start not set" />
+                                    <Label layoutX="14.0" layoutY="6.0" text="START" />
+                                 </children>
+                              </AnchorPane>
+                           </children>
+                        </HBox>
+                        <HBox id="dest-box" prefHeight="75.0" prefWidth="265.0" stylesheets="@style.css">
+                           <children>
+                              <AnchorPane>
+                                 <children>
+                                    <Label fx:id="endLabel" layoutX="73.0" layoutY="50.0" text="End not set" />
+                                    <Label layoutX="14.0" layoutY="14.0" text="DESTINATION" />
+                                 </children>
+                              </AnchorPane>
+                           </children>
+                        </HBox>
+                     </children></VBox>
+                  <Button fx:id="saveJourney" layoutX="130.0" layoutY="363.0" mnemonicParsing="false" onAction="#saveJourney" prefHeight="30.0" prefWidth="80.0" styleClass="btn-success" stylesheets="@style.css" text="Save" />
+                  <MenuButton fx:id="vehicles" layoutX="22.0" layoutY="127.0" mnemonicParsing="false" text="Select Vehicle" />
                   <Text fx:id="errorText" fill="RED" layoutX="88.0" layoutY="309.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Error" visible="false" wrappingWidth="82.0">
                      <font>
                         <Font size="32.0" />
                      </font>
                   </Text>
-                  <TextField layoutX="45.0" layoutY="98.0" stylesheets="@style.css" AnchorPane.leftAnchor="45.0" />
-                  <Label layoutX="45.0" layoutY="81.0" text="Trip name" AnchorPane.leftAnchor="45.0" />
+                  <TextField fx:id="tripName" layoutX="23.0" layoutY="43.0" stylesheets="@style.css" AnchorPane.leftAnchor="23.0" />
+                  <Label layoutX="23.0" layoutY="26.0" text="Trip name" AnchorPane.leftAnchor="23.0" />
+                  <Slider fx:id="rangeSlider" layoutX="22.0" layoutY="84.0" majorTickUnit="100.0" max="500.0" prefHeight="33.0" prefWidth="184.0" showTickLabels="true" />
                </children>
             </AnchorPane>
          </content>
