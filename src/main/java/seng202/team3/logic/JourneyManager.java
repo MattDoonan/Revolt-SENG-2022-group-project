@@ -2,6 +2,7 @@ package seng202.team3.logic;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -53,23 +54,52 @@ public class JourneyManager extends ChargerHandler {
         return selectedJourney;
     }
 
-    ///**
-    // * Gets temporary position
-    // *
-    // * @return temporary position
-    // */
-    //public Coordinate getPosition() {
-    //    return tempPosition;
-    //}
+    /**
+     * Get the start location from entity
+     * @return Coordinate start location
+     */
+    public Coordinate getStart() {
+        return selectedJourney.getStartPosition();
+    }
 
-    ///**
-    // * Sets temporary position
-    // *
-    // * @param tempPosition temporary position
-    // */
-    //public void setPosition(Coordinate tempPosition) {
-    //    this.tempPosition = tempPosition;
-    //}
+    /**
+     * Sets the start location in entity
+     * @param start start location
+     */
+    public void setStart(Coordinate start) {
+        selectedJourney.setStartPosition(start);
+    }
+
+    /**
+     * Gets end location from entity
+     * @return Coordinate end location
+     */
+    public Coordinate getEnd() {
+        return selectedJourney.getEndPosition();
+    }
+
+    /**
+     * Sets end location in entity
+     * @param end end location
+     */
+    public void setEnd(Coordinate end) {
+        selectedJourney.setEndPosition(end);
+    }
+
+    /**
+     * Gets charger stops in from journey entity
+     * @return List<Charger> chargers
+     */
+    public List<Charger> getChargers() {
+        return selectedJourney.getChargers();
+    }
+
+    /**
+     * Clears charger stops in journey entity
+     */
+    public void clearChargers() {
+        selectedJourney.getChargers().clear();
+    }
 
     /**
      * Initialises a new Journeymv

@@ -219,7 +219,7 @@ public class JourneyController {
         Coordinate position = journeyManager.getPosition();
         if (position != null) {
             mapController.addStartMarker();
-            journeyManager.getSelectedJourney().setStartPosition(position);
+            journeyManager.setStart(position); //TODO fix
             makeStart.setDisable(true);
             String address = position.getAddress();
             if (address.contains(",")) {
@@ -228,7 +228,7 @@ public class JourneyController {
                 startLabel.setText(address);
             }     
             mapController.addChargersAroundPoint(journeyManager.getPosition());
-            if (journeyManager.getSelectedJourney().getEndPosition() != null) {
+            if (journeyManager.getEnd() != null) { //TODO fix
                 calculateRoute();
             }
         }
@@ -242,7 +242,7 @@ public class JourneyController {
         Coordinate position = journeyManager.getPosition();
         if (position != null) {
             String address = position.getAddress();
-            journeyManager.getSelectedJourney().setEndPosition(journeyManager.getPosition());
+            journeyManager.setEnd(journeyManager.getPosition()); //TODO fix
             makeEnd.setDisable(true);
             if (address.contains(",")) {
                 endLabel.setText(address.substring(0, address.indexOf(",")));
@@ -253,7 +253,7 @@ public class JourneyController {
                 endLabel.setText(address);
                 tripName.setText("Trip to " + address);
             }        
-            if (journeyManager.getSelectedJourney().getStartPosition() != null) {
+            if (journeyManager.getStart() != null) { //TODO fix
                 if (tripName.getText() == "") {
                     calculateRoute();
                 }
@@ -282,7 +282,7 @@ public class JourneyController {
         for (int i = 1; i < journeyTable.getChildren().size() - 1; i++) {
             journeyTable.getChildren().remove(i);
         }
-        journeyManager.getSelectedJourney().getChargers().clear();
+        journeyManager.clearChargers(); //TODO fix
         startLabel.setText("Start not set");
         endLabel.setText("End not set");
         errorText.setVisible(false);
@@ -300,7 +300,7 @@ public class JourneyController {
         double dist;
         int i = 0;
         Integer index = null;
-        for (Charger c : journeyManager.getSelectedJourney().getChargers()) {
+        for (Charger c : journeyManager.getChargers()) { //TODO fix
             if (c.getChargerId() == charger.getChargerId()) {
                 index = i;
             }
@@ -308,10 +308,10 @@ public class JourneyController {
         }
         if (index == 0) {
             dist = Math.floor(Calculations.calculateDistance(charger.getLocation(),
-                    journeyManager.getSelectedJourney().getStartPosition()) * 100) / 100;
+                    journeyManager.getStart()) * 100) / 100;
         } else {
             dist = Math.floor(Calculations.calculateDistance(charger.getLocation(),
-                    journeyManager.getSelectedJourney().getChargers()
+                    journeyManager.getChargers()
                             .get(index - 1).getLocation()) * 100) / 100;
         }
         VBox text = new VBox(new Text(charger.getName()),
@@ -345,15 +345,14 @@ public class JourneyController {
      * @param e the event of button being clicked
      */
     public void removeFromDisplay(ActionEvent e) {
-        List<Charger> chargers = journeyManager.getSelectedJourney().getChargers();
+        List<Charger> chargers = journeyManager.getChargers();
         String ids = ((Node) e.getSource()).getId();
         int idi = Integer.parseInt(ids);
         chargers.removeIf(charger -> charger.getChargerId() == idi);
         journeyTable.getChildren().removeIf(box -> Objects.equals(box.getId(), ids));
         calculateRoute();
         if (chargers.size() == 0) {
-            mapController.addChargersAroundPoint(journeyManager.getSelectedJourney()
-                .getStartPosition());
+            mapController.addChargersAroundPoint(journeyManager.getStart());
         } else {
             mapController.addChargersAroundPoint(chargers.get(chargers.size() - 1).getLocation());
         }
@@ -364,14 +363,14 @@ public class JourneyController {
      * Saves journey to database
      */
     public void saveJourney() {
-        if (!(distanceError) && (journeyManager.getSelectedJourney().getStartPosition() != null)
-                && (journeyManager.getSelectedJourney().getEndPosition() != null)) {
+        if (!(distanceError) && (journeyManager.getStart() != null)
+                && (journeyManager.getEnd() != null)) {
             journeyManager.saveJourney();
         } else {
-            if (journeyManager.getSelectedJourney().getStartPosition() == null) {
+            if (journeyManager.getStart() == null) {
                 errors.add("No start location added");
             }
-            if (journeyManager.getSelectedJourney().getEndPosition() == null) {
+            if (journeyManager.getEnd() == null) {
                 errors.add("No end location added");
             }
             if (distanceError) {
