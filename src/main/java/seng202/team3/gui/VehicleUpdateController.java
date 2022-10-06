@@ -275,20 +275,17 @@ public class VehicleUpdateController {
                     button.setId(connector.getText());
                     button.setOnAction(e -> deleteConnection(e));
                     Label label = new Label("Connection: " + connector.getText());
-                    HBox hbox = new HBox();
-                    Region filler = new Region();
-                    HBox.setHgrow(filler, Priority.ALWAYS);
-                    hbox.getChildren().addAll(label, filler, button);
-                    connections.add(connector.getText());
+                    // HBox hbox = new HBox();
+                    // Region filler = new Region();
+                    // HBox.setHgrow(filler, Priority.ALWAYS);
+                    // hbox.getChildren().addAll(label, filler, button);
+                    // connections.add(connector.getText());
                     // addedConnections.getItems().add(hbox);
                     
                     GridPane gridpane = new GridPane();
                     gridpane.add(label, 1, 0);
                     gridpane.add(button, 2, 0); 
-                    // GridPane.setHalignment(button, HPos.RIGHT);
-                    button.setAlignment(Pos.CENTER_RIGHT);
-
-
+                    GridPane.setHalignment(button, HPos.CENTER);
                     addedConnections.getItems().add(gridpane);
 
                     Stage connectorStage = (Stage) save.getScene().getWindow();
@@ -301,20 +298,23 @@ public class VehicleUpdateController {
                 // connectorPopup.showAndWait();
             } else {
                 connections.add(connectorType.getValue());
-                Button button = new Button("Delete");
+                Button button = new Button("DeleteNew");
                 button.setId(connectorType.getValue());
                 button.setOnAction(e -> deleteConnection(e));
                 Label label = new Label("Connection: " + connectorType.getValue());
-                HBox hbox = new HBox();
+                Label label2 = new Label("gfgsgsgs: ");
+                // HBox hbox = new HBox();
                 Region filler = new Region();
-                HBox.setHgrow(filler, Priority.ALWAYS);
-                hbox.getChildren().addAll(label, filler, button);
+                // HBox.setHgrow(filler, Priority.ALWAYS);
+                // hbox.getChildren().addAll(label, filler, button);
 
                 GridPane gridpane = new GridPane();
                 gridpane.add(label, 1, 0);
-                gridpane.add(button, 2, 0); 
                 // GridPane.setHalignment(button, HPos.RIGHT);
-                button.setAlignment(Pos.CENTER_RIGHT);
+                // button.setAlignment(Pos.CENTER_RIGHT);
+
+                gridpane.add(button, 2, 0); 
+                gridpane.add(label2, 2, 0); 
                 
 
                 addedConnections.getItems().add(gridpane);
