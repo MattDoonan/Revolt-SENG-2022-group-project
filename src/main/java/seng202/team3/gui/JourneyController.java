@@ -215,11 +215,12 @@ public class JourneyController {
      * Calls functions in {@link JourneyMapController}
      * and {@link JourneyManager} for when Set Start button is clicked
      */
+    @FXML
     public void setStart() {
         Coordinate position = journeyManager.getPosition();
         if (position != null) {
             mapController.addStartMarker();
-            journeyManager.setStart(position); //TODO fix
+            journeyManager.setStart(position);
             makeStart.setDisable(true);
             String address = position.getAddress();
             if (address.contains(",")) {
@@ -228,35 +229,40 @@ public class JourneyController {
                 startLabel.setText(address);
             }     
             mapController.addChargersAroundPoint(journeyManager.getPosition());
-            if (journeyManager.getEnd() != null) { //TODO fix
+            if (journeyManager.getEnd() != null) {
                 calculateRoute();
             }
         }
+        //TODO disable the rangeslider once the custom vehicle has set the range
+        rangeSlider.setDisable(true);
+        vehicles.setDisable(true);
     }
 
     /**
      * Calls functions in {@link JourneyMapController}
      * and {@link JourneyManager} for when Set Destination button is clicked
      */
+    @FXML
     public void setDestination() {
         Coordinate position = journeyManager.getPosition();
         if (position != null) {
             String address = position.getAddress();
-            journeyManager.setEnd(journeyManager.getPosition()); //TODO fix
+            journeyManager.setEnd(journeyManager.getPosition());
             makeEnd.setDisable(true);
             if (address.contains(",")) {
                 endLabel.setText(address.substring(0, address.indexOf(",")));
+                //TODO strings should be all equals()
                 if (tripName.getText() == "") {
                     tripName.setText("Trip to " + address.substring(0, address.indexOf(",")));
                 }
             } else {
                 endLabel.setText(address);
-                tripName.setText("Trip to " + address);
-            }        
-            if (journeyManager.getStart() != null) { //TODO fix
                 if (tripName.getText() == "") {
-                    calculateRoute();
+                    tripName.setText("Trip to " + address);
                 }
+            }        
+            if (journeyManager.getStart() != null) {
+                calculateRoute();
             }
         }
     }
@@ -282,7 +288,7 @@ public class JourneyController {
         for (int i = 1; i < journeyTable.getChildren().size() - 1; i++) {
             journeyTable.getChildren().remove(i);
         }
-        journeyManager.clearChargers(); //TODO fix
+        journeyManager.clearChargers();
         startLabel.setText("Start not set");
         endLabel.setText("End not set");
         errorText.setVisible(false);
@@ -300,7 +306,7 @@ public class JourneyController {
         double dist;
         int i = 0;
         Integer index = null;
-        for (Charger c : journeyManager.getChargers()) { //TODO fix
+        for (Charger c : journeyManager.getChargers()) {
             if (c.getChargerId() == charger.getChargerId()) {
                 index = i;
             }
@@ -317,6 +323,7 @@ public class JourneyController {
         VBox text = new VBox(new Text(charger.getName()),
                 new Text("\n" + dist + " km Distance"));
 
+        //TODO removable as will always have a vehicle?
         if (journeyManager.getSelectedJourney().getVehicle() != null) {
             text.getChildren().add(
                 new Text("\n" + (int) Math.ceil(dist / journeyManager.getSelectedJourney()
@@ -325,6 +332,7 @@ public class JourneyController {
 
         VBox buttonBox = new VBox(btn);
         buttonBox.setAlignment(Pos.CENTER_RIGHT);
+        //TODO make remove button accessable always
         HBox content = new HBox(text, buttonBox);
         content.setPadding(new Insets(15));
         content.setId(Integer.toString(charger.getChargerId()));
@@ -349,6 +357,8 @@ public class JourneyController {
         String ids = ((Node) e.getSource()).getId();
         int idi = Integer.parseInt(ids);
         chargers.removeIf(charger -> charger.getChargerId() == idi);
+        journeyManager.getChargers().removeIf(charger
+                -> charger.getChargerId() == idi);
         journeyTable.getChildren().removeIf(box -> Objects.equals(box.getId(), ids));
         calculateRoute();
         if (chargers.size() == 0) {
@@ -419,9 +429,13 @@ public class JourneyController {
         MenuItem item = ((MenuItem) e.getSource());
         vehicles.setText(item.getText());
         int i = 0;
-        if (item.getText() == "Custom") {
+        if (item.getText().equals("Custom")) {
             rangeSlider.setDisable(false);
-            journeyManager.getSelectedJourney().setVehicle(null);
+            //TODO Make a default vehicle in the journeymanager
+            journeyManager.makeDefaultVehicle();
+            //TODO set the slider value to the vehicle's range
+            sliderUpdated();
+
         } else {
             for (Vehicle vehicle : garageManager.getData()) {
                 if (vehicle.getVehicleId() == Integer.parseInt(item.getId())) {
@@ -460,7 +474,7 @@ public class JourneyController {
             errorPopup.setScene(modalScene);
             errorPopup.setResizable(false);
             errorPopup.setTitle("Error With Journey:");
-            errorPopup.initModality(Modality.WINDOW_MODAL);
+            errorPopup.initModality(Modality.APPLICATION_MODAL);
             ErrorController controller = error.getController();
             controller.init();
             controller.setErrors(errors);
@@ -468,7 +482,7 @@ public class JourneyController {
             controller.displayErrors();
             errorPopup.setAlwaysOnTop(true);
             errorPopup.showAndWait();
-            //TODO stop errors piling up when clicking multiple times
+            //TODO Done: Michelle
         } catch (IOException e) {
             e.printStackTrace();
         }
