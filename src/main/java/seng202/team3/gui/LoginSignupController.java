@@ -145,6 +145,11 @@ public class LoginSignupController {
     private static final String INVALID_STYLE = "-fx-border-color: #ff0000;";
 
     /**
+     * Styling for valid fields
+     */
+    private static final String VALID_STYLE = "-fx-border-color: default;";
+
+    /**
      * Login label text
      */
     private static final String LOGIN_LABEL = "login";
@@ -158,6 +163,11 @@ public class LoginSignupController {
      * Confirm label text
      */
     private static final String SIGNUP_CONFIRM_LABEL = "signupconf";
+
+    private Tooltip nameError = new Tooltip();
+    private Tooltip emailError = new Tooltip();
+    private Tooltip passError = new Tooltip();
+    private Tooltip confPassError = new Tooltip();
 
     /**
      * Initialises the sign up
@@ -214,25 +224,24 @@ public class LoginSignupController {
      */
     @FXML
     public void signUp() {
-        signUpErrorChecks();
-        Boolean fail = false;
-        if (!UserManager.checkEmail(signupEmailField.getText())) {
-            signupEmailField.setStyle(INVALID_STYLE);
-            fail = true;
-        }
-        if (signupUsernameField.getText().isEmpty()) {
-            signupUsernameField.setStyle(INVALID_STYLE);
-            fail = true;
-        }
-        if (signupPasswordField.getText().length() < 4) {
-            signupPasswordField.setStyle(INVALID_STYLE);
-            confPassField.setStyle(INVALID_STYLE);
-            fail = true;
-        }
-        if (!signupPasswordField.getText().equals(confPassField.getText())) {
-            confPassField.setStyle(INVALID_STYLE);
-            fail = true;
-        }
+        Boolean fail = signUpErrorChecks();
+        // if (!UserManager.checkEmail(signupEmailField.getText())) {
+        //     signupEmailField.setStyle(INVALID_STYLE);
+        //     fail = true;
+        // }
+        // if (signupUsernameField.getText().isEmpty()) {
+        //     signupUsernameField.setStyle(INVALID_STYLE);
+        //     fail = true;
+        // }
+        // if (signupPasswordField.getText().length() < 4) {
+        //     signupPasswordField.setStyle(INVALID_STYLE);
+        //     confPassField.setStyle(INVALID_STYLE);
+        //     fail = true;
+        // }
+        // if (!signupPasswordField.getText().equals(confPassField.getText())) {
+        //     confPassField.setStyle(INVALID_STYLE);
+        //     fail = true;
+        // }
         if (Boolean.TRUE.equals(fail)) {
             invalidSignup.setVisible(true);
             logManager.warn("Incorrect user details");
@@ -260,61 +269,65 @@ public class LoginSignupController {
      * Checks the signup fields for errors, and displays messages to the user 
      * if there are errors
      */
-    public void signUpErrorChecks() {
-        Boolean fail = false;
-        
-        Tooltip nameError = new Tooltip();
-        Tooltip emailError = new Tooltip();
-        Tooltip passError = new Tooltip();
-        Tooltip confPassError = new Tooltip();
+    public Boolean signUpErrorChecks() {
+        nameError.hide();
+        emailError.hide();
+        passError.hide();
+        confPassError.hide();
+
+        signupEmailField.setStyle(VALID_STYLE);
+        signupUsernameField.setStyle(VALID_STYLE);
+        signupPasswordField.setStyle(VALID_STYLE);
+        signupPasswordField.setStyle(VALID_STYLE);
+
         Point2D pName = signupUsernameField.localToScene(0.0, 0.0);
         Point2D pEmail = signupEmailField.localToScene(0.0, 0.0);
         Point2D pPass = signupPasswordField.localToScene(0.0, 0.0);
         Point2D pConf = confPassField.localToScene(0.0, 0.0);
 
+        Boolean fail = false;
 
         if (!UserManager.checkEmail(signupEmailField.getText())) {
-            emailError.setText("Email required.");
+            emailError.setText("Invalid email.");
+            if (signupEmailField.getText().isEmpty()) {
+                emailError.setText("Email required.");
+            }
             signupEmailField.setStyle(INVALID_STYLE);
+            emailError.show(signupEmailField,
+            pEmail.getX() + signupEmailField.getScene().getX() + signupEmailField.getScene().getWindow().getX() + signupEmailField.getWidth() + 25,
+            pEmail.getY() + signupEmailField.getScene().getY() + signupEmailField.getScene().getWindow().getY());
             fail = true;
         }
         if (signupUsernameField.getText().isEmpty()) {
             nameError.setText("Username required.");
             signupUsernameField.setStyle(INVALID_STYLE);
+            nameError.show(signupUsernameField,
+            pName.getX() + signupUsernameField.getScene().getX() + signupUsernameField.getScene().getWindow().getX() + signupUsernameField.getWidth() + 25,
+            pName.getY() + signupUsernameField.getScene().getY() + signupUsernameField.getScene().getWindow().getY());
             fail = true;
         }
         if (signupPasswordField.getText().length() < 4) {
             passError.setText("Password must be more than 4 characters.");
             signupPasswordField.setStyle(INVALID_STYLE);
             confPassField.setStyle(INVALID_STYLE);
+            passError.show(signupPasswordField,
+            pPass.getX() + signupPasswordField.getScene().getX() + signupPasswordField.getScene().getWindow().getX() + signupPasswordField.getWidth() + 25,
+            pPass.getY() + signupPasswordField.getScene().getY() + signupPasswordField.getScene().getWindow().getY());
             fail = true;
         }
-        if (!signupPasswordField.getText().equals(confPassField.getText())) {
-            confPassError.setText("Passwords must match.");
+        if (confPassField.getText().isEmpty()) {
+            confPassError.setText("Confirm password required.");
+            if (!signupPasswordField.getText().equals(confPassField.getText())) {
+                confPassError.setText("Passwords must match.");
+            }
             confPassField.setStyle(INVALID_STYLE);
+            confPassError.show(confPassField,
+            pConf.getX() + confPassField.getScene().getX() + confPassField.getScene().getWindow().getX() + confPassField.getWidth() + 25,
+            pConf.getY() + confPassField.getScene().getY() + confPassField.getScene().getWindow().getY());
             fail = true;
         }
-        // if (Boolean.TRUE.equals(fail)) {
-        //     invalidSignup.setVisible(true);
-        //     logManager.warn("Incorrect user details");
-        //     return;
-        // }
 
-        nameError.show(signupUsernameField,
-        pName.getX() + signupUsernameField.getScene().getX() + signupUsernameField.getScene().getWindow().getX() + signupUsernameField.getWidth() + 10,
-        pName.getY() + signupUsernameField.getScene().getY() + signupUsernameField.getScene().getWindow().getY());
-
-        emailError.show(signupEmailField,
-        pEmail.getX() + signupEmailField.getScene().getX() + signupEmailField.getScene().getWindow().getX() + signupEmailField.getWidth() + 10,
-        pEmail.getY() + signupEmailField.getScene().getY() + signupEmailField.getScene().getWindow().getY());
-
-        passError.show(signupPasswordField,
-        pPass.getX() + signupPasswordField.getScene().getX() + signupPasswordField.getScene().getWindow().getX() + signupPasswordField.getWidth() + 10,
-        pPass.getY() + signupPasswordField.getScene().getY() + signupPasswordField.getScene().getWindow().getY());
-
-        confPassError.show(confPassField,
-        pConf.getX() + confPassField.getScene().getX() + confPassField.getScene().getWindow().getX() + confPassField.getWidth() + 10,
-        pConf.getY() + confPassField.getScene().getY() + confPassField.getScene().getWindow().getY());
+        return fail;
     }
 
     /**
