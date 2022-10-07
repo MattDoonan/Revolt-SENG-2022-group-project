@@ -7,6 +7,9 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
@@ -127,14 +130,14 @@ public class LoginSignupController {
      */
     private MenuController menuControl;
 
-    /** 
-     * Invalid login error 
+    /**
+     * Invalid login error
      */
     @FXML
     private Label invalidLogin;
 
-    /** 
-     * invalid signup error 
+    /**
+     * invalid signup error
      */
     @FXML
     private Label invalidSignup;
@@ -185,6 +188,12 @@ public class LoginSignupController {
     private Tooltip confPassError = new Tooltip();
 
     /**
+     * Compilation of error popups
+     */
+    private final List<Tooltip> errorPopups = new ArrayList<>(
+            Arrays.asList(nameError, emailError, passError, confPassError));
+
+    /**
      * Initialises the sign up
      */
     public LoginSignupController() {
@@ -225,6 +234,12 @@ public class LoginSignupController {
      */
     public void init(MenuController menuControl) {
         this.menuControl = menuControl;
+
+        confPassError.setId("confPassError");
+        emailError.setId("emailError");
+        nameError.setId("nameError");
+        passError.setId("passError");
+
         if (showPassLogin != null) {
             setIcon(LOGIN_LABEL, "show");
         } else if (showPassSignup != null) {
@@ -265,12 +280,13 @@ public class LoginSignupController {
     }
 
     /**
-     * Checks the signup fields for errors, and displays messages to the user 
+     * Checks the signup fields for errors, and displays messages to the user
      * if there are errors
      * 
      * @return whether there were any errors
      */
     public Boolean signUpErrorChecks() {
+
         nameError.hide();
         emailError.hide();
         passError.hide();
@@ -295,22 +311,22 @@ public class LoginSignupController {
             }
             signupEmailField.setStyle(INVALID_STYLE);
             emailError.show(signupEmailField,
-                pointEmail.getX() + signupEmailField.getScene().getX() 
-                    + signupEmailField.getScene().getWindow().getX() 
-                    + signupEmailField.getWidth() + 25,
-                pointEmail.getY() + signupEmailField.getScene().getY() 
-                    + signupEmailField.getScene().getWindow().getY());
+                    pointEmail.getX() + signupEmailField.getScene().getX()
+                            + signupEmailField.getScene().getWindow().getX()
+                            + signupEmailField.getWidth() + 25,
+                    pointEmail.getY() + signupEmailField.getScene().getY()
+                            + signupEmailField.getScene().getWindow().getY());
             fail = true;
         }
         if (signupUsernameField.getText().isEmpty()) {
             nameError.setText("Username required.");
             signupUsernameField.setStyle(INVALID_STYLE);
             nameError.show(signupUsernameField,
-                pointName.getX() + signupUsernameField.getScene().getX() 
-                    + signupUsernameField.getScene().getWindow().getX() 
-                    + signupUsernameField.getWidth() + 25,
-                pointName.getY() + signupUsernameField.getScene().getY() 
-                    + signupUsernameField.getScene().getWindow().getY());
+                    pointName.getX() + signupUsernameField.getScene().getX()
+                            + signupUsernameField.getScene().getWindow().getX()
+                            + signupUsernameField.getWidth() + 25,
+                    pointName.getY() + signupUsernameField.getScene().getY()
+                            + signupUsernameField.getScene().getWindow().getY());
             fail = true;
         }
         if (signupPasswordField.getText().length() < 4) {
@@ -318,24 +334,23 @@ public class LoginSignupController {
             signupPasswordField.setStyle(INVALID_STYLE);
             confPassField.setStyle(INVALID_STYLE);
             passError.show(signupPasswordField,
-                pointPass.getX() + signupPasswordField.getScene().getX() 
-                    + signupPasswordField.getScene().getWindow().getX() 
-                    + signupPasswordField.getWidth() + 25,
-                pointPass.getY() + signupPasswordField.getScene().getY() 
-                    + signupPasswordField.getScene().getWindow().getY());
+                    pointPass.getX() + signupPasswordField.getScene().getX()
+                            + signupPasswordField.getScene().getWindow().getX()
+                            + signupPasswordField.getWidth() + 25,
+                    pointPass.getY() + signupPasswordField.getScene().getY()
+                            + signupPasswordField.getScene().getWindow().getY());
             fail = true;
         }
-        if (confPassField.getText().isEmpty()) {
-            confPassError.setText("Confirm password required.");
-            if (!signupPasswordField.getText().equals(confPassField.getText())) {
-                confPassError.setText("Passwords must match.");
-            }
+        if (confPassField.getText().isEmpty()
+                || !signupPasswordField.getText().equals(confPassField.getText())) {
+            confPassError.setText("Passwords must match.");
             confPassField.setStyle(INVALID_STYLE);
             confPassError.show(confPassField,
-                pointConf.getX() + confPassField.getScene().getX() 
-                    + confPassField.getScene().getWindow().getX() + confPassField.getWidth() + 25,
-                pointConf.getY() + confPassField.getScene().getY() 
-                    + confPassField.getScene().getWindow().getY());
+                    pointConf.getX() + confPassField.getScene().getX()
+                            + confPassField.getScene().getWindow().getX()
+                            + confPassField.getWidth() + 25,
+                    pointConf.getY() + confPassField.getScene().getY()
+                            + confPassField.getScene().getWindow().getY());
             fail = true;
         }
 
@@ -372,7 +387,7 @@ public class LoginSignupController {
     }
 
     /**
-     * Checks the login fields for errors, and displays messages to the user 
+     * Checks the login fields for errors, and displays messages to the user
      * if there are errors
      */
     public void loginErrorChecks() {
@@ -389,21 +404,21 @@ public class LoginSignupController {
             emailError.setText("Username required.");
             loginEmailField.setStyle(INVALID_STYLE);
             emailError.show(loginEmailField,
-                pointEmail.getX() + loginEmailField.getScene().getX() 
-                    + loginEmailField.getScene().getWindow().getX() 
-                    + loginEmailField.getWidth() + 25,
-                pointEmail.getY() + loginEmailField.getScene().getY() 
-                    + loginEmailField.getScene().getWindow().getY());
+                    pointEmail.getX() + loginEmailField.getScene().getX()
+                            + loginEmailField.getScene().getWindow().getX()
+                            + loginEmailField.getWidth() + 25,
+                    pointEmail.getY() + loginEmailField.getScene().getY()
+                            + loginEmailField.getScene().getWindow().getY());
         }
         if (loginPasswordField.getText().isEmpty()) {
             passError.setText("Password required.");
             loginPasswordField.setStyle(INVALID_STYLE);
             passError.show(loginPasswordField,
-                pointPass.getX() + loginPasswordField.getScene().getX() 
-                    + loginPasswordField.getScene().getWindow().getX() 
-                    + loginPasswordField.getWidth() + 25,
-                pointPass.getY() + loginPasswordField.getScene().getY() 
-                    + loginPasswordField.getScene().getWindow().getY());
+                    pointPass.getX() + loginPasswordField.getScene().getX()
+                            + loginPasswordField.getScene().getWindow().getX()
+                            + loginPasswordField.getWidth() + 25,
+                    pointPass.getY() + loginPasswordField.getScene().getY()
+                            + loginPasswordField.getScene().getWindow().getY());
         }
 
     }
@@ -560,6 +575,16 @@ public class LoginSignupController {
             logManager.error(e.getMessage());
             return null;
         }
+    }
+
+    /**
+     * Returns the active errors
+     * ##USED FOR TESTING
+     * 
+     * @return list of tooltips used for errors
+     */
+    public List<Tooltip> getErrors() {
+        return errorPopups;
     }
 
 }
