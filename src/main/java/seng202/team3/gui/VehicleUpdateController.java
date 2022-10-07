@@ -10,6 +10,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -18,6 +19,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -105,6 +107,12 @@ public class VehicleUpdateController {
     private Label inputBox;
 
     /**
+     * Invalid vehicle lable
+     */
+    @FXML
+    private Label invalidVehicle;
+
+    /**
      * Save the selected image
      */
     private Button saveImg = new Button("Select");
@@ -139,6 +147,16 @@ public class VehicleUpdateController {
      */
     private String[] imgNames = { "car_one.png", "car_two.png", "car_three.png",
         "truck_one.png", "truck_two.png" };
+
+    /**
+     * Styling for invalid fields
+     */
+    private static final String INVALID_STYLE = "-fx-border-color: #ff0000;";
+
+    /**
+     * Styling for valid fields
+     */
+    private static final String VALID_STYLE = "-fx-border-color: default;";
 
     /**
      * Default path for images
@@ -192,6 +210,28 @@ public class VehicleUpdateController {
     private Object prevController = null;
 
     /**
+     * Error tooltip for the make field
+     */
+    private Tooltip makeError = new Tooltip();
+
+    /**
+     * Error tooltip for the model field
+     */
+    private Tooltip modelError = new Tooltip();
+
+    /**
+     * Error tooltip for the range field
+     */
+    private Tooltip rangeError = new Tooltip();
+
+    /**
+     * Error tooltip for the connector field
+     */
+    private Tooltip connectorError = new Tooltip();
+
+
+
+    /**
      * Initialises the Vehicle editing
      */
     public VehicleUpdateController() {
@@ -234,31 +274,19 @@ public class VehicleUpdateController {
         } else {
             vehicle = new Vehicle();
         }
-        checkForErrors(vehicle);
 
-        try {
-            vehicle.setMake(makeText.getText());
-        } catch (NullPointerException e) {
-            errors.add(MAKE_ERROR);
-        }
+        Boolean fail = checkForErrors();
 
-        if (makeText.getText().equals("") && !errors.contains(MAKE_ERROR)) {
-            errors.add(MAKE_ERROR);
-        }
-
-        try {
-            vehicle.setModel(modelText.getText());
-        } catch (NullPointerException e) {
-            errors.add(MODEL_ERROR);
-        }
-
-        if (modelText.getText().equals("") && !errors.contains(MODEL_ERROR)) {
-            errors.add(MODEL_ERROR);
-        }
-
-        boolean errorOccured = false;
-        if (errors.isEmpty()) {
+        if (Boolean.TRUE.equals(fail)) {
+            invalidVehicle.setVisible(true);
+            logManager.warn("Incorrect vehicle details");
+        } else {
             vehicle.setOwner(UserManager.getUser().getUserid());
+            vehicle.setMake(makeText.getText());
+            vehicle.setModel(modelText.getText());
+            vehicle.setMaxRange(Integer.parseInt(maxRangeText.getText()));
+            vehicle.setBatteryPercent(100.0);
+            vehicle.setConnectors(connections);
             manage.saveVehicle(vehicle);
             makeText.setText(null);
             modelText.setText(null);
@@ -267,13 +295,6 @@ public class VehicleUpdateController {
             imgName.setText(null);
             connections = new ArrayList<>();
             connectorType.setPromptText("Connector Type");
-        } else {
-            launchErrorPopUps();
-            errors.clear();
-            errorOccured = true;
-        }
-
-        if (!errorOccured) {
             selectedVehicle = null;
             Stage popupStage = (Stage) saveChanges.getScene().getWindow();
             popupStage.close();
@@ -284,48 +305,74 @@ public class VehicleUpdateController {
     /**
      * Checks if there are any errors when a user adds/updates a vehicle.
      * 
-     * @param vehicle the vehicle to be made
+     * @return whether there were any errors
      */
-    public void checkForErrors(Vehicle vehicle) {
+    public Boolean checkForErrors() {
+        makeError.hide();
+        modelError.hide();
+        rangeError.hide();
+        connectorError.hide();
 
-        try {
-            if (Integer.parseInt(maxRangeText.getText()) < 0) {
-                errors.add("A vehicle's maximum range cannot be negative.");
-            } else {
-                vehicle.setMaxRange(Integer.parseInt(maxRangeText.getText()));
-            }
-        } catch (NumberFormatException e) {
-            errors.add("A vehicle's maximum range must be a whole number.");
+        makeText.setStyle(VALID_STYLE);
+        modelText.setStyle(VALID_STYLE);
+        maxRangeText.setStyle(VALID_STYLE);
+        connectorType.setStyle(VALID_STYLE);
+
+        Point2D pMake = makeText.localToScene(0.0, 0.0);
+        Point2D pModel = modelText.localToScene(0.0, 0.0);
+        Point2D pRange = maxRangeText.localToScene(0.0, 0.0);
+        Point2D pConn = connectorType.localToScene(0.0, 0.0);
+
+        Boolean fail = false;
+
+        if (makeText.getText().isEmpty()) {
+            makeError.setText(MAKE_ERROR);
+
+            makeText.setStyle(INVALID_STYLE);
+            makeError.show(makeText,
+                pMake.getX() + makeText.getScene().getX() + makeText.getScene().getWindow().getX() + makeText.getWidth() + 25,
+                pMake.getY() + makeText.getScene().getY() + makeText.getScene().getWindow().getY());
+            fail = true;
         }
-
+        if (modelText.getText().isEmpty()) {
+            modelError.setText(MODEL_ERROR);
+            modelText.setStyle(INVALID_STYLE);
+            modelError.show(modelText,
+                pModel.getX() + modelText.getScene().getX() + modelText.getScene().getWindow().getX() + modelText.getWidth() + 25,
+                pModel.getY() + modelText.getScene().getY() + modelText.getScene().getWindow().getY());
+            fail = true;
+        }
+        Boolean rangeFlag = false;
         try {
-            if (Double.parseDouble(currChargeText.getText()) < 0) {
-                errors.add("A vehicle's current charge cannot be negative.");
-            } else {
-                vehicle.setBatteryPercent(Double.parseDouble(currChargeText.getText()));
+            if (maxRangeText.getText().isEmpty()) {
+                rangeError.setText("Max. range required.");
+                rangeFlag = true;
+            } else if (Integer.parseInt(maxRangeText.getText()) < 0) {
+                rangeError.setText("Max. range cannot be negative.");
+                rangeFlag = true;
             }
         } catch (NumberFormatException e) {
-            if (!currChargeText.getText().equals("")) {
-                errors.add("A vehicle's current charge must be a number.");
-            }
+            rangeError.setText("Max. range must be a whole number.");
+            rangeFlag = true;
+        }
+        if (Boolean.TRUE.equals(rangeFlag)) {
+            maxRangeText.setStyle(INVALID_STYLE);
+            rangeError.show(maxRangeText,
+                pRange.getX() + maxRangeText.getScene().getX() + maxRangeText.getScene().getWindow().getX() + maxRangeText.getWidth() + 25,
+                pRange.getY() + maxRangeText.getScene().getY() + maxRangeText.getScene().getWindow().getY());
+            fail = true;
         }
 
         if (connections.isEmpty()) {
-            errors.add("A vehicle must have at least one connector.");
-        } else {
-            vehicle.setConnectors(connections);
+            connectorError.setText("A vehicle must have at least one connector.");
+            connectorType.setStyle(INVALID_STYLE);
+            connectorError.show(connectorType,
+                pConn.getX() + connectorType.getScene().getX() + connectorType.getScene().getWindow().getX() + connectorType.getWidth() + 25,
+                pConn.getY() + connectorType.getScene().getY() + connectorType.getScene().getWindow().getY());
+            fail = true;
         }
 
-        if (selectedImg != null) {
-            vehicle.setImgPath(IMGPATH + selectedImg);
-        } else {
-            vehicle.setImgPath(IMGPATH + "null");
-        }
-
-        if (vehicle.getBatteryPercent() == null) {
-            vehicle.setBatteryPercent(100.0);
-        }
-
+        return fail;
     }
 
     /**

@@ -164,9 +164,24 @@ public class LoginSignupController {
      */
     private static final String SIGNUP_CONFIRM_LABEL = "signupconf";
 
+    /**
+     * Error tooltip for the username field
+     */
     private Tooltip nameError = new Tooltip();
+
+    /**
+     * Error tooltip for the email field
+     */
     private Tooltip emailError = new Tooltip();
+
+    /**
+     * Error tooltip for the password field
+     */
     private Tooltip passError = new Tooltip();
+
+    /**
+     * Error tooltip for the confirm password field
+     */
     private Tooltip confPassError = new Tooltip();
 
     /**
@@ -225,23 +240,7 @@ public class LoginSignupController {
     @FXML
     public void signUp() {
         Boolean fail = signUpErrorChecks();
-        // if (!UserManager.checkEmail(signupEmailField.getText())) {
-        //     signupEmailField.setStyle(INVALID_STYLE);
-        //     fail = true;
-        // }
-        // if (signupUsernameField.getText().isEmpty()) {
-        //     signupUsernameField.setStyle(INVALID_STYLE);
-        //     fail = true;
-        // }
-        // if (signupPasswordField.getText().length() < 4) {
-        //     signupPasswordField.setStyle(INVALID_STYLE);
-        //     confPassField.setStyle(INVALID_STYLE);
-        //     fail = true;
-        // }
-        // if (!signupPasswordField.getText().equals(confPassField.getText())) {
-        //     confPassField.setStyle(INVALID_STYLE);
-        //     fail = true;
-        // }
+
         if (Boolean.TRUE.equals(fail)) {
             invalidSignup.setVisible(true);
             logManager.warn("Incorrect user details");
