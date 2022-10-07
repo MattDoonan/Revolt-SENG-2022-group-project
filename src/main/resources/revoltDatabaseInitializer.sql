@@ -1,3 +1,23 @@
+--SPLIT
+DROP TABLE IF EXISTS user;
+--SPLIT
+CREATE TABLE if not exists user
+(
+   userid INTEGER constraint dk_users PRIMARY KEY AUTOINCREMENT,
+   email VARCHAR(250) NOT NULL,
+   username VARCHAR(50) NOT NULL UNIQUE,
+   password VARCHAR(170) NOT NULL,
+   permissions INTEGER NOT NULL,
+   carbonSaved REAL
+   );
+--SPLIT
+INSERT INTO user (username, password, email, carbonSaved, permissions)
+VALUES ("admin",
+        "c7ad44cbad762a5da0a452f9e854fdc1e0e7a52a38015f23f3eab1d80b931dd472634dfac71cd34ebc35d16ab7fb8a90c81f975113d6c7538dc69dd8de9077ec",
+        "admin@admin.com",
+        0,
+        3);
+--SPLIT
 DROP TABLE IF EXISTS charger;
 --SPLIT
 CREATE TABLE IF NOT EXISTS charger
@@ -6,7 +26,7 @@ CREATE TABLE IF NOT EXISTS charger
     x REAL,
     y REAL,
     operator VARCHAR(50),
-    owner VARCHAR(50) NOT NULL,
+    owner INTEGER NOT NULL references User(userid),
     address VARCHAR(255) NOT NULL,
     name VARCHAR(50) NOT NULL,
     is24hours BIT,
@@ -39,6 +59,7 @@ DROP TABLE IF EXISTS vehicle;
 CREATE TABLE if not exists vehicle
 (
     vehicleid INTEGER constraint dk_Veh PRIMARY KEY AUTOINCREMENT,
+    owner INTEGER NOT NULL references user(userid),
     make VARCHAR(10),
     model VARCHAR(10),
     rangekm INTEGER NOT NULL,
@@ -52,6 +73,7 @@ DROP TABLE IF EXISTS journey;
 CREATE TABLE if not exists journey
 (
     journeyid INTEGER constraint dk_journey PRIMARY KEY AUTOINCREMENT,
+    userid INTEGER NOT NULL references user(userid),
     vehicleid INTEGER NOT NULL references Vehicle(vehicleid),
     startLat REAL NOT NULL,
     startLon REAL NOT NULL,
@@ -70,3 +92,13 @@ CREATE TABLE if not exists stop
     chargerid INTEGER NOT NULL references Charger(chargerid),
     PRIMARY KEY (journeyid, position)
     );
+--SPLIT
+DROP TABLE IF EXISTS views;
+--SPLIT
+CREATE TABLE views
+(
+    userid INTEGER NOT NULL REFERENCES user(userid),
+    chargerid INTEGER NOT NULL REFERENCES charger(chargerid),
+    times INTEGER,
+    PRIMARY KEY (userid, chargerid)
+    )

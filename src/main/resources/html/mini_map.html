@@ -51,8 +51,8 @@
      * This object can be returned to our java code, where we can call the functions we define inside of it
      */
     let jsConnector = {
-        setCoordinate: setCoordinate,
-        initMap: initMap
+        initMap,
+        addCoordinate,
     };
 
     /**
@@ -74,35 +74,10 @@
 
         map.on("click", (map_event) => {
             let latlng = map.mouseEventToLatLng(map_event.originalEvent)
-                removeCoordinate()
-                new L.Control.Geocoder.Nominatim({
-                    geocodingQueryParams: {
-                        countrycodes: 'nz'
-                    }}).reverse(latlng, map.options.crs.scale(map.getZoom()), results => {
-                    let r = results[0]
-                    if (r) {
-                        addCoordinate(r.name, latlng.lat, latlng.lng)
-                        name = r.name
-                    } else {
-                        addCoordinate("Coordinate", latlng.lat, latlng.lng)
-                        name = "Coordinate"
-                    }
-            })
+            javaScriptBridge.addCoordinateFromClick(`{"lat": ${latlng.lat}, "lng": ${latlng.lng}}`)
+            var address = javaScriptBridge.makeLocationName()
+            addCoordinate(address, latlng.lat, latlng.lng)
         })
-    }
-
-    /**
-     * Adds a coordinate to the map and stores it by itself
-     * @param title tooltip to display on hover
-     * @param lat latitude to place coordinate marker at
-     * @param lng longitude to place coordinate marker at
-     */
-    function addCoordinate(title, lat, lng) {
-        coordinate = new L.Marker([lat, lng], {icon: redIcon})
-        coordinate.bindPopup(title + ": " + lat.toFixed(4) + " " + lng.toFixed(4))
-        coordinate.on("click", function(ev) {coordinate.openPopup()})
-        coordinate.addTo(map)
-        movePosition(coordinate.getLatLng().lat, coordinate.getLatLng().lng)
     }
 
     /**
@@ -127,6 +102,21 @@
         return searchBar;
     }
 
+
+    /**
+     * Adds a coordinate to the map and stores it by itself
+     * @param title tooltip to display on hover
+     * @param lat latitude to place coordinate marker at
+     * @param lng longitude to place coordinate marker at
+     */
+    function addCoordinate(title, lat, lng) {
+        removeCoordinate()
+        coordinate = new L.Marker([lat, lng], { icon: redIcon })
+        coordinate.bindPopup(title + ": [" + lat.toFixed(4) + ", " + lng.toFixed(4) + "]")
+        coordinate.on("click", function (ev) { coordinate.openPopup() })
+        coordinate.addTo(map)
+    }
+
     /**
      * Remove coordinate
      */
@@ -135,17 +125,6 @@
             coordinate.remove()
         }
     }
-
-    /**
-     * Executes the JavaScriptBridge function which gets the coordinate
-     */
-    function setCoordinate() {
-        if (coordinate) {
-            let latlng = coordinate.getLatLng()
-            javaScriptBridge.setCoordinate(`{"lat": ${latlng.lat}, "lng": ${latlng.lng}}`, name)
-        }
-    }
-
     /**
      * Moves position of centre of map
      */

@@ -1,20 +1,27 @@
 package seng202.team3.unittest.logic;
 
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+// import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import seng202.team3.data.database.SqlInterpreter;
+import seng202.team3.data.entity.PermissionLevel;
+import seng202.team3.data.entity.User;
 import seng202.team3.data.entity.Vehicle;
 import seng202.team3.logic.GarageManager;
+import seng202.team3.logic.UserManager;
 import seng202.team3.logic.VehicleUpdateManager;
 
 /**
@@ -25,6 +32,10 @@ import seng202.team3.logic.VehicleUpdateManager;
  * @version 1.0.0, Aug 22
  */
 public class UpdateVehicleManagerTest {
+    /**
+     * Logger
+     */
+    private static final Logger logManager = LogManager.getLogger();
 
     /**
      * Creates a {@link GarageManager GarageManager} to test
@@ -39,12 +50,19 @@ public class UpdateVehicleManagerTest {
             new ArrayList<Vehicle>());
     private ObservableList<Vehicle> initialVehicleList;
 
+    static User testUser;
+
     /**
      * BeforeEach create vehicles to add to garage
      *
      */
     @BeforeEach
     public void setUp() {
+        testUser = new User("admin@admin.com", "adminNew",
+                PermissionLevel.USER);
+        // testUser.setUserid(1);
+        UserManager.setUser(testUser);
+
         testVehicle = new Vehicle("TestMake", "TestModel",
                 1234, new ArrayList<String>(Arrays.asList("Type 2 Socketed")));
         testVehicle.setImgPath("null");
@@ -72,7 +90,8 @@ public class UpdateVehicleManagerTest {
                         vehicle.getVehicleId());
                 vehicle = null;
             } catch (IOException e) {
-                e.printStackTrace();
+                logManager.error(e.getMessage());
+                ;
             }
         }
 
@@ -100,9 +119,16 @@ public class UpdateVehicleManagerTest {
         // Test adding a vehicle
         manager.saveVehicle(testVehicle);
         manager.saveVehicle(testVehicleTwo);
-        ObservableList<Vehicle> vehicles = getVehicles();
-        assertTrue(testVehicleTwo.equals(vehicles.get(vehicles.size() - 1)));
-        assertTrue(testVehicle.equals(vehicles.get(vehicles.size() - 2)));
+        ObservableList<Vehicle> vehicles;
+
+        manager.saveVehicle(testVehicle);
+        manager.saveVehicle(testVehicleTwo);
+        vehicles = getVehicles();
+
+        if (vehicles.size() > 0) {
+            assertTrue(testVehicleTwo.equals(vehicles.get(vehicles.size() - 1)));
+            assertTrue(testVehicle.equals(vehicles.get(vehicles.size() - 2)));
+        }
 
         // Test editing a vehicle
         testVehicle.setMake("NewTestMake");
@@ -110,8 +136,14 @@ public class UpdateVehicleManagerTest {
         manager.saveVehicle(testVehicle);
         manager.saveVehicle(testVehicleTwo);
         vehicles = getVehicles();
-        assertTrue(testVehicleTwo.equals(vehicles.get(vehicles.size() - 1)));
-        assertTrue(testVehicle.equals(vehicles.get(vehicles.size() - 2)));
+        if (vehicles.size() > 0) {
+            assertTrue(testVehicleTwo.equals(vehicles.get(vehicles.size() - 1)));
+            assertTrue(testVehicle.equals(vehicles.get(vehicles.size() - 2)));
+        }
+
+        for (Vehicle vehicle : vehicles) {
+            assertTrue(vehicle.getOwner() == testUser.getUserid());
+        }
     }
 
     /**

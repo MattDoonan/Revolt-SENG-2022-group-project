@@ -2,6 +2,7 @@ package seng202.team3.data.entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import seng202.team3.logic.UserManager;
 
 /**
  * Representation of a past or current Journey
@@ -31,10 +32,10 @@ public class Journey {
     /** the journeys id number **/
     private int journeyId;
 
-    //TODO: This not associate with the vehicle or the database
-    /** Range of vehicle */
-    private double vehicleRange;
-
+    /**
+     * id of user who took the journey
+     */
+    private int user;
 
     /**
      * Constructor for the Journey
@@ -53,6 +54,7 @@ public class Journey {
         this.vehicle = vehicle;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.user = UserManager.getUser().getUserid();
     }
 
     /**
@@ -197,22 +199,22 @@ public class Journey {
         return this.journeyId;
     }
 
-    //TODO: This not associate with the vehicle or the database
     /**
-     * Gets range of vehicle
-     * @return range of vehicle
+     * sets the user ID number
+     *
+     * @param number integer for the id
      */
-    public double getVehicleRange() {
-        return vehicleRange;
+    public void setUser(int number) {
+        this.user = number;
     }
 
-    //TODO: This not associate with the vehicle or the database
     /**
-     * Sets range of vehicle
-     * @param vehicleRange range of vehicle
+     * returns the user id number
+     *
+     * @return the integer id number
      */
-    public void setVehicleRange(double vehicleRange) {
-        this.vehicleRange = vehicleRange;
+    public int getUser() {
+        return this.user;
     }
 
     /** {@inheritDoc} */
@@ -230,7 +232,22 @@ public class Journey {
                 && j.getEndPosition().equals(this.getEndPosition())
                 && j.getStartDate().equals(this.getStartDate())
                 && j.getEndDate().equals(this.getEndDate())
-                && j.getJourneyId() == this.getJourneyId();
+                && j.getJourneyId() == this.getJourneyId()
+                && j.getUser() == this.getUser();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public int hashCode() {
+        int result = (journeyId ^ (journeyId >>> 32));
+        result = 31 * result + chargers.hashCode();
+        result = 31 * result + vehicle.hashCode();
+        result = 31 * result + startPosition.hashCode();
+        result = 31 * result + endPosition.hashCode();
+        result = 31 * result + startDate.hashCode();
+        result = 31 * result + endDate.hashCode();
+
+        return result;
     }
 
 }

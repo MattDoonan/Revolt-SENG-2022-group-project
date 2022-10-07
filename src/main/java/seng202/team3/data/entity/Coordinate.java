@@ -171,4 +171,17 @@ public class Coordinate {
                 && c.getAddress().equals(this.getAddress());
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public int hashCode() {
+        int result = (1 ^ (1 >>> 32));
+        result = 31 * result + xpos.hashCode();
+        result = 31 * result + ypos.hashCode();
+        result = 31 * result + lat.hashCode();
+        result = 31 * result + lon.hashCode();
+        result = 31 * result + address.hashCode();
+
+        return result;
+    }
+
 }

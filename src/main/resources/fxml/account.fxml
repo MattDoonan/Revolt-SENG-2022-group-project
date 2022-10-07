@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+
+<ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.AccountController">
+   <content>
+      <SplitPane dividerPositions="0.5" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" orientation="VERTICAL">
+         <items>
+            <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="410.0">
+               <children>
+                  <Text layoutX="23.0" layoutY="302.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Distance Travelled:" textAlignment="CENTER" wrappingWidth="154.796875">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Text>
+                  <Text layoutX="23.0" layoutY="367.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Stops visited:">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Text>
+                  <Text layoutX="23.0" layoutY="335.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Most viewed stop:">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Text>
+                  <Button fx:id="editAccountButton" layoutX="675.0" layoutY="339.0" mnemonicParsing="false" onAction="#editDetails" prefHeight="45.0" prefWidth="125.0" text="Edit Account" />
+                  <Text fx:id="distanceTravelled" layoutX="189.0" layoutY="302.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Text>
+                  <Text fx:id="numberStops" layoutX="141.0" layoutY="367.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Text>
+                  <Text fx:id="mostViewed" layoutX="178.0" layoutY="335.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Text>
+                  <Button fx:id="editAdmin" contentDisplay="CENTER" layoutX="675.0" layoutY="284.0" mnemonicParsing="false" onAction="#adminEditing" prefHeight="45.0" prefWidth="125.0" text="Administration Edit Page" textAlignment="CENTER" visible="false" wrapText="true" />
+                  <Text layoutX="23.0" layoutY="269.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Carbon Saved:">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Text>
+                  <Text fx:id="carbonSaved" layoutX="150.0" layoutY="269.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Text>
+                  <TextField fx:id="accountName" editable="false" layoutX="12.0" layoutY="14.0" prefWidth="800.0" style="-fx-background-color: transparent;" text="Account Name">
+                     <font>
+                        <Font size="40.0" />
+                     </font>
+                  </TextField>
+                  <TextField fx:id="accountEmail" editable="false" layoutX="14.0" layoutY="97.0" prefHeight="53.0" prefWidth="800.0" style="-fx-background-color: transparent;" text="Account Email">
+                     <font>
+                        <Font size="28.0" />
+                     </font>
+                  </TextField>
+                  <TextField fx:id="accountPassword" layoutX="14.0" layoutY="158.0" prefHeight="26.0" prefWidth="800.0" promptText="New Password" style="-fx-background-color: white; -fx-border-color: black;" visible="false" />
+                  <Button fx:id="confirm" layoutX="544.0" layoutY="339.0" mnemonicParsing="false" onAction="#confirmChanges" prefHeight="45.0" prefWidth="125.0" text="Confirm" visible="false" />
+               </children>
+            </AnchorPane>
+            <BorderPane fx:id="chargerTable" maxWidth="1.7976931348623157E308" prefWidth="600.0">
+               <cursor>
+                  <Cursor fx:constant="DEFAULT" />
+               </cursor>
+            </BorderPane>
+         </items>
+      </SplitPane>
+   </content>
+</ScrollPane>

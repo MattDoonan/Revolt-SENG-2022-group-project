@@ -187,4 +187,16 @@ public class Connector {
                 && c.getStatus().equals(this.getStatus())
                 && c.getCurrent().equals(this.getCurrent());
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public int hashCode() {
+        int result = (connectorId ^ (connectorId >>> 32));
+        result = 31 * result + type.hashCode();
+        result = 31 * result + current.hashCode();
+        result = 31 * result + powerDraw.hashCode();
+        result = 31 * result + status.hashCode();
+
+        return result;
+    }
 }

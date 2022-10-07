@@ -18,7 +18,8 @@ public class App {
 
     /**
      * Entry point which runs the javaFX application
-     * Also shows off some different logging levels
+     * since it is non-modular.
+     * Causes Unsupported JavaFX config error log - this can be ignored
      *
      * @param args program arguments from command line
      */

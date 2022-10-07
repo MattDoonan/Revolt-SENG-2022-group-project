@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javax.management.InstanceAlreadyExistsException;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,9 +23,12 @@ import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
+import seng202.team3.data.entity.PermissionLevel;
+import seng202.team3.data.entity.User;
 import seng202.team3.logic.ChargerManager;
 import seng202.team3.logic.GeoLocationHandler;
 import seng202.team3.logic.MainManager;
+import seng202.team3.logic.UserManager;
 
 /**
  * Unit tests for {@link MainManager} MainManager class in logic
@@ -31,13 +37,18 @@ import seng202.team3.logic.MainManager;
  * @version 1.0.0, Aug 28
  */
 public class MainManagerTest {
+    /**
+     * Logger
+     */
+    private static final Logger logManager = LogManager.getLogger();
 
     private MainManager manage;
     private ChargerManager charge;
     static SqlInterpreter db;
+    static User testUser;
 
     @BeforeAll
-    static void intialize() throws InstanceAlreadyExistsException {
+    static void intialize() throws InstanceAlreadyExistsException, IOException {
         SqlInterpreter.removeInstance();
         db = SqlInterpreter.initialiseInstanceWithUrl(
                 "jdbc:sqlite:./target/test-classes/test_database.db");
@@ -48,6 +59,12 @@ public class MainManagerTest {
      */
     @BeforeEach
     public void setUp() {
+        testUser = new User("admin@admin.com", "admin",
+                PermissionLevel.USER);
+        testUser.setUserid(1);
+
+        UserManager.setUser(testUser);
+
         manage = new MainManager();
         charge = new ChargerManager();
         db.defaultDatabase();
@@ -68,7 +85,7 @@ public class MainManagerTest {
     @Test
     public void positionTest1() {
         Coordinate coordinate = new Coordinate(1.1, 2.3, -43.53418, 172.627572);
-        GeoLocationHandler.getInstance().setCoordinate(coordinate, "empty");
+        GeoLocationHandler.setCoordinate(coordinate, "empty");
         manage.setPosition();
         assertEquals(coordinate, manage.getPosition());
 
@@ -77,7 +94,7 @@ public class MainManagerTest {
     @Test
     public void positionTest2() {
         Coordinate coordinate = new Coordinate(4.4, 6.1, 23.2334, 32.3242);
-        GeoLocationHandler.getInstance().setCoordinate(coordinate, "empty");
+        GeoLocationHandler.setCoordinate(coordinate, "empty");
         manage.setPosition();
         assertEquals(coordinate, manage.getPosition());
     }
@@ -92,7 +109,7 @@ public class MainManagerTest {
         connectorList.add(dummyConnector);
         Coordinate coord = new Coordinate(4.5, 5.7, -36.85918, 174.76602);
         Charger c = new Charger(connectorList, "Test1", coord, 1, 0.3,
-                "Meridian", "Meridian", "2020/1/1 00:00:00", true, true, true, true);
+                "Meridian", "2020/1/1 00:00:00", true, true, true, true);
         manage.setSelectedCharger(c);
         assertEquals(c.getLocation().getLat(),
                 manage.getSelectedCharger().getLocation().getLat());
@@ -142,7 +159,7 @@ public class MainManagerTest {
         ArrayList<Charger> cc;
 
         cc = charge.getNearbyChargers(chargerList, coordinate, 50.0);
-        GeoLocationHandler.getInstance().setCoordinate(coordinate, "empty");
+        GeoLocationHandler.setCoordinate(coordinate, "empty");
         manage.setPosition();
         manage.setDistance(50.0);
         manage.resetQuery();
@@ -174,7 +191,7 @@ public class MainManagerTest {
 
         Coordinate coordinate = new Coordinate(1.1, 2.3, -43.53418, 172.627572);
         cc = charge.getNearbyChargers(chargerList, coordinate, 90.0);
-        GeoLocationHandler.getInstance().setCoordinate(coordinate, "empty");
+        GeoLocationHandler.setCoordinate(coordinate, "empty");
         manage.setPosition();
         manage.setDistance(90.0);
         manage.resetQuery();
@@ -230,7 +247,8 @@ public class MainManagerTest {
                 chargerList.add((Charger) o);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
+            ;
         }
         manage.resetQuery();
         manage.adjustQuery("connectorcurrent", "DC", ComparisonType.CONTAINS);
@@ -256,7 +274,8 @@ public class MainManagerTest {
                 chargerList.add((Charger) o);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
+            ;
         }
         manage.resetQuery();
         manage.adjustQuery("hastouristattraction", "True", ComparisonType.CONTAINS);
@@ -283,7 +302,8 @@ public class MainManagerTest {
                 chargerList.add((Charger) o);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
+            ;
         }
         manage.resetQuery();
         manage.adjustQuery("haschargingcost", "False", ComparisonType.CONTAINS);
@@ -310,7 +330,8 @@ public class MainManagerTest {
                 chargerList.add((Charger) o);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
+            ;
         }
         manage.resetQuery();
         manage.adjustQuery("haschargingcost", "False", ComparisonType.CONTAINS);
@@ -333,7 +354,8 @@ public class MainManagerTest {
                 chargerList.add((Charger) o);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
+            ;
         }
         manage.resetQuery();
         manage.adjustQuery("hastouristattraction", "True", ComparisonType.CONTAINS);
@@ -359,12 +381,13 @@ public class MainManagerTest {
                 chargerList.add((Charger) o);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
+            ;
         }
         manage.resetQuery();
         manage.makeAllChargers();
         // Checks the sizes of each list
-        assertArrayEquals(chargerList.toArray(), manage.getCloseChargerData().toArray());
+        assertEquals(chargerList.size(), manage.getCloseChargerData().size());
 
     }
 }

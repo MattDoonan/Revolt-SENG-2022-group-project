@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<SplitPane dividerPositions="0.3" minWidth="200.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.MainController">
+<SplitPane dividerPositions="0.3" minWidth="200.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.MainController">
     <items>
         <SplitPane dividerPositions="0.10287081339712918, 0.21291866028708134, 0.5" maxWidth="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefWidth="530.0">
             <items>
@@ -29,9 +29,9 @@
            </font></Button>
     </items>
   </SplitPane>
-  <SplitPane dividerPositions="0.7198067632850241" maxHeight="40.0">
+  <SplitPane dividerPositions="0.5" maxHeight="40.0">
     <items>
-                      <MenuButton fx:id="filters" mnemonicParsing="false" prefHeight="40.0" prefWidth="510.0" style="-fx-font-size: 20;" text="Filters">
+                      <MenuButton fx:id="filters" mnemonicParsing="false" onAction="#onEnter" prefHeight="40.0" prefWidth="510.0" style="-fx-font-size: 20;" text="Filters">
                           <font>
                               <Font size="16.0" />
                           </font>
@@ -44,7 +44,7 @@
                               </CustomMenuItem>
                               <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                                   <content>
-                                      <Slider fx:id="changeDistance" majorTickUnit="10.0" min="10.0" minorTickCount="5" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="20.0" />
+                                      <Slider fx:id="changeDistance" blockIncrement="50.0" majorTickUnit="100.0" max="1000.0" min="10.0" minorTickCount="50" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="100.0" />
                                   </content>
                               </CustomMenuItem>
                         <SeparatorMenuItem mnemonicParsing="false" />
@@ -145,16 +145,12 @@
                         </Menu>
                           </items>
                       </MenuButton>
-        <Button minWidth="140.0" mnemonicParsing="false" onAction="#loadTableView" prefHeight="40.0" prefWidth="55.0" text="Show Table">
-           <font>
-              <Font size="17.0" />
-           </font>
-        </Button>
+                  <TextField fx:id="batteryPercent" maxHeight="-Infinity" maxWidth="-Infinity" onKeyTyped="#checkForNumber" prefHeight="40.0" prefWidth="100.0" promptText="Charge" />
     </items>
   </SplitPane>
-            <ScrollPane minHeight="180.0" maxHeight="180.0" prefWidth="530.0">
+            <ScrollPane maxHeight="180.0" minHeight="180.0" prefWidth="530.0">
                <content>
-                  <HBox fx:id="displayInfo" maxHeight="50.0" prefWidth="530.0" spacing="20.0" style="-fx-background-color: #FFFFFF;">
+                  <HBox fx:id="displayInfo" maxHeight="50.0" onMouseClicked="#editCharger" prefWidth="530.0" spacing="20.0" style="-fx-background-color: #FFFFFF;">
                      <padding>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </padding>
@@ -168,7 +164,7 @@
             </ScrollPane>
             </items>
         </SplitPane>
-  <BorderPane fx:id="mainWindow" maxHeight="Infinity" maxWidth="Infinity" minHeight="400" minWidth="600.0">
+  <BorderPane fx:id="mainWindow" maxHeight="Infinity" maxWidth="Infinity" minHeight="400.0" minWidth="600.0">
 <top>
 </top>
 </BorderPane>

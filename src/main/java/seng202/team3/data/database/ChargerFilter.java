@@ -12,6 +12,7 @@ import seng202.team3.data.entity.Charger;
  * @version 1.0.0, Aug 22
  */
 public class ChargerFilter implements BeanVerifier<Object> {
+
     /**
      * Field to filter by
      */

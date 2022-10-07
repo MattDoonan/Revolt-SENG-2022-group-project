@@ -1,12 +1,18 @@
 package seng202.team3.logic;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.List;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -28,6 +34,10 @@ import seng202.team3.gui.MenuController;
  * @version 1.0.0, Aug 22
  */
 public class JavaScriptBridge {
+    /**
+     * Logger
+     */
+    private static final Logger logManager = LogManager.getLogger();
 
     /**
      * Unused constructor
@@ -42,7 +52,7 @@ public class JavaScriptBridge {
      * @param latlng the string created with latitude and longitude
      */
     public void addCoordinateFromClick(String latlng) {
-        GeoLocationHandler.getInstance().setCoordinate(parseCoordinate(latlng), "Coordinate");
+        GeoLocationHandler.setCoordinate(parseCoordinate(latlng), "Coordinate");
         refreshCoordinates();
     }
 
@@ -50,9 +60,8 @@ public class JavaScriptBridge {
      * Refreshes the coordinates for journey manager and main manager
      */
     private void refreshCoordinates() {
-        MenuController menu = new MenuController();
-        if (menu.getController() != null) {
-            menu.getController().getManager().setPosition();
+        if (MenuController.getController() != null) {
+            MenuController.getController().getManager().setPosition();
         }
         if (menu.getJourneyController() != null) {
             menu.getJourneyController().getManager().setPosition();
@@ -64,7 +73,8 @@ public class JavaScriptBridge {
      * Parses a string into a series of coordinates
      *
      * @param latlng the string to be parsed
-     * @return {@link seng202.team3.data.entity.Coordinate}, the coordinate end product
+     * @return {@link seng202.team3.data.entity.Coordinate}, the coordinate end
+     *         product
      */
     public Coordinate parseCoordinate(String latlng) {
         JSONParser parser = new JSONParser();
@@ -76,8 +86,10 @@ public class JavaScriptBridge {
             coord.setLat((double) lat);
             coord.setLon((double) lng);
         } catch (ParseException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
+            return null;
         }
+
         return coord;
     }
 
@@ -88,7 +100,7 @@ public class JavaScriptBridge {
      * @param address String of the address
      */
     public void addLocationName(String address) {
-        String[] splitAddress = address.split("[,]", 10);
+        String[] splitAddress = address.split(",", 10);
         if (splitAddress.length > 6) {
             address = "";
             address += splitAddress[0] + splitAddress[1] + ", "
@@ -96,16 +108,46 @@ public class JavaScriptBridge {
                     + splitAddress[splitAddress.length - 2] + ", "
                     + splitAddress[splitAddress.length - 1];
         }
-        GeoLocationHandler.getInstance().setCoordinate(GeoLocationHandler
-                .getInstance().getCoordinate(), address);
+        GeoLocationHandler.setCoordinate(GeoLocationHandler.getCoordinate(), address);
         refreshCoordinates();
+    }
+
+    /**
+     * Makes the location name; returns a string of it
+     *
+     * @return a string of the name
+     */
+    public String makeLocationName() {
+        String address = "";
+        JSONParser parser = new JSONParser();
+        Coordinate coord = GeoLocationHandler.getCoordinate();
+        try {
+            HttpClient client = HttpClient.newHttpClient();
+            HttpRequest request = HttpRequest.newBuilder(
+                    URI.create("https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat="
+                            + Double.toString(coord.getLat()) + "&lon="
+                            + Double.toString(coord.getLon())))
+                    .build();
+            HttpResponse<String> response = client.send(request,
+                    HttpResponse.BodyHandlers.ofString());
+            JSONObject result = (JSONObject) parser.parse(response.body());
+            address += (String) result.get("display_name");
+            addLocationName(address);
+        } catch (IOException e) {
+            logManager.error(e.getMessage());
+        } catch (ParseException | InterruptedException e) {
+            Thread.currentThread().interrupt();
+            logManager.error(e.getMessage());
+        }
+
+        return address;
     }
 
     /**
      * Refresh the menu table
      */
     public void refreshTable() {
-        MainController controller = new MenuController().getController();
+        MainController controller = MenuController.getController();
         controller.refreshTable();
     }
 
@@ -113,7 +155,7 @@ public class JavaScriptBridge {
      * Recalls a query with all the components at the new location
      */
     public void refreshQuery() {
-        MainController controller = new MenuController().getController();
+        MainController controller = MenuController.getController();
         controller.executeSearch();
     }
 
@@ -125,7 +167,6 @@ public class JavaScriptBridge {
      * @param id the charger id selected
      */
     public void chargerHandler(int id) {
-        MainController controller = new MenuController().getController();
         QueryBuilder query = new QueryBuilderImpl().withSource("charger")
                 .withFilter("charger.chargerId", Integer.toString(id), ComparisonType.EQUAL);
         try {
@@ -133,12 +174,13 @@ public class JavaScriptBridge {
                     .readData(query.build(), Charger.class);
             if (object.size() == 1) {
                 Charger charger = (Charger) object.get(0);
-                controller.getManager().setSelectedCharger(charger);
-                controller.viewChargers(charger);
-                controller.getMapController().changePosition(charger.getLocation());
+                MenuController.getController().getManager().setSelectedCharger(charger);
+                MenuController.getController().viewChargers(charger);
+                MenuController.getController().getMapController()
+                        .changePosition(charger.getLocation());
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
         }
     }
 
@@ -148,7 +190,7 @@ public class JavaScriptBridge {
      * @param latlng string representation of a physical coordinate
      */
     public void zoomToPoint(String latlng) {
-        MainController controller = new MenuController().getController();
+        MainController controller = MenuController.getController();
         controller.getMapController().changePosition(parseCoordinate(latlng));
     }
 
@@ -158,7 +200,7 @@ public class JavaScriptBridge {
      * @param latlng the String from the route.
      */
     public void addStopInRoute(String latlng) {
-        MainController controller = new MenuController().getController();
+        MainController controller = MenuController.getController();
         controller.getMapController().addStopInRoute(parseCoordinate(latlng));
     }
 
@@ -169,7 +211,7 @@ public class JavaScriptBridge {
      */
     public void loadMoreInfo(int id) {
         chargerHandler(id);
-        MainManager main = new MenuController().getController().getManager();
+        MainManager main = MenuController.getController().getManager();
         loadChargerEdit(main.getSelectedCharger(), main.getPosition());
     }
 
@@ -179,9 +221,9 @@ public class JavaScriptBridge {
      */
     public void addChargerToJourney(int id) {
         chargerHandler(id);
-        
-        MainManager mainManager = new MenuController().getController().getManager();
-        JourneyController journeyController = new MenuController().getJourneyController();
+
+        MainManager mainManager = MenuController.getController().getManager();
+        JourneyController journeyController = MenuController.getJourneyController();
         JourneyManager journeyManager = journeyController.getManager();
         Charger charger = mainManager.getSelectedCharger();
 
@@ -199,41 +241,38 @@ public class JavaScriptBridge {
      */
     public void setCoordinate(String latlng, String name) {
         GeoLocationHandler.getInstance().setCoordinate(parseCoordinate(latlng), name);
+        MainManager main = MenuController.getController().getManager();
+        loadChargerEdit(main.getSelectedCharger());
     }
 
     /**
      * Creates the charger adding/editing screen when necessary
      *
-     * @param charger    the {@link seng202.team3.data.entity.Charger} that is being selected
-     * @param coordinate the {@link seng202.team3.data.entity.Coordinate} that is being selected
+     * @param charger the {@link seng202.team3.data.entity.Charger} that is being
+     *                selected
      */
-    public void loadChargerEdit(Charger charger, Coordinate coordinate) {
+    public void loadChargerEdit(Charger charger) {
         try {
             FXMLLoader chargerCont = new FXMLLoader(getClass().getResource(
                     "/fxml/charger_info.fxml"));
-            AnchorPane root = chargerCont.load();
+            BorderPane root = chargerCont.load();
             Scene modalScene = new Scene(root);
             Stage modal = new Stage();
             modal.setScene(modalScene);
-            modal.setWidth(400);
-            modal.setHeight(550);
+            modal.setWidth(1085);
+            modal.setHeight(630);
             modal.setResizable(false);
             modal.setTitle("Charger Information");
-            modal.initModality(Modality.WINDOW_MODAL);
+            modal.initModality(Modality.APPLICATION_MODAL);
             ChargerController controller = chargerCont.getController();
-            controller.setCoordinate(coordinate);
             controller.setCharger(charger);
-            controller.displayChargerInfo();
             controller.init(modal);
             modal.setAlwaysOnTop(true);
             modal.showAndWait();
-
+            MenuController.getController().getManager().makeAllChargers();
+            MenuController.getController().refreshTable();
         } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            MenuController menu = new MenuController();
-            menu.getController().getManager().makeAllChargers();
-            menu.getController().refreshTable();
+            logManager.error(e.getMessage());
         }
 
     }

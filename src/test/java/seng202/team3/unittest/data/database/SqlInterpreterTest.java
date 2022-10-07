@@ -1,5 +1,6 @@
 package seng202.team3.unittest.data.database;
 
+import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -19,6 +20,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Stream;
 import javax.management.InstanceAlreadyExistsException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,7 +39,10 @@ import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
 import seng202.team3.data.entity.Journey;
+import seng202.team3.data.entity.PermissionLevel;
+import seng202.team3.data.entity.User;
 import seng202.team3.data.entity.Vehicle;
+import seng202.team3.logic.UserManager;
 
 /**
  * Tests for SqlInterpreter {@link SqlInterpreter} Class
@@ -44,12 +51,18 @@ import seng202.team3.data.entity.Vehicle;
  * @version 1.0.0, Sep 2
  */
 public class SqlInterpreterTest {
+    /**
+     * Logger
+     */
+    private static final Logger logManager = LogManager.getLogger();
+
     static SqlInterpreter db;
     static Connector testConnector1;
     static Connector testConnector2;
     static Charger testCharger;
     static Vehicle testVehicle;
     static Journey testJourney;
+    static User testUser;
 
     static final int DEFAULTID = 1;
 
@@ -75,6 +88,9 @@ public class SqlInterpreterTest {
                 db.writeCharger(testCharger);
                 db.writeJourney((Journey) objectToTest);
                 break;
+            case "User":
+                db.writeUser((User) objectToTest, "admin"); // arbitrary password
+                break;
             default:
                 fail();
         }
@@ -90,11 +106,12 @@ public class SqlInterpreterTest {
                 Arguments.of(testCharger, "charger"),
                 Arguments.of(testConnector1, "connector"),
                 Arguments.of(testVehicle, "vehicle"),
-                Arguments.of(testJourney, "journey"));
+                Arguments.of(testJourney, "journey"),
+                Arguments.of(testUser, "user"));
     }
 
     @BeforeAll
-    static void setup() throws InstanceAlreadyExistsException {
+    static void setup() throws InstanceAlreadyExistsException, IOException {
         SqlInterpreter.removeInstance();
         db = SqlInterpreter.initialiseInstanceWithUrl(
                 "jdbc:sqlite:./target/test-classes/test_database.db");
@@ -103,16 +120,40 @@ public class SqlInterpreterTest {
     @BeforeEach
     void reset() {
         db.defaultDatabase();
+        try {
+            Connection conn = db.createConnection();
+
+            conn.createStatement()
+                    .executeUpdate("DELETE FROM user;"); // remove default admin
+            conn.close();
+        } catch (SQLException e) {
+            logManager.error(e.getMessage());
+            ;
+        }
+
+        testUser = new User("admin@admin.com", "admin",
+                PermissionLevel.ADMIN);
+        testUser.setUserid(DEFAULTID);
+
+        UserManager.setUser(testUser);
+
+        try {
+            db.writeUser(testUser, "admin");
+        } catch (IOException e) {
+            logManager.error(e.getMessage());
+            ;
+        }
+
         testConnector1 = new Connector("ChardaMo", "AC", "Available", "123", 3);
         testConnector2 = new Connector("ChardaMo", "AC", "Available", "420", 1);
 
+        UserManager.setUser(testUser);
         testCharger = new Charger(new ArrayList<Connector>(
                 Arrays.asList(testConnector1, testConnector2)),
                 "Test2",
                 new Coordinate(4.8, 6.2, -32.85658, 177.77702, "testAddy1"),
                 1,
                 0.3,
-                "Meridian",
                 "Meridian",
                 "2020/05/01 00:00:00+00",
                 false,
@@ -134,7 +175,7 @@ public class SqlInterpreterTest {
     }
 
     @Test
-    public void testNullUrl() {
+    public void testNullUrl() throws IOException {
         assertNotNull(db);
         assertEquals(db, SqlInterpreter.getInstance());
     }
@@ -237,6 +278,16 @@ public class SqlInterpreterTest {
     public void deleteMissingEntityTest(Object objectToTest, String dbTable) throws IOException {
         // Empty db
         QueryBuilder q = new QueryBuilderImpl().withSource(dbTable);
+        if (objectToTest instanceof User) { // Remove default user
+            try {
+                Connection conn = db.createConnection();
+                conn.createStatement().executeUpdate("DELETE FROM user"); // remove default admin
+                conn.close();
+            } catch (SQLException e) {
+                logManager.error(e.getMessage());
+                ;
+            }
+        }
 
         List<Object> originalTable = db.readData(q.build(), objectToTest.getClass());
         db.deleteData(dbTable, DEFAULTID);
@@ -271,6 +322,10 @@ public class SqlInterpreterTest {
             case "Journey":
                 ((Journey) objectToTest).setJourneyId(0);
                 break;
+            case "User":
+                ((User) objectToTest).setUserid(0);
+                ((User) objectToTest).setAccountName("newName"); // username must be unique
+                break;
             default:
                 fail();
         }
@@ -284,12 +339,63 @@ public class SqlInterpreterTest {
                 ResultSet rs = stmt.executeQuery("SELECT " + dbTable + "id "
                         + "FROM " + dbTable + " ORDER BY " + dbTable + "id DESC LIMIT 0,1")) {
             entityId = rs.getInt(dbTable + "id");
+            rs.close();
+            stmt.close();
+            conn.close();
 
         } catch (SQLException e) {
             throw new IOException(e.getMessage());
         }
 
         assertEquals(DEFAULTID + 1, entityId);
+    }
+
+    /**
+     * Tests check if deleting a user deletes all associated information
+     */
+    @Test
+    public void delUserTestForJourneys() throws IOException {
+        writeSingleEntity(testUser);
+        testJourney.setUser(testUser.getUserid());
+        writeSingleEntity(testJourney);
+        db.deleteData("user", testUser.getUserid());
+        List<Object> result = db.readData(
+                new QueryBuilderImpl().withSource("journey")
+                        .withFilter("userid", String.valueOf(testUser.getUserid()),
+                                ComparisonType.EQUAL)
+                        .build(),
+                Journey.class);
+        assertArrayEquals(new Object[] {}, result.toArray());
+    }
+
+    @Test
+    public void delUserTestForVehicles() throws IOException {
+        writeSingleEntity(testUser);
+        testVehicle.setOwner(testUser.getUserid());
+        writeSingleEntity(testVehicle);
+        db.deleteData("user", testUser.getUserid());
+        List<Object> result = db.readData(
+                new QueryBuilderImpl().withSource("vehicle")
+                        .withFilter("owner", String.valueOf(testUser.getUserid()),
+                                ComparisonType.EQUAL)
+                        .build(),
+                Vehicle.class);
+        assertArrayEquals(new Object[] {}, result.toArray());
+    }
+
+    @Test
+    public void delUserTestForChargers() throws IOException {
+        writeSingleEntity(testUser);
+        testCharger.setOwner(testUser.getAccountName());
+        writeSingleEntity(testCharger);
+        db.deleteData("user", testUser.getUserid());
+        List<Object> result = db.readData(
+                new QueryBuilderImpl().withSource("charger")
+                        .withFilter("owner", String.valueOf(testUser.getUserid()),
+                                ComparisonType.EQUAL)
+                        .build(),
+                Charger.class);
+        assertArrayEquals(new Object[] {}, result.toArray());
     }
 
     /**
@@ -319,6 +425,7 @@ public class SqlInterpreterTest {
         ResultSet result = db.createConnection().createStatement().executeQuery(
                 "SELECT * FROM stop WHERE journeyid = " + testJourney.getJourneyId() + ";");
         assertFalse(result.getBoolean(1));
+        result.close();
     }
 
     /**
@@ -331,6 +438,7 @@ public class SqlInterpreterTest {
         ResultSet result = db.createConnection().createStatement().executeQuery(
                 "SELECT * FROM stop WHERE chargerid = " + testCharger.getChargerId() + ";");
         assertFalse(result.getBoolean(3));
+        result.close();
     }
 
     /**
@@ -402,7 +510,7 @@ public class SqlInterpreterTest {
         db.writeCharger(testCharger); // Write to database
 
         // Modify attributes
-        testCharger.setOwner("Tesla");
+        testCharger.setName("New");
         testCharger.setAvailable24Hrs(false);
         testCharger.setOperator("Seng202");
 
@@ -495,7 +603,7 @@ public class SqlInterpreterTest {
         writeSingleEntity(testJourney);
         testJourney.getChargers().get(0).setName("New Name");
         testJourney.getChargers().get(0).setOperator("New op");
-        testJourney.getChargers().get(0).setOwner("New owner");
+        testJourney.getChargers().get(0).setDateOpened("00:00:00 12/34/56");
         writeSingleEntity(testJourney.getChargers().get(0));
         List<Object> result = db.readData(
                 new QueryBuilderImpl().withSource("journey").withFilter("journeyid",
@@ -538,7 +646,7 @@ public class SqlInterpreterTest {
 
         switch (objectToTest.getClass().getSimpleName()) {
             case "Charger":
-                ((Charger) objectToTest).setOwner(null);
+                ((Charger) objectToTest).setName(null);
                 break;
             case "Connector":
                 ((Connector) objectToTest).setCurrent(null);
@@ -549,6 +657,17 @@ public class SqlInterpreterTest {
             case "Journey":
                 ((Journey) objectToTest).setStartPosition(
                         new Coordinate(4.8, 6.2, null, 177.77702, "testAddy1"));
+                break;
+            case "User":
+                try { // remove default records
+                    Connection conn = db.createConnection();
+                    Statement stmt = conn.createStatement();
+                    stmt.executeUpdate("DELETE FROM user"); // remove default admin
+                } catch (SQLException e) {
+                    logManager.error(e.getMessage());
+                    ;
+                }
+                ((User) objectToTest).setAccountName(null);
                 break;
             default:
                 fail();
@@ -709,4 +828,104 @@ public class SqlInterpreterTest {
 
         assertEquals(expected.size(), actual.size());
     }
+
+    /**
+     * Tests validate users
+     */
+    @Test
+    public void testValidateUsers() throws IOException, SQLException {
+        writeSingleEntity(testUser);
+        User result = db.validatePassword(testUser.getAccountName(), "admin");
+        assertEquals(testUser, result);
+    }
+
+    /**
+     * Test wrong password
+     */
+    @Test
+    public void testWrongPasswordUsers() throws IOException, SQLException {
+        writeSingleEntity(testUser);
+        User result = db.validatePassword(testUser.getAccountName(), "wrong");
+        assertNull(result);
+    }
+
+    /**
+     * Test wrong password
+     */
+    @Test
+    public void testFakeUsers() throws IOException, SQLException {
+        testUser = new User("fake@gmail.com", "test", PermissionLevel.USER);
+        User result = db.validatePassword(testUser.getAccountName(), "wrong");
+        assertNull(result);
+    }
+
+    /**
+     * Updates a valid user
+     */
+    @Test
+    public void updateValidUser() {
+        testUser = new User("test@gmail.com", "test", PermissionLevel.USER);
+        try {
+            db.writeUser(testUser, "1234");
+            testUser.setCarbonSaved(500);
+            testUser.setAccountName("New Account name");
+            testUser.setLevel(PermissionLevel.CHARGEROWNER);
+            db.writeUser(testUser);
+            List<Object> res = SqlInterpreter.getInstance().readData(new QueryBuilderImpl()
+                    .withSource("user").withFilter("username", testUser.getAccountName(),
+                            ComparisonType.EQUAL)
+                    .build(), User.class);
+            assertEquals(testUser, (User) res.get(0));
+        } catch (SQLException | IOException e) {
+            Assertions.fail("Database failed");
+        }
+    }
+
+    /**
+     * Tests updating a null user
+     */
+    @Test
+    public void updateNullUser() {
+        try {
+            db.writeUser(null);
+            Assertions.fail("Database shouldn't add null pointers");
+        } catch (SQLException e) {
+            Assertions.fail("Database failed");
+        } catch (NullPointerException n) {
+            Assertions.assertTrue(true);
+        }
+    }
+
+    @Test
+    public void updateFakeUser() {
+        try {
+            db.writeUser(new User("fake@email", "fake", PermissionLevel.USER));
+            List<Object> res = SqlInterpreter.getInstance().readData(new QueryBuilderImpl()
+                    .withSource("user").withFilter("username", "fake",
+                            ComparisonType.EQUAL)
+                    .build(), User.class);
+            Assertions.assertEquals(0, res.size());
+        } catch (SQLException | IOException e) {
+            Assertions.fail("Database Failed");
+        }
+    }
+
+    /**
+     * Checks if the program updates the password
+     */
+    @Test
+    public void updatePassword() {
+        User updatable = new User("fake@email", "fake", PermissionLevel.USER);
+        try {
+            db.writeUser(updatable, "1234");
+            updatable.setCarbonSaved(50);
+            updatable.setEmail("update@gmail.com");
+            db.writeUser(updatable, "5678");
+            User login = db.validatePassword(updatable.getAccountName(), "5678");
+            assertEquals(updatable, login);
+        } catch (IOException e) {
+            Assertions.fail("Database failed");
+        }
+    }
+
 }

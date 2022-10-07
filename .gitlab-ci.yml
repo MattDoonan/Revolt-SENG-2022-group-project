@@ -1,22 +1,30 @@
-junit:
-  stage: test
-  script:
-    - mvn -B clean test -Dtest=\*Test
-generate_artifacts:
-  stage: deploy
-  script:
-    - mvn -B clean package -DskipTests
-  artifacts:
-    paths:
-      - target/revolt*.jar
 checkstyle:
   stage: build
   script:
     - mvn -B clean validate
+junit:
+  stage: test
+  script:
+    - mvn -B clean test -Dtest="**/unittest/**/*.java" -Dcheckstyle.skip=true
+cucumber:
+  stage: test
+  script:
+    - mvn -B clean test -P headlessTests -Dtest="**/cucumber/**/*.java" -Dcheckstyle.skip=true
+testfx:
+  stage: test
+  script:
+    - mvn -B clean test -P headlessTests -Dtest="**/testfx/**/*.java" -Dcheckstyle.skip=true
+generate_artifacts:
+  stage: deploy
+  script:
+    - mvn -B clean package -DskipTests -Dmaven.javadoc.skip=true -Dcheckstyle.skip=true
+  artifacts:
+    paths:
+      - target/revolt*.jar
 generate_doc:
   stage: deploy
   script:
-    - mvn -B clean javadoc:javadoc
+    - mvn -B clean javadoc:javadoc -Dcheckstyle.skip=true
   artifacts:
     paths:
       - target/site/apidocs/
