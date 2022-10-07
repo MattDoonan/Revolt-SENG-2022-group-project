@@ -268,6 +268,8 @@ public class LoginSignupController {
     /**
      * Checks the signup fields for errors, and displays messages to the user 
      * if there are errors
+     * 
+     * @return whether there were any errors
      */
     public Boolean signUpErrorChecks() {
         nameError.hide();
@@ -336,8 +338,10 @@ public class LoginSignupController {
     @FXML
     public void login() {
         try {
+            loginErrorChecks();
             String hashedPassword = encryptThisString(loginPasswordField.getText());
             User user = manage.login(loginEmailField.getText(), hashedPassword);
+
             if (user != null) {
                 menuControl.setUser(user);
                 stage.close();
@@ -347,12 +351,47 @@ public class LoginSignupController {
                 loginEmailField.clear();
                 invalidLogin.setVisible(true);
                 logManager.info("Username or password incorrect");
+                loginEmailField.setStyle(INVALID_STYLE);
+                loginPasswordField.setStyle(INVALID_STYLE);
             }
         } catch (SQLException | IOException e) {
             loginPasswordField.clear();
             invalidLogin.setVisible(true);
             logManager.error(e.getMessage());
         }
+    }
+
+    /**
+     * Checks the login fields for errors, and displays messages to the user 
+     * if there are errors
+     * 
+     * @return whether there were any errors
+     */
+    public void loginErrorChecks() {
+        emailError.hide();
+        passError.hide();
+
+        loginEmailField.setStyle(VALID_STYLE);
+        loginPasswordField.setStyle(VALID_STYLE);
+
+        Point2D pEmail = loginEmailField.localToScene(0.0, 0.0);
+        Point2D pPass = loginPasswordField.localToScene(0.0, 0.0);
+
+        if (loginEmailField.getText().isEmpty()) {
+            emailError.setText("Username required.");
+            loginEmailField.setStyle(INVALID_STYLE);
+            emailError.show(loginEmailField,
+            pEmail.getX() + loginEmailField.getScene().getX() + loginEmailField.getScene().getWindow().getX() + loginEmailField.getWidth() + 25,
+            pEmail.getY() + loginEmailField.getScene().getY() + loginEmailField.getScene().getWindow().getY());
+        }
+        if (loginPasswordField.getText().isEmpty()) {
+            passError.setText("Password required.");
+            loginPasswordField.setStyle(INVALID_STYLE);
+            passError.show(loginPasswordField,
+            pPass.getX() + loginPasswordField.getScene().getX() + loginPasswordField.getScene().getWindow().getX() + loginPasswordField.getWidth() + 25,
+            pPass.getY() + loginPasswordField.getScene().getY() + loginPasswordField.getScene().getWindow().getY());
+        }
+
     }
 
     /**
