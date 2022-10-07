@@ -184,11 +184,6 @@ public class VehicleUpdateController {
     private static final String CONN_PROMPT_TEXT = "Connection: ";
 
     /**
-     * List of user input errors for adding/editing vehicles
-     */
-    private ArrayList<String> errors = new ArrayList<>();
-
-    /**
      * The popup for selecting an image
      */
     private Stage imagePopup = new Stage();
@@ -309,37 +304,49 @@ public class VehicleUpdateController {
      */
     public Boolean checkForErrors() {
         makeError.hide();
+        makeError.setId("makeErr");
         modelError.hide();
+        modelError.setId("modelErr");
         rangeError.hide();
+        rangeError.setId("rangeErr");
         connectorError.hide();
+        connectorError.setId("connErr");
+
 
         makeText.setStyle(VALID_STYLE);
         modelText.setStyle(VALID_STYLE);
         maxRangeText.setStyle(VALID_STYLE);
         connectorType.setStyle(VALID_STYLE);
 
-        Point2D pMake = makeText.localToScene(0.0, 0.0);
-        Point2D pModel = modelText.localToScene(0.0, 0.0);
-        Point2D pRange = maxRangeText.localToScene(0.0, 0.0);
-        Point2D pConn = connectorType.localToScene(0.0, 0.0);
+        Point2D pointMake = makeText.localToScene(0.0, 0.0);
+        Point2D pointModel = modelText.localToScene(0.0, 0.0);
+        Point2D pointRange = maxRangeText.localToScene(0.0, 0.0);
+        Point2D pointConn = connectorType.localToScene(0.0, 0.0);
 
         Boolean fail = false;
 
         if (makeText.getText().isEmpty()) {
             makeError.setText(MAKE_ERROR);
-
+            makeText.setTooltip(makeError);
             makeText.setStyle(INVALID_STYLE);
             makeError.show(makeText,
-                pMake.getX() + makeText.getScene().getX() + makeText.getScene().getWindow().getX() + makeText.getWidth() + 25,
-                pMake.getY() + makeText.getScene().getY() + makeText.getScene().getWindow().getY());
+                pointMake.getX() + makeText.getScene().getX() 
+                    + makeText.getScene().getWindow().getX() 
+                    + makeText.getWidth() + 25,
+                pointMake.getY() + makeText.getScene().getY() 
+                    + makeText.getScene().getWindow().getY());
             fail = true;
         }
         if (modelText.getText().isEmpty()) {
             modelError.setText(MODEL_ERROR);
             modelText.setStyle(INVALID_STYLE);
+            modelText.setTooltip(modelError);
             modelError.show(modelText,
-                pModel.getX() + modelText.getScene().getX() + modelText.getScene().getWindow().getX() + modelText.getWidth() + 25,
-                pModel.getY() + modelText.getScene().getY() + modelText.getScene().getWindow().getY());
+                pointModel.getX() + modelText.getScene().getX() 
+                    + modelText.getScene().getWindow().getX() 
+                    + modelText.getWidth() + 25,
+                pointModel.getY() + modelText.getScene().getY() 
+                    + modelText.getScene().getWindow().getY());
             fail = true;
         }
         Boolean rangeFlag = false;
@@ -351,24 +358,33 @@ public class VehicleUpdateController {
                 rangeError.setText("Max. range cannot be negative.");
                 rangeFlag = true;
             }
+            maxRangeText.setTooltip(rangeError);
         } catch (NumberFormatException e) {
             rangeError.setText("Max. range must be a whole number.");
+            maxRangeText.setTooltip(rangeError);
             rangeFlag = true;
         }
         if (Boolean.TRUE.equals(rangeFlag)) {
             maxRangeText.setStyle(INVALID_STYLE);
             rangeError.show(maxRangeText,
-                pRange.getX() + maxRangeText.getScene().getX() + maxRangeText.getScene().getWindow().getX() + maxRangeText.getWidth() + 25,
-                pRange.getY() + maxRangeText.getScene().getY() + maxRangeText.getScene().getWindow().getY());
+                pointRange.getX() + maxRangeText.getScene().getX() 
+                    + maxRangeText.getScene().getWindow().getX() 
+                    + maxRangeText.getWidth() + 25,
+                pointRange.getY() + maxRangeText.getScene().getY() 
+                    + maxRangeText.getScene().getWindow().getY());
             fail = true;
         }
 
         if (connections.isEmpty()) {
             connectorError.setText("A vehicle must have at least one connector.");
             connectorType.setStyle(INVALID_STYLE);
+            connectorType.setTooltip(connectorError);
             connectorError.show(connectorType,
-                pConn.getX() + connectorType.getScene().getX() + connectorType.getScene().getWindow().getX() + connectorType.getWidth() + 25,
-                pConn.getY() + connectorType.getScene().getY() + connectorType.getScene().getWindow().getY());
+                pointConn.getX() + connectorType.getScene().getX() 
+                    + connectorType.getScene().getWindow().getX() 
+                    + connectorType.getWidth() + 25,
+                pointConn.getY() + connectorType.getScene().getY() 
+                    + connectorType.getScene().getWindow().getY());
             fail = true;
         }
 
@@ -577,32 +593,6 @@ public class VehicleUpdateController {
                 hbox.getChildren().addAll(label, filler, button);
                 addedConnections.getItems().add(hbox);
             }
-        }
-    }
-
-    /**
-     * Launches an error popup when trying to do illegal things
-     */
-    public void launchErrorPopUps() {
-        try {
-            FXMLLoader error = new FXMLLoader(getClass().getResource(
-                    "/fxml/error_popup.fxml"));
-            AnchorPane base = error.load();
-            Scene modalScene = new Scene(base);
-            Stage errorPopup = new Stage();
-            errorPopup.setScene(modalScene);
-            errorPopup.setResizable(false);
-            errorPopup.setTitle("Error With Vehicle:");
-            errorPopup.initModality(Modality.APPLICATION_MODAL);
-            ErrorController controller = error.getController();
-            controller.init();
-            controller.setErrors(errors);
-            controller.setPromptType("error");
-            controller.displayErrors();
-            errorPopup.setAlwaysOnTop(true);
-            errorPopup.showAndWait();
-        } catch (IOException e) {
-            logManager.error(e.getMessage());
         }
     }
 

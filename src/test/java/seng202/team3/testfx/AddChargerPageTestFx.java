@@ -143,7 +143,7 @@ public class AddChargerPageTestFx extends TestFxBase {
             logManager.error(e.getMessage());
             ;
         }
-        assertEquals(2, chargers.size());
+        assertEquals(1, chargers.size());
     }
 
 }

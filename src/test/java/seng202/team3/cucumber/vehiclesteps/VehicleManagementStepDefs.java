@@ -14,7 +14,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.tools.Tool;
+
 import javafx.application.Platform;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import seng202.team3.cucumber.CucumberFxBase;
@@ -160,14 +167,23 @@ public class VehicleManagementStepDefs extends CucumberFxBase {
 
     @Then("I can see the vehicle in the garage")
     public void iCanSeeTheVehicleInTheGarage() {
-        assertTrue(controller.getManage().getData().size() == 1);
+        assertEquals(1, controller.getManage().getData().size());
     }
 
     @Then("I am informed my input is invalid")
     public void iIsInvalid() {
         // clickOn("#close");
-        ErrorController err = (ErrorController) MainWindow.getController();
-        assertTrue(err.getErrors().size() > 0);
+        TextField make = (TextField) this.find("#makeText");
+        TextField model = (TextField) this.find("#modelText");
+        TextField range = (TextField) this.find("#maxRangeText");
+        Tooltip makeError = make.getTooltip();
+        Tooltip modelError = model.getTooltip();
+        Tooltip rangeError = range.getTooltip();
+
+
+        assertEquals("Vehicle make required.", makeError.getText());
+        assertEquals("Vehicle model required.", modelError.getText());
+        assertEquals("Max. range required.", rangeError.getText());
     }
 
     @Given("I have a vehicle in the garage")
@@ -179,7 +195,7 @@ public class VehicleManagementStepDefs extends CucumberFxBase {
         db.writeVehicle(v);
 
         controller.getManage().getAllVehicles();
-        assertTrue(controller.getManage().getData().size() == 1);
+        assertEquals(1, controller.getManage().getData().size());
         iNavigateToTheVehicleScreen();
     }
 
