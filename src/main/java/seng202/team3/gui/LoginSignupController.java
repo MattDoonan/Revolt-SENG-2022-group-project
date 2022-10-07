@@ -9,10 +9,12 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Point2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
@@ -125,11 +127,15 @@ public class LoginSignupController {
      */
     private MenuController menuControl;
 
-    /** Invalid login error */
+    /** 
+     * Invalid login error 
+     */
     @FXML
     private Label invalidLogin;
 
-    /** invalid signup error */
+    /** 
+     * invalid signup error 
+     */
     @FXML
     private Label invalidSignup;
 
@@ -208,6 +214,7 @@ public class LoginSignupController {
      */
     @FXML
     public void signUp() {
+        signUpErrorChecks();
         Boolean fail = false;
         if (!UserManager.checkEmail(signupEmailField.getText())) {
             signupEmailField.setStyle(INVALID_STYLE);
@@ -247,6 +254,67 @@ public class LoginSignupController {
             invalidSignup.setVisible(true);
             logManager.error(e.getMessage());
         }
+    }
+
+    /**
+     * Checks the signup fields for errors, and displays messages to the user 
+     * if there are errors
+     */
+    public void signUpErrorChecks() {
+        Boolean fail = false;
+        
+        Tooltip nameError = new Tooltip();
+        Tooltip emailError = new Tooltip();
+        Tooltip passError = new Tooltip();
+        Tooltip confPassError = new Tooltip();
+        Point2D pName = signupUsernameField.localToScene(0.0, 0.0);
+        Point2D pEmail = signupEmailField.localToScene(0.0, 0.0);
+        Point2D pPass = signupPasswordField.localToScene(0.0, 0.0);
+        Point2D pConf = confPassField.localToScene(0.0, 0.0);
+
+
+        if (!UserManager.checkEmail(signupEmailField.getText())) {
+            emailError.setText("Email required.");
+            signupEmailField.setStyle(INVALID_STYLE);
+            fail = true;
+        }
+        if (signupUsernameField.getText().isEmpty()) {
+            nameError.setText("Username required.");
+            signupUsernameField.setStyle(INVALID_STYLE);
+            fail = true;
+        }
+        if (signupPasswordField.getText().length() < 4) {
+            passError.setText("Password must be more than 4 characters.");
+            signupPasswordField.setStyle(INVALID_STYLE);
+            confPassField.setStyle(INVALID_STYLE);
+            fail = true;
+        }
+        if (!signupPasswordField.getText().equals(confPassField.getText())) {
+            confPassError.setText("Passwords must match.");
+            confPassField.setStyle(INVALID_STYLE);
+            fail = true;
+        }
+        // if (Boolean.TRUE.equals(fail)) {
+        //     invalidSignup.setVisible(true);
+        //     logManager.warn("Incorrect user details");
+        //     return;
+        // }
+
+        nameError.show(signupUsernameField,
+        pName.getX() + signupUsernameField.getScene().getX() + signupUsernameField.getScene().getWindow().getX() + signupUsernameField.getWidth() + 10,
+        pName.getY() + signupUsernameField.getScene().getY() + signupUsernameField.getScene().getWindow().getY());
+
+        emailError.show(signupEmailField,
+        pEmail.getX() + signupEmailField.getScene().getX() + signupEmailField.getScene().getWindow().getX() + signupEmailField.getWidth() + 10,
+        pEmail.getY() + signupEmailField.getScene().getY() + signupEmailField.getScene().getWindow().getY());
+
+        passError.show(signupPasswordField,
+        pPass.getX() + signupPasswordField.getScene().getX() + signupPasswordField.getScene().getWindow().getX() + signupPasswordField.getWidth() + 10,
+        pPass.getY() + signupPasswordField.getScene().getY() + signupPasswordField.getScene().getWindow().getY());
+
+        confPassError.show(confPassField,
+        pConf.getX() + confPassField.getScene().getX() + confPassField.getScene().getWindow().getX() + confPassField.getWidth() + 10,
+        pConf.getY() + confPassField.getScene().getY() + confPassField.getScene().getWindow().getY());
     }
 
     /**
