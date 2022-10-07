@@ -7,9 +7,6 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
@@ -17,7 +14,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
@@ -168,30 +164,9 @@ public class LoginSignupController {
     private static final String SIGNUP_CONFIRM_LABEL = "signupconf";
 
     /**
-     * Error tooltip for the username field
+     * Manages all error tooltips
      */
-    private Tooltip nameError = new Tooltip();
-
-    /**
-     * Error tooltip for the email field
-     */
-    private Tooltip emailError = new Tooltip();
-
-    /**
-     * Error tooltip for the password field
-     */
-    private Tooltip passError = new Tooltip();
-
-    /**
-     * Error tooltip for the confirm password field
-     */
-    private Tooltip confPassError = new Tooltip();
-
-    /**
-     * Compilation of error popups
-     */
-    private final List<Tooltip> errorPopups = new ArrayList<>(
-            Arrays.asList(nameError, emailError, passError, confPassError));
+    private ErrorHandler errors = new ErrorHandler();
 
     /**
      * Initialises the sign up
@@ -234,11 +209,10 @@ public class LoginSignupController {
      */
     public void init(MenuController menuControl) {
         this.menuControl = menuControl;
-
-        confPassError.setId("confPassError");
-        emailError.setId("emailError");
-        nameError.setId("nameError");
-        passError.setId("passError");
+        errors.add("confPassError", "Passwords must match.");
+        errors.add("emailError", "Email required.");
+        errors.add("nameError", "Username required.");
+        errors.add("passError", "Password must be more than 4 characters.");
 
         if (showPassLogin != null) {
             setIcon(LOGIN_LABEL, "show");
@@ -287,10 +261,7 @@ public class LoginSignupController {
      */
     public Boolean signUpErrorChecks() {
 
-        nameError.hide();
-        emailError.hide();
-        passError.hide();
-        confPassError.hide();
+        errors.hideAll();
 
         signupEmailField.setStyle(VALID_STYLE);
         signupUsernameField.setStyle(VALID_STYLE);
@@ -305,12 +276,12 @@ public class LoginSignupController {
         Boolean fail = false;
 
         if (!UserManager.checkEmail(signupEmailField.getText())) {
-            emailError.setText("Invalid email.");
+            errors.changeMessage("emailError", "Invalid email.");
             if (signupEmailField.getText().isEmpty()) {
-                emailError.setText("Email required.");
+                errors.changeMessage("emailError", "Email Required.");
             }
             signupEmailField.setStyle(INVALID_STYLE);
-            emailError.show(signupEmailField,
+            errors.get("emailError").show(signupEmailField,
                     pointEmail.getX() + signupEmailField.getScene().getX()
                             + signupEmailField.getScene().getWindow().getX()
                             + signupEmailField.getWidth() + 25,
@@ -319,9 +290,8 @@ public class LoginSignupController {
             fail = true;
         }
         if (signupUsernameField.getText().isEmpty()) {
-            nameError.setText("Username required.");
             signupUsernameField.setStyle(INVALID_STYLE);
-            nameError.show(signupUsernameField,
+            errors.get("nameError").show(signupUsernameField,
                     pointName.getX() + signupUsernameField.getScene().getX()
                             + signupUsernameField.getScene().getWindow().getX()
                             + signupUsernameField.getWidth() + 25,
@@ -330,10 +300,10 @@ public class LoginSignupController {
             fail = true;
         }
         if (signupPasswordField.getText().length() < 4) {
-            passError.setText("Password must be more than 4 characters.");
+            errors.changeMessage("passError", "Password must be more than 4 characters.");
             signupPasswordField.setStyle(INVALID_STYLE);
             confPassField.setStyle(INVALID_STYLE);
-            passError.show(signupPasswordField,
+            errors.get("passError").show(signupPasswordField,
                     pointPass.getX() + signupPasswordField.getScene().getX()
                             + signupPasswordField.getScene().getWindow().getX()
                             + signupPasswordField.getWidth() + 25,
@@ -343,9 +313,8 @@ public class LoginSignupController {
         }
         if (confPassField.getText().isEmpty()
                 || !signupPasswordField.getText().equals(confPassField.getText())) {
-            confPassError.setText("Passwords must match.");
             confPassField.setStyle(INVALID_STYLE);
-            confPassError.show(confPassField,
+            errors.get("confPassError").show(confPassField,
                     pointConf.getX() + confPassField.getScene().getX()
                             + confPassField.getScene().getWindow().getX()
                             + confPassField.getWidth() + 25,
@@ -391,8 +360,7 @@ public class LoginSignupController {
      * if there are errors
      */
     public void loginErrorChecks() {
-        emailError.hide();
-        passError.hide();
+        errors.hideAll();
 
         loginEmailField.setStyle(VALID_STYLE);
         loginPasswordField.setStyle(VALID_STYLE);
@@ -401,9 +369,8 @@ public class LoginSignupController {
         Point2D pointPass = loginPasswordField.localToScene(0.0, 0.0);
 
         if (loginEmailField.getText().isEmpty()) {
-            emailError.setText("Username required.");
             loginEmailField.setStyle(INVALID_STYLE);
-            emailError.show(loginEmailField,
+            errors.get("nameError").show(loginEmailField,
                     pointEmail.getX() + loginEmailField.getScene().getX()
                             + loginEmailField.getScene().getWindow().getX()
                             + loginEmailField.getWidth() + 25,
@@ -411,9 +378,9 @@ public class LoginSignupController {
                             + loginEmailField.getScene().getWindow().getY());
         }
         if (loginPasswordField.getText().isEmpty()) {
-            passError.setText("Password required.");
+            errors.changeMessage("passError", "Password required.");
             loginPasswordField.setStyle(INVALID_STYLE);
-            passError.show(loginPasswordField,
+            errors.get("passError").show(loginPasswordField,
                     pointPass.getX() + loginPasswordField.getScene().getX()
                             + loginPasswordField.getScene().getWindow().getX()
                             + loginPasswordField.getWidth() + 25,
@@ -578,13 +545,12 @@ public class LoginSignupController {
     }
 
     /**
-     * Returns the active errors
-     * ##USED FOR TESTING
+     * Returns the error handler manager instance
      * 
-     * @return list of tooltips used for errors
+     * @return error handler object
      */
-    public List<Tooltip> getErrors() {
-        return errorPopups;
+    public ErrorHandler getErrors() {
+        return errors;
     }
 
 }

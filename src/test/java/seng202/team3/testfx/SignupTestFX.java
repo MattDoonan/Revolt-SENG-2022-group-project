@@ -1,23 +1,17 @@
 package seng202.team3.testfx;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.testfx.api.FxAssert.verifyThat;
 
 import java.io.IOException;
-
 import javax.management.InstanceAlreadyExistsException;
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.Tooltip;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.gui.LoginSignupController;
 import seng202.team3.gui.MenuController;
@@ -101,7 +95,7 @@ public class SignupTestFX extends TestFxBase {
         clickOn("#signupEmailField");
         write("tester@gmail.com");
         clickOn("#signUpBtn");
-        verifyThat("#invalidSignup", Node::isVisible);
+        assertTrue(controller.getErrors().isShowing("passError"));
     }
 
     @Test
@@ -113,7 +107,7 @@ public class SignupTestFX extends TestFxBase {
         clickOn("#confPassField");
         write("1234");
         clickOn("#signUpBtn");
-        verifyThat("#invalidSignup", Node::isVisible);
+        assertTrue(controller.getErrors().isShowing("emailError"));
     }
 
     @Test
@@ -125,7 +119,7 @@ public class SignupTestFX extends TestFxBase {
         clickOn("#confPassField");
         write("1234");
         clickOn("#signUpBtn");
-        verifyThat("#invalidSignup", Node::isVisible);
+        assertTrue(controller.getErrors().isShowing("nameError"));
     }
 
     @Test
@@ -137,7 +131,7 @@ public class SignupTestFX extends TestFxBase {
         clickOn("#signupPasswordField");
         write("1234");
         clickOn("#signUpBtn");
-        verifyThat("#invalidSignup", Node::isVisible);
+        assertTrue(controller.getErrors().isShowing("confPassError"));
     }
 
     @Test
@@ -149,7 +143,7 @@ public class SignupTestFX extends TestFxBase {
         clickOn("#confPassField");
         write("1234");
         clickOn("#signUpBtn");
-        verifyThat("#invalidSignup", Node::isVisible);
+        assertTrue(controller.getErrors().isShowing("passError"));
     }
 
     @Test
@@ -177,7 +171,7 @@ public class SignupTestFX extends TestFxBase {
         clickOn("#confPassField");
         write("1234");
         clickOn("#signUpBtn");
-        verifyThat("#invalidSignup", Node::isVisible);
+        assertTrue(controller.getErrors().isShowing("emailError"));
     }
 
     @Test
@@ -192,13 +186,6 @@ public class SignupTestFX extends TestFxBase {
         write("5678");
         clickOn("#signUpBtn");
 
-        for (Tooltip t : controller.getErrors()) {
-            if (t.getId().equals("confPassError")) {
-                assertTrue(t.isShowing());
-                return;
-            }
-        }
-
-        fail("Error popup not found");
+        assertTrue(controller.getErrors().isShowing("confPassError"));
     }
 }
