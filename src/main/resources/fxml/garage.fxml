@@ -20,8 +20,8 @@
             <Button fx:id="editCarTwo" layoutX="105.0" layoutY="310.0" mnemonicParsing="false" onAction="#setEdit" text="Edit" />
             <Button fx:id="deleteCarTwo" layoutX="149.0" layoutY="310.0" mnemonicParsing="false" onAction="#setDelete" text="Delete" />
             <ImageView fx:id="vehicleImageTwo" fitHeight="130.0" fitWidth="214.0" layoutX="-2.0" layoutY="58.0" pickOnBounds="true" preserveRatio="true" />
-            <TextArea fx:id="makeModelTwo" editable="false" layoutX="1.0" layoutY="6.0" prefHeight="51.0" prefWidth="214.0" stylesheets="@textarea.css" wrapText="true" />
-            <TextArea fx:id="carDetailsTwo" editable="false" layoutX="1.0" layoutY="188.0" prefHeight="116.0" prefWidth="214.0" stylesheets="@textarea.css" wrapText="true" />
+            <TextArea fx:id="makeModelTwo" editable="false" layoutX="1.0" layoutY="6.0" prefHeight="51.0" prefWidth="214.0" stylesheets="@style.css" wrapText="true" />
+            <TextArea fx:id="carDetailsTwo" editable="false" layoutX="1.0" layoutY="188.0" prefHeight="116.0" prefWidth="214.0" stylesheets="@style.css" wrapText="true" />
          </children>
       </AnchorPane>
       <AnchorPane fx:id="anchorTwo1" layoutX="199.0" layoutY="188.0" prefHeight="344.0" prefWidth="200.0" style="-fx-border-color: black;">
@@ -29,8 +29,8 @@
             <Button fx:id="editCarOne" layoutX="105.0" layoutY="310.0" mnemonicParsing="false" onAction="#setEdit" text="Edit" />
             <Button fx:id="deleteCarOne" layoutX="149.0" layoutY="310.0" mnemonicParsing="false" onAction="#setDelete" text="Delete" />
             <ImageView fx:id="vehicleImageOne" fitHeight="130.0" fitWidth="214.0" layoutX="-2.0" layoutY="58.0" pickOnBounds="true" preserveRatio="true" />
-            <TextArea fx:id="makeModelOne" editable="false" layoutX="1.0" layoutY="6.0" prefHeight="51.0" prefWidth="214.0" stylesheets="@textarea.css" wrapText="true" />
-            <TextArea fx:id="carDetailsOne" editable="false" layoutX="1.0" layoutY="188.0" prefHeight="116.0" prefWidth="214.0" stylesheets="@textarea.css" wrapText="true" />
+            <TextArea fx:id="makeModelOne" editable="false" layoutX="1.0" layoutY="6.0" prefHeight="51.0" prefWidth="214.0" stylesheets="@style.css" wrapText="true" />
+            <TextArea fx:id="carDetailsOne" editable="false" layoutX="1.0" layoutY="188.0" prefHeight="116.0" prefWidth="214.0" stylesheets="@style.css" wrapText="true" />
          </children>
       </AnchorPane>
       <AnchorPane fx:id="anchorTwo2" layoutX="660.0" layoutY="188.0" prefHeight="344.0" prefWidth="200.0" style="-fx-border-color: black;">
@@ -38,8 +38,8 @@
             <Button fx:id="editCarThree" layoutX="105.0" layoutY="310.0" mnemonicParsing="false" onAction="#setEdit" text="Edit" />
             <Button fx:id="deleteCarThree" layoutX="149.0" layoutY="310.0" mnemonicParsing="false" onAction="#setDelete" text="Delete" />
             <ImageView fx:id="vehicleImageThree" fitHeight="130.0" fitWidth="214.0" layoutX="-2.0" layoutY="58.0" pickOnBounds="true" preserveRatio="true" />
-            <TextArea fx:id="makeModelThree" editable="false" layoutX="1.0" layoutY="6.0" prefHeight="51.0" prefWidth="214.0" stylesheets="@textarea.css" wrapText="true" />
-            <TextArea fx:id="carDetailsThree" editable="false" layoutX="1.0" layoutY="188.0" prefHeight="116.0" prefWidth="214.0" stylesheets="@textarea.css" wrapText="true" />
+            <TextArea fx:id="makeModelThree" editable="false" layoutX="1.0" layoutY="6.0" prefHeight="51.0" prefWidth="214.0" stylesheets="@style.css" wrapText="true" />
+            <TextArea fx:id="carDetailsThree" editable="false" layoutX="1.0" layoutY="188.0" prefHeight="116.0" prefWidth="214.0" stylesheets="@style.css" wrapText="true" />
          </children>
       </AnchorPane>
       <Button fx:id="openUpdate" layoutX="503.0" layoutY="585.0" mnemonicParsing="false" onAction="#launchUpdate" text="Add New" />
