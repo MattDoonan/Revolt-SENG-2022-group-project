@@ -409,11 +409,14 @@ public class MainController {
             add.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> selectToView(finalI));
             // Changes Hover style
             add.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET,
-                    event -> add.setStyle("-fx-background-color:#FFF8EB;"));
+                    event -> add.setStyle("-fx-background-color:#FFF8EB;"
+                            + " -fx-border-color: transparent transparent gray transparent;"));
             // Changes off hover style
             add.addEventHandler(MouseEvent.MOUSE_EXITED_TARGET,
-                    event -> add.setStyle("-fx-background-color:#FFFFFF;"));
+                    event -> add.setStyle("-fx-background-color:#FFFFFF;"
+                            + " -fx-border-color: transparent transparent gray transparent;"));
             // Adds the HBox to the main VBox
+            add.setStyle("-fx-border-color: transparent transparent gray transparent");
             chargerTable.getChildren().add(add);
         }
         if (Boolean.TRUE.equals(MapHandler.isMapRequested())) {

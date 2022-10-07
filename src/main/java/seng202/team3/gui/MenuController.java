@@ -69,23 +69,6 @@ public class MenuController {
     private static MainController controller;
 
     /**
-     * Action background style
-     */
-    private static final String ACTION_BCKGND_STYLE = "-fx-background-color: #e06666;";
-
-    /**
-     * Nav hover styling
-     */
-    private static final String HOVER_STYLE = "-fx-text-fill:#000000; -fx-font-size: 26px; "
-            + ACTION_BCKGND_STYLE;
-
-    /**
-     * Nav exit hover styling
-     */
-    private static final String EXIT_STYLE = "-fx-text-fill:#ffffff;-fx-font-size: 24px; "
-            + ACTION_BCKGND_STYLE;
-
-    /**
      * Login Source path
      */
     private static final String LOGIN_PATH = "/fxml/login.fxml";
@@ -109,63 +92,6 @@ public class MenuController {
      */
     public void init(Stage stage) {
         this.stage = stage;
-    }
-
-    /**
-     * Following functions are the hover and hover exit effects for the nav bar
-     * buttons
-     */
-    public void menuHover() {
-        menuButton.setStyle(HOVER_STYLE);
-    }
-
-    /**
-     * menuExit.
-     */
-    public void menuExit() {
-        menuButton.setStyle(EXIT_STYLE);
-    }
-
-    /**
-     * vehicleHover.
-     */
-    public void vehicleHover() {
-        vehicleButton.setStyle(HOVER_STYLE);
-    }
-
-    /**
-     * vehicleExit.
-     */
-    public void vehicleExit() {
-        vehicleButton.setStyle(EXIT_STYLE);
-    }
-
-    /**
-     * accountHover.
-     */
-    public void accountHover() {
-        accountPage.setStyle(HOVER_STYLE);
-    }
-
-    /**
-     * accountExit.
-     */
-    public void accountExit() {
-        accountPage.setStyle(EXIT_STYLE);
-    }
-
-    /**
-     * loginHover.
-     */
-    public void loginHover() {
-        loginSignout.setStyle(HOVER_STYLE);
-    }
-
-    /**
-     * loginExit.
-     */
-    public void loginExit() {
-        loginSignout.setStyle(EXIT_STYLE);
     }
 
     /**

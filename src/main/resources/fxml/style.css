@@ -1,3 +1,7 @@
+.root {
+    -fx-font-family: Didact Gothic;
+}
+
 .text-area {
     -fx-background-color: transparent;
     background-color: transparent;
@@ -17,4 +21,27 @@
 .text-area .scroll-pane .content{
     -fx-background-color: transparent;
     background-color: transparent;
+}
+
+#menu-bar {
+    -fx-background-color: #242582;
+}
+
+.menu-button {
+    -fx-background-color: #242582;
+}
+
+.menu-button:hover {
+    -fx-background-color: #2F2fa2;
+    -fx-font-size: 13px;
+    -fx-text-fill: #F64C72;
+}
+
+#REVOLT {
+    -fx-fill: #F64C72;
+}
+
+#btn-login {
+    -fx-border-color: #F64C72;
+    -fx-border-width: 3px;
 }
