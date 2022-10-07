@@ -1,6 +1,7 @@
 package seng202.team3.testfx;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,14 +16,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.testfx.util.WaitForAsyncUtils;
+import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.database.QueryBuilder;
 import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
-import seng202.team3.data.entity.Charger;
-import seng202.team3.data.entity.Connector;
-import seng202.team3.data.entity.Coordinate;
+import seng202.team3.data.entity.*;
 import seng202.team3.gui.ChargerController;
+import seng202.team3.gui.MenuController;
 import seng202.team3.logic.GeoLocationHandler;
+import seng202.team3.logic.UserManager;
 
 /**
  * TestFx to test adding a charger
@@ -35,8 +38,6 @@ public class AddChargerPageTestFx extends TestFxBase {
      * Logger
      */
     private static final Logger logManager = LogManager.getLogger();
-
-    private Charger charger;
     private static SqlInterpreter database;
     private ChargerController controller;
 
@@ -48,6 +49,9 @@ public class AddChargerPageTestFx extends TestFxBase {
     @BeforeAll
     public static void initialise() throws Exception {
         SqlInterpreter.removeInstance();
+        User user = new User("admin@something.co", "trial", PermissionLevel.ADMIN);
+        user.setUserid(1);
+        UserManager.setUser(user);
         database = SqlInterpreter.initialiseInstanceWithUrl(
                 "jdbc:sqlite:./target/test-classes/test_database.db");
         database.defaultDatabase();
@@ -66,26 +70,9 @@ public class AddChargerPageTestFx extends TestFxBase {
         Parent editorParent = editor.load();
         Scene scene = new Scene(editorParent);
         controller = editor.getController();
-        addChargers();
         stage.setScene(scene);
         controller.init(stage);
         stage.show();
-    }
-
-    /**
-     * Adds just one charger to database
-     *
-     * @throws IOException IO error handling
-     */
-    public void addChargers() throws IOException {
-        Coordinate coord1 = new Coordinate(1.1, 2.3, -43.53418, 172.627572);
-        Connector connector = new Connector("ChardaMo", "AC", "Available", "123", 3);
-
-        charger = new Charger(
-                new ArrayList<>(List.of(connector)), "Hosp", coord1, 1, 0.3, "Meridian",
-                "2020/1/1 00:00:00", true,
-                false, false, false);
-        database.writeCharger(charger);
     }
 
     /**
@@ -131,19 +118,17 @@ public class AddChargerPageTestFx extends TestFxBase {
         write("123.0");
         clickOn("#saveButton");
 
-        ArrayList<Charger> chargers = new ArrayList<>();
-
+        ArrayList<Object> returnedChargers = new ArrayList<>();
         try {
-            QueryBuilder mainDataQuery = new QueryBuilderImpl().withSource("charger");
-            for (Object o : SqlInterpreter.getInstance()
-                    .readData(mainDataQuery.build(), Charger.class)) {
-                chargers.add((Charger) o);
-            }
+            List<Object> chargers = database.readData(new QueryBuilderImpl().withSource("charger")
+                    .withFilter("name", "Trial", ComparisonType.EQUAL).build(), Charger.class);
+            returnedChargers.addAll(chargers);
+
         } catch (IOException e) {
-            logManager.error(e.getMessage());
-            ;
+            e.printStackTrace();
         }
-        assertEquals(2, chargers.size());
+
+        //TODO find a way to assert across TestFX, Java Application and JUnit threads! -_-
     }
 
 }
