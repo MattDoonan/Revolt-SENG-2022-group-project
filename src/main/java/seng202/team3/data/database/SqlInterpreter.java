@@ -1162,7 +1162,7 @@ public class SqlInterpreter implements DataReader {
         /**
          * Number of threads
          */
-        private static int threadCount = 1;
+        private static int threadCount = 4;
 
         /**
          * List of chargers to write
