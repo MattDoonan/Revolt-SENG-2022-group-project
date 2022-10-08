@@ -296,7 +296,7 @@ public class MapViewController extends MapHandler {
                 addChargersOnMap();
                 addCoordinateName();
             }
-            MenuController.getController().viewChargers(null);
+            MenuController.getController().getListController().viewChargers(null);
         }
     }
 

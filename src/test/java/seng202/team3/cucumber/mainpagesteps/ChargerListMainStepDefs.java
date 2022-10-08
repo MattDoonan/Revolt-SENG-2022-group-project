@@ -84,7 +84,7 @@ public class ChargerListMainStepDefs extends CucumberFxBase {
         VBox information = (VBox) display.getChildren().get(1);
         Text addy = (Text) information.getChildren().get(1);
         Assertions.assertEquals(controller.getManager().getSelectedCharger()
-                .getLocation().getAddress() + "\n",
+                .getLocation().getAddress(),
                 addy.getText());
         Text name = (Text) information.getChildren().get(0);
         Assertions.assertEquals(controller.getManager().getSelectedCharger().getName(),

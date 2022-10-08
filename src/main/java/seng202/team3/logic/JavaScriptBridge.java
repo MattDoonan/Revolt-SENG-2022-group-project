@@ -143,7 +143,7 @@ public class JavaScriptBridge {
      */
     public void refreshTable() {
         MainController controller = MenuController.getController();
-        controller.refreshTable();
+        controller.getListController().refreshTable();
     }
 
     /**
@@ -170,7 +170,7 @@ public class JavaScriptBridge {
             if (object.size() == 1) {
                 Charger charger = (Charger) object.get(0);
                 MenuController.getController().getManager().setSelectedCharger(charger);
-                MenuController.getController().viewChargers(charger);
+                MenuController.getController().getListController().viewChargers(charger);
                 MenuController.getController().getMapController()
                         .changePosition(charger.getLocation());
             }
@@ -235,7 +235,7 @@ public class JavaScriptBridge {
             modal.setAlwaysOnTop(true);
             modal.showAndWait();
             MenuController.getController().getManager().makeAllChargers();
-            MenuController.getController().refreshTable();
+            MenuController.getController().getListController().refreshTable();
         } catch (IOException e) {
             logManager.error(e.getMessage());
         }

@@ -1,31 +1,20 @@
 package seng202.team3.gui;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.entity.Charger;
-import seng202.team3.logic.Calculations;
 import seng202.team3.logic.GarageManager;
 import seng202.team3.logic.GeoLocationHandler;
 import seng202.team3.logic.MainManager;
@@ -69,22 +58,10 @@ public class MainController {
     private CheckBox dcButton;
 
     /**
-     * An HBox to display info
-     */
-    @FXML
-    private HBox displayInfo;
-
-    /**
      * A Checkbox for distance display
      */
     @FXML
     private CheckBox distanceDisplay;
-
-    /**
-     * A VBox for charging table
-     */
-    @FXML
-    private VBox chargerTable;
 
     /**
      * A CheckBox for attraction
@@ -169,9 +146,10 @@ public class MainController {
     private TextField batteryPercent;
 
     /**
-     * The default image to be used
+     * The border plane to inherit charger list
      */
-    private Image image;
+    @FXML
+    private BorderPane chargerListPane;
 
     /**
      * A reflection of the routing state of mapcontroller
@@ -182,6 +160,11 @@ public class MainController {
      * The map controller
      */
     private MapViewController mapController;
+
+    /**
+     * The charger list controller
+     */
+    private ChargerListController listController;
 
     /**
      * The map manager
@@ -209,7 +192,7 @@ public class MainController {
      */
     public void init(Stage stage, BorderPane menuWindow) {
         manage = new MainManager();
-        fetchImage();
+        createListController();
         loadMapView(stage);
         manage.resetQuery();
         manage.makeAllChargers();
@@ -227,24 +210,9 @@ public class MainController {
             manage.setDistance(changeDistance.getValue() * buffer);
             distanceDisplay.setSelected(true);
         }
-        addChargersToDisplay(manage.getCloseChargerData());
+        updateChargerDisplay();
         change();
 
-    }
-
-    /**
-     * Tries to fetch the image
-     */
-    public void fetchImage() {
-        try {
-            // Gets image and adds it to an Image View
-            image = new Image(
-                    new BufferedInputStream(
-                            getClass().getResourceAsStream("/images/charger.png")));
-        } catch (NullPointerException e) {
-            image = null;
-            logManager.error(e.getMessage());
-        }
     }
 
     /**
@@ -286,151 +254,45 @@ public class MainController {
     }
 
     /**
-     * Display charger info on panel
-     *
-     * @param c charger to display information about
+     * Loads the charger list into the border pane
      */
-    public void viewChargers(Charger c) {
-        // Clears the HBox of nodes (items)
-        displayInfo.getChildren().removeAll(displayInfo.getChildren());
-        // Check if there is no charger
-        if (c == null) {
-            if (!manage.getCloseChargerData().isEmpty()) {
-                manage.setSelectedCharger(manage.getCloseChargerData().get(0));
-                viewChargers(manage.getCloseChargerData().get(0));
-            } else {
-                displayInfo.getChildren().add(new Text("No Charger Selected"));
-                displayInfo.setAlignment(Pos.CENTER);
-            }
-        } else {
-            loadSelectedPreview(c);
-        }
-    }
-
-    /**
-     * Load selected charger preview
-     *
-     * @param c Charger to load in
-     */
-    private void loadSelectedPreview(Charger c) {
-
+    public void createListController() {
         try {
-            // Gets image for charger
-            ImageView chargerImg = new ImageView(new Image(
-                    new BufferedInputStream(
-                            getClass().getResourceAsStream("/images/charger.png"))));
-            // Edits the width and height to 150px
-            chargerImg.setFitHeight(150);
-            chargerImg.setFitWidth(150);
-            displayInfo.getChildren().add(chargerImg); // adds to the HBox
-        } catch (NullPointerException e) {
-            Label chargerImg = new Label("Image");
-            displayInfo.getChildren().add(chargerImg);
+            FXMLLoader webViewLoader =
+                    new FXMLLoader(getClass().getResource("/fxml/chargerListView.fxml"));
+            Parent mapViewParent = webViewLoader.load();
+            listController = webViewLoader.getController();
+            listController.chargerListView(chargerListPane, this);
+            chargerListPane.setCenter(mapViewParent);
+            MainWindow.setController(listController);
+            logManager.info("The list view has opened");
+        } catch (IOException e) {
             logManager.error(e.getMessage());
         }
-        VBox display = new VBox(); // Creates Vbox to contain text
-        display.getChildren().add(new Text("" + c.getName() + ""));
-        display.getChildren().add(new Text("" + c.getLocation().getAddress() + "\n"));
-        String word = manage.getConnectors(c);
-        display.getChildren().add(new Text("Current types " + word + ""));
-        // If statements are there to make different text depending on the charger info
-        if (c.getOperator() != null) {
-            display.getChildren().add(new Text("Operator is: " + c.getOperator() + ""));
-        }
-        display.getChildren().add(new Text("Owner is: " + c.getOwner() + ""));
-        if (c.getChargeCost()) {
-            display.getChildren().add(new Text("Charger has a cost"));
-        } else {
-            display.getChildren().add(new Text("Charger has no cost"));
-        }
-        if (c.getAvailable24Hrs()) {
-            display.getChildren().add(new Text("Open 24"));
-        } else {
-            display.getChildren().add(new Text("Open 24 hours"));
-        }
-        display.getChildren().add(new Text("Has " + c.getAvailableParks() + " parking spaces"));
-        if (c.getTimeLimit() == Double.POSITIVE_INFINITY) {
-            display.getChildren().add(new Text("Has no time limit"));
-        } else {
-            display.getChildren().add(new Text("Has " + c.getTimeLimit() + " minute limit"));
-        }
-        if (c.getHasAttraction()) {
-            display.getChildren().add(new Text("Has near by attraction"));
-        }
-        // Adds the charger info to the HBox
-        displayInfo.getChildren().add(display);
-        getManager().setSelectedCharger(c);
-    }
-
-    /**
-     * Changes active charger on selected and moves the map
-     *
-     * @param number a int
-     */
-    public void selectToView(int number) {
-        Charger selectedCharger = manage.getCloseChargerData().get(number);
-        manage.setSelectedCharger(selectedCharger);
-        viewChargers(selectedCharger);
-        if (mapController != null) {
-            mapController.changePosition(selectedCharger.getLocation());
+        try {
+            // For reloading the datalist
+            updateChargerDisplay();
+        } catch (NullPointerException e) {
+            logManager.info("Loading the main manager for the first time");
+            return;
         }
     }
 
     /**
-     * Adds every charger in charger list to the vbox
-     *
-     * @param chargersToAdd a {@link ObservableList} object
+     * Button call that swaps the views
      */
-    public void addChargersToDisplay(ObservableList<Charger> chargersToAdd) {
-
-        chargerTable.getChildren().removeAll(chargerTable.getChildren()); // clears vbox
-        for (int i = 0; i < chargersToAdd.size(); i++) {
-            HBox add = new HBox(); // creates HBox that will contain the changer info
-
-            // adds the cached image
-            if (image != null) {
-                add.getChildren().add(new ImageView(image));
-            } else {
-                Label substitueText = new Label("Image");
-                add.getChildren().add(substitueText); // adds to the HBox
-            }
-            // Create Vbox to contain the charger info
-            VBox content = new VBox(new Text(chargersToAdd.get(i).getName()),
-                    new Text(chargersToAdd.get(i).getLocation().getAddress()),
-                    new Text(chargersToAdd.get(i).getOperator()),
-                    new Text("\n" + Math.round(Calculations.calculateDistance(
-                            manage.getPosition(), chargersToAdd.get(i).getLocation()))
-                            * 10.0 / 10.0 + "km"));
-            add.getChildren().add(content); // Adds charger content to HBox
-            add.setPadding(new Insets(10));
-            add.setSpacing(10);
-            int finalI = i;
-            add.setId("charger" + finalI + "");
-            add.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> selectToView(finalI));
-            // Changes Hover style
-            add.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET,
-                    event -> add.setStyle("-fx-background-color:#FFF8EB;"));
-            // Changes off hover style
-            add.addEventHandler(MouseEvent.MOUSE_EXITED_TARGET,
-                    event -> add.setStyle("-fx-background-color:#FFFFFF;"));
-            // Adds the HBox to the main VBox
-            chargerTable.getChildren().add(add);
+    public void createLargeChargerView() {
+        try {
+            FXMLLoader webViewLoader =
+                    new FXMLLoader(getClass().getResource("/fxml/moreChargerInfoView.fxml"));
+            Parent chargerList = webViewLoader.load();
+            listController = webViewLoader.getController();
+            listController.largerView(chargerListPane, this);
+            chargerListPane.setCenter(chargerList);
+            logManager.info("The more charger info view has opened");
+        } catch (IOException e) {
+            logManager.error(e.getMessage());
         }
-        if (Boolean.TRUE.equals(MapHandler.isMapRequested())) {
-            getMapController().addChargersOnMap();
-        }
-        if (!chargerTable.getChildren().isEmpty()) {
-            viewChargers(chargersToAdd.get(0));
-        } else {
-            viewChargers(null);
-        }
-    }
-
-    /**
-     * Refresh the vbox filled with chargers
-     */
-    public void refreshTable() {
-        addChargersToDisplay(manage.getCloseChargerData());
     }
 
     /**
@@ -515,8 +377,7 @@ public class MainController {
             manage.setDistance(0);
         }
         ObservableList<Charger> chargers = manage.getCloseChargerData();
-        addChargersToDisplay(chargers);
-
+        updateChargerDisplay();
         if (!chargers.isEmpty() && Boolean.TRUE.equals(MapHandler.isMapRequested())) {
             mapController.changePosition(chargers.get(0).getLocation());
         }
@@ -562,6 +423,27 @@ public class MainController {
      */
     public MainManager getManager() {
         return manage;
+    }
+
+    /**
+     * Updates the display of chargers
+     */
+    private void updateChargerDisplay() {
+        if (listController.getChargerTable()) {
+            listController.addChargersToDisplay(manage.getCloseChargerData());
+        }
+        if (Boolean.TRUE.equals(MapHandler.isMapRequested())) {
+            getMapController().addChargersOnMap();
+        }
+    }
+
+    /**
+     * Gets the list view controller
+     *
+     * @return {@link ChargerListController} the controller
+     */
+    public ChargerListController getListController() {
+        return listController;
     }
 
     /**
