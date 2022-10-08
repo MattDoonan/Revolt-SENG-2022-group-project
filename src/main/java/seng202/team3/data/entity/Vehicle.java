@@ -20,9 +20,6 @@ public class Vehicle {
     /** Model of the vehicle */
     private String model;
 
-    /** Current battery percentage (0 - 100) */
-    private Double batteryPercent;
-
     /** Range of vehicle with full battery capacity, in kms */
     private int maxRange;
 
@@ -36,6 +33,9 @@ public class Vehicle {
      * userid of the vehicle owner
      */
     private int owner;
+
+    /** Flag for if this vehicle is the user's currently-selected vehicle */
+    private boolean currVehicle;
 
     /**
      * Default filepath for missing images
@@ -57,7 +57,7 @@ public class Vehicle {
         this.maxRange = maxRange;
         this.connectors = connectors;
         this.imgPath = DEFAULTIMGPATH;
-        this.batteryPercent = 100.0;
+        this.currVehicle = false;
         setOwner(UserManager.getUser().getUserid());
     }
 
@@ -105,24 +105,6 @@ public class Vehicle {
     }
 
     /**
-     * Get current battery percentage
-     *
-     * @return current battery percentage
-     */
-    public Double getBatteryPercent() {
-        return batteryPercent;
-    }
-
-    /**
-     * Set current battery percentage
-     *
-     * @param batteryPercent current battery percentage
-     */
-    public void setBatteryPercent(Double batteryPercent) {
-        this.batteryPercent = batteryPercent;
-    }
-
-    /**
      * Get max range
      *
      * @return range on full capacity
@@ -156,15 +138,6 @@ public class Vehicle {
      */
     public void setConnectors(List<String> connectors) {
         this.connectors = connectors;
-    }
-
-    /**
-     * Calculates the range of the vehicle based on maxRange and batteryPercent
-     *
-     * @return current range of the vehicle
-     */
-    public Double getCurrentRange() {
-        return (double) (maxRange * (batteryPercent / 100));
     }
 
     /**
@@ -204,6 +177,24 @@ public class Vehicle {
     }
 
     /**
+     * Set whether this vehicle is the user's currently selected one
+     *
+     * @param flag true or false
+     */
+    public void setcurrVehicle(Boolean flag) {
+        this.currVehicle = flag;
+    }
+
+    /**
+     * returns whether this vehicle is the user's currently selected one
+     *
+     * @return the vehicle status
+     */
+    public boolean getCurrVehicle() {
+        return currVehicle;
+    }
+
+    /**
      * Set the user id number
      *
      * @param number integer for the id
@@ -222,7 +213,17 @@ public class Vehicle {
     }
 
     /**
-     * {@inheritDoc}}
+     * toString function (mostly for debugging purposes)
+     * 
+     * @return string representation of vehicle
+     */
+    public String toString() {
+        return "MAKE: " + make + "  MODEL: " + model + "  MAXRANGE: " + maxRange
+                + "  ID: " + vehicleId + "  OWNER: " + owner + "  CURR: " + currVehicle;
+    }
+
+    /**
+     * {@inheritDoc}
      */
     @Override
     public boolean equals(Object o) {
@@ -235,10 +236,8 @@ public class Vehicle {
 
         return v.getMake().equals(this.getMake())
                 && v.getModel().equals(this.getModel())
-                && v.getBatteryPercent().equals(this.getBatteryPercent())
                 && v.getMaxRange() == this.getMaxRange()
                 && v.getConnectors().equals(this.getConnectors())
-                && v.getCurrentRange().equals(this.getCurrentRange())
                 && v.getImgPath().equals(this.getImgPath())
                 && v.getVehicleId() == this.getVehicleId()
                 && v.getOwner() == this.getOwner();
@@ -250,20 +249,9 @@ public class Vehicle {
         int result = (vehicleId ^ (vehicleId >>> 32));
         result = 31 * result + make.hashCode();
         result = 31 * result + model.hashCode();
-        result = 31 * result + batteryPercent.hashCode();
         result = 31 * result + connectors.hashCode();
         result = 31 * result + imgPath.hashCode();
 
         return result;
-    }
-
-    /**
-     * toString function (mostly for debugging purposes)
-     * 
-     * @return string representation of vehicle
-     */
-    public String toString() {
-        return "MAKE: " + make + "  MODEL: " + model + "  MAXRANGE: " + maxRange
-                + "  ID: " + vehicleId + "  OWNER: " + owner;
     }
 }

@@ -566,8 +566,8 @@ public class SqlInterpreter implements DataReader {
             v.setOwner(rs.getInt("owner"));
             v.setMake(rs.getString("make"));
             v.setModel(rs.getString("model"));
-            v.setBatteryPercent(rs.getDouble("batteryPercent"));
             v.setMaxRange(rs.getInt("rangeKM"));
+            v.setcurrVehicle(rs.getBoolean("currVehicle"));
             if (rs.getString("imgPath") == null) {
                 v.setImgPath(Vehicle.DEFAULTIMGPATH);
             } else {
@@ -909,9 +909,11 @@ public class SqlInterpreter implements DataReader {
      */
     public void writeVehicle(Vehicle v) throws IOException {
         String toAdd = "INSERT INTO vehicle (vehicleid, make, model, rangekm, "
-                + "connectorType, batteryPercent, imgPath, owner) values(?,?,?,?,?,?,?,?)"
+                + "connectorType, imgPath, owner, currVehicle) "
+                + "values(?,?,?,?,?,?,?,?)"
                 + "ON CONFLICT(vehicleid) DO UPDATE SET make = ?, model = ?, "
-                + "rangekm = ?, connectorType = ?, batteryPercent = ?, imgPath = ?, owner = ?";
+                + "rangekm = ?, connectorType = ?, imgPath = ?, owner = ?, "
+                + "currVehicle = ?";
         try (Connection connection = createConnection();
                 PreparedStatement statement = connection.prepareStatement(toAdd)) {
             if (v.getVehicleId() == 0) {
@@ -929,16 +931,16 @@ public class SqlInterpreter implements DataReader {
             }
             connectors += v.getConnectors().get(i);
             statement.setString(5, connectors);
-            statement.setDouble(6, v.getBatteryPercent());
-            statement.setString(7, v.getImgPath());
-            statement.setInt(8, v.getOwner());
+            statement.setString(6, v.getImgPath());
+            statement.setInt(7, v.getOwner());
+            statement.setBoolean(8, v.getCurrVehicle());
             statement.setString(9, v.getMake());
             statement.setString(10, v.getModel());
             statement.setInt(11, v.getMaxRange());
             statement.setString(12, connectors);
-            statement.setDouble(13, v.getBatteryPercent());
-            statement.setString(14, v.getImgPath());
-            statement.setInt(15, v.getOwner());
+            statement.setString(13, v.getImgPath());
+            statement.setInt(14, v.getOwner());
+            statement.setBoolean(15, v.getCurrVehicle());
 
             statement.executeUpdate();
             if (v.getVehicleId() == 0) {
@@ -1162,7 +1164,7 @@ public class SqlInterpreter implements DataReader {
         /**
          * Number of threads
          */
-        private static int threadCount = 4;
+        private static int threadCount = 1;
 
         /**
          * List of chargers to write

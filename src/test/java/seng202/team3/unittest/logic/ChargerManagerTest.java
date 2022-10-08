@@ -52,6 +52,7 @@ public class ChargerManagerTest {
      * Makes a test database
      *
      * @throws InstanceAlreadyExistsException If already exists
+     * @throws IOException
      */
     @BeforeAll
     static void intialize() throws InstanceAlreadyExistsException, IOException {
