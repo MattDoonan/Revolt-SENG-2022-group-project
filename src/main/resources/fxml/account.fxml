@@ -10,8 +10,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
-<ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.AccountController">
+<ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.AccountController">
    <content>
       <SplitPane dividerPositions="0.5" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" orientation="VERTICAL">
          <items>
@@ -32,7 +31,7 @@
                         <Font size="16.0" />
                      </font>
                   </Text>
-                  <Button fx:id="editAccountButton" layoutX="675.0" layoutY="339.0" mnemonicParsing="false" onAction="#editDetails" prefHeight="45.0" prefWidth="125.0" text="Edit Account" />
+                  <Button fx:id="editAccountButton" layoutX="843.0" layoutY="330.0" mnemonicParsing="false" onAction="#editDetails" prefHeight="45.0" prefWidth="125.0" text="Edit Account" />
                   <Text fx:id="distanceTravelled" layoutX="189.0" layoutY="302.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text">
                      <font>
                         <Font size="16.0" />
@@ -48,7 +47,7 @@
                         <Font size="16.0" />
                      </font>
                   </Text>
-                  <Button fx:id="editAdmin" contentDisplay="CENTER" layoutX="675.0" layoutY="284.0" mnemonicParsing="false" onAction="#adminEditing" prefHeight="45.0" prefWidth="125.0" text="Administration Edit Page" textAlignment="CENTER" visible="false" wrapText="true" />
+                  <Button fx:id="editAdmin" contentDisplay="CENTER" layoutX="843.0" layoutY="274.0" mnemonicParsing="false" onAction="#adminEditing" prefHeight="45.0" prefWidth="125.0" text="Administration Edit Page" textAlignment="CENTER" visible="false" wrapText="true" />
                   <Text layoutX="23.0" layoutY="269.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Carbon Saved:">
                      <font>
                         <Font size="16.0" />
@@ -70,7 +69,8 @@
                      </font>
                   </TextField>
                   <TextField fx:id="accountPassword" layoutX="14.0" layoutY="158.0" prefHeight="26.0" prefWidth="800.0" promptText="New Password" style="-fx-background-color: white; -fx-border-color: black;" visible="false" />
-                  <Button fx:id="confirm" layoutX="544.0" layoutY="339.0" mnemonicParsing="false" onAction="#confirmChanges" prefHeight="45.0" prefWidth="125.0" text="Confirm" visible="false" />
+                  <Button fx:id="confirm" layoutX="710.0" layoutY="330.0" mnemonicParsing="false" onAction="#confirmChanges" prefHeight="45.0" prefWidth="125.0" text="Confirm" visible="false" />
+                  <Button fx:id="delete" contentDisplay="CENTER" layoutX="577.0" layoutY="330.0" mnemonicParsing="false" onAction="#deleteAccount" prefHeight="45.0" prefWidth="125.0" text="Delete Account" textAlignment="CENTER" visible="false" wrapText="true" />
                </children>
             </AnchorPane>
             <BorderPane fx:id="chargerTable" maxWidth="1.7976931348623157E308" prefWidth="600.0">
