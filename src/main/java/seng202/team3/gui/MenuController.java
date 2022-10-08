@@ -399,8 +399,10 @@ public class MenuController {
             }
             FXMLLoader journeyLoader = new FXMLLoader(getClass().getResource("/fxml/journey.fxml"));
             Parent journeyViewParent = journeyLoader.load();
+            menuWindow.setCenter(journeyViewParent);
             setJourneyController(journeyLoader.getController());
             journeyController.init(stage);
+            journeyController.setBorderPane(menuWindow);
             menuWindow.setCenter(journeyViewParent);
             logManager.info("Switched to Journeys Screen");
         } catch (IOException e) {

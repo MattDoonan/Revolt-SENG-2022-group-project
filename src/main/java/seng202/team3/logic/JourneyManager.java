@@ -188,16 +188,6 @@ public class JourneyManager extends ChargerHandler {
     }
 
     /**
-     * Initialises a new Journey
-     */
-    public void startNewJourney() {
-        if ((selectedJourney.getStartPosition() != null) 
-            && (selectedJourney.getEndPosition() != null)) {
-            selectedJourney = new Journey();
-        }
-    }
-
-    /**
      * Selects vehicle to use for selected journey
      *
      * @param vehicle vehicle to use for journey
@@ -260,11 +250,11 @@ public class JourneyManager extends ChargerHandler {
             coordinates.add(selectedJourney.getEndPosition());
         }
         boolean error = Calculations.calculateDistance(coordinates.get(0), coordinates.get(1))
-                >= desiredRange;
+                >= selectedJourney.getVehicle().getMaxRange();
 
         for (int i = 1; i < coordinates.size() - 1; i++) {
             if (Calculations.calculateDistance(coordinates.get(i), coordinates.get(i + 1))
-                    >= desiredRange) {
+                    >= selectedJourney.getVehicle().getMaxRange()) {
                 error = true;
             }
         }

@@ -13,7 +13,7 @@ import seng202.team3.logic.JourneyManager;
  * A Journey Map Controller that extends the abstract MapHandler class
  *
  * @author Michelle Hsieh and James Billows
- * @version 1.0.0, Sep 22
+ * @version 1.0.4, Sep 22
  */
 public class JourneyMapController extends MapHandler {
 
