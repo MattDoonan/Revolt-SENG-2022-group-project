@@ -581,4 +581,13 @@ public class VehicleUpdateController {
         stage.close();
     }
 
+    /**
+     * Gets the manager of this vehicle add
+     *
+     * @return the {@link VehicleUpdateManager} of this controller
+     */
+    public VehicleUpdateManager getManage() {
+        return manage;
+    }
+
 }

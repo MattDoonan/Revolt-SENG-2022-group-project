@@ -184,7 +184,7 @@ public class MainController {
     private MapViewController mapController;
 
     /**
-     * The map manager
+     * The Main manager
      */
     private MainManager manage;
 

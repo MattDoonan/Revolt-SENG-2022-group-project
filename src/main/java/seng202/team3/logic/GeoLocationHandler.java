@@ -33,11 +33,12 @@ public class GeoLocationHandler {
      */
     private static Coordinate coordinate;
 
+    //TODO remove set positions
     /**
      * Default coordinate all nz
      */
     public static final Coordinate DEFAULT_COORDINATE = new Coordinate(
-            null, null, -40.9006, 174.8860, "New Zealand");
+            1.0, 1.0, -40.9006, 174.8860, "New Zealand");
 
     /**
      * DatabaseReader for geolocation data
@@ -80,6 +81,9 @@ public class GeoLocationHandler {
      * @param name       the address of the coordinate
      */
     public static void setCoordinate(Coordinate coordinate, String name) {
+        //TODO remove set positions
+        coordinate.setYpos(1.0);
+        coordinate.setXpos(1.0);
         GeoLocationHandler.coordinate = coordinate;
         String[] splitAddress = name.split(",", 10);
         if (splitAddress.length > 6) {
@@ -115,6 +119,9 @@ public class GeoLocationHandler {
 
         location.setLat(response.getLocation().getLatitude());
         location.setLon(response.getLocation().getLongitude());
+        //TODO remove set positions
+        location.setYpos(1.0);
+        location.setXpos(1.0);
         location.setAddress("My Position");
         GeoLocationHandler.setCoordinate(location, location.getAddress());
         logManager.info("Current position set: {}, {}", location.getLat(), location.getLon());

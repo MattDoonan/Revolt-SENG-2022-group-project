@@ -1,18 +1,13 @@
 package seng202.team3.gui;
 
+import static java.lang.Math.round;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -23,18 +18,19 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import seng202.team3.data.database.SqlInterpreter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
 import seng202.team3.data.entity.Vehicle;
 import seng202.team3.logic.Calculations;
 import seng202.team3.logic.GarageManager;
 import seng202.team3.logic.JourneyManager;
+
 
 /**
  * Controller for journeySidebar.fxml
@@ -43,6 +39,12 @@ import seng202.team3.logic.JourneyManager;
  * @version 1.0.0, Aug 22
  */
 public class JourneyController {
+
+    /**
+     * Logger
+     */
+    private static final Logger logManager = LogManager.getLogger();
+
 
     /**
      * Button to set start point
@@ -78,7 +80,7 @@ public class JourneyController {
      * Used to contain stops along route
      */
     @FXML 
-    private VBox journeyTable;
+    private VBox journeyChargerTable;
 
     /**
      * MenuButton containing user vehicles
@@ -134,10 +136,24 @@ public class JourneyController {
     private JourneyManager journeyManager;
 
     /**
+     * The border pane of the controller
+     */
+    private BorderPane borderPane;
+
+    /**
      * Constructor for this class
      */
     public JourneyController() {
         // unused
+    }
+
+    /**
+     * Gets this border pane
+     *
+     * @return the {@link BorderPane} of this border pane
+     */
+    public BorderPane getBorderPane() {
+        return borderPane;
     }
 
     /**
@@ -187,7 +203,7 @@ public class JourneyController {
                     .getResource("/fxml/journeyMap.fxml"));
             Parent mapViewParent = webViewLoader.load();
             mapController = webViewLoader.getController();
-            mapController.init(stage, journeyManager, this);
+            mapController.init(stage, this);
             mainWindow.setCenter(mapViewParent);
         } catch (IOException e) {
             e.printStackTrace();
@@ -198,15 +214,10 @@ public class JourneyController {
      * Sets an action listener for the range slider
      */
     private void configureSlider() {
-        rangeSlider.valueChangingProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(
-                ObservableValue<? extends Boolean> observableValue,
-                Boolean wasChanging,
-                Boolean changing) {
-                if (!rangeSlider.isValueChanging()) {
-                    sliderUpdated();
-                }
+        rangeSlider.valueChangingProperty().addListener((observableValue, wasChanging, changing)
+                -> {
+            if (!rangeSlider.isValueChanging()) {
+                sliderUpdated();
             }
         });
     }
@@ -217,25 +228,19 @@ public class JourneyController {
      */
     @FXML
     public void setStart() {
+        journeyManager.makeCoordinateName();
         Coordinate position = journeyManager.getPosition();
         if (position != null) {
-            mapController.addStartMarker();
             journeyManager.setStart(position);
+            mapController.positionMarker("Start");
             makeStart.setDisable(true);
-            String address = position.getAddress();
-            if (address.contains(",")) {
-                startLabel.setText(address.substring(0, address.indexOf(",")));
-            } else {
-                startLabel.setText(address);
-            }     
-            mapController.addChargersAroundPoint(journeyManager.getPosition());
-            if (journeyManager.getEnd() != null) {
-                calculateRoute();
-            }
+            startLabel.setText(position.getAddress());
+            rangeSlider.setDisable(true);
+            vehicles.setDisable(true);
+            journeyManager.makeRangeChargers();
+            mapController.addChargersOnMap();
         }
-        //TODO disable the rangeslider once the custom vehicle has set the range
-        rangeSlider.setDisable(true);
-        vehicles.setDisable(true);
+        calculateRoute();
     }
 
     /**
@@ -244,107 +249,113 @@ public class JourneyController {
      */
     @FXML
     public void setDestination() {
+        journeyManager.makeCoordinateName();
         Coordinate position = journeyManager.getPosition();
         if (position != null) {
-            String address = position.getAddress();
-            journeyManager.setEnd(journeyManager.getPosition());
+            journeyManager.setEnd(position);
             makeEnd.setDisable(true);
-            if (address.contains(",")) {
-                endLabel.setText(address.substring(0, address.indexOf(",")));
-                //TODO strings should be all equals()
-                if (tripName.getText() == "") {
-                    tripName.setText("Trip to " + address.substring(0, address.indexOf(",")));
-                }
-            } else {
-                endLabel.setText(address);
-                if (tripName.getText() == "") {
-                    tripName.setText("Trip to " + address);
-                }
-            }        
-            if (journeyManager.getStart() != null) {
-                calculateRoute();
+            endLabel.setText(position.getAddress());
+            mapController.positionMarker("Destination");
+            if (tripName.getText().isEmpty()) {
+                tripName.setText("Trip to " + position.getAddress().split(",")[0]);
             }
         }
+        calculateRoute();
     }
 
     /**
      * calls function to add a route going through all markers
      */
     public void calculateRoute() {
-        mapController.addRouteToScreen();
-        errorTextCheck();
+        if (journeyManager.getSelectedJourney().getEndPosition() != null
+                && journeyManager.getSelectedJourney().getStartPosition() != null) {
+            distanceError = journeyManager.checkDistanceBetweenChargers();
+            errorText.setVisible(false);
+            if (distanceError) {
+                errorText.setVisible(true);
+            }
+            mapController.addRouteToScreen();
+
+        }
     }
 
     /**
      * Resets the journey entity and GUI
      */
     public void resetJourney() {
-        //mapController.javaScriptConnector.call("removeRoute");
-        //mapController.javaScriptConnector.call("removeCoordinate");
+        mapController.removeRoute();
+        journeyManager.clearChargers();
         journeyManager.clearJourney();
-        init(this.stage);
+        journeyManager.setCurrentCoordinate(null);
+        journeyManager.makeRangeChargers();
+        mapController.addChargersOnMap();
         makeStart.setDisable(false);
         makeEnd.setDisable(false);
-        for (int i = 1; i < journeyTable.getChildren().size() - 1; i++) {
-            journeyTable.getChildren().remove(i);
-        }
-        journeyManager.clearChargers();
         startLabel.setText("Start not set");
         endLabel.setText("End not set");
         errorText.setVisible(false);
         distanceError = false;
+        rangeSlider.setDisable(false);
+        vehicles.setDisable(false);
+        resetChargerDisplay();
     }
 
     /**
      * Adds a charger to the Journey table
-     * @param charger charger to add to table
+     *
+     * @param charger charger
      */
-    public void addChargerToDisplay(Charger charger) {
-        Button btn = new Button("Remove");
-        btn.setId(Integer.toString(charger.getChargerId()));
-        btn.setOnAction(this::removeFromDisplay);
-        double dist;
-        int i = 0;
-        Integer index = null;
-        for (Charger c : journeyManager.getChargers()) {
-            if (c.getChargerId() == charger.getChargerId()) {
-                index = i;
-            }
-            i++;
-        }
-        if (index == 0) {
-            dist = Math.floor(Calculations.calculateDistance(charger.getLocation(),
-                    journeyManager.getStart()) * 100) / 100;
-        } else {
-            dist = Math.floor(Calculations.calculateDistance(charger.getLocation(),
-                    journeyManager.getChargers()
-                            .get(index - 1).getLocation()) * 100) / 100;
-        }
-        VBox text = new VBox(new Text(charger.getName()),
-                new Text("\n" + dist + " km Distance"));
+    public void addCharger(Charger charger) {
 
-        //TODO removable as will always have a vehicle?
-        if (journeyManager.getSelectedJourney().getVehicle() != null) {
-            text.getChildren().add(
-                new Text("\n" + (int) Math.ceil(dist / journeyManager.getSelectedJourney()
-                    .getVehicle().getMaxRange() * 100) + "% Battery Used"));
-        }
-
-        VBox buttonBox = new VBox(btn);
-        buttonBox.setAlignment(Pos.CENTER_RIGHT);
-        //TODO make remove button accessable always
-        HBox content = new HBox(text, buttonBox);
-        content.setPadding(new Insets(15));
-        content.setId(Integer.toString(charger.getChargerId()));
-        journeyTable.getChildren().add((journeyTable.getChildren()).size() - 1, content);
+        //TODO decide on maximum number of stops in a journey and implement handle
+        journeyManager.addCharger(charger);
+        mapController.addChargersOnMap();
+        resetChargerDisplay();
+        addWaypointsToDisplay();
+        calculateRoute();
     }
 
     /**
-     * Adds a location to the Journey table
-     * @param coordinate coordinate to add to table
+     * Shows all the added waypoints to the display
      */
-    public void addLocationToDisplay(Coordinate coordinate) {
+    public void addWaypointsToDisplay() {
 
+
+        List<Charger> chargers = journeyManager.getSelectedJourney().getChargers();
+
+        for (int i = 0; i < chargers.size(); i++) {
+            double dist = Math.floor(Calculations.calculateDistance(chargers.get(i).getLocation(),
+                    journeyManager.getStart()) * 100) / 100;
+            if (i != 0) {
+                dist = Math.floor(Calculations.calculateDistance(chargers.get(i - 1).getLocation(),
+                        chargers.get(i).getLocation()) * 100) / 100;
+            }
+
+            Label addressBox = new Label(chargers.get(i).getLocation().getAddress());
+            addressBox.setWrapText(true);
+
+            Label nameBox = new Label(chargers.get(i).getName());
+            nameBox.setWrapText(true);
+
+            VBox text = new VBox(nameBox,
+                    addressBox,
+                    new Text("\n" + dist + " km Distance"),
+                    new Text("\n" + (int) Math.ceil(dist / journeyManager.getSelectedJourney()
+                    .getVehicle().getMaxRange() * 100) + "% Battery Used"));
+
+            journeyChargerTable.getChildren().add(text);
+        }
+
+        Button btn = new Button("Remove Last Point");
+        btn.setOnAction(this::removeFromDisplay);
+        journeyChargerTable.getChildren().add(btn);
+    }
+
+    /**
+     * Resets the charger display nodes
+     */
+    private void resetChargerDisplay() {
+        journeyChargerTable.getChildren().clear();
     }
 
     /**
@@ -353,20 +364,12 @@ public class JourneyController {
      * @param e the event of button being clicked
      */
     public void removeFromDisplay(ActionEvent e) {
-        List<Charger> chargers = journeyManager.getChargers();
-        String ids = ((Node) e.getSource()).getId();
-        int idi = Integer.parseInt(ids);
-        chargers.removeIf(charger -> charger.getChargerId() == idi);
-        journeyManager.getChargers().removeIf(charger
-                -> charger.getChargerId() == idi);
-        journeyTable.getChildren().removeIf(box -> Objects.equals(box.getId(), ids));
-        calculateRoute();
-        if (chargers.size() == 0) {
-            mapController.addChargersAroundPoint(journeyManager.getStart());
-        } else {
-            mapController.addChargersAroundPoint(chargers.get(chargers.size() - 1).getLocation());
+        journeyManager.removeLastCharger();
+        resetChargerDisplay();
+        addWaypointsToDisplay();
+        if (journeyManager.getSelectedJourney().getChargers().isEmpty()) {
+            journeyChargerTable.getChildren().clear();
         }
-        //TODO remove all others and add to display again to recalculate distances
     } 
 
     /**
@@ -384,7 +387,7 @@ public class JourneyController {
                 errors.add("No end location added");
             }
             if (distanceError) {
-                errors.add("Some of your locations are out of range of eachother");
+                errors.add("Some of your locations are out of range of each other");
             }
             displayErrorPopups();
         }
@@ -399,11 +402,9 @@ public class JourneyController {
         garageManager.getAllVehicles();
         vehicles.getItems().clear();
         
-        MenuItem custom = new MenuItem("Custom");
+        MenuItem custom = new MenuItem("Add Vehicle...");
         custom.setOnAction(this::configureVehicleItem);
         vehicles.getItems().add(custom);
-
-        vehicles.setText("Custom");
 
         for (Vehicle vehicle : garageManager.getData()) {
             String title = vehicle.getMake() + ' ' + vehicle.getModel();
@@ -413,11 +414,6 @@ public class JourneyController {
             vehicles.getItems().add(item);
         }
 
-        //if (vehicles.getText() == "") { //Only runs first time
-        //vehicles.setText(garageManager.getData().get(0).getMake()
-        //+ " " + garageManager.getData().get(0).getModel());
-        //journeyManager.selectVehicle(garageManager.getData().get(0));
-        //}
     }
 
     /**
@@ -428,38 +424,22 @@ public class JourneyController {
     public void configureVehicleItem(ActionEvent e) {
         MenuItem item = ((MenuItem) e.getSource());
         vehicles.setText(item.getText());
-        int i = 0;
-        if (item.getText().equals("Custom")) {
-            rangeSlider.setDisable(false);
-            //TODO Make a default vehicle in the journeymanager
-            journeyManager.makeDefaultVehicle();
-            //TODO set the slider value to the vehicle's range
-            sliderUpdated();
-
+        if (item.getText().equals("Add Vehicle...")) {
+            //Prompts you to add a vehicle
+            //TODO handle
+            //loadInternalVehicleScreen();
         } else {
             for (Vehicle vehicle : garageManager.getData()) {
                 if (vehicle.getVehicleId() == Integer.parseInt(item.getId())) {
                     journeyManager.selectVehicle(vehicle);
-                    rangeSlider.setValue(vehicle.getMaxRange());
-                    rangeSlider.setDisable(true);
+                    rangeSlider.setMax(vehicle.getMaxRange());
+                    rangeSlider.setMajorTickUnit(round(vehicle.getMaxRange() / 5.0));
                     sliderUpdated();
                 }
-                i++;
             }
         }
     }
 
-    /**
-     * Uses {@link JourneyManager JourneyManager} function to toggle
-     * error test based on calculations
-     */
-    public void errorTextCheck() {
-        distanceError = journeyManager.checkDistanceBetweenChargers();
-        errorText.setVisible(false);
-        if (distanceError) {
-            errorText.setVisible(true);
-        }
-    }
 
     /**
      * Displays popup error message
@@ -482,25 +462,26 @@ public class JourneyController {
             controller.displayErrors();
             errorPopup.setAlwaysOnTop(true);
             errorPopup.showAndWait();
-            //TODO Done: Michelle
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+
     /**
      * Handles updates of vehicle range slider
      */
     public void sliderUpdated() {
-        journeyManager.getSelectedJourney().setVehicleRange(rangeSlider.getValue());
+        journeyManager.setDesiredRange(rangeSlider.getValue());
         if (journeyManager.getSelectedJourney().getStartPosition() != null) {
             List<Charger> chargers = journeyManager.getSelectedJourney().getChargers();
             if (chargers.size() == 0) {
-                mapController.addChargersAroundPoint(journeyManager.getSelectedJourney()
-                    .getStartPosition());
+                mapController.addChargersOnMap();
             } else {
-                mapController.addChargersAroundPoint(
-                    chargers.get(chargers.size() - 1).getLocation());
+                journeyManager.setCurrentCoordinate(chargers.get(chargers.size() - 1)
+                        .getLocation());
+                journeyManager.makeRangeChargers();
+                mapController.addChargersOnMap();
             }
         }
     }

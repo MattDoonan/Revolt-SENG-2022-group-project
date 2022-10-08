@@ -1,10 +1,12 @@
 package seng202.team3.logic;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
 import java.util.List;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -63,8 +65,8 @@ public class JavaScriptBridge {
         if (MenuController.getController() != null) {
             MenuController.getController().getManager().setPosition();
         }
-        if (menu.getJourneyController() != null) {
-            menu.getJourneyController().getManager().setPosition();
+        if (MenuController.getJourneyController() != null) {
+            MenuController.getJourneyController().getManager().setPosition();
             //TODO check back later
         }
     }
@@ -212,25 +214,30 @@ public class JavaScriptBridge {
     public void loadMoreInfo(int id) {
         chargerHandler(id);
         MainManager main = MenuController.getController().getManager();
-        loadChargerEdit(main.getSelectedCharger(), main.getPosition());
+        loadChargerEdit(main.getSelectedCharger());
     }
 
     /**
      * Adds a {@link Charger Charger} to Journey
+     *
      * @param id unique identifier
      */
     public void addChargerToJourney(int id) {
-        chargerHandler(id);
 
-        MainManager mainManager = MenuController.getController().getManager();
         JourneyController journeyController = MenuController.getJourneyController();
-        JourneyManager journeyManager = journeyController.getManager();
-        Charger charger = mainManager.getSelectedCharger();
 
-        journeyController.getMapController().addChargersAroundPoint(charger.getLocation());
-        journeyManager.addCharger(charger);
-        journeyController.addChargerToDisplay(charger);
-        journeyController.calculateRoute();
+        ArrayList<Charger> chargers = journeyController.getManager().getRangeChargers();
+
+        List<Charger> chargerList = chargers.stream()
+                .filter(charger -> charger.getChargerId() == id).toList();
+
+        if (!chargerList.isEmpty()) {
+            Charger selectedCharger = chargerList.get(0);
+            journeyController.getManager().setCurrentCoordinate(selectedCharger.getLocation());
+            journeyController.addCharger(selectedCharger);
+        } else {
+            logManager.error("Charger does not exist, should not have been selected: " + id);
+        }
     }
 
     /**
@@ -240,7 +247,7 @@ public class JavaScriptBridge {
      * @param name   the address of the coordinate to set
      */
     public void setCoordinate(String latlng, String name) {
-        GeoLocationHandler.getInstance().setCoordinate(parseCoordinate(latlng), name);
+        GeoLocationHandler.setCoordinate(parseCoordinate(latlng), name);
         MainManager main = MenuController.getController().getManager();
         loadChargerEdit(main.getSelectedCharger());
     }

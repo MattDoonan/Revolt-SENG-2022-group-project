@@ -75,6 +75,12 @@ public class MenuController {
     private static MainController controller;
 
     /**
+     * The JourneyController of the application; static as there is only
+     * one instance at a time
+     */
+    private static JourneyController journeyController;
+
+    /**
      * Action background style
      */
     private static final String ACTION_BCKGND_STYLE = "-fx-background-color: #e06666;";
@@ -100,12 +106,6 @@ public class MenuController {
      * Login title text
      */
     private static final String LOGIN_TITLE = "Login";
-
-    /**
-     * The JourneyController of the application; static as there is only
-     * one instance at a time
-     */
-    private static JourneyController journeyController;
 
     /**
      * unused constructor
@@ -393,6 +393,10 @@ public class MenuController {
      */
     public void loadJourneyScreen() {
         try {
+            if (UserManager.getUser() == UserManager.getGuest()) {
+                createLoginWindow(LOGIN_PATH, LOGIN_TITLE, null, null);
+                logManager.warn("Must be logged in to access this feature");
+            }
             FXMLLoader journeyLoader = new FXMLLoader(getClass().getResource("/fxml/journey.fxml"));
             Parent journeyViewParent = journeyLoader.load();
             setJourneyController(journeyLoader.getController());
@@ -403,5 +407,6 @@ public class MenuController {
             logManager.error(e.getMessage());
         }
     }
+
 
 }

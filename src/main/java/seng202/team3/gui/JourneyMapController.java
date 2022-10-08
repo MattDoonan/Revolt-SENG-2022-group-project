@@ -5,6 +5,7 @@ import javafx.stage.Stage;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
 import seng202.team3.logic.ChargerManager;
+import seng202.team3.logic.GeoLocationHandler;
 import seng202.team3.logic.JavaScriptBridge;
 import seng202.team3.logic.JourneyManager;
 
@@ -22,11 +23,6 @@ public class JourneyMapController extends MapHandler {
     private JourneyController journeyController;
 
     /**
-     * The logic manager for journeys
-     */
-    private JourneyManager journeyManager;
-
-    /**
      * Constructor for this class
      */
     public JourneyMapController() {
@@ -37,84 +33,70 @@ public class JourneyMapController extends MapHandler {
      * Initialise the map view
      *
      * @param stage top level container for this window
-     * @param journeyManager Manager to interact with
+     * @param journeyController The journey controller for this object
      */
-    public void init(Stage stage, JourneyManager journeyManager, 
-        JourneyController journeyController) {
+    public void init(Stage stage, JourneyController journeyController) {
+        path = "html/map.html";
         this.stage = stage;
         javaScriptBridge = new JavaScriptBridge();
-        this.journeyManager = journeyManager;
         this.journeyController = journeyController;
         initMap();
         this.stage.sizeToScene();
     }
 
     /**
-     * Implements adding a list of all eligible chargers on the map
+     * Implements adding a list of all eligible chargers on the map around the selected coordinate
      */
     @Override
     public void addChargersOnMap() {
         javaScriptConnector.call("setJourney");
         javaScriptConnector.call("clearMarkers");
-        journeyManager.resetQuery();
-        journeyManager.makeAllChargers();
+        javaScriptConnector.call("removeRoute");
+        journeyController.getManager().makeRangeChargers();
 
-        for (Charger charger : journeyManager.getData()) {
+        Coordinate start = journeyController.getManager().getStart();
+        Coordinate end = journeyController.getManager().getEnd();
+
+        boolean isEditable = false;
+        if (start != null) {
+            javaScriptConnector.call("addPoint", start.getAddress(),
+                    start.getLat(), start.getLon());
+            isEditable = true;
+        } else if (end != null) {
+            javaScriptConnector.call("addPoint", end.getAddress(), end.getLat(), end.getLon());
+        }
+        for (Charger charger : journeyController.getManager().getRangeChargers()) {
             javaScriptConnector.call("addMarker", charger.getLocation().getAddress(),
                     charger.getLocation().getLat(), charger.getLocation().getLon(),
-                    charger.getChargerId());
+                    charger.getChargerId(), isEditable);
         }
-    }
-
-    /**
-     * Shows chargers on map around given coordinate with radius of vehicle range
-     * @param coord centre of circle
-     */
-    public void addChargersAroundPoint(Coordinate coord) {
-        javaScriptConnector.call("setJourney");
-        javaScriptConnector.call("clearMarkers");
-        journeyManager.resetQuery();
-        journeyManager.makeAllChargers();
-        //TODO move above into own function
-
-        ChargerManager chargerManager = new ChargerManager();
-        ArrayList<Charger> arrayChargers = new ArrayList<>(journeyManager.getData());
-        ArrayList<Charger> nearbyChargers = chargerManager.getNearbyChargers(arrayChargers,
-                    coord, journeyController.getRangeSlider().getValue());
-
-        for (Charger charger : nearbyChargers) {
-            javaScriptConnector.call("addMarker", charger.getLocation().getAddress(),
-                    charger.getLocation().getLat(), charger.getLocation().getLon(),
-                    charger.getChargerId());
+        if (journeyController.getManager().getCurrentCoordinate() != null) {
+            addCircle();
         }
 
-        addCircle(coord);
+
     }
 
     /**
-     * Adds a marker at the start
+     * Adds a marker either at the start or destination according to string input
+     *
+     * @param position a String of either "Start" or "Destination"
      */
-    public void addStartMarker() {
-        javaScriptConnector.call("addCoordinate", "Start",
-                journeyManager.getPosition().getLat(), journeyManager.getPosition().getLon());
+    public void positionMarker(String position) {
+        javaScriptConnector.call("addCoordinate", position + ":" + "\n"
+                + GeoLocationHandler.getCoordinate().getAddress(),
+                GeoLocationHandler.getCoordinate().getLat(),
+                GeoLocationHandler.getCoordinate().getLon());
     }
 
     /**
-     * Adds a marker at the destination
-     */
-    public void addEndMarker() {
-        javaScriptConnector.call("addCoordinate", "Destination",
-                journeyManager.getPosition().getLat(), journeyManager.getPosition().getLon());
-    }
-
-    /**
-     * Adds a circle around an inputted point on the map
+     * Adds a circle around a point on the map
      * with radius of vehicle range
-     * @param coord coordinate for centre of circle
      */
-    public void addCircle(Coordinate coord) {
+    public void addCircle() {
+        Coordinate coord = journeyController.getManager().getCurrentCoordinate();
         javaScriptConnector.call("addCircle", coord.getLat(), coord.getLon(),
-            journeyController.getRangeSlider().getValue() * 1000);
+            journeyController.getManager().getDesiredRange() * 1000);
                                 
     }
 
@@ -127,8 +109,8 @@ public class JourneyMapController extends MapHandler {
 
         javaScriptConnector.call("removeRoute");
 
-        Coordinate start = journeyManager.getSelectedJourney().getStartPosition();
-        Coordinate end = journeyManager.getSelectedJourney().getEndPosition();
+        Coordinate start = journeyController.getManager().getSelectedJourney().getStartPosition();
+        Coordinate end = journeyController.getManager().getSelectedJourney().getEndPosition();
 
         if (start != null && end != null) {
 
@@ -136,7 +118,7 @@ public class JourneyMapController extends MapHandler {
                     start.getAddress(), "p", 0);
 
             int i = 1;
-            for (Charger charger : journeyManager.getSelectedJourney().getChargers()) {
+            for (Charger charger : journeyController.getManager().getChargers()) {
                 javaScriptConnector.call("addLocationToRoute", charger.getLocation().getLat(),
                         charger.getLocation().getLon(), charger.getChargerId(), "c", i);
                 i += 1;
@@ -150,4 +132,11 @@ public class JourneyMapController extends MapHandler {
         //TODO add pop up if missing either start or end
     }
 
+    /**
+     * Removes the route and circles
+     */
+    public void removeRoute() {
+        javaScriptConnector.call("removeRoute");
+        javaScriptConnector.call("removeCircle");
+    }
 }

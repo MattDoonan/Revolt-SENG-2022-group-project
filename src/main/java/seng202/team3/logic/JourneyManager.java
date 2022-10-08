@@ -18,34 +18,34 @@ import seng202.team3.data.entity.Vehicle;
 /**
  * Manages creation and storage of journeys
  *
- * @author Angus Kirtlan and James Billows
- * @version 1.0.0, Aug 22
+ * @author Angus Kirtlan, James Billows and Michelle Hsieh
+ * @version 1.0.4, Sep 22
  */
 public class JourneyManager extends ChargerHandler {
     /** {@link Journey Journey} which is the currently selected journey */
     private Journey selectedJourney;
 
-    ///** Coordinate*/
-    //private Coordinate tempPosition;
+    /**
+     * The desired range of chargers to be found
+     */
+    private double desiredRange;
 
-    /** List of {@link Charger chargers} that are candidates for journey*/
-    private ObservableList<Charger> candidateChargers;
+    /**
+     * A list of all the chargers in range
+     */
+    private ArrayList<Charger> rangeChargers;
 
+    /**
+     * Current coordinate to get chargers in range
+     */
+    private Coordinate currentCoordinate;
 
     /**
      * Initialises the JourneyManager Class
      */
     public JourneyManager() {
+        resetQuery();
         selectedJourney = new Journey();
-    }
-
-    /**
-     * Gets a list of candidate chargers
-     *
-     * @return an Observable list of all the candidate chargers
-     */
-    public ObservableList<Charger> getCandidateChargers() {
-        return candidateChargers;
     }
 
     /**
@@ -75,6 +75,7 @@ public class JourneyManager extends ChargerHandler {
 
     /**
      * Gets end location from entity
+     *
      * @return Coordinate end location
      */
     public Coordinate getEnd() {
@@ -83,6 +84,7 @@ public class JourneyManager extends ChargerHandler {
 
     /**
      * Sets end location in entity
+     *
      * @param end end location
      */
     public void setEnd(Coordinate end) {
@@ -90,8 +92,27 @@ public class JourneyManager extends ChargerHandler {
     }
 
     /**
+     * Sets the current coordinate
+     *
+     * @param coordinate the current coordinate
+     */
+    public void setCurrentCoordinate(Coordinate coordinate) {
+        currentCoordinate = coordinate;
+    }
+
+    /**
+     * Gets the current coordinate
+     *
+     * @return a {@link Coordinate} of the current coordinate for distance calculations
+     */
+    public Coordinate getCurrentCoordinate() {
+        return currentCoordinate;
+    }
+
+    /**
      * Gets charger stops in from journey entity
-     * @return List<Charger> chargers
+     *
+     * @return a list of {@link Charger}s in the journey
      */
     public List<Charger> getChargers() {
         return selectedJourney.getChargers();
@@ -105,7 +126,69 @@ public class JourneyManager extends ChargerHandler {
     }
 
     /**
-     * Initialises a new Journeymv
+     * Gets the desired range
+     *
+     * @return a double of the desired range
+     */
+    public double getDesiredRange() {
+        return desiredRange;
+    }
+
+    /**
+     * Set the desired range
+     *
+     * @param desiredRange the desired range by the slider
+     */
+    public void setDesiredRange(Double desiredRange) {
+        this.desiredRange = desiredRange;
+    }
+
+    /**
+     * Gets a list of all the chargers in range
+     *
+     * @return a list of {@link Charger}s in range
+     */
+    public ArrayList<Charger> getRangeChargers() {
+        return rangeChargers;
+    }
+
+    /**
+     * Makes a list of all chargers in range
+     */
+    public void makeRangeChargers() {
+        makeAllChargers();
+        ArrayList<Charger> chargers = new ArrayList<>(chargerData);
+        rangeChargers = chargers;
+        if (currentCoordinate != null) {
+            rangeChargers = new ChargerManager().getNearbyChargers(chargers,
+                    currentCoordinate, desiredRange);
+        }
+    }
+
+    /**
+     * Gives the current coordinate a name
+     */
+    public void makeCoordinateName() {
+        Coordinate position = GeoLocationHandler.getCoordinate();
+        if (position != null) {
+            GeoLocationHandler.setCoordinate(position, new JavaScriptBridge().makeLocationName());
+            currentCoordinate = position;
+        }
+    }
+
+    /**
+     * Removes the last charger
+     */
+    public void removeLastCharger() {
+        if (!selectedJourney.getChargers().isEmpty()) {
+            Charger charger = selectedJourney.getChargers()
+                    .get(selectedJourney.getChargers().size() - 1);
+            selectedJourney.removeCharger(charger);
+        }
+    }
+
+    /**
+     * Initialises a new Journey
      */
     public void startNewJourney() {
         if ((selectedJourney.getStartPosition() != null) 
@@ -141,53 +224,6 @@ public class JourneyManager extends ChargerHandler {
         selectedJourney.removeCharger(charger);
     }
 
-    /**
-     * Calculates all candidate chargers for the journey
-     * Calculates ellipse where start and end are foci
-     * Assumes full tank max range
-     * Assigns the candidate chargers
-     *
-     * @param chargers an array of all chargers
-     */
-    public void makeCandidateChargers(ArrayList<Charger> chargers) {
-        double distance = Calculations.calculateDistance(selectedJourney.getStartPosition(),
-                selectedJourney.getEndPosition()) * 1.1;
-        ArrayList<Charger> validChargers = chargers.stream()
-                .filter(charger -> (Calculations.isWithinRange(charger.getLocation(),
-                        selectedJourney.getStartPosition(),
-                        selectedJourney.getEndPosition(), distance)))
-                .collect(Collectors.toCollection(ArrayList::new));
-        candidateChargers = FXCollections.observableList(validChargers);
-    }
-
-    /**
-     * TODO Docstring
-     */
-    public void makeDefaultVehicle() {
-        ArrayList<String> connectorArray = new ArrayList<>();
-        QueryBuilder query = new QueryBuilderImpl().withSource("connector");
-        try {
-            List<Connector> connectorList = new ArrayList<>();
-            for (Object o : SqlInterpreter.getInstance()
-                    .readData(query.build(), Connector.class)) {
-                connectorList.add((Connector) o);
-            }
-
-            List<String> connectorStrings = connectorList.stream()
-                    .map(Connector::getType)
-                    .distinct().toList();
-
-            connectorArray.addAll(connectorStrings);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        Vehicle vehicle = new Vehicle("Default", "Default", 0, connectorArray);
-        vehicle.setBatteryPercent(100.0);
-
-        getSelectedJourney().setVehicle(vehicle);
-    }
-
 
     /**
      * Clears the current journey
@@ -209,9 +245,10 @@ public class JourneyManager extends ChargerHandler {
     }
 
     /**
-     * Gets boolean for if there is an error or not
+     * Runs a check between all chargers and makes sure that there is no error
+     * in range
      *
-     * @return boolean of error
+     * @return boolean true if there is an error
      */
     public boolean checkDistanceBetweenChargers() { //TODO possibly needs fixing
         ArrayList<Coordinate> coordinates = new ArrayList<>();
@@ -223,11 +260,11 @@ public class JourneyManager extends ChargerHandler {
             coordinates.add(selectedJourney.getEndPosition());
         }
         boolean error = Calculations.calculateDistance(coordinates.get(0), coordinates.get(1))
-                >= selectedJourney.getVehicleRange();
+                >= desiredRange;
 
         for (int i = 1; i < coordinates.size() - 1; i++) {
             if (Calculations.calculateDistance(coordinates.get(i), coordinates.get(i + 1))
-                    >= selectedJourney.getVehicleRange()) {
+                    >= desiredRange) {
                 error = true;
             }
         }

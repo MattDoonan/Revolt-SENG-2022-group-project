@@ -79,6 +79,7 @@ public class NavbarTestFx extends TestFxBase {
         initState(loader, stage);
         Scene scene = new Scene(page);
         stage.setScene(scene);
+        stage.setMinWidth(1500);
         stage.show();
     }
 

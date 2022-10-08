@@ -104,7 +104,7 @@ public class MapViewController extends MapHandler {
         if (Boolean.TRUE.equals(!MapHandler.isMapRequested()) || javaScriptConnector == null) {
             return;
         }
-
+        javaScriptConnector.call("removeJourneys");
         javaScriptConnector.call("clearMarkers");
 
         if (UserManager.getUser().getLevel() == PermissionLevel.ADMIN) {
