@@ -88,6 +88,24 @@ public class GarageController {
     private TextArea carDetailsThree;
 
     /**
+     * Tells user whether the first vehicle is currently selected
+     */
+    @FXML
+    private TextArea currSelectedOne;
+
+    /**
+     * Tells user whether the second vehicle is currently selected
+     */
+    @FXML
+    private TextArea currSelectedTwo;
+
+    /**
+     * Tells user whether the third vehicle is currently selected
+     */
+    @FXML
+    private TextArea currSelectedThree;
+
+    /**
      * Button to edit the first vehicle
      */
     @FXML
@@ -124,6 +142,24 @@ public class GarageController {
     private Button deleteCarThree;
 
     /**
+     * Button to set the first vehicle as the user's current vehicle
+     */
+    @FXML
+    private Button currEvOne;
+
+    /**
+     * Button to set the second vehicle as the user's current vehicle
+     */
+    @FXML
+    private Button currEvTwo;
+
+    /**
+     * Button to set the third vehicle as the user's current vehicle
+     */
+    @FXML
+    private Button currEvThree;
+
+    /**
      * Button to scroll the vehicle view forward
      */
     @FXML
@@ -154,11 +190,6 @@ public class GarageController {
      * Logic controller
      */
     private GarageManager manage = new GarageManager();
-
-    /**
-     * Current Charger label text
-     */
-    private static final String CURR_CHARG_TXT = "Current Charge: ";
 
     /**
      * Max Range label text
@@ -223,6 +254,42 @@ public class GarageController {
     @FXML
     public void launchUpdate() {
         launchEditable(null);
+    }
+
+    /**
+     * Sets the user's current vehicle
+     * 
+     * @param event the event that called the method
+     */
+    @FXML
+    public void setCurr(ActionEvent event) {
+        for (Vehicle vehicle : vehicleData) {
+            vehicle.setcurrVehicle(false);
+            manage.saveCurrVehicle(vehicle);
+        }
+        String source = ((Button) event.getSource()).getId();
+        // System.out.println("source: " + source);
+        Vehicle currVehicle = new Vehicle();
+        switch (source) {
+            case "currEvOne":
+                vehicleData.get(0).setcurrVehicle(true);
+                currVehicle = vehicleData.get(0);
+                break;
+            case "currEvTwo":
+                vehicleData.get(1).setcurrVehicle(true);
+                currVehicle = vehicleData.get(1);
+                break;
+            case "currEvThree":
+                vehicleData.get(2).setcurrVehicle(true);
+                currVehicle = vehicleData.get(2);
+                break;
+            default:
+                break;
+        }
+
+        manage.saveCurrVehicle(currVehicle);
+        refresh();
+
     }
 
     /**
@@ -356,27 +423,33 @@ public class GarageController {
             populateDisplays(VEHICLE_ONE, vehicleImageOne, 0);
             editCarOne.setVisible(true);
             deleteCarOne.setVisible(true);
+            currEvOne.setVisible(true);
         } else {
             editCarOne.setVisible(false);
             deleteCarOne.setVisible(false);
+            currEvOne.setVisible(false);
             clearDisplay(VEHICLE_ONE, vehicleImageOne);
         }
         if (vehicleData.size() > 1) {
             populateDisplays(VEHICLE_TWO, vehicleImageTwo, 1);
             editCarTwo.setVisible(true);
             deleteCarTwo.setVisible(true);
+            currEvTwo.setVisible(true);
         } else {
             editCarTwo.setVisible(false);
             deleteCarTwo.setVisible(false);
+            currEvTwo.setVisible(false);
             clearDisplay(VEHICLE_TWO, vehicleImageTwo);
         }
         if (vehicleData.size() > 2) {
             populateDisplays(VEHICLE_THREE, vehicleImageThree, 2);
             editCarThree.setVisible(true);
             deleteCarThree.setVisible(true);
+            currEvThree.setVisible(true);
         } else {
             editCarThree.setVisible(false);
             deleteCarThree.setVisible(false);
+            currEvThree.setVisible(false);
             clearDisplay(VEHICLE_THREE, vehicleImageThree);
         }
         if (vehicleData.size() <= 3) {
@@ -399,14 +472,17 @@ public class GarageController {
             case VEHICLE_ONE:
                 makeModelOne.setText("");
                 carDetailsOne.setText("");
+                currSelectedOne.setText("");
                 break;
             case VEHICLE_TWO:
                 makeModelTwo.setText("");
                 carDetailsTwo.setText("");
+                currSelectedTwo.setText("");
                 break;
             case VEHICLE_THREE:
                 makeModelThree.setText("");
                 carDetailsThree.setText("");
+                currSelectedThree.setText("");
                 break;
             default:
                 break;
@@ -428,32 +504,44 @@ public class GarageController {
                     makeModelOne.setText(vehicleData.get(index).getMake() + " "
                             + vehicleData.get(index).getModel());
                     carDetailsOne.setText(
-                            CURR_CHARG_TXT + vehicleData.get(index).getBatteryPercent() + "%\n"
-                                    + MAX_RANGE_TXT + vehicleData.get(index).getMaxRange()
+                            MAX_RANGE_TXT + vehicleData.get(index).getMaxRange()
                                     + DISTANCE_UNIT_TXT + "\n"
                                     + CONNECTIONS_TXT
                                     + vehicleData.get(index).getConnectors().toString());
+                    if (vehicleData.get(index).getCurrVehicle()) {
+                        currSelectedOne.setText("Currently selected");
+                    } else {
+                        currSelectedOne.setText("");
+                    }
+
                     break;
                 case VEHICLE_TWO:
                     makeModelTwo.setText(vehicleData.get(index).getMake() + " "
                             + vehicleData.get(index).getModel());
                     carDetailsTwo.setText(
-                            CURR_CHARG_TXT + vehicleData.get(index).getBatteryPercent() + "%\n"
-                                    + MAX_RANGE_TXT + vehicleData.get(index).getMaxRange()
+                            MAX_RANGE_TXT + vehicleData.get(index).getMaxRange()
                                     + DISTANCE_UNIT_TXT + "\n"
                                     + CONNECTIONS_TXT
                                     + vehicleData.get(index).getConnectors().toString());
+                    if (vehicleData.get(index).getCurrVehicle()) {
+                        currSelectedTwo.setText("Currently selected");
+                    } else {
+                        currSelectedTwo.setText("");
+                    }
                     break;
                 case VEHICLE_THREE:
                     makeModelThree.setText(vehicleData.get(index).getMake() + " "
                             + vehicleData.get(index).getModel());
                     carDetailsThree.setText(
-                            CURR_CHARG_TXT + vehicleData.get(index).getBatteryPercent()
-                                    + "%\n"
-                                    + MAX_RANGE_TXT + vehicleData.get(index).getMaxRange()
+                            MAX_RANGE_TXT + vehicleData.get(index).getMaxRange()
                                     + DISTANCE_UNIT_TXT + "\n"
                                     + CONNECTIONS_TXT
                                     + vehicleData.get(index).getConnectors().toString());
+                    if (vehicleData.get(index).getCurrVehicle()) {
+                        currSelectedThree.setText("Currently selected");
+                    } else {
+                        currSelectedThree.setText("");
+                    }
                     break;
                 default:
                     break;

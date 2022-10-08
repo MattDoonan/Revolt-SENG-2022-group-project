@@ -41,7 +41,7 @@
     -fx-fill: #F64C72;
 }
 
-#btn-login {
+#loginSignout {
     -fx-border-color: #F64C72;
     -fx-border-width: 3px;
 }

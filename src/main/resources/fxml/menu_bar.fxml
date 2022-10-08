@@ -26,7 +26,7 @@
             </HBox>
             <HBox alignment="CENTER_LEFT" nodeOrientation="RIGHT_TO_LEFT" prefWidth="1920.0">
                <children>
-                  <Button id="btn-login" fx:id="loginSignout" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#loginOut" prefHeight="30.0" prefWidth="80.0" styleClass="menu-button" text="LOGIN" textFill="WHITE">
+                  <Button id="loginSignout" fx:id="loginSignout" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#loginOut" prefHeight="30.0" prefWidth="80.0" styleClass="menu-button" text="LOGIN" textFill="WHITE">
                      <font>
                         <Font name="FreeSans" size="12.0" />
                      </font>
