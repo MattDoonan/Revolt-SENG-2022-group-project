@@ -1,13 +1,10 @@
 package seng202.team3.gui;
 
-import java.util.ArrayList;
 import javafx.stage.Stage;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
-import seng202.team3.logic.ChargerManager;
 import seng202.team3.logic.GeoLocationHandler;
 import seng202.team3.logic.JavaScriptBridge;
-import seng202.team3.logic.JourneyManager;
 
 /**
  * A Journey Map Controller that extends the abstract MapHandler class
@@ -32,7 +29,7 @@ public class JourneyMapController extends MapHandler {
     /**
      * Initialise the map view
      *
-     * @param stage top level container for this window
+     * @param stage             top level container for this window
      * @param journeyController The journey controller for this object
      */
     public void init(Stage stage, JourneyController journeyController) {
@@ -45,7 +42,8 @@ public class JourneyMapController extends MapHandler {
     }
 
     /**
-     * Implements adding a list of all eligible chargers on the map around the selected coordinate
+     * Implements adding a list of all eligible chargers on the map around the
+     * selected coordinate
      */
     @Override
     public void addChargersOnMap() {
@@ -74,7 +72,6 @@ public class JourneyMapController extends MapHandler {
             addCircle();
         }
 
-
     }
 
     /**
@@ -96,16 +93,15 @@ public class JourneyMapController extends MapHandler {
     public void addCircle() {
         Coordinate coord = journeyController.getManager().getCurrentCoordinate();
         javaScriptConnector.call("addCircle", coord.getLat(), coord.getLon(),
-            journeyController.getManager().getDesiredRange() * 1000);
-                                
-    }
+                journeyController.getManager().getDesiredRange() * 1000);
 
+    }
 
     /**
      * Adds route to map, calling the underlying js function, from the currently
      * selected start and end coordinates.
      */
-    public void addRouteToScreen() { 
+    public void addRouteToScreen() {
 
         javaScriptConnector.call("removeRoute");
 
@@ -129,7 +125,7 @@ public class JourneyMapController extends MapHandler {
 
             javaScriptConnector.call("addRoute");
         }
-        //TODO add pop up if missing either start or end
+        // TODO add pop up if missing either start or end
     }
 
     /**

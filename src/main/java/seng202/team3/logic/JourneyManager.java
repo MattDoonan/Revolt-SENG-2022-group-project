@@ -3,14 +3,8 @@ package seng202.team3.logic;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import seng202.team3.data.database.QueryBuilder;
-import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
-import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
 import seng202.team3.data.entity.Journey;
 import seng202.team3.data.entity.Vehicle;
@@ -59,6 +53,7 @@ public class JourneyManager extends ChargerHandler {
 
     /**
      * Get the start location from entity
+     * 
      * @return Coordinate start location
      */
     public Coordinate getStart() {
@@ -67,6 +62,7 @@ public class JourneyManager extends ChargerHandler {
 
     /**
      * Sets the start location in entity
+     * 
      * @param start start location
      */
     public void setStart(Coordinate start) {
@@ -103,7 +99,8 @@ public class JourneyManager extends ChargerHandler {
     /**
      * Gets the current coordinate
      *
-     * @return a {@link Coordinate} of the current coordinate for distance calculations
+     * @return a {@link Coordinate} of the current coordinate for distance
+     *         calculations
      */
     public Coordinate getCurrentCoordinate() {
         return currentCoordinate;
@@ -214,7 +211,6 @@ public class JourneyManager extends ChargerHandler {
         selectedJourney.removeCharger(charger);
     }
 
-
     /**
      * Clears the current journey
      */
@@ -228,7 +224,7 @@ public class JourneyManager extends ChargerHandler {
     public void saveJourney() {
         try {
             SqlInterpreter.getInstance().writeJourney(selectedJourney);
-            //TODO give feedback to user, reset journey so no accidental duplicate?
+            // TODO give feedback to user, reset journey so no accidental duplicate?
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -240,7 +236,7 @@ public class JourneyManager extends ChargerHandler {
      *
      * @return boolean true if there is an error
      */
-    public boolean checkDistanceBetweenChargers() { //TODO possibly needs fixing
+    public boolean checkDistanceBetweenChargers() { // TODO possibly needs fixing
         ArrayList<Coordinate> coordinates = new ArrayList<>();
         coordinates.add(selectedJourney.getStartPosition());
         for (Charger charger : this.getSelectedJourney().getChargers()) {
@@ -249,17 +245,18 @@ public class JourneyManager extends ChargerHandler {
         if (selectedJourney.getEndPosition() != null) {
             coordinates.add(selectedJourney.getEndPosition());
         }
-        boolean error = Calculations.calculateDistance(coordinates.get(0), coordinates.get(1))
-                >= selectedJourney.getVehicle().getMaxRange();
+        boolean error = Calculations.calculateDistance(
+                coordinates.get(0), coordinates.get(1)) >= selectedJourney
+                        .getVehicle().getMaxRange();
 
         for (int i = 1; i < coordinates.size() - 1; i++) {
-            if (Calculations.calculateDistance(coordinates.get(i), coordinates.get(i + 1))
-                    >= selectedJourney.getVehicle().getMaxRange()) {
+            if (Calculations.calculateDistance(
+                    coordinates.get(i), coordinates.get(i + 1)) >= selectedJourney
+                            .getVehicle().getMaxRange()) {
                 error = true;
             }
         }
         return error;
     }
-
 
 }

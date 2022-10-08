@@ -1,7 +1,6 @@
 package seng202.team3.logic;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -67,7 +66,7 @@ public class JavaScriptBridge {
         }
         if (MenuController.getJourneyController() != null) {
             MenuController.getJourneyController().getManager().setPosition();
-            //TODO check back later
+            // TODO check back later
         }
     }
 

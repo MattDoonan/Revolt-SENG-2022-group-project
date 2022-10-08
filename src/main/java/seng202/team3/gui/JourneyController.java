@@ -1,7 +1,5 @@
 package seng202.team3.gui;
 
-import static java.lang.Math.round;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,8 +28,6 @@ import seng202.team3.data.entity.Vehicle;
 import seng202.team3.logic.Calculations;
 import seng202.team3.logic.GarageManager;
 import seng202.team3.logic.JourneyManager;
-import seng202.team3.logic.UserManager;
-
 
 /**
  * Controller for the journey; contains the journey manager
@@ -46,7 +42,6 @@ public class JourneyController {
      * Logger
      */
     private static final Logger logManager = LogManager.getLogger();
-
 
     /**
      * Label of the maximum range
@@ -87,7 +82,7 @@ public class JourneyController {
     /**
      * Used to contain stops along route
      */
-    @FXML 
+    @FXML
     private VBox journeyChargerTable;
 
     /**
@@ -123,10 +118,6 @@ public class JourneyController {
      * Boolean if there is an error with the routing distances
      */
     private boolean distanceError = false;
-    /**
-     * Top level container for journey window
-     */
-    private Stage stage;
 
     /**
      * Garage manager for selecting vehicle
@@ -175,20 +166,19 @@ public class JourneyController {
 
     /**
      * Gets the logic manager for journeys
+     * 
      * @return journeyManager
      */
     public JourneyManager getManager() {
         return this.journeyManager;
     }
 
-    
     /**
      * Initialize the window
      *
      * @param stage Top level container for this window
      */
     public void init(Stage stage) {
-        this.stage = stage;
         journeyManager = new JourneyManager();
         loadMapView(stage);
         populateVehicles();
@@ -197,6 +187,7 @@ public class JourneyController {
 
     /**
      * Loads the map view into the main part of the main window
+     * 
      * @param stage stage to load with
      */
     private void loadMapView(Stage stage) {
@@ -216,12 +207,12 @@ public class JourneyController {
      * Sets an action listener for the range slider
      */
     private void configureSlider() {
-        rangeSlider.valueChangingProperty().addListener((observableValue, wasChanging, changing)
-                -> {
-            if (!rangeSlider.isValueChanging()) {
-                sliderUpdated();
-            }
-        });
+        rangeSlider.valueChangingProperty().addListener(
+                (observableValue, wasChanging, changing) -> {
+                    if (!rangeSlider.isValueChanging()) {
+                        sliderUpdated();
+                    }
+                });
     }
 
     /**
@@ -316,7 +307,7 @@ public class JourneyController {
      */
     public void addCharger(Charger charger) {
 
-        //TODO decide on maximum number of stops in a journey and implement handle
+        // TODO decide on maximum number of stops in a journey and implement handle
         journeyManager.addCharger(charger);
         mapController.addChargersOnMap();
         resetChargerDisplay();
@@ -378,6 +369,7 @@ public class JourneyController {
     /**
      * Button method which removes the charger/location from table
      * and removes from the journey
+     * 
      * @param e the event of button being clicked
      */
     public void removeFromDisplay(ActionEvent e) {
@@ -390,7 +382,7 @@ public class JourneyController {
         }
         journeyManager.checkDistanceBetweenChargers();
         mapController.addRouteToScreen();
-    } 
+    }
 
     /**
      * Saves journey to database
@@ -422,7 +414,7 @@ public class JourneyController {
         garageManager.getAllVehicles();
         vehicles.getItems().clear();
 
-        //TODO once favourites is in; load favourite as text, else this
+        // TODO once favourites is in; load favourite as text, else this
         vehicles.setText("Add Vehicle...");
 
         MenuItem custom = new MenuItem("Add Vehicle...");
@@ -442,6 +434,7 @@ public class JourneyController {
     /**
      * Configures the vehicles MenuItem
      * Adds text to vehicles MenuButton and selects vehicle
+     * 
      * @param e the event of menu item being selected
      */
     public void configureVehicleItem(ActionEvent e) {
@@ -460,7 +453,6 @@ public class JourneyController {
             }
         }
     }
-
 
     /**
      * Switch to the vehicle screen
@@ -505,7 +497,6 @@ public class JourneyController {
             e.printStackTrace();
         }
     }
-
 
     /**
      * Handles updates of vehicle range slider
