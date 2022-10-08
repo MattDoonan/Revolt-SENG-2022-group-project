@@ -1,29 +1,26 @@
 package seng202.team3.testfx;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.testfx.api.FxRobotException;
 
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import org.testfx.util.WaitForAsyncUtils;
-import seng202.team3.data.database.ComparisonType;
-import seng202.team3.data.database.QueryBuilder;
-import seng202.team3.data.database.QueryBuilderImpl;
+import javafx.stage.Window;
 import seng202.team3.data.database.SqlInterpreter;
-import seng202.team3.data.entity.*;
+import seng202.team3.data.entity.Coordinate;
+import seng202.team3.data.entity.PermissionLevel;
+import seng202.team3.data.entity.User;
 import seng202.team3.gui.ChargerController;
-import seng202.team3.gui.MenuController;
 import seng202.team3.logic.GeoLocationHandler;
 import seng202.team3.logic.UserManager;
 
@@ -34,10 +31,6 @@ import seng202.team3.logic.UserManager;
  * @version 1.0.0, Sep 22
  */
 public class AddChargerPageTestFx extends TestFxBase {
-    /**
-     * Logger
-     */
-    private static final Logger logManager = LogManager.getLogger();
     private static SqlInterpreter database;
     private ChargerController controller;
 
@@ -75,12 +68,26 @@ public class AddChargerPageTestFx extends TestFxBase {
         stage.show();
     }
 
+    @BeforeEach
+    public void reset() {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                List<Window> ws = Stage.getWindows();
+                while (ws.size() > 1) {
+                    ws.get(ws.size() - 1).hide();
+                }
+            }
+        });
+    }
+
     /**
      * Checks if adding a charger without filling out throws errors
      */
     @Test
     public void addChargerFail() {
-        GeoLocationHandler.setCoordinate(new Coordinate(1.1, 2.3, -43.60, 172.572), "Trial location");
+        GeoLocationHandler.setCoordinate(new Coordinate(1.1, 2.3, -43.60, 172.572),
+                "Trial location");
         clickOn("#saveButton");
         clickOn("#okay");
     }
@@ -90,7 +97,8 @@ public class AddChargerPageTestFx extends TestFxBase {
      */
     @Test
     public void addChargerSuccess() {
-        GeoLocationHandler.setCoordinate(new Coordinate(1.1, 2.3, -43.60, 172.572), "Trial location");
+        GeoLocationHandler.setCoordinate(new Coordinate(1.1, 2.3, -43.60, 172.572),
+                "Trial location");
         clickOn("#name");
         write("Trial");
         clickOn("#operator");
@@ -112,23 +120,18 @@ public class AddChargerPageTestFx extends TestFxBase {
         clickOn("#statusField");
         write("operative");
         clickOn("#saveConnectors");
-        clickOn("#lat");
+        ((TextField) this.find("#lat")).clear();
+        ((TextField) this.find("#lon")).clear();
+        doubleClickOn("#lat");
         write("-53.00");
-        clickOn("#lon");
+        doubleClickOn("#lon");
         write("123.0");
         clickOn("#saveButton");
 
-        ArrayList<Object> returnedChargers = new ArrayList<>();
-        try {
-            List<Object> chargers = database.readData(new QueryBuilderImpl().withSource("charger")
-                    .withFilter("name", "Trial", ComparisonType.EQUAL).build(), Charger.class);
-            returnedChargers.addAll(chargers);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        //TODO find a way to assert across TestFX, Java Application and JUnit threads! -_-
+        // Check for no error popup
+        assertThrows(FxRobotException.class, () -> {
+            clickOn("#prompt");
+        });
     }
 
 }
