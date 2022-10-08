@@ -1,12 +1,8 @@
 package seng202.team3.testfx;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.testfx.api.FxRobotException;
-
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -190,34 +186,17 @@ public class MainSearchFilterTestFx extends TestFxBase {
         assertTrue(isValid);
     }
 
-    /**
-     * Can't test on other file
-     *
-     */
     @Test
-    public void carRangeNotExistOnGuest() throws Exception {
-        UserManager.setUser(UserManager.getGuest());
-        try {
-            clickOn("#batteryPercent");
-            fail("Should not exist");
-        } catch (FxRobotException e) {
-            Assertions.assertTrue(true);
+    public void distanceFilterDisables() {
+        boolean isValid = true;
+        int total;
+        total = controller.getManager().getCloseChargerData().size();
+        clickOn("#executeSearch");
+        controller.getManager().resetQuery();
+        controller.getManager().makeAllChargers();
+        if (total != controller.getManager().getCloseChargerData().size()) {
+            isValid = false;
         }
+        assertTrue(isValid);
     }
-
-    // TODO: fix test
-    // @Test
-    // public void distanceFilterDisables() {
-    // boolean isValid = true;
-    // int total;
-
-    // clickOn("#executeSearch");
-    // total = controller.getManager().getCloseChargerData().size();
-    // controller.getManager().resetQuery();
-    // controller.getManager().makeAllChargers();
-    // if (total != controller.getManager().getCloseChargerData().size()) {
-    // isValid = false;
-    // }
-    // assertTrue(isValid);
-    // }
 }

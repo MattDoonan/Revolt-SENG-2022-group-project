@@ -1,14 +1,13 @@
 package seng202.team3.gui;
 
 import java.io.BufferedInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
@@ -24,6 +23,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -71,12 +71,6 @@ public class VehicleUpdateController {
     private TextField maxRangeText;
 
     /**
-     * The textfield for the vehicle's current charge
-     */
-    @FXML
-    private TextField currChargeText;
-
-    /**
      * Lable to display the name of the chosen vehicle image
      */
     @FXML
@@ -86,13 +80,19 @@ public class VehicleUpdateController {
      * Lable to display the currently added connections
      */
     @FXML
-    private ListView<HBox> addedConnections;
+    private ListView<GridPane> addedConnections;
 
     /**
      * Dropdown of the connector types
      */
     @FXML
     private ComboBox<String> connectorType;
+
+    /**
+     * Button to save a connector
+     */
+    @FXML
+    private Button addConnectionBtn;
 
     /**
      * Button to save the changes to the database
@@ -224,8 +224,6 @@ public class VehicleUpdateController {
      */
     private Tooltip connectorError = new Tooltip();
 
-
-
     /**
      * Initialises the Vehicle editing
      */
@@ -260,14 +258,15 @@ public class VehicleUpdateController {
         Vehicle vehicle;
 
         if (selectedVehicle != null) {
-            if (selectedImg != null) {
-                selectedVehicle.setImgPath(IMGPATH + selectedImg);
-            } else {
-                selectedVehicle.setImgPath(IMGPATH + "null");
-            }
             vehicle = selectedVehicle;
         } else {
             vehicle = new Vehicle();
+        }
+
+        if (selectedImg != null) {
+            vehicle.setImgPath(IMGPATH + selectedImg);
+        } else {
+            vehicle.setImgPath(IMGPATH + "car_one.png");
         }
 
         Boolean fail = checkForErrors();
@@ -280,7 +279,6 @@ public class VehicleUpdateController {
             vehicle.setMake(makeText.getText());
             vehicle.setModel(modelText.getText());
             vehicle.setMaxRange(Integer.parseInt(maxRangeText.getText()));
-            vehicle.setBatteryPercent(100.0);
             vehicle.setConnectors(connections);
             manage.saveVehicle(vehicle);
             makeText.setText(null);
@@ -298,6 +296,14 @@ public class VehicleUpdateController {
     }
 
     /**
+     * Enables the addConnector button
+     */
+    @FXML
+    public void enableConnectorBtn() {
+        addConnectionBtn.setDisable(false);
+    }
+
+    /**
      * Checks if there are any errors when a user adds/updates a vehicle.
      * 
      * @return whether there were any errors
@@ -311,7 +317,6 @@ public class VehicleUpdateController {
         rangeError.setId("rangeErr");
         connectorError.hide();
         connectorError.setId("connErr");
-
 
         makeText.setStyle(VALID_STYLE);
         modelText.setStyle(VALID_STYLE);
@@ -330,11 +335,11 @@ public class VehicleUpdateController {
             makeText.setTooltip(makeError);
             makeText.setStyle(INVALID_STYLE);
             makeError.show(makeText,
-                pointMake.getX() + makeText.getScene().getX() 
-                    + makeText.getScene().getWindow().getX() 
-                    + makeText.getWidth() + 25,
-                pointMake.getY() + makeText.getScene().getY() 
-                    + makeText.getScene().getWindow().getY());
+                    pointMake.getX() + makeText.getScene().getX()
+                            + makeText.getScene().getWindow().getX()
+                            + makeText.getWidth() + 25,
+                    pointMake.getY() + makeText.getScene().getY()
+                            + makeText.getScene().getWindow().getY());
             fail = true;
         }
         if (modelText.getText().isEmpty()) {
@@ -342,11 +347,11 @@ public class VehicleUpdateController {
             modelText.setStyle(INVALID_STYLE);
             modelText.setTooltip(modelError);
             modelError.show(modelText,
-                pointModel.getX() + modelText.getScene().getX() 
-                    + modelText.getScene().getWindow().getX() 
-                    + modelText.getWidth() + 25,
-                pointModel.getY() + modelText.getScene().getY() 
-                    + modelText.getScene().getWindow().getY());
+                    pointModel.getX() + modelText.getScene().getX()
+                            + modelText.getScene().getWindow().getX()
+                            + modelText.getWidth() + 25,
+                    pointModel.getY() + modelText.getScene().getY()
+                            + modelText.getScene().getWindow().getY());
             fail = true;
         }
         Boolean rangeFlag = false;
@@ -367,11 +372,11 @@ public class VehicleUpdateController {
         if (Boolean.TRUE.equals(rangeFlag)) {
             maxRangeText.setStyle(INVALID_STYLE);
             rangeError.show(maxRangeText,
-                pointRange.getX() + maxRangeText.getScene().getX() 
-                    + maxRangeText.getScene().getWindow().getX() 
-                    + maxRangeText.getWidth() + 25,
-                pointRange.getY() + maxRangeText.getScene().getY() 
-                    + maxRangeText.getScene().getWindow().getY());
+                    pointRange.getX() + maxRangeText.getScene().getX()
+                            + maxRangeText.getScene().getWindow().getX()
+                            + maxRangeText.getWidth() + 25,
+                    pointRange.getY() + maxRangeText.getScene().getY()
+                            + maxRangeText.getScene().getWindow().getY());
             fail = true;
         }
 
@@ -380,11 +385,11 @@ public class VehicleUpdateController {
             connectorType.setStyle(INVALID_STYLE);
             connectorType.setTooltip(connectorError);
             connectorError.show(connectorType,
-                pointConn.getX() + connectorType.getScene().getX() 
-                    + connectorType.getScene().getWindow().getX() 
-                    + connectorType.getWidth() + 25,
-                pointConn.getY() + connectorType.getScene().getY() 
-                    + connectorType.getScene().getWindow().getY());
+                    pointConn.getX() + connectorType.getScene().getX()
+                            + connectorType.getScene().getWindow().getX()
+                            + connectorType.getWidth() + 25,
+                    pointConn.getY() + connectorType.getScene().getY()
+                            + connectorType.getScene().getWindow().getY());
             fail = true;
         }
 
@@ -408,12 +413,15 @@ public class VehicleUpdateController {
                     button.setId(connector.getText());
                     button.setOnAction(this::deleteConnection);
                     Label label = new Label(CONN_PROMPT_TEXT + connector.getText());
-                    HBox hbox = new HBox();
-                    Region filler = new Region();
-                    HBox.setHgrow(filler, Priority.ALWAYS);
-                    hbox.getChildren().addAll(label, filler, button);
-                    connections.add(connector.getText());
-                    addedConnections.getItems().add(hbox);
+                    label.setMaxWidth(190);
+                    label.setMinWidth(190);
+                    GridPane gridpane = new GridPane();
+                    gridpane.add(label, 1, 0);
+                    gridpane.add(button, 2, 0);
+                    gridpane.getColumnConstraints().add(new ColumnConstraints(0));
+                    gridpane.getColumnConstraints().add(new ColumnConstraints(210));
+                    GridPane.setHalignment(button, HPos.CENTER);
+                    addedConnections.getItems().add(gridpane);
 
                     Stage connectorStage = (Stage) save.getScene().getWindow();
                     connectorStage.close();
@@ -423,17 +431,22 @@ public class VehicleUpdateController {
                 connectorPopup.setTitle("Other Connector");
                 connectorPopup.setScene(new Scene(root, 300, 100));
             } else {
-
                 connections.add(connectorType.getValue());
                 Button button = new Button(DELETE_BUTTON_TEXT);
                 button.setId(connectorType.getValue());
                 button.setOnAction(this::deleteConnection);
                 Label label = new Label(CONN_PROMPT_TEXT + connectorType.getValue());
-                HBox hbox = new HBox();
-                Region filler = new Region();
-                HBox.setHgrow(filler, Priority.ALWAYS);
-                hbox.getChildren().addAll(label, filler, button);
-                addedConnections.getItems().add(hbox);
+                label.setMaxWidth(190);
+                label.setMinWidth(190);
+
+                GridPane gridpane = new GridPane();
+                gridpane.add(label, 1, 0);
+                gridpane.add(button, 2, 0);
+                gridpane.getColumnConstraints().add(new ColumnConstraints(0));
+                gridpane.getColumnConstraints().add(new ColumnConstraints(210));
+                GridPane.setHalignment(button, HPos.RIGHT);
+                GridPane.setHalignment(label, HPos.LEFT);
+                addedConnections.getItems().add(gridpane);
 
             }
         }
@@ -455,6 +468,7 @@ public class VehicleUpdateController {
                 connectorPopup.showAndWait();
             } finally {
                 connectorPopup = new Stage();
+                addConnectionBtn.setDisable(true);
             }
         }
     }
@@ -578,7 +592,6 @@ public class VehicleUpdateController {
             makeText.setText(vehicle.getMake());
             modelText.setText(vehicle.getModel());
             maxRangeText.setText(Integer.toString(vehicle.getMaxRange()));
-            currChargeText.setText(vehicle.getBatteryPercent().toString());
             imgName.setText(vehicle.getImgPath().replace(IMGPATH, ""));
             selectedImg = vehicle.getImgPath().replace(IMGPATH, "");
             connections = vehicle.getConnectors();
@@ -591,7 +604,13 @@ public class VehicleUpdateController {
                 Region filler = new Region();
                 HBox.setHgrow(filler, Priority.ALWAYS);
                 hbox.getChildren().addAll(label, filler, button);
-                addedConnections.getItems().add(hbox);
+
+                GridPane gridpane = new GridPane();
+                gridpane.add(label, 1, 0);
+                gridpane.add(button, 2, 0);
+                GridPane.setHalignment(button, HPos.RIGHT);
+
+                addedConnections.getItems().add(gridpane);
             }
         }
     }

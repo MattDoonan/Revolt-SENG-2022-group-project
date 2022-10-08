@@ -35,7 +35,6 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
          <Label fx:id="inputBox" />
@@ -60,15 +59,15 @@
                <padding>
                   <Insets left="7.0" />
                </padding></Label>
-            <Label text="Image:" GridPane.rowIndex="4">
+            <Label text="Image:" GridPane.rowIndex="3">
                <font>
                   <Font size="14.0" />
                </font>
                <padding>
                   <Insets left="7.0" />
                </padding></Label>
-            <Button fx:id="selectImgBtn" mnemonicParsing="false" onAction="#selectImg" text="Select Image" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <Label text="Connections:" GridPane.rowIndex="6">
+            <Button fx:id="selectImgBtn" mnemonicParsing="false" onAction="#selectImg" text="Select Image" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Label text="Connections:" GridPane.rowIndex="5">
                <font>
                   <Font size="14.0" />
                </font>
@@ -76,7 +75,7 @@
                   <Insets left="7.0" />
                </padding>
             </Label>
-            <ComboBox fx:id="connectorType" prefHeight="26.0" prefWidth="150.0" promptText="Connector Type" GridPane.columnIndex="1" GridPane.rowIndex="6">
+            <ComboBox fx:id="connectorType" onAction="#enableConnectorBtn" prefHeight="26.0" prefWidth="150.0" promptText="Connector Type" GridPane.columnIndex="1" GridPane.rowIndex="5">
                <items>
                   <FXCollections fx:factory="observableArrayList">
                      <String fx:id="Type_1_Teth" fx:value="Type 1 Tethered" />
@@ -90,8 +89,8 @@
                   </FXCollections>
                </items>
             </ComboBox>
-            <Button fx:id="addConnectionBtn" mnemonicParsing="false" onAction="#launchConnector" text="Add Connection" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-            <Label fx:id="imgName" prefHeight="26.0" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <Button fx:id="addConnectionBtn" disable="true" mnemonicParsing="false" onAction="#launchConnector" text="Add Connection" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <Label fx:id="imgName" prefHeight="26.0" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <TextField fx:id="makeText" promptText="Make" GridPane.columnIndex="1" />
             <TextField fx:id="modelText" prefHeight="26.0" prefWidth="150.0" promptText="Model" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <TextField fx:id="maxRangeText" promptText="Maximum range (km)" GridPane.columnIndex="1" GridPane.rowIndex="2" />
@@ -110,25 +109,16 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label text="*" textFill="RED" GridPane.rowIndex="6">
+            <Label text="*" textFill="RED" GridPane.rowIndex="5">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label text="Current Charge:" GridPane.rowIndex="3">
-               <font>
-                  <Font size="14.0" />
-               </font>
-               <padding>
-                  <Insets left="7.0" />
-               </padding>
-            </Label>
-            <TextField fx:id="currChargeText" promptText="Current charge (%)" GridPane.columnIndex="1" GridPane.rowIndex="3" />
          </children>
       </GridPane>
       <Label fx:id="addedConnections1" layoutX="161.0" layoutY="405.0" prefHeight="88.0" prefWidth="150.0" />
       <Button fx:id="saveChanges" layoutX="122.0" layoutY="436.0" mnemonicParsing="false" onAction="#saveChanges" text="Save Changes" />
-      <ListView fx:id="addedConnections" layoutX="19.0" layoutY="332.0" prefHeight="88.0" prefWidth="296.0" />
+      <ListView fx:id="addedConnections" layoutX="19.0" layoutY="320.0" prefHeight="100.0" prefWidth="296.0" />
       <HBox fx:id="addedConnections3" layoutX="272.0" layoutY="313.0" prefHeight="100.0" prefWidth="257.0" />
     </children>
 </AnchorPane>
