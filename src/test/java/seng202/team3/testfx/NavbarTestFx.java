@@ -9,6 +9,9 @@ import java.util.stream.Stream;
 
 import javax.management.InstanceAlreadyExistsException;
 
+import javafx.geometry.HorizontalDirection;
+import javafx.geometry.VerticalDirection;
+import javafx.scene.control.Button;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -23,6 +26,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
@@ -52,7 +56,7 @@ public class NavbarTestFx extends TestFxBase {
         SqlInterpreter.initialiseInstanceWithUrl(
                 "jdbc:sqlite:./target/test-classes/test_database.db");
         SqlInterpreter.getInstance().addChargerCsvToData("csvtest/filtering");
-        user = new User("test@gmail.com", "MrTest", PermissionLevel.ADMIN);
+        user = new User("test@gmail.com", "MrTest", PermissionLevel.CHARGEROWNER);
         user.setUserid(2);
         password = "1234";
         SqlInterpreter.getInstance().writeUser(user, UserManager.encryptThisString(password));
@@ -173,5 +177,27 @@ public class NavbarTestFx extends TestFxBase {
         clickOn("#loginBtn");
         clickOn("#accountPage");
         clickOn("#menuButton");
+    }
+
+    @Test
+    public void deleteUserTest() throws IOException {
+        clickOn("#loginSignout");
+        clickOn("#loginSignout");
+        clickOn("#loginEmailField");
+        write(user.getAccountName());
+        clickOn("#loginPasswordField");
+        write(password);
+        clickOn("#loginBtn");
+        clickOn("#accountPage");
+        clickOn("#accountPage");
+        clickOn("#accountName");
+        clickOn("#editAccountButton");
+        clickOn("#delete");
+        clickOn("#confirm");
+        Button b = (Button) find("#loginSignout");
+        Assertions.assertTrue(b.getText() == "Login");
+        List<Object> users =  SqlInterpreter.getInstance().readData(new QueryBuilderImpl().withSource("user")
+                .withFilter("email", user.getEmail(), ComparisonType.EQUAL).build(), User.class);
+        Assertions.assertTrue(users.size() == 0);
     }
 }
