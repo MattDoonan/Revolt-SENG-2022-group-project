@@ -250,7 +250,6 @@ public class GarageController {
             default:
                 break;
         }
-        // System.out.println("currVehicle: " + currVehicle.toString());
 
         manage.saveCurrVehicle(currVehicle);
         refresh();
@@ -461,9 +460,6 @@ public class GarageController {
      * @param index     index of the vehicle to display
      */
     public void populateDisplays(String display, ImageView imageview, int index) {
-        // for (Vehicle vehicle : vehicleData) {
-        //     System.out.println(vehicle.toString());
-        // }
         if (vehicleData.size() > 0) {
             switch (display) {
                 case "one":
@@ -475,8 +471,12 @@ public class GarageController {
                                     + " km\n"
                                     + "Connections: "
                                     + vehicleData.get(index).getConnectors().toString());
-                    currSelectedOne.setText("Currently selected: " 
-                        + vehicleData.get(index).getCurrVehicle());
+                    if (vehicleData.get(index).getCurrVehicle()) {
+                        currSelectedOne.setText("Currently selected");
+                    } else {
+                        currSelectedOne.setText("");
+                    }
+
                     break;
                 case "two":
                     makeModelTwo.setText(vehicleData.get(index).getMake() + " "
@@ -487,8 +487,11 @@ public class GarageController {
                                     + " km\n"
                                     + "Connections: "
                                     + vehicleData.get(index).getConnectors().toString());
-                    currSelectedTwo.setText("Currently selected: " 
-                        + vehicleData.get(index).getCurrVehicle());
+                    if (vehicleData.get(index).getCurrVehicle()) {
+                        currSelectedTwo.setText("Currently selected");
+                    } else {
+                        currSelectedTwo.setText("");
+                    }
                     break;
                 case "three":
                     makeModelThree.setText(vehicleData.get(index).getMake() + " "
@@ -500,8 +503,11 @@ public class GarageController {
                                     + " km\n"
                                     + "Connections: "
                                     + vehicleData.get(index).getConnectors().toString());
-                    currSelectedThree.setText("Currently selected: " 
-                        + vehicleData.get(index).getCurrVehicle());
+                    if (vehicleData.get(index).getCurrVehicle()) {
+                        currSelectedThree.setText("Currently selected");
+                    } else {
+                        currSelectedThree.setText("");
+                    }
                     break;
                 default:
                     break;

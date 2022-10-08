@@ -1,15 +1,5 @@
 package seng202.team3.data.entity;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import seng202.team3.data.database.ComparisonType;
-import seng202.team3.data.database.QueryBuilder;
-import seng202.team3.data.database.QueryBuilderImpl;
-import seng202.team3.data.database.SqlInterpreter;
-
 /**
  * Stores information about Users
  *
@@ -48,8 +38,6 @@ public class User {
         this.accountName = accountName;
         this.level = level;
         this.carbonSaved = 0;
-        setVehicle();
-        // System.out.println(vehicle.toString());
     }
 
     /**
@@ -147,29 +135,6 @@ public class User {
      */
     public PermissionLevel getLevel() {
         return level;
-    }
-
-    /**
-     * Gets the user's current vehicle from the database and sets it
-     */
-    public void setVehicle() {
-        QueryBuilder vehicleDataQuery = new QueryBuilderImpl().withSource("vehicle")
-                .withFilter("owner", Integer.toString(getUserid()), ComparisonType.EQUAL);
-        try {
-            List<Vehicle> vehicleList = new ArrayList<>();
-            for (Object o : SqlInterpreter.getInstance()
-                    .readData(vehicleDataQuery.build(), Vehicle.class)) {
-                vehicleList.add((Vehicle) o);
-            }
-            ObservableList<Vehicle> vehicleData = FXCollections.observableList(vehicleList);
-            for (Vehicle vehicle : vehicleData) {
-                if (vehicle.getCurrVehicle() == true) {
-                    this.vehicle = vehicle;
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     /**

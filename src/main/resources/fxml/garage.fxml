@@ -25,7 +25,7 @@
             <TextArea fx:id="makeModelTwo" editable="false" layoutX="1.0" layoutY="6.0" prefHeight="51.0" prefWidth="258.0" stylesheets="@textarea.css" wrapText="true" />
             <TextArea fx:id="carDetailsTwo" editable="false" layoutX="1.0" layoutY="188.0" prefHeight="116.0" prefWidth="258.0" stylesheets="@textarea.css" wrapText="true" />
             <TextArea fx:id="currSelectedTwo" layoutX="1.0" layoutY="304.0" prefHeight="58.0" prefWidth="258.0" stylesheets="@textarea.css" />
-            <Button fx:id="currEvTwo" layoutX="14.0" layoutY="376.0" mnemonicParsing="false" onAction="#setCurr" text="Set as Current Vehicle" />
+            <Button fx:id="currEvTwo" layoutX="14.0" layoutY="376.0" mnemonicParsing="false" onAction="#setCurr" text="Select" />
          </children>
       </AnchorPane>
       <AnchorPane fx:id="anchorTwo1" layoutX="308.0" layoutY="189.0" prefHeight="416.0" prefWidth="253.0" style="-fx-border-color: black;">
@@ -36,7 +36,7 @@
             <TextArea fx:id="makeModelOne" editable="false" layoutX="1.0" layoutY="6.0" prefHeight="51.0" prefWidth="254.0" stylesheets="@textarea.css" wrapText="true" />
             <TextArea fx:id="carDetailsOne" editable="false" layoutX="1.0" layoutY="188.0" prefHeight="116.0" prefWidth="258.0" stylesheets="@textarea.css" wrapText="true" />
             <TextArea fx:id="currSelectedOne" layoutX="1.0" layoutY="304.0" prefHeight="58.0" prefWidth="258.0" stylesheets="@textarea.css" />
-            <Button fx:id="currEvOne" layoutX="14.0" layoutY="376.0" mnemonicParsing="false" onAction="#setCurr" text="Set as Current Vehicle" />
+            <Button fx:id="currEvOne" layoutX="14.0" layoutY="376.0" mnemonicParsing="false" onAction="#setCurr" text="Select" />
          </children>
       </AnchorPane>
       <AnchorPane fx:id="anchorTwo2" layoutX="930.0" layoutY="189.0" prefHeight="416.0" prefWidth="262.0" style="-fx-border-color: black;">
@@ -47,7 +47,7 @@
             <TextArea fx:id="makeModelThree" editable="false" layoutX="1.0" layoutY="6.0" prefHeight="51.0" prefWidth="258.0" stylesheets="@textarea.css" wrapText="true" />
             <TextArea fx:id="carDetailsThree" editable="false" layoutX="1.0" layoutY="188.0" prefHeight="116.0" prefWidth="258.0" stylesheets="@textarea.css" wrapText="true" />
             <TextArea fx:id="currSelectedThree" layoutX="2.0" layoutY="304.0" prefHeight="58.0" prefWidth="258.0" stylesheets="@textarea.css" />
-            <Button fx:id="currEvThree" layoutX="14.0" layoutY="376.0" mnemonicParsing="false" onAction="#setCurr" text="Set as Current Vehicle" />
+            <Button fx:id="currEvThree" layoutX="14.0" layoutY="376.0" mnemonicParsing="false" onAction="#setCurr" text="Select" />
          </children>
       </AnchorPane>
       <Button fx:id="openUpdate" layoutX="713.0" layoutY="626.0" mnemonicParsing="false" onAction="#launchUpdate" text="Add New" />

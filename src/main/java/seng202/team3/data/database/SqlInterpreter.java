@@ -7,11 +7,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.math.BigInteger;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -123,7 +120,7 @@ public class SqlInterpreter implements DataReader {
                     new User(
                             "example" + i + "@fake.com", owners.get(i),
                             PermissionLevel.CHARGEROWNER),
-                            UserManager.encryptThisString("demo"));
+                    UserManager.encryptThisString("demo"));
         }
 
         for (int i = 0; i < chargersToImport.size(); i++) {

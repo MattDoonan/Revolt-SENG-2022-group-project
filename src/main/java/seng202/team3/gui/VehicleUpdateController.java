@@ -12,7 +12,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -78,7 +77,7 @@ public class VehicleUpdateController {
      */
     @FXML
     private ComboBox<String> connectorType;
-    
+
     /**
      * Button to save a connector
      */
@@ -275,16 +274,10 @@ public class VehicleUpdateController {
                     button.setId(connector.getText());
                     button.setOnAction(e -> deleteConnection(e));
                     Label label = new Label("Connection: " + connector.getText());
-                    // HBox hbox = new HBox();
-                    // Region filler = new Region();
-                    // HBox.setHgrow(filler, Priority.ALWAYS);
-                    // hbox.getChildren().addAll(label, filler, button);
-                    // connections.add(connector.getText());
-                    // addedConnections.getItems().add(hbox);
-                    
+
                     GridPane gridpane = new GridPane();
                     gridpane.add(label, 1, 0);
-                    gridpane.add(button, 2, 0); 
+                    gridpane.add(button, 2, 0);
                     GridPane.setHalignment(button, HPos.CENTER);
                     addedConnections.getItems().add(gridpane);
 
@@ -302,20 +295,10 @@ public class VehicleUpdateController {
                 button.setId(connectorType.getValue());
                 button.setOnAction(e -> deleteConnection(e));
                 Label label = new Label("Connection: " + connectorType.getValue());
-                Label label2 = new Label("gfgsgsgs: ");
-                // HBox hbox = new HBox();
-                Region filler = new Region();
-                // HBox.setHgrow(filler, Priority.ALWAYS);
-                // hbox.getChildren().addAll(label, filler, button);
 
                 GridPane gridpane = new GridPane();
                 gridpane.add(label, 1, 0);
-                // GridPane.setHalignment(button, HPos.RIGHT);
-                // button.setAlignment(Pos.CENTER_RIGHT);
-
-                gridpane.add(button, 2, 0); 
-                gridpane.add(label2, 2, 0); 
-                
+                gridpane.add(button, 2, 0);
 
                 addedConnections.getItems().add(gridpane);
 
@@ -480,10 +463,9 @@ public class VehicleUpdateController {
                 hbox.getChildren().addAll(label, filler, button);
                 // addedConnections.getItems().add(hbox);
 
-                
                 GridPane gridpane = new GridPane();
                 gridpane.add(label, 1, 0);
-                gridpane.add(button, 2, 0); 
+                gridpane.add(button, 2, 0);
                 GridPane.setHalignment(button, HPos.RIGHT);
 
                 addedConnections.getItems().add(gridpane);
