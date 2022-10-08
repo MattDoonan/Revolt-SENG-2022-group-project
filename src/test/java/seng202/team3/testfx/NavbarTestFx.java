@@ -178,26 +178,4 @@ public class NavbarTestFx extends TestFxBase {
         clickOn("#accountPage");
         clickOn("#menuButton");
     }
-
-    @Test
-    public void deleteUserTest() throws IOException {
-        clickOn("#loginSignout");
-        clickOn("#loginSignout");
-        clickOn("#loginEmailField");
-        write(user.getAccountName());
-        clickOn("#loginPasswordField");
-        write(password);
-        clickOn("#loginBtn");
-        clickOn("#accountPage");
-        clickOn("#accountPage");
-        clickOn("#accountName");
-        clickOn("#editAccountButton");
-        clickOn("#delete");
-        clickOn("#confirm");
-        Button b = (Button) find("#loginSignout");
-        Assertions.assertTrue(b.getText() == "Login");
-        List<Object> users =  SqlInterpreter.getInstance().readData(new QueryBuilderImpl().withSource("user")
-                .withFilter("email", user.getEmail(), ComparisonType.EQUAL).build(), User.class);
-        Assertions.assertTrue(users.size() == 0);
-    }
 }
