@@ -244,9 +244,9 @@ public class MainController {
         } else {
             garageManager = new GarageManager();
             garageManager.resetQuery();
-            garageManager.getAllVehicles();
-            if (!garageManager.getData().isEmpty()) {
-                changeDistance.setValue(garageManager.getData().get(0).getMaxRange());
+            if (garageManager.getSelectedVehicle() != null) {
+                batteryPercent.setVisible(true);
+                changeDistance.setValue(garageManager.getSelectedVehicle().getMaxRange());
             } else {
                 batteryPercent.setVisible(false);
             }
