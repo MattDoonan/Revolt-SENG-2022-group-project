@@ -268,7 +268,6 @@ public class GarageController {
             manage.saveCurrVehicle(vehicle);
         }
         String source = ((Button) event.getSource()).getId();
-        // System.out.println("source: " + source);
         Vehicle currVehicle = new Vehicle();
         switch (source) {
             case "currEvOne":
@@ -349,8 +348,9 @@ public class GarageController {
             editPopup.setResizable(false);
             editPopup.setTitle("Vehicle Information");
             editPopup.initModality(Modality.APPLICATION_MODAL);
+            VehicleUpdateController controller = vehicleEdit.getController();
+            controller.init();
             if (vehicle != null) {
-                VehicleUpdateController controller = vehicleEdit.getController();
                 controller.displayInfo(vehicle);
             }
         } catch (IOException e) {

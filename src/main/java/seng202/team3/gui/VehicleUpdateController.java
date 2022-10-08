@@ -18,7 +18,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -164,14 +163,24 @@ public class VehicleUpdateController {
     private static final String IMGPATH = "/images/";
 
     /**
-     * Error message for invalid make
+     * id for invalid make
      */
-    private static final String MAKE_ERROR = "Vehicle make required.";
+    private static final String MAKE_ERROR = "makeError";
 
     /**
-     * Error message for invalid model
+     * id for invalid model
      */
-    private static final String MODEL_ERROR = "Vehicle model required.";
+    private static final String MODEL_ERROR = "modelError";
+
+    /**
+     * id for invalid range
+     */
+    private static final String RANGE_ERROR = "rangeError";
+
+    /**
+     * id for invalid connector
+     */
+    private static final String CONNECTOR_ERROR = "connectorError";
 
     /**
      * Delete button text
@@ -205,30 +214,19 @@ public class VehicleUpdateController {
     private Object prevController = null;
 
     /**
-     * Error tooltip for the make field
+     * Stores all of the tooltips used for error messages
      */
-    private Tooltip makeError = new Tooltip();
-
-    /**
-     * Error tooltip for the model field
-     */
-    private Tooltip modelError = new Tooltip();
-
-    /**
-     * Error tooltip for the range field
-     */
-    private Tooltip rangeError = new Tooltip();
-
-    /**
-     * Error tooltip for the connector field
-     */
-    private Tooltip connectorError = new Tooltip();
+    private ErrorHandler errors = new ErrorHandler();
 
     /**
      * Initialises the Vehicle editing
      */
     public VehicleUpdateController() {
         // Unused
+        errors.add(MAKE_ERROR, "Vehicle make required.");
+        errors.add(MODEL_ERROR, "Vehicle model required.");
+        errors.add(RANGE_ERROR, "Max range required");
+        errors.add(CONNECTOR_ERROR, "A vehicle must have at least one connector.");
     }
 
     /**
@@ -309,14 +307,7 @@ public class VehicleUpdateController {
      * @return whether there were any errors
      */
     public Boolean checkForErrors() {
-        makeError.hide();
-        makeError.setId("makeErr");
-        modelError.hide();
-        modelError.setId("modelErr");
-        rangeError.hide();
-        rangeError.setId("rangeErr");
-        connectorError.hide();
-        connectorError.setId("connErr");
+        errors.hideAll();
 
         makeText.setStyle(VALID_STYLE);
         modelText.setStyle(VALID_STYLE);
@@ -331,10 +322,9 @@ public class VehicleUpdateController {
         Boolean fail = false;
 
         if (makeText.getText().isEmpty()) {
-            makeError.setText(MAKE_ERROR);
-            makeText.setTooltip(makeError);
+            makeText.setTooltip(errors.get(MAKE_ERROR));
             makeText.setStyle(INVALID_STYLE);
-            makeError.show(makeText,
+            errors.get(MAKE_ERROR).show(makeText,
                     pointMake.getX() + makeText.getScene().getX()
                             + makeText.getScene().getWindow().getX()
                             + makeText.getWidth() + 25,
@@ -343,10 +333,9 @@ public class VehicleUpdateController {
             fail = true;
         }
         if (modelText.getText().isEmpty()) {
-            modelError.setText(MODEL_ERROR);
             modelText.setStyle(INVALID_STYLE);
-            modelText.setTooltip(modelError);
-            modelError.show(modelText,
+            modelText.setTooltip(errors.get(MODEL_ERROR));
+            errors.get(MODEL_ERROR).show(modelText,
                     pointModel.getX() + modelText.getScene().getX()
                             + modelText.getScene().getWindow().getX()
                             + modelText.getWidth() + 25,
@@ -357,21 +346,22 @@ public class VehicleUpdateController {
         Boolean rangeFlag = false;
         try {
             if (maxRangeText.getText().isEmpty()) {
-                rangeError.setText("Max. range required.");
+                errors.changeMessage(RANGE_ERROR, "Max. range required.");
                 rangeFlag = true;
             } else if (Integer.parseInt(maxRangeText.getText()) < 0) {
-                rangeError.setText("Max. range cannot be negative.");
+                errors.changeMessage(RANGE_ERROR, "Max. range cannot be negative.");
                 rangeFlag = true;
             }
-            maxRangeText.setTooltip(rangeError);
         } catch (NumberFormatException e) {
-            rangeError.setText("Max. range must be a whole number.");
-            maxRangeText.setTooltip(rangeError);
+            errors.changeMessage(RANGE_ERROR, "Max. range must be a whole number.");
+
             rangeFlag = true;
+        } finally {
+            maxRangeText.setTooltip(errors.get(RANGE_ERROR));
         }
         if (Boolean.TRUE.equals(rangeFlag)) {
             maxRangeText.setStyle(INVALID_STYLE);
-            rangeError.show(maxRangeText,
+            errors.get(RANGE_ERROR).show(maxRangeText,
                     pointRange.getX() + maxRangeText.getScene().getX()
                             + maxRangeText.getScene().getWindow().getX()
                             + maxRangeText.getWidth() + 25,
@@ -381,10 +371,9 @@ public class VehicleUpdateController {
         }
 
         if (connections.isEmpty()) {
-            connectorError.setText("A vehicle must have at least one connector.");
             connectorType.setStyle(INVALID_STYLE);
-            connectorType.setTooltip(connectorError);
-            connectorError.show(connectorType,
+            connectorType.setTooltip(errors.get(CONNECTOR_ERROR));
+            errors.get(CONNECTOR_ERROR).show(connectorType,
                     pointConn.getX() + connectorType.getScene().getX()
                             + connectorType.getScene().getWindow().getX()
                             + connectorType.getWidth() + 25,
@@ -637,4 +626,12 @@ public class VehicleUpdateController {
         stage.close();
     }
 
+    /**
+     * Gets error handling object for tooltip messages
+     * 
+     * @return errorhandler with entry field tooltip alerts
+     */
+    public ErrorHandler getErrors() {
+        return errors;
+    }
 }

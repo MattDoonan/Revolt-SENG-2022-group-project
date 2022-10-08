@@ -411,7 +411,7 @@ public class LoginSignupController {
      */
     @FXML
     public void forgotPassword() {
-        // TODO
+        // TODO: forgot password
     }
 
     /**

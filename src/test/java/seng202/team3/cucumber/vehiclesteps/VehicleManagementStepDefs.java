@@ -2,6 +2,7 @@ package seng202.team3.cucumber.vehiclesteps;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import io.cucumber.java.AfterAll;
 import io.cucumber.java.Before;
@@ -30,7 +31,6 @@ import seng202.team3.data.database.Query;
 import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Vehicle;
-import seng202.team3.gui.ErrorController;
 import seng202.team3.gui.GarageController;
 import seng202.team3.gui.MainWindow;
 import seng202.team3.gui.MapHandler;
@@ -172,18 +172,14 @@ public class VehicleManagementStepDefs extends CucumberFxBase {
 
     @Then("I am informed my input is invalid")
     public void iIsInvalid() {
-        // clickOn("#close");
-        TextField make = (TextField) this.find("#makeText");
-        TextField model = (TextField) this.find("#modelText");
-        TextField range = (TextField) this.find("#maxRangeText");
-        Tooltip makeError = make.getTooltip();
-        Tooltip modelError = model.getTooltip();
-        Tooltip rangeError = range.getTooltip();
+        // At least one tooltip visible
+        for (Tooltip t : ((VehicleUpdateController) MainWindow.getController())
+                .getErrors().getAll()) {
+            assertTrue(t.isShowing());
+            return;
+        }
 
-
-        assertEquals("Vehicle make required.", makeError.getText());
-        assertEquals("Vehicle model required.", modelError.getText());
-        assertEquals("Max. range required.", rangeError.getText());
+        fail("No error tooltips shown");
     }
 
     @Given("I have a vehicle in the garage")

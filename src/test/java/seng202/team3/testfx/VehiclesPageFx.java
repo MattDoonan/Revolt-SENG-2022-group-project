@@ -1,11 +1,11 @@
 package seng202.team3.testfx;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.testfx.api.FxAssert.verifyThat;
 
 import java.io.IOException;
-import java.security.Key;
 import java.util.stream.Stream;
 
 import javax.management.InstanceAlreadyExistsException;
@@ -21,10 +21,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
+import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.gui.GarageController;
+import seng202.team3.gui.MainWindow;
+import seng202.team3.gui.VehicleUpdateController;
 
 /**
  * Runs the vehicle testFX
@@ -102,7 +104,16 @@ public class VehiclesPageFx extends TestFxBase {
         clickOn(node);
         write(text);
         clickOn("#saveChanges");
-        // TODO: check for tooltip popup (see SignupTestFX#testDifferentPassword)
+
+        for (Tooltip t : ((VehicleUpdateController) MainWindow.getController())
+                .getErrors().getAll()) {
+            if (!t.isShowing()) {
+                assertTrue(true);
+                return;
+            }
+        }
+
+        fail("Valid field was displayed as error");
     }
 
     @Test
@@ -113,7 +124,8 @@ public class VehiclesPageFx extends TestFxBase {
         clickOn();
         clickOn("#addConnectionBtn");
         clickOn("#saveChanges");
-        // TODO: check for tooltip popup (see SignupTestFX#testDifferentPassword)
+        assertFalse(((VehicleUpdateController) MainWindow.getController())
+                .getErrors().isShowing("connectorError"));
     }
 
     @Test
