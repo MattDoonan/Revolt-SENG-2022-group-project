@@ -77,6 +77,19 @@ public class GarageManager {
     }
 
     /**
+     * Saves the changes to the given vehicle to the database
+     * 
+     * @param vehicle the vehicle to be saved
+     */
+    public void saveCurrVehicle(Vehicle vehicle) {
+        try {
+            SqlInterpreter.getInstance().writeVehicle(vehicle);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * Returns the list of vehicles
      *
      * @return vehicleData of the required vehicle

@@ -67,6 +67,7 @@
             changeZoom,
             clearMarkers,
             addLocationToRoute,
+            relocate
         };
 
 
@@ -151,6 +152,20 @@
         function changeZoom() {
             map.setZoom(zoomedIn);
         }
+
+        /**
+         * Relocates user view to new position and adds marker
+         */
+        function relocate(lat, lon, locationAccepted) {
+            removeCoordinate();
+            addCoordinate("Current Coordinate", lat, lon);
+            movePosition(lat, lon);
+            if (locationAccepted) {
+                changeZoom();
+            }
+
+        }
+
 
         /**
          * Adds a charger marker to the map and stores it in the markers array for later use (e.g. removal)
