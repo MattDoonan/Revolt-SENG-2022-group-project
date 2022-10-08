@@ -131,16 +131,10 @@ public class MapViewController extends MapHandler {
      */
     public void makeCoordinate(Coordinate coordinate) {
         if (Boolean.TRUE.equals(MapHandler.isMapRequested())) {
-            javaScriptConnector.call("removeCoordinate");
-            javaScriptConnector.call("addCoordinate", "Current Coordinate: ",
-                    coordinate.getLat(), coordinate.getLon());
-            javaScriptConnector.call("addCoordinateName");
+            javaScriptConnector.call("relocate", coordinate.getLat(), coordinate.getLon(),
+                    Boolean.TRUE.equals(MapHandler.getLocationAccepted()));
 
-            changePosition(coordinate);
             map.makeCoordinate(coordinate);
-            if (Boolean.TRUE.equals(MapHandler.getLocationAccepted())) {
-                javaScriptConnector.call("changeZoom");
-            }
 
             logManager.info("Point created on map");
         } else {

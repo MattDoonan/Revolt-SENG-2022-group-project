@@ -141,13 +141,8 @@ public class VehiclesPageFx extends TestFxBase {
         write("Y");
         clickOn("#maxRangeText");
         write("500");
-        clickOn("#selectImgBtn");
-        clickOn();
-        moveBy(20, 220);
-        clickOn();
         clickOn("#connectorType");
-        moveBy(0, 40);
-        clickOn();
+        clickOn("CHAdeMO");
         clickOn("#addConnectionBtn");
         clickOn("#saveChanges");
         verifyThat("#editCarOne", Node::isVisible);

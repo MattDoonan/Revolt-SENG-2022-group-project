@@ -72,7 +72,8 @@
 				addCircle,
 				removeCircle,
 				addPoint,
-				removeJourneys
+				removeJourneys,
+                relocate
 			};
 
 			/**
@@ -125,7 +126,7 @@
 
 
 		/**
-		 * removes the journey
+		 * Removes the journey
 		 */
 		function removeJourneys() {
 			isJourney = false
@@ -164,6 +165,20 @@
         function changeZoom() {
             map.setZoom(zoomedIn);
         }
+
+        /**
+         * Relocates user view to new position and adds marker
+         */
+        function relocate(lat, lon, locationAccepted) {
+            removeCoordinate();
+            addCoordinate("Current Coordinate", lat, lon);
+            movePosition(lat, lon);
+            if (locationAccepted) {
+                changeZoom();
+            }
+
+        }
+
 
         /**
          * Adds a charger marker to the map and stores it in the markers array for later use (e.g. removal)
@@ -294,7 +309,7 @@
 				routeToCharger = L.Routing.control({
 					waypoints: coordinates,
 					serviceUrl: 'https://tile.csse.canterbury.ac.nz/route/v1',
-					routeWhileDragging: true,
+					routeWhileDragging: false,
 				}).addTo(map);
 			}
         }
