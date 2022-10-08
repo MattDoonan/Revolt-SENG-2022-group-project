@@ -243,13 +243,13 @@ public class MapViewController extends MapHandler {
                     || UserManager.getUser().getLevel() == PermissionLevel.CHARGEROWNER) {
                 addButton.setOpacity(100.0);
             }
-            routing.setText("Route To Charger");
-            routing.setStyle("-fx-background-color:#3ea055;");
+            routing.setText("Create Route");
+            routing.setStyle("-fx-background-color:#FFFFFF; -fx-border-color: #9b9b9b;");
         } else {
             addButton.setOpacity(0.0);
             addRouteToCharger();
             routing.setText("Stop Routing");
-            routing.setStyle("-fx-background-color:#FF3131;");
+            routing.setStyle("-fx-background-color:#e06666; -fx-border-color: #9b9b9b;");
         }
     }
 

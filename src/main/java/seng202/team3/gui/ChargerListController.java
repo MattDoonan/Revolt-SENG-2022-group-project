@@ -67,6 +67,10 @@ public class ChargerListController {
      */
     private BorderPane listView;
 
+    /** Sets rounding for distance */
+    private DecimalFormat rounding = new DecimalFormat("0.00"); // rounding to 6 decimal places
+
+
     /**
      * unused
      */
@@ -134,9 +138,9 @@ public class ChargerListController {
             VBox content = new VBox(new Text(chargersToAdd.get(i).getName()),
                     new Text(chargersToAdd.get(i).getLocation().getAddress()),
                     new Text(chargersToAdd.get(i).getOperator()),
-                    new Text("\n" + Math.round(Calculations.calculateDistance(
+                    new Text("\n" + rounding.format(Calculations.calculateDistance(
                             manage.getManager().getPosition(), chargersToAdd.get(i).getLocation()))
-                            * 10.0 / 10.0 + "km"));
+                            + "km"));
             add.getChildren().add(content); // Adds charger content to HBox
             add.setPadding(new Insets(10));
             add.setSpacing(10);
@@ -223,6 +227,9 @@ public class ChargerListController {
         display.getChildren().add(new Text("Current types " + word + ""));
         display.getChildren().add(
                 new Text("Has " + c.getAvailableParks() + " parking spaces"));
+        display.getChildren().add(new Text("\n" + rounding.format(Calculations.calculateDistance(
+                manage.getManager().getPosition(), c.getLocation()))
+                + "km"));
         // Adds the charger info to the HBox
         displayInfo.getChildren().add(display);
         manage.getManager().setSelectedCharger(c);
@@ -249,10 +256,15 @@ public class ChargerListController {
         owner.setWrappingWidth(480);
         largeDisplayInfo.getChildren().add(owner);
 
+
         if (c.getOperator() != null) {
             largeDisplayInfo.getChildren().add(
                     new Text("Operator is: " + c.getOperator() + ""));
         }
+
+        Text distance = new Text("" + rounding.format(Calculations.calculateDistance(
+                manage.getManager().getPosition(), c.getLocation())) + "km");
+        largeDisplayInfo.getChildren().add(distance);
 
         Text large2 = new Text();
         largeDisplayInfo.getChildren().add(large2);
