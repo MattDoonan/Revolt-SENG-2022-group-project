@@ -256,7 +256,8 @@ public class MenuController {
      */
     public void setUser(User u) {
         UserManager.setUser(u);
-        loginSignout.setText("LOGOUT");
+        loginSignout.setText("Logout");
+        loginSignout.setStyle("-fx-font-family: Didact Gothic;");
         logManager.info("User has been successfully signed in");
     }
 
