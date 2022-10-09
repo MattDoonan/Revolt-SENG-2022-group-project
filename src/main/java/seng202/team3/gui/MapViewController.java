@@ -48,10 +48,24 @@ public class MapViewController extends MapHandler {
     private Button routing;
 
     /**
+     * Relocate pos button
+     */
+    @FXML
+    private Button relocatePosBtn;
+
+    /**
      * The add Charger button
      */
     @FXML
     private Button addButton;
+
+    /** Hover set style */
+    private static final String onHover =
+            "-fx-background-color:#FFF8EB; -fx-border-color:  #9b9b9b;";
+
+    /** Hover exit style */
+    private static final String exitHover =
+            "-fx-background-color:#FFFFFF; -fx-border-color:  #9b9b9b;";
 
     /**
      * JavaScript function to add selected location to route
@@ -80,6 +94,48 @@ public class MapViewController extends MapHandler {
         initMap();
         this.stage.sizeToScene();
 
+    }
+
+    /**
+     * On hover for create route
+     */
+    public void createRouteHoverOn() {
+        routing.setStyle(onHover);
+    }
+
+    /**
+     * On exit hover for relocate pos
+     */
+    public void createRouteExitHover() {
+        routing.setStyle(exitHover);
+    }
+
+    /**
+     * On hover for relocate button
+     */
+    public void relocateHoverOn() {
+        relocatePosBtn.setStyle(onHover);
+    }
+
+    /**
+     * On exit hover for relocate button
+     */
+    public void relocateExitHover() {
+        relocatePosBtn.setStyle(exitHover);
+    }
+
+    /**
+     * On hover for add charger
+     */
+    public void addChargerHoverOn() {
+        addButton.setStyle(onHover);
+    }
+
+    /**
+     * On exit hover for add charger button
+     */
+    public void addChargerExitHover() {
+        addButton.setStyle(exitHover);
     }
 
     /**

@@ -13,9 +13,9 @@
    <top>
       <AnchorPane maxHeight="0.0" maxWidth="400.0" minHeight="0.0" minWidth="400.0" prefHeight="0.0" prefWidth="400.0" BorderPane.alignment="CENTER_LEFT">
          <children>
-            <Button fx:id="addButton" layoutX="280.0" layoutY="42.0" mnemonicParsing="false" onMouseClicked="#addCharger" prefHeight="30.0" prefWidth="135.0" style="-fx-background-color: white; -fx-border-color: #9b9b9b;" text="Add Charger" />
-            <Button fx:id="routing" layoutY="42.0" mnemonicParsing="false" onAction="#toggleRoute" prefHeight="30.0" prefWidth="135.0" style="-fx-background-color: white; -fx-border-color: #9b9b9b;" text="Create Route" textAlignment="CENTER" wrapText="true" />
-            <Button alignment="CENTER" layoutX="140.0" layoutY="42.0" mnemonicParsing="false" onMouseClicked="#getLocation" prefHeight="30.0" prefWidth="135.0" style="-fx-background-color: white; -fx-border-color: #9b9b9b;" text="Relocate Position" textAlignment="CENTER" wrapText="true" />
+            <Button fx:id="addButton" layoutX="280.0" layoutY="42.0" mnemonicParsing="false" onMouseClicked="#addCharger" onMouseEntered="#addChargerHoverOn" onMouseExited="#addChargerExitHover" prefHeight="30.0" prefWidth="135.0" style="-fx-background-color: white; -fx-border-color: #9b9b9b;" text="Add Charger" />
+            <Button fx:id="routing" layoutY="42.0" mnemonicParsing="false" onAction="#toggleRoute" onMouseEntered="#createRouteHoverOn" onMouseExited="#createRouteExitHover" prefHeight="30.0" prefWidth="135.0" style="-fx-background-color: white; -fx-border-color: #9b9b9b;" text="Create Route" textAlignment="CENTER" wrapText="true" />
+            <Button fx:id="relocatePosBtn" alignment="CENTER" layoutX="140.0" layoutY="42.0" mnemonicParsing="false" onMouseClicked="#getLocation" onMouseEntered="#relocateHoverOn" onMouseExited="#relocateExitHover" prefHeight="30.0" prefWidth="135.0" style="-fx-background-color: white; -fx-border-color: #9b9b9b;" text="Relocate Position" textAlignment="CENTER" wrapText="true" />
          </children>
          <BorderPane.margin>
             <Insets left="50.0" />
