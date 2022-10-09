@@ -92,7 +92,7 @@ public class MainListChangingTestFX extends TestFxBase {
         Assertions.assertEquals(((Text)information.getChildren().get(0)).getText(),
                 ((Text) largerInfo.getChildren().get(2)).getText());
         Assertions.assertEquals(((Text)information.getChildren().get(1)).getText(),
-                ((Text) largerInfo.getChildren().get(6)).getText());
+                ((Text) largerInfo.getChildren().get(7)).getText());
     }
 
     @Test
@@ -105,7 +105,7 @@ public class MainListChangingTestFX extends TestFxBase {
         Assertions.assertEquals(((Text)information.getChildren().get(0)).getText(),
                 ((Text) largerInfo.getChildren().get(2)).getText());
         Assertions.assertEquals(((Text)information.getChildren().get(1)).getText(),
-                ((Text) largerInfo.getChildren().get(6)).getText());
+                ((Text) largerInfo.getChildren().get(7)).getText());
     }
 
 }
