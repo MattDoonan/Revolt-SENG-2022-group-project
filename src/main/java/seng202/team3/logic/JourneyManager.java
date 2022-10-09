@@ -229,6 +229,15 @@ public class JourneyManager extends ChargerHandler {
     }
 
     /**
+     * Sets the selected Journey
+     *
+     * @param journey journey to set manager to have selected
+     */
+    public void setSelectedJourney(Journey journey) {
+        selectedJourney = journey;
+    }
+
+    /**
      * Saves Journey
      */
     public void saveJourney() {

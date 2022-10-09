@@ -12,7 +12,7 @@ import seng202.team3.logic.UserManager;
  */
 public class Journey {
     /** {@link Charger Chargers} used on journey */
-    private ArrayList<Charger> chargers = new ArrayList<>();
+    private final ArrayList<Charger> chargers = new ArrayList<>();
 
     /** {@link Vehicle Vehicle} used for journey */
     private Vehicle vehicle;
@@ -61,7 +61,7 @@ public class Journey {
      * Unused constructor
      */
     public Journey() {
-        // Unused
+        this.user = UserManager.getUser().getUserid();
     }
 
     /**

@@ -9,7 +9,7 @@ import seng202.team3.logic.JavaScriptBridge;
 /**
  * A Journey Map Controller that extends the abstract MapHandler class
  *
- * @author Michelle Hsieh and James Billows
+ * @author Michelle Hsieh, James Billows, Angus Kirtlan
  * @version 1.0.4, Sep 22
  */
 public class JourneyMapController extends MapHandler {

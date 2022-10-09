@@ -434,7 +434,7 @@ public class TableController {
     }
 
     /**
-     * Initializes tha table and columns
+     * Initializes the table and columns
      */
     private void tableMaker() {
         mainTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
