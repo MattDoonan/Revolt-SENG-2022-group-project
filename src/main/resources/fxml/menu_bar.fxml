@@ -5,9 +5,9 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<SplitPane dividerPositions="0.10552763819095477" minHeight="100" minWidth="300" orientation="VERTICAL" prefHeight="461.0" prefWidth="701.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.MenuController">
+<SplitPane dividerPositions="0.10552763819095477" minHeight="100" minWidth="300" orientation="VERTICAL" prefHeight="461.0" prefWidth="701.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.MenuController" stylesheets="@style.css">
     <items>
-      <HBox id="menu-bar" fx:id="menuBar" alignment="CENTER" maxHeight="60.0" prefHeight="70.0" stylesheets="@style.css">
+      <HBox id="menu-bar" fx:id="menuBar" alignment="CENTER" maxHeight="60.0" prefHeight="70.0">
          <children>
             <HBox alignment="CENTER_LEFT" minWidth="100.0" nodeOrientation="LEFT_TO_RIGHT" prefWidth="1920.0">
                <children>
@@ -31,17 +31,17 @@
                         <Font name="FreeSans" size="12.0" />
                      </font>
                   </Button>
-                  <Button fx:id="accountPage" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#loadAccountScreen" prefHeight="30.0" prefWidth="80.0" styleClass="menu-button" stylesheets="@style.css" text="ACCOUNT" textFill="WHITE">
+                  <Button fx:id="accountPage" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#loadAccountScreen" prefHeight="30.0" prefWidth="80.0" styleClass="menu-button" text="ACCOUNT" textFill="WHITE">
                      <font>
                         <Font name="FreeSans" size="12.0" />
                      </font>
                   </Button>
-                  <Button fx:id="vehicleButton" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#loadVehicleScreen" prefHeight="30.0" prefWidth="80.0" styleClass="menu-button" stylesheets="@style.css" text="GARAGE" textFill="WHITE">
+                  <Button fx:id="vehicleButton" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#loadVehicleScreen" prefHeight="30.0" prefWidth="80.0" styleClass="menu-button" text="GARAGE" textFill="WHITE">
                      <font>
                         <Font name="FreeSans" size="12.0" />
                      </font>
                   </Button>
-                  <Button fx:id="menuButton" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#loadHome" prefHeight="30.0" prefWidth="80.0" styleClass="menu-button" stylesheets="@style.css" text="HOME" textFill="WHITE">
+                  <Button fx:id="menuButton" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#loadHome" prefHeight="30.0" prefWidth="80.0" styleClass="menu-button" text="HOME" textFill="WHITE">
                      <font>
                         <Font size="12.0" />
                      </font>
