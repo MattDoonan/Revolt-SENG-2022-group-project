@@ -125,7 +125,7 @@
                   </Menu>
                </items>
             </MenuButton>
-            <MenuButton fx:id="columnEdit" minHeight="30.0" mnemonicParsing="false" prefWidth="250.0" style="-fx-font-size: 20;" text="Select Columns">
+            <MenuButton fx:id="columnEdit" minHeight="30.0" mnemonicParsing="false" prefWidth="250.0" style="-fx-font-size: 20; -fx" text="Select Columns">
                <items>
                   <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                     <content>
