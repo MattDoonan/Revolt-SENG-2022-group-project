@@ -236,6 +236,7 @@ public class JourneyController {
         journeyManager.makeCoordinateName();
         Coordinate position = journeyManager.getPosition();
         if (position != null && journeyManager.getSelectedJourney().getVehicle() != null) {
+            journeyManager.setDesiredRange(rangeSlider.getValue());
             journeyManager.setStart(position);
             mapController.positionMarker("Start");
             makeStart.setDisable(true);
@@ -308,7 +309,7 @@ public class JourneyController {
         rangeSlider.setDisable(false);
         vehicles.setDisable(false);
         populateVehicles();
-        rangeSlider.setValue(50.0);
+        rangeSlider.setValue(100.0);
         resetChargerDisplay();
     }
 
@@ -321,7 +322,6 @@ public class JourneyController {
 
         // TODO decide on maximum number of stops in a journey and implement handle
         journeyManager.addCharger(charger);
-        mapController.addChargersOnMap();
         resetChargerDisplay();
         addWaypointsToDisplay();
         calculateRoute();
@@ -333,6 +333,7 @@ public class JourneyController {
     public void addWaypointsToDisplay() {
 
         double remainingCharge = 100.0;
+
 
         List<Charger> chargers = journeyManager.getSelectedJourney().getChargers();
 
@@ -363,10 +364,24 @@ public class JourneyController {
 
         Button btn = new Button("Remove Last Point");
         btn.setOnAction(this::removeFromDisplay);
-        journeyChargerTable.getChildren().add(btn);
 
-        rangeSlider.setValue(100 - remainingCharge);
-        journeyManager.setDesiredRange(remainingCharge);
+        if (!chargers.isEmpty()) {
+            journeyChargerTable.getChildren().add(btn);
+
+            double previousRange = journeyManager.getDesiredRange();
+
+            journeyManager.setDesiredRange(previousRange - remainingCharge
+                    * journeyManager.getSelectedJourney().getVehicle().getMaxRange() / 100.0);
+
+            rangeSlider.setValue(journeyManager.getDesiredRange()
+                    / journeyManager.getSelectedJourney().getVehicle().getMaxRange() * 100.0);
+        } else if (journeyManager.getStart() != null) {
+            journeyManager.setCurrentCoordinate(journeyManager.getStart());
+            journeyManager.setDesiredRange((double) journeyManager
+                    .getSelectedJourney().getVehicle().getMaxRange());
+            rangeSlider.setValue(100);
+        }
+
         journeyManager.makeRangeChargers();
         mapController.addChargersOnMap();
     }
@@ -387,11 +402,11 @@ public class JourneyController {
     public void removeFromDisplay(ActionEvent e) {
         journeyManager.removeLastCharger();
         resetChargerDisplay();
-        addWaypointsToDisplay();
         if (journeyManager.getSelectedJourney().getChargers().isEmpty()) {
             journeyChargerTable.getChildren().clear();
             mapController.removeRoute();
         }
+        addWaypointsToDisplay();
         journeyManager.checkDistanceBetweenChargers();
         mapController.addRouteToScreen();
     }
@@ -401,6 +416,7 @@ public class JourneyController {
      */
     @FXML
     public void saveJourney() {
+        journeyManager.checkDistanceBetweenChargers();
         if (!(distanceError) && (journeyManager.getStart() != null)
                 && (journeyManager.getEnd() != null)) {
             journeyManager.getSelectedJourney().setEndDate(tripName.getText());
@@ -483,6 +499,10 @@ public class JourneyController {
         if (item.getText().equals(ADD_VEHICLE)) {
             rangeSlider.setDisable(true);
             loadVehicleScreen();
+            System.out.println(e.getSource());
+            System.out.println(e.getSource().getClass());
+
+            System.out.println("1");
         } else {
             for (Vehicle vehicle : vehicleList) {
                 rangeSlider.setDisable(false);
@@ -492,11 +512,6 @@ public class JourneyController {
                 }
             }
         }
-        System.out.println(e.getSource());
-        System.out.println(e.getSource().getClass());
-
-        System.out.println("1");
-
     }
 
     /**
