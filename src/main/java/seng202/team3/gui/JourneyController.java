@@ -3,6 +3,7 @@ package seng202.team3.gui;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -163,6 +164,12 @@ public class JourneyController {
     public void setBorderPane(BorderPane borderPane) {
         this.borderPane = borderPane;
     }
+
+    /**
+     * Add vehicle button text
+     */
+    private static final String ADD_VEHICLE = "Add Vehicle...";
+
 
     /**
      * Gets the logic manager for journeys
@@ -409,26 +416,37 @@ public class JourneyController {
      * Loads vehicles into the menuBox
      */
     public void populateVehicles() {
+
         garageManager = new GarageManager();
         garageManager.resetQuery();
         garageManager.getAllVehicles();
         vehicles.getItems().clear();
 
-        // TODO once favourites is in; load favourite as text, else this
-        vehicles.setText("Add Vehicle...");
+        ObservableList<Vehicle> vehicleList = garageManager.getData();
+        Vehicle favVehicle = vehicleList.stream().filter(element -> 
+            Boolean.TRUE.equals(element.getCurrVehicle())).findFirst().orElse(null);
 
-        MenuItem custom = new MenuItem("Add Vehicle...");
-        custom.setOnAction(this::configureVehicleItem);
-        vehicles.getItems().add(custom);
-
-        for (Vehicle vehicle : garageManager.getData()) {
-            String title = vehicle.getMake() + ' ' + vehicle.getModel();
-            MenuItem item = new MenuItem(title);
-            item.setId(Integer.toString(vehicle.getVehicleId()));
-            item.setOnAction(this::configureVehicleItem);
-            vehicles.getItems().add(item);
+        if (favVehicle != null) {
+            vehicleList.remove(favVehicle);
+            vehicleList.add(0, favVehicle);
+        } else {
+            vehicles.setText(ADD_VEHICLE);
         }
 
+        if (!vehicleList.isEmpty() && vehicleList.get(0) != null) {
+            vehicles.setText(vehicleList.get(0).getMake() + ' ' 
+                + vehicleList.get(0).getModel());
+            for (Vehicle vehicle : vehicleList) {
+                String title = vehicle.getMake() + ' ' + vehicle.getModel();
+                MenuItem item = new MenuItem(title);
+                item.setId(Integer.toString(vehicle.getVehicleId()));
+                item.setOnAction(this::configureVehicleItem);
+                vehicles.getItems().add(item);
+            }
+        }  
+        MenuItem custom = new MenuItem(ADD_VEHICLE);
+        custom.setOnAction(this::configureVehicleItem);
+        vehicles.getItems().add(custom);
     }
 
     /**
@@ -440,7 +458,7 @@ public class JourneyController {
     public void configureVehicleItem(ActionEvent e) {
         MenuItem item = ((MenuItem) e.getSource());
         vehicles.setText(item.getText());
-        if (item.getText().equals("Add Vehicle...")) {
+        if (item.getText().equals(ADD_VEHICLE)) {
             rangeSlider.setDisable(true);
             loadVehicleScreen();
         } else {
