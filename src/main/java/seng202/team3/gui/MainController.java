@@ -428,7 +428,7 @@ public class MainController {
     /**
      * Updates the display of chargers
      */
-    private void updateChargerDisplay() {
+    public void updateChargerDisplay() {
         if (listController.getChargerTable()) {
             listController.addChargersToDisplay(manage.getCloseChargerData());
         }

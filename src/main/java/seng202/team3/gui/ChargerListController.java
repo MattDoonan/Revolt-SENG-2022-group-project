@@ -157,11 +157,7 @@ public class ChargerListController {
             chargerTable.getChildren().add(add);
         }
         if (!chargerTable.getChildren().isEmpty()) {
-            if (manage.getManager().getSelectedCharger() == null) {
-                viewChargers(chargersToAdd.get(0));
-            } else {
-                viewChargers(manage.getManager().getSelectedCharger());
-            }
+            viewChargers(chargersToAdd.get(0));
         } else {
             viewChargers(null);
         }
@@ -171,12 +167,10 @@ public class ChargerListController {
      * Refresh the vbox filled with chargers
      */
     public void refreshTable() {
-        manage.getManager()
-                .setSelectedCharger(manage.getManager().getCloseChargerData().get(0));
         if (displayInfo != null) {
-            addChargersToDisplay(manage.getManager().getCloseChargerData());
+            manage.updateChargerDisplay();
         } else {
-            viewChargers(manage.getManager().getSelectedCharger());
+            viewChargers(null);
         }
     }
 
@@ -296,6 +290,7 @@ public class ChargerListController {
         connector.setStyle("-fx-font-size : 17");
         largeDisplayInfo.getChildren().add(connector);
         addConnectorsToView(c);
+        manage.getManager().setSelectedCharger(c);
     }
 
     /**
