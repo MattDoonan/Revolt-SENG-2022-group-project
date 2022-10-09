@@ -268,7 +268,6 @@ public class GarageController {
             manage.saveCurrVehicle(vehicle);
         }
         String source = ((Button) event.getSource()).getId();
-        // System.out.println("source: " + source);
         Vehicle currVehicle = new Vehicle();
         switch (source) {
             case "currEvOne":
@@ -331,7 +330,6 @@ public class GarageController {
             editPopup = new Stage();
             refresh();
         }
-
     }
 
     /**

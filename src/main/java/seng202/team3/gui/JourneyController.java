@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -26,14 +27,17 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import seng202.team3.data.database.ComparisonType;
+import seng202.team3.data.database.QueryBuilderImpl;
+import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
 import seng202.team3.data.entity.Journey;
 import seng202.team3.data.entity.Vehicle;
 import seng202.team3.logic.Calculations;
-import seng202.team3.logic.GarageManager;
 import seng202.team3.logic.JourneyManager;
 import seng202.team3.logic.JourneyUpdateManager;
+import seng202.team3.logic.UserManager;
 
 /**
  * Controller for the journey; contains the journey manager
@@ -163,14 +167,15 @@ public class JourneyController {
     private final ArrayList<String> errors = new ArrayList<>();
 
     /**
+     * List of vehicles available for the journey
+     */
+    private ObservableList<Vehicle> vehicleList = FXCollections.observableArrayList();
+
+    /**
      * Boolean if there is an error with the routing distances
      */
     private boolean distanceError = false;
 
-    /**
-     * Garage manager for selecting vehicle
-     */
-    private GarageManager garageManager;
 
     /**
      * GUI controller for map
@@ -557,12 +562,23 @@ public class JourneyController {
      */
     public void populateVehicles() {
 
-        garageManager = new GarageManager();
-        garageManager.resetQuery();
-        garageManager.getAllVehicles();
         vehicles.getItems().clear();
 
-        ObservableList<Vehicle> vehicleList = garageManager.getData();
+        try {
+            List<Vehicle> vehicleData = new ArrayList<>();
+            for (Object o : SqlInterpreter.getInstance()
+                .readData(new QueryBuilderImpl().withSource("vehicle")
+                .withFilter("owner",
+                    Integer.toString(UserManager.getUser().getUserid()), ComparisonType.EQUAL)
+                .build(), Vehicle.class)) {
+                vehicleData.add((Vehicle) o);
+            }
+            vehicleList = FXCollections.observableList(vehicleData);
+        } catch (IOException e) {
+            logManager.error(e.getMessage());
+        }
+
+
         Vehicle favVehicle = vehicleList.stream().filter(element -> 
             Boolean.TRUE.equals(element.getCurrVehicle())).findFirst().orElse(null);
 
@@ -574,8 +590,10 @@ public class JourneyController {
         }
 
         if (!vehicleList.isEmpty() && vehicleList.get(0) != null) {
-            vehicles.setText(vehicleList.get(0).getMake() + ' ' 
-                + vehicleList.get(0).getModel());
+            vehicles.setText(vehicleList.get(0).getMake() + ' ' + vehicleList.get(0).getModel());
+            rangeSlider.setDisable(false);
+            journeyManager.selectVehicle(vehicleList.get(0));
+            maxRange.setText(vehicleList.get(0).getMaxRange() + " km");
             for (Vehicle vehicle : vehicleList) {
                 String title = vehicle.getMake() + ' ' + vehicle.getModel();
                 MenuItem item = new MenuItem(title);
@@ -585,6 +603,7 @@ public class JourneyController {
             }
         }  
         MenuItem custom = new MenuItem(ADD_VEHICLE);
+        custom.setId("add");
         custom.setOnAction(this::configureVehicleItem);
         vehicles.getItems().add(custom);
     }
@@ -602,7 +621,7 @@ public class JourneyController {
             rangeSlider.setDisable(true);
             loadVehicleScreen();
         } else {
-            for (Vehicle vehicle : garageManager.getData()) {
+            for (Vehicle vehicle : vehicleList) {
                 rangeSlider.setDisable(false);
                 if (vehicle.getVehicleId() == Integer.parseInt(item.getId())) {
                     journeyManager.selectVehicle(vehicle);
@@ -610,6 +629,11 @@ public class JourneyController {
                 }
             }
         }
+        System.out.println(e.getSource());
+        System.out.println(e.getSource().getClass());
+
+        System.out.println("1");
+
     }
 
     /**
