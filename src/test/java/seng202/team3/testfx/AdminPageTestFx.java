@@ -1,6 +1,7 @@
 package seng202.team3.testfx;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 
@@ -143,7 +144,7 @@ public class AdminPageTestFx extends TestFxBase {
             release(KeyCode.DOWN);
         }
         clickOn("#updatePermissions");
-        clickOn("#okay");
+        assertTrue(controller.getErrors().isShowing("permissionsMenuError"));
     }
 
     /**
@@ -157,7 +158,7 @@ public class AdminPageTestFx extends TestFxBase {
         press(KeyCode.UP);
         release(KeyCode.UP);
         clickOn("#delete");
-        clickOn("#okay");
+        assertTrue(controller.getErrors().isShowing("deleteError"));
     }
 
     /**

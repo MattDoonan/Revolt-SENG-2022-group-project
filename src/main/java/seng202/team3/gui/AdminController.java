@@ -2,16 +2,16 @@ package seng202.team3.gui;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Point2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -42,6 +42,12 @@ public class AdminController {
     private MenuButton menu;
 
     /**
+     * FXML for update permissions button
+     */
+    @FXML
+    private Button updatePermissions;
+
+    /**
      * The table in the admin controller
      */
     @FXML
@@ -66,6 +72,12 @@ public class AdminController {
     private TableColumn<User, String> permissions;
 
     /**
+     * FXML for delete user button
+     */
+    @FXML
+    private Button delete;
+
+    /**
      * The BorderPane to hold the object
      */
     private BorderPane border;
@@ -76,9 +88,24 @@ public class AdminController {
     private AdminManager manager;
 
     /**
-     * String list of errors to display
+     * Handler for error message tooltips
      */
-    private ArrayList<String> errors = new ArrayList<>();
+    private ErrorHandler errors = new ErrorHandler();
+
+    /**
+     * User select prompt
+     */
+    private static final String SELECT_USER = "Please select a user";
+
+    /**
+     * Delete Error ID
+     */
+    private static final String DELETE_ERROR = "deleteError";
+
+    /**
+     * Permissions Button error id
+     */
+    private static final String PERMISSIONS_ERROR = "permissionsEditError";
 
     /**
      * To create the admin controller
@@ -93,6 +120,9 @@ public class AdminController {
      * @param border the BorderPane containing this class
      */
     public void init(BorderPane border) {
+        errors.add(DELETE_ERROR, SELECT_USER);
+        errors.add("permissionsMenuError", "Select a permission level.");
+        errors.add(PERMISSIONS_ERROR, SELECT_USER);
         this.border = border;
         manager = new AdminManager();
         manager.setAdmin(UserManager.getUser());
@@ -151,50 +181,31 @@ public class AdminController {
     }
 
     /**
-     * Launches an error popup when trying to do illegal things
-     */
-    public void launchErrorPopUps() {
-        try {
-            FXMLLoader error = new FXMLLoader(getClass().getResource(
-                    "/fxml/error_popup.fxml"));
-            AnchorPane base = error.load();
-            Scene modalScene = new Scene(base);
-            Stage modal = new Stage();
-            modal.setScene(modalScene);
-            modal.setResizable(false);
-            modal.setTitle("Error With Users:");
-            modal.initModality(Modality.APPLICATION_MODAL);
-            ErrorController errController = error.getController();
-            errController.init();
-            errController.setErrors(errors);
-            errController.setPromptType("error");
-            errController.displayErrors();
-            modal.setAlwaysOnTop(true);
-            modal.showAndWait();
-            for (String e : errors) {
-                logManager.warn(e);
-            }
-        } catch (IOException e) {
-            logManager.error(e.getMessage());
-        }
-    }
-
-    /**
      * Deletes a user
      */
     @FXML
     public void deleteUser() {
+        errors.hideAll();
         setSelectedUser();
-        if (manager.getSelectedUser() != null) {
-            if (manager.getAdmin().getUserid() == manager.getSelectedUser().getUserid()) {
-                errors.add("Cannot delete current user");
-            }
-        } else {
-            errors.add("Please select a user");
+
+        Point2D pointDelete = delete.localToScene(0.0, 0.0);
+
+        boolean errorOccured = false;
+        if (manager.getSelectedUser() == null) {
+            errors.changeMessage(DELETE_ERROR, SELECT_USER);
+            errorOccured = true;
+        } else if (manager.getAdmin().getUserid() == manager.getSelectedUser().getUserid()) {
+            errors.changeMessage(DELETE_ERROR, "Cannot delete current user");
+            errorOccured = true;
         }
-        if (!errors.isEmpty()) {
-            launchErrorPopUps();
-            errors.clear();
+
+        if (errorOccured) {
+            errors.get(DELETE_ERROR).show(delete, pointDelete.getX()
+                    + delete.getScene().getX()
+                    + delete.getScene().getWindow().getX(),
+                    pointDelete.getY() + delete.getScene().getY()
+                            + delete.getScene().getWindow().getY()
+                            + delete.getHeight());
         } else {
             loadPromptScreen("Are you sure you'd like to \n"
                     + "delete this user (and owned chargers)?\n\n");
@@ -209,19 +220,39 @@ public class AdminController {
      */
     @FXML
     public void editPermissions() throws SQLException {
+        errors.hideAll();
+
+        Point2D pointMenu = menu.localToScene(0.0, 0.0);
+        Point2D pointUpdate = updatePermissions.localToScene(0.0, 0.0);
+
         setSelectedUser();
-        if (manager.getSelectedUser() != null) {
-            if (manager.getAdmin().getUserid() == manager.getSelectedUser().getUserid()) {
-                errors.add("Cannot edit your own permissions!");
-            } else if (menu.getText().equals("Select...")) {
-                errors.add("Select a permission level.");
-            }
-        } else {
-            errors.add("Please select a user.");
+
+        boolean permissionsErr = false;
+        if (manager.getSelectedUser() == null) {
+            errors.changeMessage(PERMISSIONS_ERROR, SELECT_USER);
+            permissionsErr = true;
+        } else if (manager.getAdmin().getUserid() == manager.getSelectedUser().getUserid()) {
+            errors.changeMessage(PERMISSIONS_ERROR, "Cannot edit your own permissions!");
+            permissionsErr = true;
         }
-        if (!errors.isEmpty()) {
-            launchErrorPopUps();
-            errors.clear();
+
+        if (menu.getText().equals("Select...")) {
+            permissionsErr = true;
+            errors.get("permissionsMenuError").show(menu, pointMenu.getX()
+                    + menu.getScene().getX()
+                    + menu.getScene().getWindow().getX(),
+                    pointMenu.getY() + menu.getScene().getY()
+                            + menu.getScene().getWindow().getY()
+                            + menu.getHeight());
+        }
+
+        if (permissionsErr) {
+            errors.get(PERMISSIONS_ERROR).show(updatePermissions, pointUpdate.getX()
+                    + updatePermissions.getScene().getX()
+                    + updatePermissions.getScene().getWindow().getX(),
+                    pointUpdate.getY() + updatePermissions.getScene().getY()
+                            + updatePermissions.getScene().getWindow().getY()
+                            + updatePermissions.getHeight());
         } else {
             manager.getSelectedUser().setLevel(manager.permissionLevel(menu.getText()));
             manager.updateUser();
@@ -311,5 +342,14 @@ public class AdminController {
      */
     public AdminManager getManager() {
         return manager;
+    }
+
+    /**
+     * Gets error handler for the controller
+     * 
+     * @return the error handler for the controller
+     */
+    public ErrorHandler getErrors() {
+        return errors;
     }
 }
