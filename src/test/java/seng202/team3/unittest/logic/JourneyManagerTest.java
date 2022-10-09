@@ -32,7 +32,6 @@ public class JourneyManagerTest {
     static SqlInterpreter db;
     private Charger charger1;
     private Charger charger2;
-    private ArrayList<Charger> chargerList;
 
 
     /**
@@ -62,7 +61,6 @@ public class JourneyManagerTest {
     public void tearDown() {
         charger1 = null;
         charger2 = null;
-        chargerList = null;
     }
 
     /**
