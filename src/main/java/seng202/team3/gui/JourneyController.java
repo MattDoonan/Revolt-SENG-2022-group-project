@@ -399,9 +399,11 @@ public class JourneyController {
     /**
      * Saves journey to database
      */
+    @FXML
     public void saveJourney() {
         if (!(distanceError) && (journeyManager.getStart() != null)
                 && (journeyManager.getEnd() != null)) {
+            journeyManager.getSelectedJourney().setEndDate(tripName.getText());
             journeyManager.saveJourney();
         } else {
             if (journeyManager.getStart() == null) {
@@ -414,6 +416,7 @@ public class JourneyController {
                 errors.add("Some of your locations are out of range of each other");
             }
             displayErrorPopups();
+            errors.clear();
         }
     }
 

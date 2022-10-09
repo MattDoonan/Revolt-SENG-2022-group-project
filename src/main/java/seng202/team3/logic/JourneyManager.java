@@ -1,8 +1,12 @@
 package seng202.team3.logic;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
@@ -16,6 +20,12 @@ import seng202.team3.data.entity.Vehicle;
  * @version 1.0.4, Sep 22
  */
 public class JourneyManager extends ChargerHandler {
+
+    /**
+     * The log manager
+     */
+    private static final Logger logManager = LogManager.getLogger();
+
     /** {@link Journey Journey} which is the currently selected journey */
     private Journey selectedJourney;
 
@@ -223,10 +233,14 @@ public class JourneyManager extends ChargerHandler {
      */
     public void saveJourney() {
         try {
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDateTime now = LocalDateTime.now();
+            selectedJourney.setStartDate(dtf.format(now));
             SqlInterpreter.getInstance().writeJourney(selectedJourney);
-            // TODO give feedback to user, reset journey so no accidental duplicate?
+            logManager.info("Saved journey successfully");
+            //TODO now successfully saves and to throw confirmation prompt up
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.warn(e.getMessage());
         }
     }
 
