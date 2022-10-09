@@ -51,13 +51,19 @@
 	background-color: transparent;
 }
 
-#filters {
+#filters,
+#modChargers,
+#columnEdit,
+#update {
 	-fx-background-color: #ffffff;
 	-fx-border-color: #2b2d42;
 	-fx-border-width: 0.5px;
 }
 
-#filters:hover {
+#filters:hover,
+#modChargers:hover,
+#columnEdit:hover,
+#update:hover {
 	-fx-background-color: #ffeff2;
 	-fx-border-color: #2b2d42;
 	-fx-border-width: 0.5px;
@@ -90,7 +96,7 @@
 
 .menu-button:hover {
 	-fx-background-color: #d80032;
-	-fx-font-size: 17px;
+	-fx-font-size: 18px;
 	-fx-text-fill: #ffd4dd;
 }
 
