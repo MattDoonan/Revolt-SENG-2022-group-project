@@ -60,12 +60,12 @@ public class MapViewController extends MapHandler {
     private Button addButton;
 
     /** Hover set style */
-    private static final String onHover =
-            "-fx-background-color:#FFF8EB; -fx-border-color:  #9b9b9b;";
+    private static final String onHover = "-fx-background-color:#FFF8EB;"
+            + "-fx-border-color:  #9b9b9b;";
 
     /** Hover exit style */
-    private static final String exitHover =
-            "-fx-background-color:#FFFFFF; -fx-border-color:  #9b9b9b;";
+    private static final String exitHover = "-fx-background-color:#FFFFFF;"
+            + "-fx-border-color:  #9b9b9b;";
 
     /**
      * JavaScript function to add selected location to route
@@ -154,7 +154,7 @@ public class MapViewController extends MapHandler {
         if (UserManager.getUser().getLevel() == PermissionLevel.ADMIN) {
             userId = -1;
         } else if (UserManager.getUser().getLevel() == PermissionLevel.CHARGEROWNER) {
-            userId = UserManager.getUser().getUserid();
+            userId = UserManager.getUser().getId();
         }
 
         if (Boolean.TRUE.equals(!MapHandler.isMapRequested()) || javaScriptConnector == null) {
@@ -173,7 +173,7 @@ public class MapViewController extends MapHandler {
             }
             javaScriptConnector.call("addMarker", charger.getLocation().getAddress(),
                     charger.getLocation().getLat(), charger.getLocation().getLon(),
-                    charger.getChargerId(), hasPermission);
+                    charger.getId(), hasPermission);
         }
 
     }
@@ -251,7 +251,7 @@ public class MapViewController extends MapHandler {
                         coord.getAddress(), "p", 0);
                 javaScriptConnector.call(ADD_LOCATION_TO_ROUTE,
                         chargerCoord.getLat(), chargerCoord.getLon(),
-                        charger.getChargerId(), "c", 1);
+                        charger.getId(), "c", 1);
                 javaScriptConnector.call("addRoute");
             }
             logManager.info("Route added to map");

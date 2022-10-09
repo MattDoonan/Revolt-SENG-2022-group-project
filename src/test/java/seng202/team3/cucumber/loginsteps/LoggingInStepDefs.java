@@ -20,7 +20,7 @@ import seng202.team3.cucumber.CucumberFxBase;
 import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.EntityType;
-import seng202.team3.data.entity.Storable;
+import seng202.team3.data.entity.Entity;
 import seng202.team3.gui.LoginSignupController;
 import seng202.team3.gui.MainWindow;
 import seng202.team3.gui.MapHandler;
@@ -94,7 +94,7 @@ public class LoggingInStepDefs extends CucumberFxBase {
     @Given("I have an account")
     public void iHaveAnAccount() throws IOException {
         // Check for default admin account
-        List<Storable> users = db.readData(new QueryBuilderImpl()
+        List<Entity> users = db.readData(new QueryBuilderImpl()
                 .withSource(EntityType.USER)
                 .build());
         assertTrue(users.size() >= 1);

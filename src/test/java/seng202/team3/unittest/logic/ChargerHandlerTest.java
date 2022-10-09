@@ -55,7 +55,7 @@ public class ChargerHandlerTest {
     public void setUp() throws IOException {
         testUser = new User("admin@admin.com", "admin",
                 PermissionLevel.USER);
-        testUser.setUserid(1);
+        testUser.setId(1);
 
         UserManager.setUser(testUser);
         manager = new ChargerHandler();

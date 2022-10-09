@@ -11,7 +11,6 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -62,41 +61,33 @@ public class ChargerListController {
      */
     private MainController manage;
 
-    /**
-     * Border plane it inherits
-     */
-    private BorderPane listView;
-
     /** Sets rounding for distance */
     private DecimalFormat rounding = new DecimalFormat("0.00"); // rounding to 6 decimal places
-
 
     /**
      * unused
      */
     public ChargerListController() {
-        //unused
+        // unused
     }
 
     /**
      * Initialized the borderpane
-     * @param chargerList the borderpane
+     * 
      * @param controller the MainController
      */
-    public void chargerListView(BorderPane chargerList, MainController controller) {
+    public void chargerListView(MainController controller) {
         manage = controller;
-        listView = chargerList;
         fetchImage();
     }
 
     /**
      * Initialized the borderpane with the large view
-     * @param chargerList the borderpane
+     * 
      * @param controller the MainController
      */
-    public void largerView(BorderPane chargerList, MainController controller) {
+    public void largerView(MainController controller) {
         manage = controller;
-        listView = chargerList;
         fetchImage();
         loadLargerChargerView(manage.getManager().getSelectedCharger());
     }
@@ -176,6 +167,7 @@ public class ChargerListController {
 
     /**
      * Gets the image and sets the size
+     * 
      * @param size the size of the image
      * @return the image as an image view
      */
@@ -231,6 +223,7 @@ public class ChargerListController {
 
     /**
      * Loads the larger charger area
+     * 
      * @param c the charger to view
      */
     private void loadLargerChargerView(Charger c) {
@@ -249,7 +242,6 @@ public class ChargerListController {
         owner.setStyle("-fx-font-size : 20");
         owner.setWrappingWidth(480);
         largeDisplayInfo.getChildren().add(owner);
-
 
         if (c.getOperator() != null) {
             largeDisplayInfo.getChildren().add(
@@ -295,6 +287,7 @@ public class ChargerListController {
 
     /**
      * Add connector info the larger display
+     * 
      * @param c the charger that is being displayed
      */
     private void addConnectorsToView(Charger c) {
@@ -311,6 +304,7 @@ public class ChargerListController {
 
     /**
      * Returns a list of texts to add to the vbox
+     * 
      * @param c the charger c
      * @return array list of texts
      */
@@ -416,6 +410,7 @@ public class ChargerListController {
 
     /**
      * Gets the vbox to check if null
+     * 
      * @return boolean for if it is null
      */
     public Boolean getChargerTable() {

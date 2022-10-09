@@ -20,7 +20,7 @@ import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
 import seng202.team3.data.entity.PermissionLevel;
-import seng202.team3.data.entity.Storable;
+import seng202.team3.data.entity.Entity;
 import seng202.team3.data.entity.User;
 import seng202.team3.logic.UserManager;
 
@@ -36,7 +36,7 @@ public class CsvInterpreterTest {
      * and List for results.
      */
     Query query;
-    List<Storable> result;
+    List<Entity> result;
     static User testUser;
 
     /**
@@ -46,7 +46,7 @@ public class CsvInterpreterTest {
     public void setUp() throws IOException {
         testUser = new User("admin@admin.com", "admin",
                 PermissionLevel.ADMIN); // TODO: get user from db
-        testUser.setUserid(1);
+        testUser.setId(1);
 
         UserManager.setUser(testUser);
         result = new CsvInterpreter().readChargers("csvtest/validChargers");
@@ -149,7 +149,7 @@ public class CsvInterpreterTest {
      */
     @Test
     public void convertsToValidObjectTest() {
-        for (Storable o : result) {
+        for (Entity o : result) {
             assertEquals(Charger.class, o.getClass());
         }
     }
@@ -179,7 +179,7 @@ public class CsvInterpreterTest {
                 1, 0.0, "MERIDIAN ENERGY LIMITED",
                 "2020/05/01 00:00:00+00",
                 false, true, true, false);
-        c.setChargerId(1);
+        c.setId(1);
         assertEquals(c, (Charger) result.get(0));
     }
 }

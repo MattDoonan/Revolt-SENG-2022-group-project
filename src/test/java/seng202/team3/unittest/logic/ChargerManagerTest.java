@@ -25,7 +25,7 @@ import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
 import seng202.team3.data.entity.EntityType;
 import seng202.team3.data.entity.PermissionLevel;
-import seng202.team3.data.entity.Storable;
+import seng202.team3.data.entity.Entity;
 import seng202.team3.data.entity.User;
 import seng202.team3.logic.ChargerManager;
 import seng202.team3.logic.UserManager;
@@ -60,7 +60,7 @@ public class ChargerManagerTest {
     static void intialize() throws InstanceAlreadyExistsException, IOException {
         testUser = new User("admin@admin.com", "admin",
                 PermissionLevel.USER);
-        testUser.setUserid(1);
+        testUser.setId(1);
 
         UserManager.setUser(testUser);
 
@@ -105,7 +105,7 @@ public class ChargerManagerTest {
                 "2020/1/1 00:00:00", true, false,
                 false, false);
 
-        ArrayList<Storable> chargers = new ArrayList<>();
+        ArrayList<Entity> chargers = new ArrayList<>();
         chargers.add(charge1);
         chargers.add(charge2);
         chargers.add(charge3);
@@ -237,28 +237,5 @@ public class ChargerManagerTest {
                 && filteredChargers.get(1).equals(charge2)
                 && filteredChargers.get(2).equals(charge4)
                 && filteredChargers.get(3).equals(charge3));
-    }
-
-    /**
-     * Tests for toggleWarning
-     */
-    @Test
-    public void testToggleWarning() {
-        manager.setSelectedCharger(charge1);
-        manager.toggleWarning("low availability", true);
-        manager.toggleWarning("high cost", true);
-        manager.toggleWarning("long wait", false);
-        ArrayList<String> test = new ArrayList<>(Arrays.asList("high cost", "low availability"));
-        assertEquals(test, manager.getSelectedCharger().getWarnings());
-    }
-
-    @Test
-    public void testRemovalToggleWarning() {
-        manager.setSelectedCharger(charge1);
-        manager.toggleWarning("low availability", true);
-        manager.toggleWarning("high cost", true);
-        manager.toggleWarning("low availability", false);
-        ArrayList<String> test = new ArrayList<>(Arrays.asList("high cost"));
-        assertEquals(test, manager.getSelectedCharger().getWarnings());
     }
 }

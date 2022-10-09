@@ -266,7 +266,7 @@ public class AccountController {
         user.setEmail(accountEmail.getText());
         user.setCarbonSaved(UserManager.getUser().getCarbonSaved());
         user.setLevel(UserManager.getUser().getLevel());
-        user.setUserid(UserManager.getUser().getUserid());
+        user.setId(UserManager.getUser().getId());
 
         try {
             if (accountPassword.getText().length() == 0) {

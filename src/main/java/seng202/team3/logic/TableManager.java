@@ -80,7 +80,7 @@ public class TableManager extends ChargerHandler implements ChargerInterface {
         if (getSelectedCharger() != null) {
             try {
                 SqlInterpreter.getInstance().deleteData(EntityType.CHARGER,
-                        getSelectedCharger().getChargerId());
+                        getSelectedCharger().getId());
                 setSelectedCharger(null);
                 logManager.info("Charger has been deleted");
             } catch (IOException e) {
@@ -110,7 +110,7 @@ public class TableManager extends ChargerHandler implements ChargerInterface {
         mainDataQuery = new QueryBuilderImpl().withSource(EntityType.CHARGER);
         if (user.getLevel() == PermissionLevel.CHARGEROWNER || getOwner) {
             mainDataQuery.withFilter("owner",
-                    Integer.toString(user.getUserid()), ComparisonType.EQUAL);
+                    Integer.toString(user.getId()), ComparisonType.EQUAL);
         }
     }
 

@@ -490,7 +490,7 @@ public class TableController {
         mainTable.getItems().clear();
         mainTable.setItems(chargersToAdd);
         idCol.setCellValueFactory(charger -> new ReadOnlyIntegerWrapper(
-                charger.getValue().getChargerId()).asObject());
+                charger.getValue().getId()).asObject());
         xposCol.setCellValueFactory(
                 charger -> new ReadOnlyDoubleWrapper(
                         charger.getValue().getLocation().getXpos()).asObject());

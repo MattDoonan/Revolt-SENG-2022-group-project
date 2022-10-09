@@ -15,9 +15,9 @@ import org.apache.logging.log4j.Logger;
 import seng202.team3.data.database.QueryBuilder;
 import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
+import seng202.team3.data.entity.Entity;
 import seng202.team3.data.entity.EntityType;
 import seng202.team3.data.entity.PermissionLevel;
-import seng202.team3.data.entity.Storable;
 import seng202.team3.data.entity.User;
 
 /**
@@ -69,7 +69,7 @@ public class AdminManager {
         QueryBuilder mainDataQuery = new QueryBuilderImpl().withSource(EntityType.USER);
         try {
             List<User> users = new ArrayList<>();
-            for (Storable o : SqlInterpreter.getInstance()
+            for (Entity o : SqlInterpreter.getInstance()
                     .readData(mainDataQuery.build())) {
                 users.add((User) o);
             }
@@ -122,7 +122,7 @@ public class AdminManager {
      */
     public void deleteUser() {
         try {
-            SqlInterpreter.getInstance().deleteData(EntityType.USER, selectedUser.getUserid());
+            SqlInterpreter.getInstance().deleteData(EntityType.USER, selectedUser.getId());
             logManager.info("User has been deleted");
         } catch (IOException e) {
             logManager.error(e.getMessage());

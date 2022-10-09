@@ -13,7 +13,7 @@ import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.EntityType;
 import seng202.team3.data.entity.PermissionLevel;
-import seng202.team3.data.entity.Storable;
+import seng202.team3.data.entity.Entity;
 import seng202.team3.data.entity.User;
 import seng202.team3.logic.UserManager;
 
@@ -40,7 +40,7 @@ public class UserManagerTest {
 
     @AfterEach
     public void deleteUser() throws IOException {
-        SqlInterpreter.getInstance().deleteData(EntityType.USER, user.getUserid());
+        SqlInterpreter.getInstance().deleteData(EntityType.USER, user.getId());
     }
 
     /**
@@ -62,7 +62,7 @@ public class UserManagerTest {
         } catch (IOException e) {
             Assertions.fail("Database failed");
         }
-        List<Storable> res = SqlInterpreter.getInstance().readData(new QueryBuilderImpl()
+        List<Entity> res = SqlInterpreter.getInstance().readData(new QueryBuilderImpl()
                 .withSource(EntityType.USER).withFilter("username", "testAccount",
                         ComparisonType.EQUAL)
                 .build());
@@ -76,7 +76,7 @@ public class UserManagerTest {
     @Test
     public void loginTest() throws IOException {
         manager.saveUser(user, "test");
-        List<Storable> res = SqlInterpreter.getInstance().readData(new QueryBuilderImpl()
+        List<Entity> res = SqlInterpreter.getInstance().readData(new QueryBuilderImpl()
                 .withSource(EntityType.USER).withFilter("username", "testAccount",
                         ComparisonType.EQUAL)
                 .build());
@@ -98,7 +98,7 @@ public class UserManagerTest {
         user.setCarbonSaved(50);
         try {
             manager.updateUser(user);
-            List<Storable> res = SqlInterpreter.getInstance().readData(new QueryBuilderImpl()
+            List<Entity> res = SqlInterpreter.getInstance().readData(new QueryBuilderImpl()
                     .withSource(EntityType.USER).withFilter("username", "testAccount",
                             ComparisonType.EQUAL)
                     .build());

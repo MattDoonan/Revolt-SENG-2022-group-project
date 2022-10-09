@@ -235,7 +235,7 @@ public class VehicleUpdateController {
             vehicle = selectedVehicle;
         } else {
             vehicle = new Vehicle();
-            vehicle.setOwner(UserManager.getUser().getUserid());
+            vehicle.setOwner(UserManager.getUser().getId());
         }
         checkForErrors(vehicle);
     }

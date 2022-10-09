@@ -76,7 +76,7 @@ public class CarChargeTestFx extends TestFxBase {
         ArrayList<String> connectors = new ArrayList<String>();
         connectors.add("Test");
         testV = new Vehicle("Tesla", "S", 300, connectors);
-        testV.setOwner(testUser.getUserid());
+        testV.setOwner(testUser.getId());
         testV.setcurrVehicle(true);
         db.writeVehicle(testV);
     }

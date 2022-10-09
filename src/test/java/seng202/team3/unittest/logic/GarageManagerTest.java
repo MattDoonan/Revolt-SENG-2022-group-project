@@ -56,7 +56,7 @@ public class GarageManagerTest {
     public void setUp() {
         testUser = new User("admin@admin.com", "admin",
                 PermissionLevel.USER);
-        testUser.setUserid(1);
+        testUser.setId(1);
         UserManager.setUser(testUser);
 
         testVehicle = new Vehicle("TestMake", "TestModel",
@@ -84,7 +84,7 @@ public class GarageManagerTest {
         for (Vehicle vehicle : vehicleList) {
             try {
                 SqlInterpreter.getInstance().deleteData(EntityType.VEHICLE,
-                        vehicle.getVehicleId());
+                        vehicle.getId());
                 vehicle = null;
             } catch (IOException e) {
                 logManager.error(e.getMessage());
@@ -127,7 +127,7 @@ public class GarageManagerTest {
         assertTrue(testVehicle.equals(vehicles.get(vehicles.size() - 2)));
 
         for (Vehicle vehicle : vehicles) {
-            assertTrue(vehicle.getOwner() == testUser.getUserid());
+            assertTrue(vehicle.getOwner() == testUser.getId());
         }
     }
 
@@ -150,7 +150,7 @@ public class GarageManagerTest {
 
         try {
             SqlInterpreter.getInstance().deleteData(EntityType.VEHICLE,
-                    testVehicleDelete.getVehicleId());
+                    testVehicleDelete.getId());
         } catch (IOException e) {
             logManager.error(e.getMessage());
             ;

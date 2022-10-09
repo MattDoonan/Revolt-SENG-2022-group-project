@@ -63,7 +63,7 @@ public class MainManagerTest {
     public void setUp() {
         testUser = new User("admin@admin.com", "admin",
                 PermissionLevel.USER);
-        testUser.setUserid(1);
+        testUser.setId(1);
 
         UserManager.setUser(testUser);
 

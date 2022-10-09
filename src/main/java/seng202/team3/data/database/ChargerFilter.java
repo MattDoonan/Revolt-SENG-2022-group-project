@@ -3,7 +3,7 @@ package seng202.team3.data.database;
 import com.opencsv.bean.BeanVerifier;
 import com.opencsv.exceptions.CsvConstraintViolationException;
 import seng202.team3.data.entity.Charger;
-import seng202.team3.data.entity.Storable;
+import seng202.team3.data.entity.Entity;
 
 /**
  * Filter class for filtering charger objects from csv
@@ -12,7 +12,7 @@ import seng202.team3.data.entity.Storable;
  * @author Harrison Tyson
  * @version 1.0.0, Aug 22
  */
-public class ChargerFilter implements BeanVerifier<Storable> {
+public class ChargerFilter implements BeanVerifier<Entity> {
 
     /**
      * Field to filter by
@@ -44,13 +44,13 @@ public class ChargerFilter implements BeanVerifier<Storable> {
 
     /** {@inheritDoc} */
     @Override
-    public boolean verifyBean(Storable bean) throws CsvConstraintViolationException {
+    public boolean verifyBean(Entity bean) throws CsvConstraintViolationException {
         Charger c = (Charger) bean; // Convert to charger object
         boolean result;
 
         switch (field) { // cases are all lower case to allow field argument to be case insensitive
             case "chargerid":
-                result = compare(c.getChargerId());
+                result = compare(c.getId());
                 break;
             case "carparkcount":
                 result = compare(c.getAvailableParks());

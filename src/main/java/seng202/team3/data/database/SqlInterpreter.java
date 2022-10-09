@@ -27,10 +27,10 @@ import org.javatuples.Triplet;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
+import seng202.team3.data.entity.Entity;
 import seng202.team3.data.entity.EntityType;
 import seng202.team3.data.entity.Journey;
 import seng202.team3.data.entity.PermissionLevel;
-import seng202.team3.data.entity.Storable;
 import seng202.team3.data.entity.User;
 import seng202.team3.data.entity.Vehicle;
 import seng202.team3.logic.UserManager;
@@ -107,10 +107,10 @@ public class SqlInterpreter implements DataReader {
      * @author Morgan English
      */
     public void importDemoData() throws IOException {
-        List<Storable> chargersToImport = new CsvInterpreter().readData(
+        List<Entity> chargersToImport = new CsvInterpreter().readData(
                 new QueryBuilderImpl().withSource(EntityType.CHARGER).build());
         ArrayList<String> owners = new ArrayList<>();
-        for (Storable o : chargersToImport) {
+        for (Entity o : chargersToImport) {
             if (!owners.contains(((Charger) o).getDemoOwner())) {
                 owners.add(((Charger) o).getDemoOwner());
             }
@@ -333,32 +333,32 @@ public class SqlInterpreter implements DataReader {
                     break;
 
                 case USER:
-                    List<Storable> charger = readData(new QueryBuilderImpl()
+                    List<Entity> charger = readData(new QueryBuilderImpl()
                             .withSource(EntityType.CHARGER)
                             .withFilter("owner", " " + id + " ",
                                     ComparisonType.EQUAL)
                             .build());
-                    for (Storable o : charger) {
-                        deleteData(EntityType.CHARGER, ((Charger) o).getChargerId());
+                    for (Entity o : charger) {
+                        deleteData(EntityType.CHARGER, ((Charger) o).getId());
                     }
 
-                    List<Storable> journey = readData(new QueryBuilderImpl()
+                    List<Entity> journey = readData(new QueryBuilderImpl()
                             .withSource(EntityType.JOURNEY)
                             .withFilter("userid", "" + id + "",
                                     ComparisonType.EQUAL)
                             .build());
 
-                    for (Storable o : journey) {
-                        deleteData(EntityType.JOURNEY, ((Journey) o).getJourneyId());
+                    for (Entity o : journey) {
+                        deleteData(EntityType.JOURNEY, ((Journey) o).getId());
                     }
 
-                    List<Storable> vehicles = readData(new QueryBuilderImpl()
+                    List<Entity> vehicles = readData(new QueryBuilderImpl()
                             .withSource(EntityType.VEHICLE)
                             .withFilter("owner", "" + id + "",
                                     ComparisonType.EQUAL)
                             .build());
-                    for (Storable o : vehicles) {
-                        deleteData(EntityType.VEHICLE, ((Vehicle) o).getVehicleId());
+                    for (Entity o : vehicles) {
+                        deleteData(EntityType.VEHICLE, ((Vehicle) o).getId());
                     }
                     break;
                 default:
@@ -374,8 +374,8 @@ public class SqlInterpreter implements DataReader {
 
     /** {@inheritDoc} */
     @Override
-    public List<Storable> readData(Query query) throws IOException {
-        List<Storable> objects = new ArrayList<>();
+    public List<Entity> readData(Query query) throws IOException {
+        List<Entity> objects = new ArrayList<>();
         String sql = "SELECT * FROM " + query.getSource().getAsDatabase();
 
         if (query.getSource().equals(EntityType.CHARGER)) { // Add connectors to charger reading
@@ -469,8 +469,8 @@ public class SqlInterpreter implements DataReader {
      * @return list of chargers
      * @throws SQLException if sql interaction fails
      */
-    private List<Storable> asCharger(ResultSet rs) throws SQLException {
-        List<Storable> chargers = new ArrayList<>();
+    private List<Entity> asCharger(ResultSet rs) throws SQLException {
+        List<Entity> chargers = new ArrayList<>();
         List<Integer> observedChargers = new ArrayList<>();
         while (rs.next()) {
             // Skip record if already processed
@@ -486,7 +486,7 @@ public class SqlInterpreter implements DataReader {
 
             // Make charger
             Charger charger = new Charger();
-            charger.setChargerId(rs.getInt("chargerid"));
+            charger.setId(rs.getInt("chargerid"));
             charger.setDateOpened(rs.getString("datefirstoperational"));
             charger.setName(rs.getString("name"));
             charger.setLocation(new Coordinate(
@@ -510,17 +510,17 @@ public class SqlInterpreter implements DataReader {
                     .executeQuery("SELECT * FROM connector WHERE chargerid = "
                             + rs.getInt("chargerid") + ";");
 
-            List<Storable> connectors = asConnector(connectorRs);
+            List<Entity> connectors = asConnector(connectorRs);
             connectorRs.close();
 
-            for (Storable c : connectors) {
+            for (Entity c : connectors) {
                 charger.addConnector((Connector) c);
             }
             charger.setCurrentType();
 
             userRs.close();
             additional.close();
-            observedChargers.add(charger.getChargerId());
+            observedChargers.add(charger.getId());
             chargers.add(charger);
 
         }
@@ -536,8 +536,8 @@ public class SqlInterpreter implements DataReader {
      * @return list of connectors
      * @throws SQLException if sql interaction fails
      */
-    private List<Storable> asConnector(ResultSet rs) throws SQLException {
-        List<Storable> connectors = new ArrayList<>();
+    private List<Entity> asConnector(ResultSet rs) throws SQLException {
+        List<Entity> connectors = new ArrayList<>();
         while (rs.next()) {
             connectors.add(new Connector(
                     rs.getString("connectortype"),
@@ -558,8 +558,8 @@ public class SqlInterpreter implements DataReader {
      * @return list of vehicles
      * @throws SQLException if sql interaction fails
      */
-    private List<Storable> asVehicle(ResultSet rs) throws SQLException {
-        List<Storable> vehicles = new ArrayList<>();
+    private List<Entity> asVehicle(ResultSet rs) throws SQLException {
+        List<Entity> vehicles = new ArrayList<>();
         while (rs.next()) {
             Vehicle v = new Vehicle();
             v.setOwner(rs.getInt("owner"));
@@ -572,7 +572,7 @@ public class SqlInterpreter implements DataReader {
             } else {
                 v.setImgPath(rs.getString("imgPath"));
             }
-            v.setVehicleId(rs.getInt("vehicleid"));
+            v.setId(rs.getInt("vehicleid"));
             v.setConnectors(
                     new ArrayList<>(Arrays.asList(rs.getString("connectorType").split(","))));
             vehicles.add(v);
@@ -590,13 +590,13 @@ public class SqlInterpreter implements DataReader {
      * @return list of journeys
      * @throws SQLException if sql interaction fails
      */
-    private List<Storable> asJourney(ResultSet rs) throws SQLException {
-        List<Storable> journeys = new ArrayList<>();
+    private List<Entity> asJourney(ResultSet rs) throws SQLException {
+        List<Entity> journeys = new ArrayList<>();
 
         while (rs.next()) {
             Journey journey = new Journey();
             journey.setUser(rs.getInt("userid"));
-            journey.setJourneyId(rs.getInt("journeyid"));
+            journey.setId(rs.getInt("journeyid"));
             journey.setStartPosition(
                     new Coordinate(rs.getDouble("startX"), rs.getDouble("startY"),
                             rs.getDouble("startLat"), rs.getDouble("startLon")));
@@ -611,7 +611,7 @@ public class SqlInterpreter implements DataReader {
                     .executeQuery("SELECT * FROM vehicle WHERE vehicleid = "
                             + rs.getInt("vehicleid") + ";");
 
-            List<Storable> vehicles = asVehicle(vehicleRs);
+            List<Entity> vehicles = asVehicle(vehicleRs);
             vehicleRs.close();
             if (vehicles.size() == 1) {
                 journey.setVehicle((Vehicle) vehicles.get(0));
@@ -627,9 +627,9 @@ public class SqlInterpreter implements DataReader {
                             + rs.getInt("journeyid")
                             + " ORDER BY position ASC;");
 
-            List<Storable> stops = asCharger(stopRs);
+            List<Entity> stops = asCharger(stopRs);
             stopRs.close();
-            for (Storable c : stops) {
+            for (Entity c : stops) {
                 journey.addCharger((Charger) c);
             }
 
@@ -648,11 +648,11 @@ public class SqlInterpreter implements DataReader {
      * @return list of users
      * @throws SQLException if sql interaction fails
      */
-    private List<Storable> asUser(ResultSet rs) throws SQLException {
-        List<Storable> users = new ArrayList<>();
+    private List<Entity> asUser(ResultSet rs) throws SQLException {
+        List<Entity> users = new ArrayList<>();
         while (rs.next()) {
             User user = new User();
-            user.setUserid(rs.getInt("userid"));
+            user.setId(rs.getInt("userid"));
             user.setAccountName(rs.getString("username"));
             user.setEmail(rs.getString("email"));
             user.setCarbonSaved(rs.getInt("carbonSaved"));
@@ -673,7 +673,7 @@ public class SqlInterpreter implements DataReader {
     public int getChargerViews(Charger c) throws SQLException {
         ResultSet rs = createConnection().createStatement()
                 .executeQuery("Select SUM(times) FROM views "
-                        + "WHERE chargerid = " + c.getChargerId() + "");
+                        + "WHERE chargerid = " + c.getId() + "");
         int result = rs.getInt(1);
         rs.close();
         return result;
@@ -698,10 +698,10 @@ public class SqlInterpreter implements DataReader {
                 + "currenttype = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(toAdd)) {
-            if (c.getChargerId() == 0) {
+            if (c.getId() == 0) {
                 statement.setNull(1, 0);
             } else {
-                statement.setInt(1, c.getChargerId());
+                statement.setInt(1, c.getId());
             }
             double time;
             if (c.getTimeLimit() == 0.0) {
@@ -743,10 +743,10 @@ public class SqlInterpreter implements DataReader {
             statement.setString(33, c.getCurrentType());
 
             statement.executeUpdate();
-            if (c.getChargerId() == 0) {
-                c.setChargerId(statement.getGeneratedKeys().getInt(1));
+            if (c.getId() == 0) {
+                c.setId(statement.getGeneratedKeys().getInt(1));
             }
-            writeConnector(connection, c.getConnectors(), c.getChargerId());
+            writeConnector(connection, c.getConnectors(), c.getId());
 
         } catch (SQLException | NullPointerException e) {
             throw new IOException(e.getMessage());
@@ -768,7 +768,7 @@ public class SqlInterpreter implements DataReader {
      *
      * @param chargers array list of charger objects
      */
-    public void writeCharger(ArrayList<Storable> chargers) {
+    public void writeCharger(ArrayList<Entity> chargers) {
         int sizePerThread = chargers.size() / WriteChargerThread.threadCount;
         WriteChargerThread[] activeThreads = new WriteChargerThread[WriteChargerThread.threadCount];
 
@@ -781,7 +781,7 @@ public class SqlInterpreter implements DataReader {
         }
 
         // Distribute remaining chargers evenly
-        List<Storable> remChargers = chargers.subList(i * sizePerThread, chargers.size());
+        List<Entity> remChargers = chargers.subList(i * sizePerThread, chargers.size());
         for (int j = 0; j < remChargers.size(); j++) {
             activeThreads[j % WriteChargerThread.threadCount]
                     .addCharger((Charger) remChargers.get(j));
@@ -915,10 +915,10 @@ public class SqlInterpreter implements DataReader {
                 + "currVehicle = ?";
         try (Connection connection = createConnection();
                 PreparedStatement statement = connection.prepareStatement(toAdd)) {
-            if (v.getVehicleId() == 0) {
+            if (v.getId() == 0) {
                 statement.setNull(1, 0);
             } else {
-                statement.setInt(1, v.getVehicleId());
+                statement.setInt(1, v.getId());
             }
             statement.setString(2, v.getMake());
             statement.setString(3, v.getModel());
@@ -942,8 +942,8 @@ public class SqlInterpreter implements DataReader {
             statement.setBoolean(15, v.getCurrVehicle());
 
             statement.executeUpdate();
-            if (v.getVehicleId() == 0) {
-                v.setVehicleId(statement.getGeneratedKeys().getInt(1));
+            if (v.getId() == 0) {
+                v.setId(statement.getGeneratedKeys().getInt(1));
             }
         } catch (SQLException | NullPointerException e) {
             throw new IOException(e.getMessage());
@@ -983,12 +983,12 @@ public class SqlInterpreter implements DataReader {
         }
         try (Connection connection = createConnection();
                 PreparedStatement addJourney = connection.prepareStatement(toAdd)) {
-            if (j.getJourneyId() == 0) {
+            if (j.getId() == 0) {
                 addJourney.setNull(1, 0);
             } else {
-                addJourney.setInt(1, j.getJourneyId());
+                addJourney.setInt(1, j.getId());
             }
-            addJourney.setInt(2, j.getVehicle().getVehicleId());
+            addJourney.setInt(2, j.getVehicle().getId());
             addJourney.setDouble(3, j.getStartPosition().getLat());
             addJourney.setDouble(4, j.getStartPosition().getLon());
             addJourney.setDouble(5, j.getStartPosition().getXpos());
@@ -1000,7 +1000,7 @@ public class SqlInterpreter implements DataReader {
             addJourney.setString(11, j.getStartDate());
             addJourney.setString(12, j.getEndDate());
             addJourney.setInt(13, j.getUser());
-            addJourney.setInt(14, j.getVehicle().getVehicleId());
+            addJourney.setInt(14, j.getVehicle().getId());
             addJourney.setDouble(15, j.getStartPosition().getLat());
             addJourney.setDouble(16, j.getStartPosition().getLon());
             addJourney.setDouble(17, j.getStartPosition().getXpos());
@@ -1013,16 +1013,16 @@ public class SqlInterpreter implements DataReader {
             addJourney.setString(24, j.getEndDate());
             addJourney.setInt(25, j.getUser());
             addJourney.executeUpdate();
-            if (j.getJourneyId() == 0) {
-                j.setJourneyId(addJourney.getGeneratedKeys().getInt(1));
+            if (j.getId() == 0) {
+                j.setId(addJourney.getGeneratedKeys().getInt(1));
             }
 
             String stopQuery = "INSERT INTO stop (journeyid, chargerid, position) "
                     + "values (?,?,?) ON CONFLICT(journeyid, position) DO UPDATE SET "
                     + "journeyid = ?, chargerid = ?, position = ?";
             PreparedStatement statement = connection.prepareStatement(stopQuery);
-            int journeyIdForStop = j.getJourneyId();
-            if (j.getJourneyId() == 0) {
+            int journeyIdForStop = j.getId();
+            if (j.getId() == 0) {
                 try (Connection conn = createConnection();
                         Statement stmt = conn.createStatement();
                         ResultSet rs = stmt.executeQuery("SELECT journeyid "
@@ -1038,10 +1038,10 @@ public class SqlInterpreter implements DataReader {
 
             for (int i = 0; i < j.getChargers().size(); i++) {
                 statement.setInt(1, journeyIdForStop);
-                statement.setInt(2, j.getChargers().get(i).getChargerId());
+                statement.setInt(2, j.getChargers().get(i).getId());
                 statement.setInt(3, i);
-                statement.setInt(4, j.getJourneyId());
-                statement.setInt(5, j.getChargers().get(i).getChargerId());
+                statement.setInt(4, j.getId());
+                statement.setInt(5, j.getChargers().get(i).getId());
                 statement.setInt(6, i);
                 statement.executeUpdate();
             }
@@ -1066,10 +1066,10 @@ public class SqlInterpreter implements DataReader {
                 + " permissions = ?, carbonSaved = ?";
         try (Connection connection = createConnection();
                 PreparedStatement statement = connection.prepareStatement(toAdd)) {
-            if (user.getUserid() == 0) {
+            if (user.getId() == 0) {
                 statement.setNull(1, 0);
             } else {
-                statement.setInt(1, user.getUserid());
+                statement.setInt(1, user.getId());
             }
             statement.setString(2, user.getEmail());
             statement.setString(3, user.getAccountName());
@@ -1082,8 +1082,8 @@ public class SqlInterpreter implements DataReader {
             statement.setInt(10, user.getLevel().ordinal());
             statement.setDouble(11, user.getCarbonSaved());
             statement.executeUpdate();
-            if (user.getUserid() == 0) {
-                user.setUserid(statement.getGeneratedKeys().getInt(1));
+            if (user.getId() == 0) {
+                user.setId(statement.getGeneratedKeys().getInt(1));
             }
         } catch (SQLException | NullPointerException e) {
             throw new IOException(e.getMessage());
@@ -1106,10 +1106,10 @@ public class SqlInterpreter implements DataReader {
         statement.setString(2, user.getAccountName());
         statement.setInt(3, user.getLevel().ordinal());
         statement.setDouble(4, user.getCarbonSaved());
-        statement.setInt(5, user.getUserid());
+        statement.setInt(5, user.getId());
         statement.executeUpdate();
-        if (user.getUserid() == 0) {
-            user.setUserid(statement.getGeneratedKeys().getInt(1));
+        if (user.getId() == 0) {
+            user.setId(statement.getGeneratedKeys().getInt(1));
         }
         statement.close();
         connection.close();
@@ -1143,7 +1143,7 @@ public class SqlInterpreter implements DataReader {
             return null;
         }
         if (password.equals(correctPassword)) {
-            List<Storable> result = readData(new QueryBuilderImpl().withSource(EntityType.USER)
+            List<Entity> result = readData(new QueryBuilderImpl().withSource(EntityType.USER)
                     .withFilter("username", username, ComparisonType.EQUAL)
                     .build());
             if (result.size() == 1) {
@@ -1168,7 +1168,7 @@ public class SqlInterpreter implements DataReader {
         /**
          * List of chargers to write
          */
-        private ArrayList<Storable> chargersToWrite;
+        private ArrayList<Entity> chargersToWrite;
 
         /**
          * Thread db connection
@@ -1180,7 +1180,7 @@ public class SqlInterpreter implements DataReader {
          * 
          * @param chargersToWrite sublist of chargers for thread to write
          */
-        private WriteChargerThread(ArrayList<Storable> chargersToWrite) {
+        private WriteChargerThread(ArrayList<Entity> chargersToWrite) {
             this.chargersToWrite = chargersToWrite;
             this.conn = createConnection();
         }
@@ -1206,7 +1206,7 @@ public class SqlInterpreter implements DataReader {
                 logManager.error(e.getMessage());
             }
 
-            for (Storable c : chargersToWrite) { // Create SQL write statements
+            for (Entity c : chargersToWrite) { // Create SQL write statements
                 try {
                     writeCharger(conn, (Charger) c);
                 } catch (IOException e) {

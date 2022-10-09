@@ -319,7 +319,7 @@ public class ChargerController {
         }
 
         if (charger == null) {
-            newCharger.setOwnerId(UserManager.getUser().getUserid());
+            newCharger.setOwnerId(UserManager.getUser().getId());
             newCharger.setDateOpened(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss")
                     .format(Date.from(Instant.now())));
         } else {
@@ -328,7 +328,7 @@ public class ChargerController {
             coordinate.setLon(location.getLon());
             newCharger.setOwnerId(charger.getOwnerId());
             newCharger.setDateOpened(charger.getDateOpened());
-            newCharger.setChargerId(charger.getChargerId());
+            newCharger.setId(charger.getId());
         }
         coordinate.setAddress(address.getText());
         if (address.getText().length() == 0) {
@@ -389,7 +389,7 @@ public class ChargerController {
         ArrayList<Connector> connectArray = new ArrayList<>();
         if (charger != null) {
             QueryBuilder query = new QueryBuilderImpl().withSource(EntityType.CONNECTOR)
-                    .withFilter("chargerid", Integer.toString(charger.getChargerId()),
+                    .withFilter("chargerid", Integer.toString(charger.getId()),
                             ComparisonType.EQUAL);
             try {
                 for (Object object : SqlInterpreter.getInstance()

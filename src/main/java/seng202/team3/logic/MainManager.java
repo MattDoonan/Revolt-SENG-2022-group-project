@@ -110,7 +110,7 @@ public class MainManager extends ChargerHandler implements ChargerInterface {
         if (selectedCharger != null) {
             try {
                 SqlInterpreter.getInstance()
-                        .deleteData(EntityType.CHARGER, selectedCharger.getChargerId());
+                        .deleteData(EntityType.CHARGER, selectedCharger.getId());
                 selectedCharger = null;
                 logManager.info("Charger has been deleted");
                 makeAllChargers();
@@ -130,9 +130,9 @@ public class MainManager extends ChargerHandler implements ChargerInterface {
         if (getSelectedCharger() == null) {
             // Do nothing
         } else if ((UserManager.getUser().getLevel() == PermissionLevel.ADMIN)
-                || (getSelectedCharger().getOwnerId() == UserManager.getUser().getUserid())) {
+                || (getSelectedCharger().getOwnerId() == UserManager.getUser().getId())) {
             JavaScriptBridge bridge = new JavaScriptBridge();
-            bridge.loadMoreInfo(getSelectedCharger().getChargerId());
+            bridge.loadMoreInfo(getSelectedCharger().getId());
             makeAllChargers();
         }
     }

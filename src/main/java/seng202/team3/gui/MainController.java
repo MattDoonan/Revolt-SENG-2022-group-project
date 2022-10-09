@@ -258,11 +258,11 @@ public class MainController {
      */
     public void createListController() {
         try {
-            FXMLLoader webViewLoader =
-                    new FXMLLoader(getClass().getResource("/fxml/chargerListView.fxml"));
+            FXMLLoader webViewLoader = new FXMLLoader(getClass()
+                    .getResource("/fxml/chargerListView.fxml"));
             Parent mapViewParent = webViewLoader.load();
             listController = webViewLoader.getController();
-            listController.chargerListView(chargerListPane, this);
+            listController.chargerListView(this);
             chargerListPane.setCenter(mapViewParent);
             MainWindow.setController(listController);
             logManager.info("The list view has opened");
@@ -283,11 +283,11 @@ public class MainController {
      */
     public void createLargeChargerView() {
         try {
-            FXMLLoader webViewLoader =
-                    new FXMLLoader(getClass().getResource("/fxml/moreChargerInfoView.fxml"));
+            FXMLLoader webViewLoader = new FXMLLoader(getClass()
+                    .getResource("/fxml/moreChargerInfoView.fxml"));
             Parent chargerList = webViewLoader.load();
             listController = webViewLoader.getController();
-            listController.largerView(chargerListPane, this);
+            listController.largerView(this);
             chargerListPane.setCenter(chargerList);
             logManager.info("The more charger info view has opened");
         } catch (IOException e) {

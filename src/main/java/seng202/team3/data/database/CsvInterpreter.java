@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.javatuples.Triplet;
 import seng202.team3.data.entity.Charger;
-import seng202.team3.data.entity.Storable;
+import seng202.team3.data.entity.Entity;
 
 /**
  * Manages data reading and parsing from CSV files
@@ -108,11 +108,11 @@ public class CsvInterpreter implements DataReader {
      * @return list of chargers that have been read
      * @throws IOException if read/write operation fails
      */
-    public List<Storable> readChargers(String filename) throws IOException {
-        List<Storable> data;
+    public List<Entity> readChargers(String filename) throws IOException {
+        List<Entity> data;
 
         // Initialize the raw data to object converter
-        CsvToBean<Storable> builder = new CsvToBeanBuilder<Storable>(
+        CsvToBean<Entity> builder = new CsvToBeanBuilder<Entity>(
                 readFile(filename))
                 .withThrowExceptions(false) // ignore exceptions to handle later
                 .withType(Charger.class)
@@ -135,19 +135,19 @@ public class CsvInterpreter implements DataReader {
 
     /** {@inheritDoc} */
     @Override
-    public List<Storable> readData(Query query)
+    public List<Entity> readData(Query query)
             throws IOException {
-        List<Storable> data;
+        List<Entity> data;
 
         // Initialize the raw data to object converter
-        CsvToBean<Storable> builder = new CsvToBeanBuilder<Storable>(
+        CsvToBean<Entity> builder = new CsvToBeanBuilder<Entity>(
                 readFile(query.getSource().getAsCsv()))
                 .withThrowExceptions(false) // ignore exceptions to handle later
                 .withType(query.getSource().getAsClass())
                 .build();
 
         // Interpret filters for CSV
-        ArrayList<BeanVerifier<Storable>> csvFilters = new ArrayList<>();
+        ArrayList<BeanVerifier<Entity>> csvFilters = new ArrayList<>();
         switch (query.getSource()) {
             case CHARGER: // Convert to charger filter
                 for (Triplet<String, String, ComparisonType> filter : query.getFilters()) {

@@ -19,7 +19,7 @@ import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
 import seng202.team3.data.entity.EntityType;
-import seng202.team3.data.entity.Storable;
+import seng202.team3.data.entity.Entity;
 import seng202.team3.gui.MainController;
 import seng202.team3.gui.MainWindow;
 import seng202.team3.gui.MapHandler;
@@ -35,7 +35,7 @@ public class ChargerListMainStepDefs extends CucumberFxBase {
     private static MainController controller;
     static SqlInterpreter db;
 
-    private static List<Storable> chargerObject;
+    private static List<Entity> chargerObject;
 
     /**
      * {@inheritDoc}
@@ -97,7 +97,7 @@ public class ChargerListMainStepDefs extends CucumberFxBase {
         chargerObject = db.readData(new QueryBuilderImpl().withSource(EntityType.CHARGER)
                 .build());
 
-        for (Storable o : chargerObject) {
+        for (Entity o : chargerObject) {
             ((Charger) o).setOwnerId(1); // Set owner to admin
         }
         db.writeCharger(new ArrayList<>(chargerObject));
@@ -118,10 +118,10 @@ public class ChargerListMainStepDefs extends CucumberFxBase {
 
     @Then("The user is told the distance (in km) between the given location and closest chargers")
     public void checkClosestChargers() throws IOException {
-        List<Storable> o = db.readData(new QueryBuilderImpl().withSource(EntityType.CHARGER)
+        List<Entity> o = db.readData(new QueryBuilderImpl().withSource(EntityType.CHARGER)
                 .build());
         ArrayList<Charger> chargers = new ArrayList<>();
-        for (Storable c : o) {
+        for (Entity c : o) {
             chargers.add((Charger) c);
         }
         ChargerManager chargerManager = new ChargerManager();

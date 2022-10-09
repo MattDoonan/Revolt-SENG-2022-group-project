@@ -167,7 +167,7 @@ public class UserManager {
      */
     public static void deleteCurrentUser() {
         try {
-            SqlInterpreter.getInstance().deleteData(EntityType.USER, getUser().getUserid());
+            SqlInterpreter.getInstance().deleteData(EntityType.USER, getUser().getId());
             setUser(guest);
         } catch (IOException e) {
             logManager.error(e.getMessage());

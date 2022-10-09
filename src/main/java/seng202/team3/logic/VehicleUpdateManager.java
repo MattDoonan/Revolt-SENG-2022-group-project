@@ -48,7 +48,7 @@ public class VehicleUpdateManager {
     public void deleteVehicle(Vehicle vehicle) {
         try {
             SqlInterpreter.getInstance().deleteData(EntityType.VEHICLE,
-                    vehicle.getVehicleId());
+                    vehicle.getId());
             logManager.info("Vehicle has been deleted");
         } catch (IOException e) {
             logManager.error(e.getMessage());

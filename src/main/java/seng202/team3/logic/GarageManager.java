@@ -55,7 +55,7 @@ public class GarageManager {
      */
     public void resetQuery() {
         vehicleDataQuery = new QueryBuilderImpl().withSource(EntityType.VEHICLE)
-                .withFilter("owner", Integer.toString(user.getUserid()), ComparisonType.EQUAL);
+                .withFilter("owner", Integer.toString(user.getId()), ComparisonType.EQUAL);
     }
 
     /**

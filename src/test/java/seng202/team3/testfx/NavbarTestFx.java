@@ -29,7 +29,7 @@ import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.EntityType;
 import seng202.team3.data.entity.PermissionLevel;
-import seng202.team3.data.entity.Storable;
+import seng202.team3.data.entity.Entity;
 import seng202.team3.data.entity.User;
 import seng202.team3.gui.MapHandler;
 import seng202.team3.gui.MenuController;
@@ -56,22 +56,22 @@ public class NavbarTestFx extends TestFxBase {
                 "jdbc:sqlite:./target/test-classes/test_database.db");
         new CsvInterpreter().importChargersToDatabase("csvtest/filtering");
         user = new User("test@gmail.com", "MrTest", PermissionLevel.CHARGEROWNER);
-        user.setUserid(2);
+        user.setId(2);
         password = "1234";
         SqlInterpreter.getInstance().writeUser(user, UserManager.encryptThisString(password));
-        List<Storable> chargers = SqlInterpreter.getInstance()
+        List<Entity> chargers = SqlInterpreter.getInstance()
                 .readData(new QueryBuilderImpl()
                         .withSource(EntityType.CHARGER)
                         .build());
-        for (Storable o : chargers) {
-            ((Charger) o).setOwnerId(user.getUserid());
+        for (Entity o : chargers) {
+            ((Charger) o).setOwnerId(user.getId());
         }
         SqlInterpreter.getInstance().writeCharger(new ArrayList<>(chargers));
     }
 
     @AfterAll
     static void deleteUser() throws IOException {
-        SqlInterpreter.getInstance().deleteData(EntityType.USER, user.getUserid());
+        SqlInterpreter.getInstance().deleteData(EntityType.USER, user.getId());
     }
 
     @Override
@@ -129,7 +129,7 @@ public class NavbarTestFx extends TestFxBase {
             Assertions.assertTrue(true);
         }
         SqlInterpreter.getInstance()
-                .deleteData(EntityType.USER, UserManager.getUser().getUserid());
+                .deleteData(EntityType.USER, UserManager.getUser().getId());
     }
 
     @Test

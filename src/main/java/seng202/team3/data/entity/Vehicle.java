@@ -9,10 +9,7 @@ import seng202.team3.logic.UserManager;
  * @author James Billows
  * @version 1.0.0, Aug 2022
  */
-public class Vehicle implements Storable {
-
-    /** Vehicle id */
-    private int vehicleId;
+public class Vehicle extends Entity {
 
     /** Make of the vehicle */
     private String make;
@@ -58,7 +55,7 @@ public class Vehicle implements Storable {
         this.connectors = connectors;
         this.imgPath = DEFAULTIMGPATH;
         this.currVehicle = false;
-        setOwner(UserManager.getUser().getUserid());
+        setOwner(UserManager.getUser().getId());
     }
 
     /**
@@ -159,24 +156,6 @@ public class Vehicle implements Storable {
     }
 
     /**
-     * Set the vehicle id number
-     *
-     * @param number integer for the id
-     */
-    public void setVehicleId(int number) {
-        this.vehicleId = number;
-    }
-
-    /**
-     * returns the vehicle id number
-     *
-     * @return the id integer
-     */
-    public int getVehicleId() {
-        return vehicleId;
-    }
-
-    /**
      * Set whether this vehicle is the user's currently selected one
      *
      * @param flag true or false
@@ -213,16 +192,6 @@ public class Vehicle implements Storable {
     }
 
     /**
-     * toString function (mostly for debugging purposes)
-     * 
-     * @return string representation of vehicle
-     */
-    public String toString() {
-        return "MAKE: " + make + "  MODEL: " + model + "  MAXRANGE: " + maxRange
-                + "  ID: " + vehicleId + "  OWNER: " + owner + "  CURR: " + currVehicle;
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
@@ -239,14 +208,13 @@ public class Vehicle implements Storable {
                 && v.getMaxRange() == this.getMaxRange()
                 && v.getConnectors().equals(this.getConnectors())
                 && v.getImgPath().equals(this.getImgPath())
-                && v.getVehicleId() == this.getVehicleId()
                 && v.getOwner() == this.getOwner();
     }
 
     /** {@inheritDoc} */
     @Override
     public int hashCode() {
-        int result = (vehicleId ^ (vehicleId >>> 32));
+        int result = (getId() ^ (getId() >>> 32));
         result = 31 * result + make.hashCode();
         result = 31 * result + model.hashCode();
         result = 31 * result + connectors.hashCode();

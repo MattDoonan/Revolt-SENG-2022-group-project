@@ -13,8 +13,8 @@ import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.database.CsvInterpreter;
 import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.entity.Charger;
+import seng202.team3.data.entity.Entity;
 import seng202.team3.data.entity.EntityType;
-import seng202.team3.data.entity.Storable;
 
 /**
  * Tests for ChargerFilter {@link ChargerFilter} Class
@@ -26,7 +26,7 @@ public class ChargerFilterTest {
     /**
      * Has a test object with classes
      */
-    List<Storable> test;
+    List<Entity> test;
 
     /**
      * After each tear-down
@@ -49,32 +49,12 @@ public class ChargerFilterTest {
                         .build());
 
         int maximum = 0;
-        for (Storable c : test) {
-            if (((Charger) c).getChargerId() > maximum) {
-                maximum = ((Charger) c).getChargerId();
+        for (Entity c : test) {
+            if (((Charger) c).getId() > maximum) {
+                maximum = ((Charger) c).getId();
             }
         }
         assertTrue(maximum < 30);
-    }
-
-    @Test
-    public void testUniqueChargerIds() throws IOException {
-        test = new CsvInterpreter().readData(
-                new QueryBuilderImpl()
-                        .withSource(EntityType.CHARGER)
-                        .withFilter("carparkcount", "2", ComparisonType.LESS_THAN)
-                        .build());
-
-        ArrayList<Integer> integers = new ArrayList<>();
-        boolean isUnique = true;
-        for (Storable c : test) {
-            if (integers.contains(((Charger) c).getChargerId())) {
-                isUnique = false;
-            } else {
-                integers.add(((Charger) c).getChargerId());
-            }
-        }
-        assertTrue(isUnique);
     }
 
     @Test
@@ -88,7 +68,7 @@ public class ChargerFilterTest {
 
         boolean correct = true;
         double minimum = -40.0;
-        for (Storable c : test) {
+        for (Entity c : test) {
             if ((((Charger) c).getLocation().getLat() < minimum)
                     || !(((Charger) c).getOperator().contains("MERIDIAN ENERGY LIMITED"))) {
                 correct = false;

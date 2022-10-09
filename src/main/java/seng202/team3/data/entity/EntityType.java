@@ -84,7 +84,7 @@ public enum EntityType {
      * 
      * @return Class object mapped to enum
      */
-    public Class<? extends Storable> getAsClass() {
+    public Class<? extends Entity> getAsClass() {
         switch (name()) {
             case "CHARGER":
                 return Charger.class;

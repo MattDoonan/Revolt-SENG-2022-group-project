@@ -36,7 +36,7 @@ public class TableSearchFilterTestFx extends TestFxBase {
     public void start(Stage stage) throws Exception {
         testUser = new User("admin@admin.com", "admin",
                 PermissionLevel.ADMIN);
-        testUser.setUserid(1);
+        testUser.setId(1);
         UserManager.setUser(testUser);
         SqlInterpreter.removeInstance();
         db = SqlInterpreter.initialiseInstanceWithUrl(

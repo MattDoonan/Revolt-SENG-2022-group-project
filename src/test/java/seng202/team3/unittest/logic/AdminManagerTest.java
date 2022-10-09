@@ -70,7 +70,7 @@ public class AdminManagerTest {
         database.defaultDatabase();
         admin = new User("admin@admin.com", "admin",
                 PermissionLevel.ADMIN);
-        admin.setUserid(1);
+        admin.setId(1);
         SqlInterpreter.getInstance().writeUser(admin, "admin");
     }
 
@@ -85,15 +85,15 @@ public class AdminManagerTest {
         manager = new AdminManager();
         manager.setAdmin(admin);
         chargerOwnerOne = new User("charger@test.com", "chargeOne", PermissionLevel.CHARGEROWNER);
-        chargerOwnerOne.setUserid(2);
+        chargerOwnerOne.setId(2);
         chargerOwnerTwo = new User("charger2@test.com", "chargeTwo", PermissionLevel.CHARGEROWNER);
-        chargerOwnerTwo.setUserid(3);
+        chargerOwnerTwo.setId(3);
         userOne = new User("user@test.com", "userOne", PermissionLevel.USER);
-        userOne.setUserid(4);
+        userOne.setId(4);
         userTwo = new User("user2@test.com", "userTwo", PermissionLevel.USER);
-        userTwo.setUserid(5);
+        userTwo.setId(5);
         otherAdmin = new User("admin@test.com", "admin2", PermissionLevel.ADMIN);
-        otherAdmin.setUserid(6);
+        otherAdmin.setId(6);
         database.writeUser(chargerOwnerOne, "null");
         database.writeUser(chargerOwnerTwo, "null");
         database.writeUser(userOne, "null");
@@ -122,7 +122,7 @@ public class AdminManagerTest {
         }
 
         assertEquals(1, userList.size());
-        assertEquals(1, userList.get(0).getUserid());
+        assertEquals(1, userList.get(0).getId());
         assertNull(manager);
     }
 

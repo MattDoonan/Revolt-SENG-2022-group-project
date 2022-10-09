@@ -10,7 +10,7 @@ import seng202.team3.logic.UserManager;
  * @author Angus Kirtlan
  * @version 1.0.0, Aug 22
  */
-public class Journey implements Storable {
+public class Journey extends Entity {
     /** {@link Charger Chargers} used on journey */
     private ArrayList<Charger> chargers = new ArrayList<>();
 
@@ -28,9 +28,6 @@ public class Journey implements Storable {
 
     /** Ending date and time */
     private String endDate;
-
-    /** the journeys id number **/
-    private int journeyId;
 
     /**
      * id of user who took the journey
@@ -54,7 +51,7 @@ public class Journey implements Storable {
         this.vehicle = vehicle;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.user = UserManager.getUser().getUserid();
+        this.user = UserManager.getUser().getId();
     }
 
     /**
@@ -182,24 +179,6 @@ public class Journey implements Storable {
     }
 
     /**
-     * sets the ID number
-     *
-     * @param number integer for the id
-     */
-    public void setJourneyId(int number) {
-        this.journeyId = number;
-    }
-
-    /**
-     * returns the unique id number
-     *
-     * @return the integer id number
-     */
-    public int getJourneyId() {
-        return this.journeyId;
-    }
-
-    /**
      * sets the user ID number
      *
      * @param number integer for the id
@@ -232,14 +211,13 @@ public class Journey implements Storable {
                 && j.getEndPosition().equals(this.getEndPosition())
                 && j.getStartDate().equals(this.getStartDate())
                 && j.getEndDate().equals(this.getEndDate())
-                && j.getJourneyId() == this.getJourneyId()
                 && j.getUser() == this.getUser();
     }
 
     /** {@inheritDoc} */
     @Override
     public int hashCode() {
-        int result = (journeyId ^ (journeyId >>> 32));
+        int result = (getId() ^ (getId() >>> 32));
         result = 31 * result + chargers.hashCode();
         result = 31 * result + vehicle.hashCode();
         result = 31 * result + startPosition.hashCode();

@@ -23,7 +23,7 @@ import seng202.team3.data.database.Query;
 import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.EntityType;
-import seng202.team3.data.entity.Storable;
+import seng202.team3.data.entity.Entity;
 import seng202.team3.data.entity.Vehicle;
 import seng202.team3.gui.ErrorController;
 import seng202.team3.gui.GarageController;
@@ -109,17 +109,17 @@ public class VehicleManagementStepDefs extends CucumberFxBase {
 
     @And("I have no vehicles")
     public void iHaveNoVehicles() throws IOException {
-        int uid = UserManager.getUser().getUserid();
+        int uid = UserManager.getUser().getId();
         Query q = new QueryBuilderImpl()
                 .withSource(EntityType.VEHICLE)
                 .withFilter("owner", "" + uid, ComparisonType.EQUAL)
                 .build();
 
-        List<Storable> vehicles = db.readData(q);
+        List<Entity> vehicles = db.readData(q);
 
         if (vehicles.size() > 0) {
-            for (Storable o : vehicles) {
-                db.deleteData(EntityType.VEHICLE, ((Vehicle) o).getVehicleId());
+            for (Entity o : vehicles) {
+                db.deleteData(EntityType.VEHICLE, ((Vehicle) o).getId());
             }
         }
 
