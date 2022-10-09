@@ -256,7 +256,7 @@ public class MenuController {
      */
     public void setUser(User u) {
         UserManager.setUser(u);
-        loginSignout.setText("Logout");
+        loginSignout.setText("LOGOUT");
         logManager.info("User has been successfully signed in");
     }
 

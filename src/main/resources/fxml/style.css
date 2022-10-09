@@ -1,47 +1,75 @@
-.root {
-    -fx-font-family: Didact Gothic;
+* {
+	font-family: "Franklin Gothic Demi Cond";
+	-fx-font-family: "Franklin Gothic Demi Cond";
+	font-size: 12px;
+	-fx-font-size: 12px;
 }
 
 .text-area {
-    -fx-background-color: transparent;
-    background-color: transparent;
+	-fx-background-color: transparent;
+	background-color: transparent;
 }
 
 .text-area .scroll-pane {
-    -fx-background-color: transparent;
-    background-color: transparent;
+	-fx-background-color: transparent;
+	background-color: transparent;
 }
 
-.text-area .scroll-pane .viewport{
-    -fx-background-color: transparent;
-    background-color: transparent;
+.text-area .scroll-pane .viewport {
+	-fx-background-color: transparent;
+	background-color: transparent;
 }
 
-
-.text-area .scroll-pane .content{
-    -fx-background-color: transparent;
-    background-color: transparent;
+.text-area .scroll-pane .content {
+	-fx-background-color: transparent;
+	background-color: transparent;
 }
 
+.split-pane-divider {
+	-fx-background-color: transparent;
+}
+
+/* Menu bar HBox */
 #menu-bar {
-    -fx-background-color: #242582;
+	background-color: #242582;
+	-fx-background-color: #242582;
 }
 
-.menu-button {
-    -fx-background-color: #242582;
+/* All buttons in menu bar */
+.menu-bar-btn {
+	background-color: #242582;
+	-fx-background-color: #242582;
+	-fx-text-fill: white;
 }
 
-.menu-button:hover {
-    -fx-background-color: #2F2fa2;
-    -fx-font-size: 13px;
-    -fx-text-fill: #F64C72;
+.menu-bar-btn:hover {
+	background-color: #2f2fa2;
+	-fx-background-color: #2f2fa2;
+	font-size: 13px;
+	-fx-font-size: 13px;
+	-fx-text-fill: #f64c72;
 }
 
+/* Title label */
 #REVOLT {
-    -fx-fill: #F64C72;
+	fill: #f64c72;
+	-fx-fill: #f64c72;
+	font-size: 25px;
+	-fx-font-size: 25px;
 }
 
-#btn-login {
+/* All buttons on map */
+.btn-map {
+	border-color: gray;
+	-fx-border-color: gray;
+	background-color: white;
+	-fx-background-color: white;
+	-fx-text-fill: gray;
+	font-size: 15px;
+	-fx-font-size: 15px;
+}
+
+/* #btn-login {
     -fx-border-color: #F64C72;
     -fx-border-width: 3px;
-}
+} */
