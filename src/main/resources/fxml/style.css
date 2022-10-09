@@ -5,6 +5,32 @@
 	-fx-font-size: 12px;
 }
 
+.root .scroll-bar:vertical .thumb {
+	-fx-background-color: #ffffff;
+}
+
+.root .scroll-bar:horizontal .thumb {
+	-fx-background-color: #ffffff;
+}
+
+.root .scroll-bar:vertical .track {
+	-fx-background-color: #f5efef;
+}
+
+.root .scroll-bar:horizontal .track {
+	-fx-background-color: #f5efef;
+}
+
+.root .scroll-bar:vertical *.increment-button,
+.scroll-bar:vertical *.decrement-button {
+	-fx-color: white;
+}
+
+.root .scroll-bar:horizontal *.increment-button,
+.scroll-bar:horizontal *.decrement-button {
+	-fx-color: white;
+}
+
 .text-area {
 	-fx-background-color: transparent;
 	background-color: transparent;
@@ -23,6 +49,18 @@
 .text-area .scroll-pane .content {
 	-fx-background-color: transparent;
 	background-color: transparent;
+}
+
+#filters {
+	-fx-background-color: #ffffff;
+	-fx-border-color: #2b2d42;
+	-fx-border-width: 0.5px;
+}
+
+#filters:hover {
+	-fx-background-color: #ffeff2;
+	-fx-border-color: #2b2d42;
+	-fx-border-width: 0.5px;
 }
 
 .split-pane-divider {
@@ -48,6 +86,32 @@
 	font-size: 13px;
 	-fx-font-size: 13px;
 	-fx-text-fill: #f64c72;
+}
+
+.menu-button:hover {
+	-fx-background-color: #d80032;
+	-fx-font-size: 17px;
+	-fx-text-fill: #ffd4dd;
+}
+
+.reg-button {
+	-fx-background-color: #ffffff;
+	-fx-border-color: #2b2d42;
+	-fx-border-width: 0.5px;
+}
+
+.reg-button:hover {
+	-fx-background-color: #ffeff2;
+	-fx-border-color: #2b2d42;
+	-fx-border-width: 0.5px;
+}
+
+.content:hover {
+	-fx-background-color: #ffeff2;
+}
+
+#displayInfo {
+	-fx-background-color: #d80032;
 }
 
 /* Title label */

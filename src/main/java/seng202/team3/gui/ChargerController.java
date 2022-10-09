@@ -254,6 +254,15 @@ public class ChargerController {
     }
 
     /**
+     * Gets the Charger being returned
+     *
+     * @return {@link Charger} the charger that is returned
+     */
+    public Charger getCharger() {
+        return this.charger;
+    }
+
+    /**
      * Adds a coordinate with a specified name and closes the box
      */
     @FXML
@@ -285,6 +294,7 @@ public class ChargerController {
                 lat.setText(Double.toString(GeoLocationHandler.getCoordinate().getLat()));
                 lon.setText(Double.toString(GeoLocationHandler.getCoordinate().getLon()));
             }
+            owner.setText(UserManager.getUser().getAccountName());
             deleteButton.setOpacity(0.0);
         }
         displayConnectorInfo();
@@ -308,9 +318,6 @@ public class ChargerController {
         }
 
         if (charger == null) {
-            Coordinate location = prevCoordinate;
-            coordinate.setLon(location.getLon());
-            coordinate.setLat(location.getLat());
             newCharger.setOwnerId(UserManager.getUser().getUserid());
             newCharger.setDateOpened(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss")
                     .format(Date.from(Instant.now())));
