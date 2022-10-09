@@ -17,6 +17,6 @@
             </VBox>
          </content>
       </ScrollPane>
-      <Button fx:id="Inherit" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#listChargerView" text="/\" />
+      <Button fx:id="Inherit" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#listChargerView" text="↑" />
    </items>
 </SplitPane>
