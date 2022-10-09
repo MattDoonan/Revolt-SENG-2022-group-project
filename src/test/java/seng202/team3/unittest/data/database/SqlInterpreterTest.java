@@ -38,8 +38,10 @@ import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
+import seng202.team3.data.entity.EntityType;
 import seng202.team3.data.entity.Journey;
 import seng202.team3.data.entity.PermissionLevel;
+import seng202.team3.data.entity.Storable;
 import seng202.team3.data.entity.User;
 import seng202.team3.data.entity.Vehicle;
 import seng202.team3.logic.UserManager;
@@ -72,7 +74,7 @@ public class SqlInterpreterTest {
      * @param objectToTest obeject to write to database
      * @throws IOException if the writing fails
      */
-    private void writeSingleEntity(Object objectToTest) throws IOException {
+    private void writeSingleEntity(Storable objectToTest) throws IOException {
         switch (objectToTest.getClass().getSimpleName()) {
             case "Charger":
                 db.writeCharger((Charger) objectToTest);
@@ -103,11 +105,11 @@ public class SqlInterpreterTest {
      */
     private static Stream<Arguments> dbSingleEntities() {
         return Stream.of(
-                Arguments.of(testCharger, "charger"),
-                Arguments.of(testConnector1, "connector"),
-                Arguments.of(testVehicle, "vehicle"),
-                Arguments.of(testJourney, "journey"),
-                Arguments.of(testUser, "user"));
+                Arguments.of(testCharger, EntityType.CHARGER),
+                Arguments.of(testConnector1, EntityType.CONNECTOR),
+                Arguments.of(testVehicle, EntityType.VEHICLE),
+                Arguments.of(testJourney, EntityType.JOURNEY),
+                Arguments.of(testUser, EntityType.USER));
     }
 
     @BeforeAll
@@ -193,11 +195,11 @@ public class SqlInterpreterTest {
     @Test
     public void invalidFilePathTest() {
         Query query = new QueryBuilderImpl()
-                .withSource("NonExistentFilePath")
+                .withSource(null)
                 .build();
         // Check error is thrown
-        assertThrows(IOException.class, () -> {
-            db.readData(query, Charger.class);
+        assertThrows(NullPointerException.class, () -> {
+            db.readData(query);
         });
     }
 
@@ -205,51 +207,33 @@ public class SqlInterpreterTest {
      * Tests single entities can be read and written to the database
      *
      * @param objectToTest entity to test
-     * @param dbTable      table to interact with
+     * @param entity       table to interact with
      * @throws IOException read/write error
      */
     @ParameterizedTest
     @MethodSource("dbSingleEntities")
-    public void singleReadWriteTest(Object objectToTest, String dbTable)
+    public void singleReadWriteTest(Storable objectToTest, EntityType entity)
             throws IOException, SQLException {
         writeSingleEntity(objectToTest); // Write object
 
         // Get object back from db
-        List<Object> result = db.readData(
-                new QueryBuilderImpl().withSource(dbTable).build(),
-                objectToTest.getClass());
+        List<Storable> result = db.readData(
+                new QueryBuilderImpl().withSource(entity).build());
 
-        assertArrayEquals(new Object[] { objectToTest }, result.toArray());
+        assertArrayEquals(new Storable[] { objectToTest }, result.toArray());
     }
 
     @Test
     public void writeChargersFromCsvTest() throws IOException {
-        db.addChargerCsvToData("csvtest/validChargers");
-        QueryBuilder q = new QueryBuilderImpl().withSource("charger");
-        List<Object> result = db.readData(q.build(), Charger.class);
+        new CsvInterpreter().importChargersToDatabase("csvtest/validChargers");
+        QueryBuilder q = new QueryBuilderImpl().withSource(EntityType.CHARGER);
+        List<Storable> result = db.readData(q.build());
 
-        List<Object> expected = new CsvInterpreter().readData(
-                q.withSource("csvtest/validChargers").build(),
-                Charger.class);
+        List<Storable> expected = new CsvInterpreter().readChargers("csvtest/validChargers");
 
-        for (Object o : expected) {
+        for (Storable o : expected) {
             assertTrue(result.contains(o));
         }
-    }
-
-    /**
-     * Tests errors are thrown correctly when unparsable object is provided
-     */
-    @ParameterizedTest
-    @MethodSource("dbSingleEntities")
-    public void interpretAsWrongObjectTest(Object objectToTest, String dbTable) throws IOException {
-        writeSingleEntity(objectToTest); // Write to db
-
-        assertThrows(IOException.class, () -> { // Interpret as abstract Object
-            db.readData(
-                    new QueryBuilderImpl().withSource(dbTable).build(),
-                    Object.class);
-        });
     }
 
     /**
@@ -257,15 +241,15 @@ public class SqlInterpreterTest {
      */
     @ParameterizedTest
     @MethodSource("dbSingleEntities")
-    public void deleteEntityTest(Object objectToTest, String dbTable) throws IOException {
+    public void deleteEntityTest(Storable objectToTest, EntityType entity) throws IOException {
         writeSingleEntity(objectToTest); // Add to db
         if (objectToTest.getClass() == Connector.class) {
             writeSingleEntity(testConnector2);
         }
-        Query q = new QueryBuilderImpl().withSource(dbTable).build();
-        db.deleteData(dbTable, DEFAULTID); // Delete
+        Query q = new QueryBuilderImpl().withSource(entity).build();
+        db.deleteData(entity, DEFAULTID); // Delete
 
-        List<Object> result = db.readData(q, objectToTest.getClass());
+        List<Storable> result = db.readData(q);
         assertFalse(result.contains(objectToTest)); // Check no longer exists
     }
 
@@ -274,9 +258,10 @@ public class SqlInterpreterTest {
      */
     @ParameterizedTest
     @MethodSource("dbSingleEntities")
-    public void deleteMissingEntityTest(Object objectToTest, String dbTable) throws IOException {
+    public void deleteMissingEntityTest(Storable objectToTest, EntityType entity)
+            throws IOException {
         // Empty db
-        QueryBuilder q = new QueryBuilderImpl().withSource(dbTable);
+        QueryBuilder q = new QueryBuilderImpl().withSource(entity);
         if (objectToTest instanceof User) { // Remove default user
             try {
                 Connection conn = db.createConnection();
@@ -288,9 +273,9 @@ public class SqlInterpreterTest {
             }
         }
 
-        List<Object> originalTable = db.readData(q.build(), objectToTest.getClass());
-        db.deleteData(dbTable, DEFAULTID);
-        List<Object> resultTable = db.readData(q.build(), objectToTest.getClass());
+        List<Storable> originalTable = db.readData(q.build());
+        db.deleteData(entity, DEFAULTID);
+        List<Storable> resultTable = db.readData(q.build());
 
         assertArrayEquals(originalTable.toArray(), resultTable.toArray());
     }
@@ -301,7 +286,7 @@ public class SqlInterpreterTest {
     @ParameterizedTest
     @MethodSource("dbSingleEntities")
     // TODO: simplify with an 'entity' interface/superclass with getId etc.
-    public void autoIncrementIdTest(Object objectToTest, String dbTable) throws IOException {
+    public void autoIncrementIdTest(Storable objectToTest, EntityType entity) throws IOException {
         if (objectToTest.getClass() == Journey.class) {
             ((Journey) objectToTest).setVehicle(testVehicle);
         }
@@ -335,9 +320,10 @@ public class SqlInterpreterTest {
         // Get id of most recently added record
         try (Connection conn = db.createConnection();
                 Statement stmt = conn.createStatement();
-                ResultSet rs = stmt.executeQuery("SELECT " + dbTable + "id "
-                        + "FROM " + dbTable + " ORDER BY " + dbTable + "id DESC LIMIT 0,1")) {
-            entityId = rs.getInt(dbTable + "id");
+                ResultSet rs = stmt.executeQuery("SELECT " + entity.getAsDatabase() + "id "
+                        + "FROM " + entity.getAsDatabase() + " ORDER BY " + entity.getAsDatabase()
+                        + "id DESC LIMIT 0,1")) {
+            entityId = rs.getInt(entity.getAsDatabase() + "id");
             rs.close();
             stmt.close();
             conn.close();
@@ -357,14 +343,13 @@ public class SqlInterpreterTest {
         writeSingleEntity(testUser);
         testJourney.setUser(testUser.getUserid());
         writeSingleEntity(testJourney);
-        db.deleteData("user", testUser.getUserid());
-        List<Object> result = db.readData(
-                new QueryBuilderImpl().withSource("journey")
+        db.deleteData(EntityType.USER, testUser.getUserid());
+        List<Storable> result = db.readData(
+                new QueryBuilderImpl().withSource(EntityType.JOURNEY)
                         .withFilter("userid", String.valueOf(testUser.getUserid()),
                                 ComparisonType.EQUAL)
-                        .build(),
-                Journey.class);
-        assertArrayEquals(new Object[] {}, result.toArray());
+                        .build());
+        assertArrayEquals(new Storable[] {}, result.toArray());
     }
 
     @Test
@@ -372,14 +357,13 @@ public class SqlInterpreterTest {
         writeSingleEntity(testUser);
         testVehicle.setOwner(testUser.getUserid());
         writeSingleEntity(testVehicle);
-        db.deleteData("user", testUser.getUserid());
-        List<Object> result = db.readData(
-                new QueryBuilderImpl().withSource("vehicle")
+        db.deleteData(EntityType.USER, testUser.getUserid());
+        List<Storable> result = db.readData(
+                new QueryBuilderImpl().withSource(EntityType.VEHICLE)
                         .withFilter("owner", String.valueOf(testUser.getUserid()),
                                 ComparisonType.EQUAL)
-                        .build(),
-                Vehicle.class);
-        assertArrayEquals(new Object[] {}, result.toArray());
+                        .build());
+        assertArrayEquals(new Storable[] {}, result.toArray());
     }
 
     @Test
@@ -387,14 +371,13 @@ public class SqlInterpreterTest {
         writeSingleEntity(testUser);
         testCharger.setOwner(testUser.getAccountName());
         writeSingleEntity(testCharger);
-        db.deleteData("user", testUser.getUserid());
-        List<Object> result = db.readData(
-                new QueryBuilderImpl().withSource("charger")
+        db.deleteData(EntityType.USER, testUser.getUserid());
+        List<Storable> result = db.readData(
+                new QueryBuilderImpl().withSource(EntityType.CHARGER)
                         .withFilter("owner", String.valueOf(testUser.getUserid()),
                                 ComparisonType.EQUAL)
-                        .build(),
-                Charger.class);
-        assertArrayEquals(new Object[] {}, result.toArray());
+                        .build());
+        assertArrayEquals(new Storable[] {}, result.toArray());
     }
 
     /**
@@ -403,14 +386,13 @@ public class SqlInterpreterTest {
     @Test
     public void delChargerTestForConnectors() throws SQLException, IOException {
         writeSingleEntity(testCharger);
-        db.deleteData("charger", testCharger.getChargerId());
-        List<Object> result = db.readData(
-                new QueryBuilderImpl().withSource("connector")
+        db.deleteData(EntityType.CHARGER, testCharger.getChargerId());
+        List<Storable> result = db.readData(
+                new QueryBuilderImpl().withSource(EntityType.CONNECTOR)
                         .withFilter("chargerid", String.valueOf(testCharger.getChargerId()),
                                 ComparisonType.CONTAINS)
-                        .build(),
-                Connector.class);
-        assertArrayEquals(new Object[] {}, result.toArray());
+                        .build());
+        assertArrayEquals(new Storable[] {}, result.toArray());
     }
 
     /**
@@ -420,7 +402,7 @@ public class SqlInterpreterTest {
     @Test
     public void delJourneyTestForStops() throws SQLException, IOException {
         writeSingleEntity(testJourney);
-        db.deleteData("journey", testJourney.getJourneyId());
+        db.deleteData(EntityType.JOURNEY, testJourney.getJourneyId());
         ResultSet result = db.createConnection().createStatement().executeQuery(
                 "SELECT * FROM stop WHERE journeyid = " + testJourney.getJourneyId() + ";");
         assertFalse(result.getBoolean(1));
@@ -433,7 +415,7 @@ public class SqlInterpreterTest {
     @Test
     public void delChargerTestForStops() throws SQLException, IOException {
         db.writeCharger(testCharger);
-        db.deleteData("charger", testCharger.getChargerId());
+        db.deleteData(EntityType.CHARGER, testCharger.getChargerId());
         ResultSet result = db.createConnection().createStatement().executeQuery(
                 "SELECT * FROM stop WHERE chargerid = " + testCharger.getChargerId() + ";");
         assertFalse(result.getBoolean(3));
@@ -446,14 +428,13 @@ public class SqlInterpreterTest {
     @Test
     public void delVehicleTestForJourney() throws SQLException, IOException {
         db.writeJourney(testJourney);
-        db.deleteData("vehicle", testVehicle.getVehicleId());
-        List<Object> result = db.readData(
-                new QueryBuilderImpl().withSource("journey")
+        db.deleteData(EntityType.VEHICLE, testVehicle.getVehicleId());
+        List<Storable> result = db.readData(
+                new QueryBuilderImpl().withSource(EntityType.JOURNEY)
                         .withFilter("vehicleid", String.valueOf(testVehicle.getVehicleId()),
                                 ComparisonType.CONTAINS)
-                        .build(),
-                Journey.class);
-        assertArrayEquals(new Object[] {}, result.toArray());
+                        .build());
+        assertArrayEquals(new Storable[] {}, result.toArray());
     }
 
     /**
@@ -490,10 +471,10 @@ public class SqlInterpreterTest {
     @Test
     public void removingTooManyConnectorsTest() throws SQLException, IOException {
         writeSingleEntity(testCharger);
-        db.deleteData("connector", testConnector1.getId());
+        db.deleteData(EntityType.CONNECTOR, testConnector1.getId());
 
         Exception e = assertThrows(IOException.class, () -> {
-            db.deleteData("connector", testConnector2.getId());
+            db.deleteData(EntityType.CONNECTOR, testConnector2.getId());
         });
 
         assertTrue(e.getMessage()
@@ -515,10 +496,9 @@ public class SqlInterpreterTest {
 
         db.writeCharger(testCharger); // Update
 
-        List<Object> result = db.readData(
-                new QueryBuilderImpl().withSource("charger").build(),
-                Charger.class);
-        assertArrayEquals(new Object[] { testCharger }, result.toArray());
+        List<Storable> result = db.readData(
+                new QueryBuilderImpl().withSource(EntityType.CHARGER).build());
+        assertArrayEquals(new Storable[] { testCharger }, result.toArray());
     }
 
     /**
@@ -534,10 +514,9 @@ public class SqlInterpreterTest {
         testConnector1.setCurrent("UpdatedCurrent");
 
         db.writeConnector(testConnector1, 1); // Update
-        List<Object> result = db.readData(
-                new QueryBuilderImpl().withSource("connector").build(),
-                Connector.class);
-        assertArrayEquals(new Object[] { testConnector1 }, result.toArray());
+        List<Storable> result = db.readData(
+                new QueryBuilderImpl().withSource(EntityType.CONNECTOR).build());
+        assertArrayEquals(new Storable[] { testConnector1 }, result.toArray());
     }
 
     @Test
@@ -551,10 +530,9 @@ public class SqlInterpreterTest {
 
         db.writeVehicle(testVehicle); // Update
 
-        List<Object> result = db.readData(
-                new QueryBuilderImpl().withSource("vehicle").build(),
-                Vehicle.class);
-        assertArrayEquals(new Object[] { testVehicle }, result.toArray());
+        List<Storable> result = db.readData(
+                new QueryBuilderImpl().withSource(EntityType.VEHICLE).build());
+        assertArrayEquals(new Storable[] { testVehicle }, result.toArray());
     }
 
     @Test
@@ -567,10 +545,9 @@ public class SqlInterpreterTest {
 
         db.writeJourney(testJourney); // Update
 
-        List<Object> result = db.readData(
-                new QueryBuilderImpl().withSource("journey").build(),
-                Journey.class);
-        assertArrayEquals(new Object[] { testJourney }, result.toArray());
+        List<Storable> result = db.readData(
+                new QueryBuilderImpl().withSource(EntityType.JOURNEY).build());
+        assertArrayEquals(new Storable[] { testJourney }, result.toArray());
     }
 
     /**
@@ -586,12 +563,11 @@ public class SqlInterpreterTest {
                 new ArrayList<String>(Arrays.asList("ChardaMo", "Type 2 Socketed"))));
         writeSingleEntity(testJourney.getVehicle());
         writeSingleEntity(testJourney);
-        List<Object> result = db.readData(
-                new QueryBuilderImpl().withSource("journey").withFilter("vehicleid",
+        List<Storable> result = db.readData(
+                new QueryBuilderImpl().withSource(EntityType.JOURNEY).withFilter("vehicleid",
                         String.valueOf(testJourney.getVehicle().getVehicleId()),
-                        ComparisonType.CONTAINS).build(),
-                Journey.class);
-        assertArrayEquals(new Object[] { testJourney }, result.toArray());
+                        ComparisonType.CONTAINS).build());
+        assertArrayEquals(new Storable[] { testJourney }, result.toArray());
     }
 
     /**
@@ -604,12 +580,11 @@ public class SqlInterpreterTest {
         testJourney.getChargers().get(0).setOperator("New op");
         testJourney.getChargers().get(0).setDateOpened("00:00:00 12/34/56");
         writeSingleEntity(testJourney.getChargers().get(0));
-        List<Object> result = db.readData(
-                new QueryBuilderImpl().withSource("journey").withFilter("journeyid",
+        List<Storable> result = db.readData(
+                new QueryBuilderImpl().withSource(EntityType.JOURNEY).withFilter("journeyid",
                         String.valueOf(testJourney.getJourneyId()),
-                        ComparisonType.CONTAINS).build(),
-                Journey.class);
-        assertArrayEquals(new Object[] { testJourney }, result.toArray());
+                        ComparisonType.CONTAINS).build());
+        assertArrayEquals(new Storable[] { testJourney }, result.toArray());
     }
 
     /**
@@ -624,24 +599,23 @@ public class SqlInterpreterTest {
         testConnector1.setType("New Type");
         testConnector1.setCurrent(testConnector1.getCurrent());
         writeSingleEntity(testCharger);
-        List<Object> result = db.readData(
-                new QueryBuilderImpl().withSource("connector").withFilter("chargerid",
+        List<Storable> result = db.readData(
+                new QueryBuilderImpl().withSource(EntityType.CONNECTOR).withFilter("chargerid",
                         String.valueOf(testCharger.getChargerId()),
-                        ComparisonType.CONTAINS).build(),
-                Connector.class);
-        assertArrayEquals(new Object[] { testConnector1, testConnector2 }, result.toArray());
+                        ComparisonType.CONTAINS).build());
+        assertArrayEquals(new Storable[] { testConnector1, testConnector2 }, result.toArray());
     }
 
     /**
      * Check doesn't add record when missing required field
      *
      * @param objectToTest object to add
-     * @param dbTable      table to add to
+     * @param entity       table to add to
      * @throws IOException read from database fails
      */
     @ParameterizedTest
     @MethodSource("dbSingleEntities")
-    public void missingRequiredFieldTest(Object objectToTest, String dbTable) throws IOException {
+    public void missingRequiredFieldTest(Storable objectToTest, EntityType entity) throws IOException {
 
         switch (objectToTest.getClass().getSimpleName()) {
             case "Charger":
@@ -677,25 +651,23 @@ public class SqlInterpreterTest {
         // writeSingleEntity(objectToTest);
         // });
 
-        List<Object> result = db.readData(
-                new QueryBuilderImpl().withSource(dbTable).build(),
-                objectToTest.getClass());
-        assertArrayEquals(new Object[] {}, result.toArray());
+        List<Storable> result = db.readData(
+                new QueryBuilderImpl().withSource(entity).build());
+        assertArrayEquals(new Storable[] {}, result.toArray());
     }
 
     @Test
     public void allRecordsOnlyOnceTest() throws IOException {
         // objectToTest is unused but defined so existing methodsource can be used
 
-        db.addChargerCsvToData("csvtest/validChargers");
+        new CsvInterpreter().importChargersToDatabase("csvtest/validChargers");
 
-        List<Object> result = db.readData(
-                new QueryBuilderImpl().withSource("charger").build(),
-                Charger.class);
+        List<Storable> result = db.readData(
+                new QueryBuilderImpl().withSource(EntityType.CHARGER).build());
 
-        HashSet<Object> unique = new HashSet<Object>();
+        HashSet<Storable> unique = new HashSet<Storable>();
         assertTrue(result.size() > 0);
-        for (Object object : result) {
+        for (Storable object : result) {
             if (!unique.add(object)) {
                 fail("Duplicate object");
             }
@@ -704,15 +676,14 @@ public class SqlInterpreterTest {
 
     @Test
     public void singleFilterTest() throws IOException {
-        db.addChargerCsvToData("csvtest/filtering");
+        new CsvInterpreter().importChargersToDatabase("csvtest/filtering");
 
-        List<Object> result = db.readData(
-                new QueryBuilderImpl().withSource("charger")
+        List<Storable> result = db.readData(
+                new QueryBuilderImpl().withSource(EntityType.CHARGER)
                         .withFilter("owner", "MERIDIAN", ComparisonType.CONTAINS)
-                        .build(),
-                Charger.class);
+                        .build());
 
-        for (Object o : result) {
+        for (Storable o : result) {
             if (!((Charger) o).getOwner().contains("MERIDIAN")) {
                 fail("Charger did not match filter");
             }
@@ -722,15 +693,14 @@ public class SqlInterpreterTest {
 
     @Test
     public void singleFilterCaseInsensitiveTest() throws IOException {
-        db.addChargerCsvToData("csvtest/filtering");
+        new CsvInterpreter().importChargersToDatabase("csvtest/filtering");
 
-        List<Object> result = db.readData(
-                new QueryBuilderImpl().withSource("charger")
+        List<Storable> result = db.readData(
+                new QueryBuilderImpl().withSource(EntityType.CHARGER)
                         .withFilter("operator", "MERIDIAN", ComparisonType.CONTAINS)
-                        .build(),
-                Charger.class);
+                        .build());
 
-        for (Object o : result) {
+        for (Storable o : result) {
             if (!((Charger) o).getOperator().toLowerCase().contains("meridian")) {
                 fail("Charger did not match filter");
             }
@@ -740,16 +710,15 @@ public class SqlInterpreterTest {
 
     @Test
     public void multipleFilterTest() throws IOException {
-        db.addChargerCsvToData("csvtest/filtering");
+        new CsvInterpreter().importChargersToDatabase("csvtest/filtering");
 
-        List<Object> result = db.readData(
-                new QueryBuilderImpl().withSource("charger")
+        List<Storable> result = db.readData(
+                new QueryBuilderImpl().withSource(EntityType.CHARGER)
                         .withFilter("owner", "MERIDIAN", ComparisonType.CONTAINS)
                         .withFilter("haschargingcost", "false", ComparisonType.EQUAL)
-                        .build(),
-                Charger.class);
+                        .build());
 
-        for (Object o : result) {
+        for (Storable o : result) {
             if (!((Charger) o).getOwner().contains("MERIDIAN")
                     || ((Charger) o).getChargeCost()) {
                 fail("Charger did not match filter");
@@ -759,15 +728,14 @@ public class SqlInterpreterTest {
 
     @Test
     public void filterByColumnOnRelatedTableTest() throws IOException {
-        db.addChargerCsvToData("csvtest/filtering");
+        new CsvInterpreter().importChargersToDatabase("csvtest/filtering");
 
-        List<Object> result = db.readData(
-                new QueryBuilderImpl().withSource("charger")
+        List<Storable> result = db.readData(
+                new QueryBuilderImpl().withSource(EntityType.CHARGER)
                         .withFilter("connectorstatus", "operative", ComparisonType.CONTAINS)
-                        .build(),
-                Charger.class);
+                        .build());
 
-        for (Object o : result) {
+        for (Storable o : result) {
             boolean valid = false;
             for (Connector c : ((Charger) o).getConnectors()) {
                 if (c.getStatus().toLowerCase().contains("operative")) {
@@ -785,16 +753,15 @@ public class SqlInterpreterTest {
 
     @Test
     public void multipleFilterSameAttributeTest() throws IOException {
-        db.addChargerCsvToData("csvtest/filtering");
+        new CsvInterpreter().importChargersToDatabase("csvtest/filtering");
 
-        List<Object> result = db.readData(
-                new QueryBuilderImpl().withSource("charger")
+        List<Storable> result = db.readData(
+                new QueryBuilderImpl().withSource(EntityType.CHARGER)
                         .withFilter("currenttype", "AC", ComparisonType.CONTAINS)
                         .withFilter("currenttype", "DC", ComparisonType.CONTAINS)
-                        .build(),
-                Charger.class);
+                        .build());
 
-        for (Object o : result) {
+        for (Storable o : result) {
             if (!((Charger) o).getCurrentType().contains("AC")
                     || !((Charger) o).getCurrentType().contains("DC")) {
                 fail("Charger did not match filter");
@@ -805,26 +772,23 @@ public class SqlInterpreterTest {
     @Test
     public void filterByNonExistentColumnTest() throws IOException {
 
-        db.addChargerCsvToData("csvtest/filtering");
+        new CsvInterpreter().importChargersToDatabase("csvtest/filtering");
 
         assertThrows(IOException.class, () -> {
             db.readData(
-                    new QueryBuilderImpl().withSource("charger")
+                    new QueryBuilderImpl().withSource(EntityType.CHARGER)
                             .withFilter("nonExistentColumn", "1", ComparisonType.GREATER_THAN)
-                            .build(),
-                    Charger.class);
+                            .build());
         });
     }
 
     @Test
     public void allRecordsImported() throws IOException {
-        db.addChargerCsvToData("csvtest/filtering");
+        new CsvInterpreter().importChargersToDatabase("csvtest/filtering");
 
-        QueryBuilder q = new QueryBuilderImpl()
-                .withSource("csvtest/filtering");
-
-        List<Object> expected = new CsvInterpreter().readData(q.build(), Charger.class);
-        List<Object> actual = db.readData(q.withSource("charger").build(), Charger.class);
+        List<Storable> expected = new CsvInterpreter().readChargers("csvtest/filtering");
+        List<Storable> actual = db.readData(new QueryBuilderImpl().withSource(EntityType.CHARGER)
+                .build());
 
         assertEquals(expected.size(), actual.size());
     }
@@ -871,10 +835,10 @@ public class SqlInterpreterTest {
             testUser.setAccountName("New Account name");
             testUser.setLevel(PermissionLevel.CHARGEROWNER);
             db.writeUser(testUser);
-            List<Object> res = SqlInterpreter.getInstance().readData(new QueryBuilderImpl()
-                    .withSource("user").withFilter("username", testUser.getAccountName(),
+            List<Storable> res = SqlInterpreter.getInstance().readData(new QueryBuilderImpl()
+                    .withSource(EntityType.USER).withFilter("username", testUser.getAccountName(),
                             ComparisonType.EQUAL)
-                    .build(), User.class);
+                    .build());
             assertEquals(testUser, (User) res.get(0));
         } catch (SQLException | IOException e) {
             Assertions.fail("Database failed");
@@ -900,10 +864,10 @@ public class SqlInterpreterTest {
     public void updateFakeUser() {
         try {
             db.writeUser(new User("fake@email", "fake", PermissionLevel.USER));
-            List<Object> res = SqlInterpreter.getInstance().readData(new QueryBuilderImpl()
-                    .withSource("user").withFilter("username", "fake",
+            List<Storable> res = SqlInterpreter.getInstance().readData(new QueryBuilderImpl()
+                    .withSource(EntityType.USER).withFilter("username", "fake",
                             ComparisonType.EQUAL)
-                    .build(), User.class);
+                    .build());
             Assertions.assertEquals(0, res.size());
         } catch (SQLException | IOException e) {
             Assertions.fail("Database Failed");

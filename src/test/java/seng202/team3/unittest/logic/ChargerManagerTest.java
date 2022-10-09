@@ -23,7 +23,9 @@ import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
+import seng202.team3.data.entity.EntityType;
 import seng202.team3.data.entity.PermissionLevel;
+import seng202.team3.data.entity.Storable;
 import seng202.team3.data.entity.User;
 import seng202.team3.logic.ChargerManager;
 import seng202.team3.logic.UserManager;
@@ -103,7 +105,7 @@ public class ChargerManagerTest {
                 "2020/1/1 00:00:00", true, false,
                 false, false);
 
-        ArrayList<Object> chargers = new ArrayList<>();
+        ArrayList<Storable> chargers = new ArrayList<>();
         chargers.add(charge1);
         chargers.add(charge2);
         chargers.add(charge3);
@@ -118,21 +120,21 @@ public class ChargerManagerTest {
         strings.add("Otago");
 
         for (int i = 0; i < strings.size(); i++) {
-            QueryBuilder mainQuery = new QueryBuilderImpl().withSource("Charger")
+            QueryBuilder mainQuery = new QueryBuilderImpl().withSource(EntityType.CHARGER)
                     .withFilter("name", strings.get(i), ComparisonType.CONTAINS);
             try {
                 switch (i) {
                     case 0 -> {
-                        charge1 = (Charger) db.readData(mainQuery.build(), Charger.class).get(0);
+                        charge1 = (Charger) db.readData(mainQuery.build()).get(0);
                     }
                     case 1 -> {
-                        charge2 = (Charger) db.readData(mainQuery.build(), Charger.class).get(0);
+                        charge2 = (Charger) db.readData(mainQuery.build()).get(0);
                     }
                     case 2 -> {
-                        charge3 = (Charger) db.readData(mainQuery.build(), Charger.class).get(0);
+                        charge3 = (Charger) db.readData(mainQuery.build()).get(0);
                     }
                     case 3 -> {
-                        charge4 = (Charger) db.readData(mainQuery.build(), Charger.class).get(0);
+                        charge4 = (Charger) db.readData(mainQuery.build()).get(0);
                     }
                     default -> {
                         break;

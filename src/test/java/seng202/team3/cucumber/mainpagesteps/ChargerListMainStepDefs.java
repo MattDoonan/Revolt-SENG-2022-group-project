@@ -13,11 +13,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import org.junit.jupiter.api.Assertions;
 import seng202.team3.cucumber.CucumberFxBase;
-import seng202.team3.data.database.ComparisonType;
+import seng202.team3.data.database.CsvInterpreter;
 import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
+import seng202.team3.data.entity.EntityType;
+import seng202.team3.data.entity.Storable;
 import seng202.team3.gui.MainController;
 import seng202.team3.gui.MainWindow;
 import seng202.team3.gui.MapHandler;
@@ -33,8 +35,7 @@ public class ChargerListMainStepDefs extends CucumberFxBase {
     private static MainController controller;
     static SqlInterpreter db;
 
-    private static List<Object> chargerObject;
-
+    private static List<Storable> chargerObject;
 
     /**
      * {@inheritDoc}
@@ -64,7 +65,7 @@ public class ChargerListMainStepDefs extends CucumberFxBase {
     public void init() throws Exception {
         db = SqlInterpreter.getInstance();
         db.defaultDatabase();
-        db.addChargerCsvToData("csvtest/filtering");
+        new CsvInterpreter().importChargersToDatabase("csvtest/filtering");
     }
 
     @Given("No charger has been selected")
@@ -93,18 +94,18 @@ public class ChargerListMainStepDefs extends CucumberFxBase {
 
     @Given("The user has the correct tab open")
     public void correctTab() throws IOException, GeoIp2Exception {
-        chargerObject = db.readData(new QueryBuilderImpl().withSource("charger")
-                .build(), Charger.class);
+        chargerObject = db.readData(new QueryBuilderImpl().withSource(EntityType.CHARGER)
+                .build());
 
-        for (Object o : chargerObject) {
+        for (Storable o : chargerObject) {
             ((Charger) o).setOwnerId(1); // Set owner to admin
         }
         db.writeCharger(new ArrayList<>(chargerObject));
 
         clickOn("#menuButton");
         controller = (MainController) MainWindow.getController();
-        GeoLocationHandler.setCoordinate(new Coordinate(1366541.2354,5153202.1642,
-                        -43.52246856689453, 172.5812225341797),
+        GeoLocationHandler.setCoordinate(new Coordinate(1366541.2354, 5153202.1642,
+                -43.52246856689453, 172.5812225341797),
                 "University of Canterbury Waimairi Road, ChristChurch 8041, New Zealand Aotearoa");
         controller.getManager().setPosition();
         controller.getManager().setDistance(100.0);
@@ -112,15 +113,17 @@ public class ChargerListMainStepDefs extends CucumberFxBase {
 
     @Given("The user has a location tracking on")
     public void locationTracking() {
-        Assertions.assertFalse(GeoLocationHandler.getCoordinate()
-                == GeoLocationHandler.DEFAULT_COORDINATE);
+        Assertions.assertFalse(GeoLocationHandler.getCoordinate() == GeoLocationHandler.DEFAULT_COORDINATE);
     }
 
     @Then("The user is told the distance (in km) between the given location and closest chargers")
     public void checkClosestChargers() throws IOException {
-        List<Object> o = db.readData(new QueryBuilderImpl().withSource("charger")
-                .build(), Charger.class);
-        ArrayList<Charger> chargers = (ArrayList<Charger>)(Object) o;
+        List<Storable> o = db.readData(new QueryBuilderImpl().withSource(EntityType.CHARGER)
+                .build());
+        ArrayList<Charger> chargers = new ArrayList<>();
+        for (Storable c : o) {
+            chargers.add((Charger) c);
+        }
         ChargerManager chargerManager = new ChargerManager();
         chargers = chargerManager.getNearbyChargers(chargers,
                 GeoLocationHandler.getCoordinate(), 100.0);

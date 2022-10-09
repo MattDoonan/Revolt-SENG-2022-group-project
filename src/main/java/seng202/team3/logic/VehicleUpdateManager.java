@@ -4,6 +4,7 @@ import java.io.IOException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team3.data.database.SqlInterpreter;
+import seng202.team3.data.entity.EntityType;
 import seng202.team3.data.entity.Vehicle;
 
 /**
@@ -46,7 +47,7 @@ public class VehicleUpdateManager {
      */
     public void deleteVehicle(Vehicle vehicle) {
         try {
-            SqlInterpreter.getInstance().deleteData("vehicle",
+            SqlInterpreter.getInstance().deleteData(EntityType.VEHICLE,
                     vehicle.getVehicleId());
             logManager.info("Vehicle has been deleted");
         } catch (IOException e) {

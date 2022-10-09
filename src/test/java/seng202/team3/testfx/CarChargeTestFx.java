@@ -22,6 +22,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import seng202.team3.data.database.CsvInterpreter;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.data.entity.User;
@@ -68,7 +69,7 @@ public class CarChargeTestFx extends TestFxBase {
         SqlInterpreter.removeInstance();
         db = SqlInterpreter.initialiseInstanceWithUrl(
                 "jdbc:sqlite:./target/test-classes/test_database.db");
-        db.addChargerCsvToData("csvtest/filtering");
+        new CsvInterpreter().importChargersToDatabase("csvtest/filtering");
         testUser = new User("admin@admin.com", "admin",
                 PermissionLevel.ADMIN);
         db.writeUser(testUser);
@@ -79,7 +80,6 @@ public class CarChargeTestFx extends TestFxBase {
         testV.setcurrVehicle(true);
         db.writeVehicle(testV);
     }
-
 
     @Test
     public void checkAppearOnUserWithCar() {

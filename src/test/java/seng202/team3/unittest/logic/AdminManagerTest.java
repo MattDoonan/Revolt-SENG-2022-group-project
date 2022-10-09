@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Test;
 import seng202.team3.data.database.QueryBuilder;
 import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
+import seng202.team3.data.entity.EntityType;
 import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.data.entity.User;
 import seng202.team3.logic.AdminManager;
@@ -109,14 +110,14 @@ public class AdminManagerTest {
     @AfterEach
     public void tearDown() throws IOException {
         for (int i = 2; i < 7; i++) {
-            database.deleteData("user", i);
+            database.deleteData(EntityType.USER, i);
         }
         manager = null;
 
-        QueryBuilder allUsers = new QueryBuilderImpl().withSource("user");
+        QueryBuilder allUsers = new QueryBuilderImpl().withSource(EntityType.USER);
         List<User> userList = new ArrayList<>();
         for (Object o : database
-                .readData(allUsers.build(), User.class)) {
+                .readData(allUsers.build())) {
             userList.add((User) o);
         }
 

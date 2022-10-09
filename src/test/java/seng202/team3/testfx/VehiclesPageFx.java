@@ -23,6 +23,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import seng202.team3.data.database.SqlInterpreter;
+import seng202.team3.data.entity.EntityType;
 import seng202.team3.gui.GarageController;
 
 /**
@@ -51,7 +52,7 @@ public class VehiclesPageFx extends TestFxBase {
         SqlInterpreter.initialiseInstanceWithUrl(
                 "jdbc:sqlite:./target/test-classes/test_database.db");
         SqlInterpreter.getInstance().defaultDatabase();
-        SqlInterpreter.getInstance().deleteData("user", 0);
+        SqlInterpreter.getInstance().deleteData(EntityType.USER, 0);
         controller.refresh();
     }
 

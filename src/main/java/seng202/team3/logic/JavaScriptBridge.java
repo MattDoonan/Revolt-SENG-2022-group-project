@@ -22,6 +22,8 @@ import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
+import seng202.team3.data.entity.EntityType;
+import seng202.team3.data.entity.Storable;
 import seng202.team3.gui.ChargerController;
 import seng202.team3.gui.MainController;
 import seng202.team3.gui.MenuController;
@@ -162,11 +164,11 @@ public class JavaScriptBridge {
      * @param id the charger id selected
      */
     public void chargerHandler(int id) {
-        QueryBuilder query = new QueryBuilderImpl().withSource("charger")
+        QueryBuilder query = new QueryBuilderImpl().withSource(EntityType.CHARGER)
                 .withFilter("charger.chargerId", Integer.toString(id), ComparisonType.EQUAL);
         try {
-            List<Object> object = SqlInterpreter.getInstance()
-                    .readData(query.build(), Charger.class);
+            List<Storable> object = SqlInterpreter.getInstance()
+                    .readData(query.build());
             if (object.size() == 1) {
                 Charger charger = (Charger) object.get(0);
                 MenuController.getController().getManager().setSelectedCharger(charger);

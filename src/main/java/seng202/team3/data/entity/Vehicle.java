@@ -9,7 +9,7 @@ import seng202.team3.logic.UserManager;
  * @author James Billows
  * @version 1.0.0, Aug 2022
  */
-public class Vehicle {
+public class Vehicle implements Storable {
 
     /** Vehicle id */
     private int vehicleId;

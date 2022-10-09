@@ -14,7 +14,7 @@ import seng202.team3.logic.UserManager;
  * @author Harrison Tyson
  * @version 1.0.1, Aug 22
  */
-public class Charger {
+public class Charger implements Storable {
 
     /** Unique identifier */
     @CsvBindByName(column = "CHARGERID", required = true)

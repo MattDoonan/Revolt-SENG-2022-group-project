@@ -2,12 +2,15 @@ package seng202.team3.cucumber.accountsteps;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.testfx.api.FxAssert.verifyThat;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -21,10 +24,6 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.cucumber.java.mk_latn.No;
-import javafx.application.Platform;
-import javafx.collections.ObservableList;
-import javafx.collections.transformation.SortedList;
 import javafx.geometry.VerticalDirection;
 import javafx.scene.Node;
 import javafx.scene.control.TableView;
@@ -32,21 +31,20 @@ import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import seng202.team3.cucumber.CucumberFxBase;
 import seng202.team3.data.database.ComparisonType;
+import seng202.team3.data.database.CsvInterpreter;
 import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
-import seng202.team3.data.entity.*;
+import seng202.team3.data.entity.Charger;
+import seng202.team3.data.entity.Connector;
+import seng202.team3.data.entity.Coordinate;
+import seng202.team3.data.entity.EntityType;
+import seng202.team3.data.entity.PermissionLevel;
+import seng202.team3.data.entity.Storable;
+import seng202.team3.data.entity.User;
 import seng202.team3.gui.AccountController;
 import seng202.team3.gui.MainWindow;
 import seng202.team3.gui.MapHandler;
 import seng202.team3.logic.UserManager;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.testfx.api.FxAssert.verifyThat;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Cucumber Tests designed to check acceptance tests for the account page
@@ -60,9 +58,9 @@ public class AccountPageStepDefs extends CucumberFxBase {
 
     static SqlInterpreter db;
 
-    private static List<Object> chargerObject;
+    private static List<Storable> chargerObject;
 
-    private static List<Object> users;
+    private static List<Storable> users;
 
     private static User chargerOwner;
 
@@ -91,20 +89,19 @@ public class AccountPageStepDefs extends CucumberFxBase {
     public void init() throws Exception {
         db = SqlInterpreter.getInstance();
         db.defaultDatabase();
-        db.addChargerCsvToData("csvtest/filtering");
+        new CsvInterpreter().importChargersToDatabase("csvtest/filtering");
         db.writeUser(new User("Tester@gmail.com",
                 "MrTest", PermissionLevel.USER), "1234");
         chargerOwner = new User("chargerowner@gmail.com", "MrTestOwner",
                 PermissionLevel.CHARGEROWNER);
         db.writeUser(chargerOwner, UserManager.encryptThisString("qwerty"));
 
-        users = db.readData(new QueryBuilderImpl().withSource("user").build(), User.class);
+        users = db.readData(new QueryBuilderImpl().withSource(EntityType.USER).build());
 
-        chargerObject = db.readData(new QueryBuilderImpl().withSource("charger")
-                .build(),
-                Charger.class);
+        chargerObject = db.readData(new QueryBuilderImpl().withSource(EntityType.CHARGER)
+                .build());
 
-        for (Object o : chargerObject) {
+        for (Storable o : chargerObject) {
             ((Charger) o).setOwnerId(1); // Set owner to admin
         }
         db.writeCharger(new ArrayList<>(chargerObject));
@@ -276,7 +273,7 @@ public class AccountPageStepDefs extends CucumberFxBase {
         clickOn("#addCharger");
     }
 
-    @When("the user inputs the charger’s details, and clicks the ‘add charger’ button")
+    @When("the user inputs the charger's details, and clicks the 'add charger' button")
     public void inputChargerInfo() {
         clickOn("#name");
         write("Test Charger");
@@ -310,14 +307,14 @@ public class AccountPageStepDefs extends CucumberFxBase {
 
     @Then("The charger is added to the table")
     public void checkTableForCharger() throws IOException {
-        List<Object> newCharger = db.readData(new QueryBuilderImpl().withSource("charger")
-                        .withFilter("name", "Test Charger", ComparisonType.EQUAL)
-                        .build(),
-                Charger.class);
-        assertFalse(chargerObject.contains(newCharger));
+        List<Storable> newCharger = db.readData(new QueryBuilderImpl()
+                .withSource(EntityType.CHARGER)
+                .withFilter("name", "Test Charger", ComparisonType.EQUAL)
+                .build());
+        assertFalse(Arrays.equals(chargerObject.toArray(), newCharger.toArray()));
     }
 
-    @Given("There is sufficient reason to change a user’s status")
+    @Given("There is sufficient reason to change a user's status")
     public void goToPermissions() {
         clickOn("#editAdmin");
         clickOn("#table");
@@ -335,7 +332,8 @@ public class AccountPageStepDefs extends CucumberFxBase {
 
     @Then("The user now has access to different functionality of the app")
     public void checkPermission() throws IOException {
-        List<Object> user = db.readData(new QueryBuilderImpl().withSource("user").build(), User.class);
+        List<Storable> user = db.readData(new QueryBuilderImpl()
+                .withSource(EntityType.USER).build());
         assertEquals(PermissionLevel.CHARGEROWNER, ((User) user.get(1)).getLevel());
     }
 
@@ -348,14 +346,14 @@ public class AccountPageStepDefs extends CucumberFxBase {
 
     @Then("The account is deleted")
     public void checkDeletedAccount() throws IOException {
-        List<Object> change = db.readData(new QueryBuilderImpl().withSource("user").build(), User.class);
-        assertEquals(users.size()-1, change.size());
+        List<Storable> change = db.readData(new QueryBuilderImpl().withSource(EntityType.USER).build());
+        assertEquals(users.size() - 1, change.size());
     }
 
     @Given("The user owns a charger")
     public void ownsCharger() throws IOException {
-        List<Object> chargers =  db.readData(new QueryBuilderImpl().withSource("charger")
-                .withFilter("owner", "3", ComparisonType.EQUAL).build(), Charger.class);
+        List<Storable> chargers = db.readData(new QueryBuilderImpl().withSource(EntityType.CHARGER)
+                .withFilter("owner", "3", ComparisonType.EQUAL).build());
         assertTrue(chargers.size() > 0);
         clickOn("#mainTable");
     }
@@ -375,8 +373,8 @@ public class AccountPageStepDefs extends CucumberFxBase {
 
     @Then("The charger details are saved")
     public void checkChargerDetails() throws IOException {
-        List<Object> chargers =  db.readData(new QueryBuilderImpl().withSource("charger")
-                .withFilter("name", "NewName", ComparisonType.EQUAL).build(), Charger.class);
+        List<Storable> chargers = db.readData(new QueryBuilderImpl().withSource(EntityType.CHARGER)
+                .withFilter("name", "NewName", ComparisonType.EQUAL).build());
         assertEquals(10, ((Charger) chargers.get(0)).getAvailableParks());
     }
 
@@ -389,17 +387,17 @@ public class AccountPageStepDefs extends CucumberFxBase {
 
     @Then("The charger details are deleted")
     public void noChargerExists() throws IOException {
-        List<Object> chargers =  db.readData(new QueryBuilderImpl().withSource("charger")
-                .withFilter("owner", "2", ComparisonType.EQUAL).build(), Charger.class);
+        List<Storable> chargers = db.readData(new QueryBuilderImpl().withSource(EntityType.CHARGER)
+                .withFilter("owner", "2", ComparisonType.EQUAL).build());
         assertEquals(0, chargers.size());
     }
 
     @Given("The user owns no chargers")
     public void noOwnedChargers() throws IOException {
-        List<Object> chargers =  db.readData(new QueryBuilderImpl().withSource("charger")
-                .withFilter("owner", "3", ComparisonType.EQUAL).build(), Charger.class);
-        for (Object o : chargers) {
-            db.deleteData("charger", ((Charger) o).getChargerId());
+        List<Storable> chargers = db.readData(new QueryBuilderImpl().withSource(EntityType.CHARGER)
+                .withFilter("owner", "3", ComparisonType.EQUAL).build());
+        for (Storable o : chargers) {
+            db.deleteData(EntityType.CHARGER, ((Charger) o).getChargerId());
         }
         clickOn("#menuButton");
         clickOn("#accountPage");
@@ -420,17 +418,20 @@ public class AccountPageStepDefs extends CucumberFxBase {
 
     @Then("The users account has been deleted as well as chargers and vehicles")
     public void checkIfDeleted() throws IOException {
-        List<Object> findUser =  db.readData(new QueryBuilderImpl().withSource("user")
+        List<Storable> findUser = db.readData(new QueryBuilderImpl().withSource(EntityType.USER)
                 .withFilter("userid", "" + chargerOwner.getUserid() + "",
-                        ComparisonType.EQUAL).build(), User.class);
+                        ComparisonType.EQUAL)
+                .build());
         assertEquals(0, findUser.size());
-        List<Object> chargers =  db.readData(new QueryBuilderImpl().withSource("charger")
+        List<Storable> chargers = db.readData(new QueryBuilderImpl().withSource(EntityType.CHARGER)
                 .withFilter("owner", "" + chargerOwner.getUserid() + "",
-                        ComparisonType.EQUAL).build(), Charger.class);
+                        ComparisonType.EQUAL)
+                .build());
         assertEquals(0, chargers.size());
-        List<Object> vehicles =  db.readData(new QueryBuilderImpl().withSource("vehicle")
+        List<Storable> vehicles = db.readData(new QueryBuilderImpl().withSource(EntityType.VEHICLE)
                 .withFilter("owner", "" + chargerOwner.getUserid() + "",
-                        ComparisonType.EQUAL).build(), Vehicle.class);
+                        ComparisonType.EQUAL)
+                .build());
         assertEquals(0, vehicles.size());
     }
 

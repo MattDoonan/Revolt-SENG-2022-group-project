@@ -31,6 +31,7 @@ import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
+import seng202.team3.data.entity.EntityType;
 import seng202.team3.logic.GeoLocationHandler;
 import seng202.team3.logic.UserManager;
 
@@ -387,12 +388,12 @@ public class ChargerController {
     public void makeConnectors() {
         ArrayList<Connector> connectArray = new ArrayList<>();
         if (charger != null) {
-            QueryBuilder query = new QueryBuilderImpl().withSource("connector")
+            QueryBuilder query = new QueryBuilderImpl().withSource(EntityType.CONNECTOR)
                     .withFilter("chargerid", Integer.toString(charger.getChargerId()),
                             ComparisonType.EQUAL);
             try {
                 for (Object object : SqlInterpreter.getInstance()
-                        .readData(query.build(), Connector.class)) {
+                        .readData(query.build())) {
                     connectArray.add((Connector) object);
                 }
             } catch (IOException e) {

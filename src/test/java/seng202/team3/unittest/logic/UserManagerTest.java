@@ -11,7 +11,9 @@ import org.junit.jupiter.params.provider.MethodSource;
 import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
+import seng202.team3.data.entity.EntityType;
 import seng202.team3.data.entity.PermissionLevel;
+import seng202.team3.data.entity.Storable;
 import seng202.team3.data.entity.User;
 import seng202.team3.logic.UserManager;
 
@@ -38,7 +40,7 @@ public class UserManagerTest {
 
     @AfterEach
     public void deleteUser() throws IOException {
-        SqlInterpreter.getInstance().deleteData("user", user.getUserid());
+        SqlInterpreter.getInstance().deleteData(EntityType.USER, user.getUserid());
     }
 
     /**
@@ -60,10 +62,10 @@ public class UserManagerTest {
         } catch (IOException e) {
             Assertions.fail("Database failed");
         }
-        List<Object> res = SqlInterpreter.getInstance().readData(new QueryBuilderImpl()
-                .withSource("user").withFilter("username", "testAccount",
+        List<Storable> res = SqlInterpreter.getInstance().readData(new QueryBuilderImpl()
+                .withSource(EntityType.USER).withFilter("username", "testAccount",
                         ComparisonType.EQUAL)
-                .build(), User.class);
+                .build());
 
         Assertions.assertEquals((User) res.get(0), user);
     }
@@ -74,10 +76,10 @@ public class UserManagerTest {
     @Test
     public void loginTest() throws IOException {
         manager.saveUser(user, "test");
-        List<Object> res = SqlInterpreter.getInstance().readData(new QueryBuilderImpl()
-                .withSource("user").withFilter("username", "testAccount",
+        List<Storable> res = SqlInterpreter.getInstance().readData(new QueryBuilderImpl()
+                .withSource(EntityType.USER).withFilter("username", "testAccount",
                         ComparisonType.EQUAL)
-                .build(), User.class);
+                .build());
         try {
             Assertions.assertEquals((User) res.get(0),
                     manager.login("testAccount", "test"));
@@ -96,10 +98,10 @@ public class UserManagerTest {
         user.setCarbonSaved(50);
         try {
             manager.updateUser(user);
-            List<Object> res = SqlInterpreter.getInstance().readData(new QueryBuilderImpl()
-                    .withSource("user").withFilter("username", "testAccount",
+            List<Storable> res = SqlInterpreter.getInstance().readData(new QueryBuilderImpl()
+                    .withSource(EntityType.USER).withFilter("username", "testAccount",
                             ComparisonType.EQUAL)
-                    .build(), User.class);
+                    .build());
             Assertions.assertEquals((User) res.get(0), user);
         } catch (SQLException e) {
             Assertions.fail("Database failed");
@@ -168,7 +170,6 @@ public class UserManagerTest {
         Assertions.assertEquals(encrypted, toCheck);
     }
 
-
     private static Stream<Arguments> passwords() {
         return Stream.of(
                 Arguments.of("1234", "1 2 3 4"),
@@ -183,12 +184,12 @@ public class UserManagerTest {
                 Arguments.of("''''", "''"),
                 Arguments.of(" ", ""));
     }
+
     @ParameterizedTest
     @MethodSource("passwords")
-    public void checkDifferentEncryption(String original, String different ) {
+    public void checkDifferentEncryption(String original, String different) {
         String encrypted = manager.encryptThisString(original);
         String toCheck = manager.encryptThisString(different);
         Assertions.assertNotEquals(encrypted, toCheck);
     }
 }
-

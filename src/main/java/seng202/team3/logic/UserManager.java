@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team3.data.database.SqlInterpreter;
+import seng202.team3.data.entity.EntityType;
 import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.data.entity.User;
 
@@ -166,7 +167,7 @@ public class UserManager {
      */
     public static void deleteCurrentUser() {
         try {
-            SqlInterpreter.getInstance().deleteData("user", getUser().getUserid());
+            SqlInterpreter.getInstance().deleteData(EntityType.USER, getUser().getUserid());
             setUser(guest);
         } catch (IOException e) {
             logManager.error(e.getMessage());

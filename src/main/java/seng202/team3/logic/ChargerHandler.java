@@ -13,6 +13,8 @@ import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
+import seng202.team3.data.entity.EntityType;
+import seng202.team3.data.entity.Storable;
 
 /**
  * A class that deals with querying charger data and positional data
@@ -103,7 +105,7 @@ public class ChargerHandler {
      * Load the initial query
      */
     public void resetQuery() {
-        mainDataQuery = new QueryBuilderImpl().withSource("charger");
+        mainDataQuery = new QueryBuilderImpl().withSource(EntityType.CHARGER);
     }
 
     /**
@@ -112,8 +114,8 @@ public class ChargerHandler {
     public void makeAllChargers() {
         try {
             List<Charger> chargerList = new ArrayList<>();
-            for (Object o : SqlInterpreter.getInstance()
-                    .readData(mainDataQuery.build(), Charger.class)) {
+            for (Storable o : SqlInterpreter.getInstance()
+                    .readData(mainDataQuery.build())) {
                 chargerList.add((Charger) o);
             }
 

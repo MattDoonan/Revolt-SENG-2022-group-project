@@ -6,7 +6,7 @@ package seng202.team3.data.entity;
  * @author Matthew Doonan
  * @version 1.0.0, Sep 2022
  */
-public class User {
+public class User implements Storable {
 
     /** users id in database */
     private int userid;

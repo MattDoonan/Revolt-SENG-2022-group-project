@@ -6,7 +6,7 @@ package seng202.team3.data.entity;
  * @author Harrison Tyson
  * @version 1.0.0, Aug 22
  */
-public class Connector {
+public class Connector implements Storable {
     /** Unique identifier */
     private int connectorId;
 

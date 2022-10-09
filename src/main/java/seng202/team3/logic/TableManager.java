@@ -7,6 +7,7 @@ import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Coordinate;
+import seng202.team3.data.entity.EntityType;
 import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.data.entity.User;
 
@@ -78,7 +79,7 @@ public class TableManager extends ChargerHandler implements ChargerInterface {
     public void deleteCharger() {
         if (getSelectedCharger() != null) {
             try {
-                SqlInterpreter.getInstance().deleteData("charger",
+                SqlInterpreter.getInstance().deleteData(EntityType.CHARGER,
                         getSelectedCharger().getChargerId());
                 setSelectedCharger(null);
                 logManager.info("Charger has been deleted");
@@ -106,7 +107,7 @@ public class TableManager extends ChargerHandler implements ChargerInterface {
      */
     @Override
     public void resetQuery() {
-        mainDataQuery = new QueryBuilderImpl().withSource("charger");
+        mainDataQuery = new QueryBuilderImpl().withSource(EntityType.CHARGER);
         if (user.getLevel() == PermissionLevel.CHARGEROWNER || getOwner) {
             mainDataQuery.withFilter("owner",
                     Integer.toString(user.getUserid()), ComparisonType.EQUAL);

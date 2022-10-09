@@ -51,15 +51,15 @@ Feature: User checking there account information
 
   Scenario: (AT_51) A user 'Charger Owner' permissions wants to register a charger
     Given The user has a charger they would like to add to the app
-    When the user inputs the charger’s details, and clicks the ‘add charger’ button
+    When the user inputs the charger's details, and clicks the 'add charger' button
     Then The charger is added to the table
 
   Scenario: (AT_58) Admin wants to change a users permissions
-    Given There is sufficient reason to change a user’s status
+    Given There is sufficient reason to change a user's status
     When A user upgrades a user permission
     Then The user now has access to different functionality of the app
 
   Scenario: (AT_61) Admin wants to delete a user
-    Given There is sufficient reason to change a user’s status
+    Given There is sufficient reason to change a user's status
     When The admin deletes an account
     Then The account is deleted

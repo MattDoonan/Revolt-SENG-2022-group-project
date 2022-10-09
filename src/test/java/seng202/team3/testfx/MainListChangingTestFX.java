@@ -12,6 +12,8 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import seng202.team3.data.database.CsvInterpreter;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.data.entity.User;
@@ -45,7 +47,7 @@ public class MainListChangingTestFX extends TestFxBase {
                 "jdbc:sqlite:./target/test-classes/test_database.db");
         db.defaultDatabase();
 
-        db.addChargerCsvToData("csvtest/filtering");
+        new CsvInterpreter().importChargersToDatabase("csvtest/filtering");
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
         Parent page = loader.load();
@@ -89,9 +91,9 @@ public class MainListChangingTestFX extends TestFxBase {
         VBox information = (VBox) smallerInfo.getChildren().get(1);
         clickOn("#Inherit");
         VBox largerInfo = (VBox) find("#largeDisplayInfo");
-        Assertions.assertEquals(((Text)information.getChildren().get(0)).getText(),
+        Assertions.assertEquals(((Text) information.getChildren().get(0)).getText(),
                 ((Text) largerInfo.getChildren().get(2)).getText());
-        Assertions.assertEquals(((Text)information.getChildren().get(1)).getText(),
+        Assertions.assertEquals(((Text) information.getChildren().get(1)).getText(),
                 ((Text) largerInfo.getChildren().get(7)).getText());
     }
 
@@ -102,9 +104,9 @@ public class MainListChangingTestFX extends TestFxBase {
         clickOn("#Inherit");
         HBox smallerInfo = (HBox) find("#displayInfo");
         VBox information = (VBox) smallerInfo.getChildren().get(1);
-        Assertions.assertEquals(((Text)information.getChildren().get(0)).getText(),
+        Assertions.assertEquals(((Text) information.getChildren().get(0)).getText(),
                 ((Text) largerInfo.getChildren().get(2)).getText());
-        Assertions.assertEquals(((Text)information.getChildren().get(1)).getText(),
+        Assertions.assertEquals(((Text) information.getChildren().get(1)).getText(),
                 ((Text) largerInfo.getChildren().get(7)).getText());
     }
 

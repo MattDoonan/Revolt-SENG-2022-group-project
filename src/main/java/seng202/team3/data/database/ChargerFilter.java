@@ -3,6 +3,7 @@ package seng202.team3.data.database;
 import com.opencsv.bean.BeanVerifier;
 import com.opencsv.exceptions.CsvConstraintViolationException;
 import seng202.team3.data.entity.Charger;
+import seng202.team3.data.entity.Storable;
 
 /**
  * Filter class for filtering charger objects from csv
@@ -11,7 +12,7 @@ import seng202.team3.data.entity.Charger;
  * @author Harrison Tyson
  * @version 1.0.0, Aug 22
  */
-public class ChargerFilter implements BeanVerifier<Object> {
+public class ChargerFilter implements BeanVerifier<Storable> {
 
     /**
      * Field to filter by
@@ -43,7 +44,7 @@ public class ChargerFilter implements BeanVerifier<Object> {
 
     /** {@inheritDoc} */
     @Override
-    public boolean verifyBean(Object bean) throws CsvConstraintViolationException {
+    public boolean verifyBean(Storable bean) throws CsvConstraintViolationException {
         Charger c = (Charger) bean; // Convert to charger object
         boolean result;
 

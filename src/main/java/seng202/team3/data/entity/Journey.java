@@ -10,7 +10,7 @@ import seng202.team3.logic.UserManager;
  * @author Angus Kirtlan
  * @version 1.0.0, Aug 22
  */
-public class Journey {
+public class Journey implements Storable {
     /** {@link Charger Chargers} used on journey */
     private ArrayList<Charger> chargers = new ArrayList<>();
 

@@ -9,9 +9,6 @@ import java.util.stream.Stream;
 
 import javax.management.InstanceAlreadyExistsException;
 
-import javafx.geometry.HorizontalDirection;
-import javafx.geometry.VerticalDirection;
-import javafx.scene.control.Button;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -26,11 +23,13 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import seng202.team3.data.database.ComparisonType;
+import seng202.team3.data.database.CsvInterpreter;
 import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
+import seng202.team3.data.entity.EntityType;
 import seng202.team3.data.entity.PermissionLevel;
+import seng202.team3.data.entity.Storable;
 import seng202.team3.data.entity.User;
 import seng202.team3.gui.MapHandler;
 import seng202.team3.gui.MenuController;
@@ -55,15 +54,16 @@ public class NavbarTestFx extends TestFxBase {
         SqlInterpreter.removeInstance();
         SqlInterpreter.initialiseInstanceWithUrl(
                 "jdbc:sqlite:./target/test-classes/test_database.db");
-        SqlInterpreter.getInstance().addChargerCsvToData("csvtest/filtering");
+        new CsvInterpreter().importChargersToDatabase("csvtest/filtering");
         user = new User("test@gmail.com", "MrTest", PermissionLevel.CHARGEROWNER);
         user.setUserid(2);
         password = "1234";
         SqlInterpreter.getInstance().writeUser(user, UserManager.encryptThisString(password));
-        List<Object> chargers = SqlInterpreter.getInstance().readData(new QueryBuilderImpl()
-                .withSource("charger")
-                .build(), Charger.class);
-        for (Object o : chargers) {
+        List<Storable> chargers = SqlInterpreter.getInstance()
+                .readData(new QueryBuilderImpl()
+                        .withSource(EntityType.CHARGER)
+                        .build());
+        for (Storable o : chargers) {
             ((Charger) o).setOwnerId(user.getUserid());
         }
         SqlInterpreter.getInstance().writeCharger(new ArrayList<>(chargers));
@@ -71,7 +71,7 @@ public class NavbarTestFx extends TestFxBase {
 
     @AfterAll
     static void deleteUser() throws IOException {
-        SqlInterpreter.getInstance().deleteData("user", user.getUserid());
+        SqlInterpreter.getInstance().deleteData(EntityType.USER, user.getUserid());
     }
 
     @Override
@@ -129,7 +129,7 @@ public class NavbarTestFx extends TestFxBase {
             Assertions.assertTrue(true);
         }
         SqlInterpreter.getInstance()
-                .deleteData("user", UserManager.getUser().getUserid());
+                .deleteData(EntityType.USER, UserManager.getUser().getUserid());
     }
 
     @Test

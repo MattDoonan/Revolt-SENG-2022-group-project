@@ -11,6 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import seng202.team3.data.database.CsvInterpreter;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.PermissionLevel;
@@ -42,7 +43,7 @@ public class TableSearchFilterTestFx extends TestFxBase {
                 "jdbc:sqlite:./target/test-classes/test_database.db");
         db.defaultDatabase();
 
-        db.addChargerCsvToData("csvtest/filtering");
+        new CsvInterpreter().importChargersToDatabase("csvtest/filtering");
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main_table.fxml"));
         Parent page = loader.load();

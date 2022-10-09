@@ -20,6 +20,7 @@ import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
 import seng202.team3.data.entity.PermissionLevel;
+import seng202.team3.data.entity.Storable;
 import seng202.team3.data.entity.User;
 import seng202.team3.logic.UserManager;
 
@@ -35,7 +36,7 @@ public class CsvInterpreterTest {
      * and List for results.
      */
     Query query;
-    List<Object> result;
+    List<Storable> result;
     static User testUser;
 
     /**
@@ -48,10 +49,7 @@ public class CsvInterpreterTest {
         testUser.setUserid(1);
 
         UserManager.setUser(testUser);
-        query = new QueryBuilderImpl()
-                .withSource("csvtest/validChargers")
-                .build();
-        result = new CsvInterpreter().readData(query, Charger.class);
+        result = new CsvInterpreter().readChargers("csvtest/validChargers");
 
     }
 
@@ -74,9 +72,9 @@ public class CsvInterpreterTest {
         // Check error is thrown
         assertThrows(NullPointerException.class, () -> {
             Query query = new QueryBuilderImpl()
-                    .withSource("NonExistentFilePath")
+                    .withSource(null)
                     .build();
-            new CsvInterpreter().readData(query, Charger.class);
+            new CsvInterpreter().readData(query);
         });
     }
 
@@ -87,10 +85,8 @@ public class CsvInterpreterTest {
     public void missingHeaderTest() {
         // Check exception is thrown
         IOException exception = assertThrows(IOException.class, () -> {
-            Query query = new QueryBuilderImpl()
-                    .withSource("csvtest/missingHeader")
-                    .build();
-            new CsvInterpreter().readData(query, Charger.class);
+
+            result = new CsvInterpreter().readChargers("csvtest/missingHeader");
         });
 
         // Check header is missing
@@ -106,10 +102,7 @@ public class CsvInterpreterTest {
     public void invalidDataTypeTest() {
         // Check exception is thrown
         IOException exception = assertThrows(IOException.class, () -> {
-            Query query = new QueryBuilderImpl()
-                    .withSource("csvtest/invalidDataType")
-                    .build();
-            new CsvInterpreter().readData(query, Charger.class);
+            result = new CsvInterpreter().readChargers("csvtest/invalidDataType");
         });
 
         // Check data cannot be converted
@@ -125,10 +118,7 @@ public class CsvInterpreterTest {
     public void missingDataValueTest() {
         // Check exception is thrown
         IOException exception = assertThrows(IOException.class, () -> {
-            Query query = new QueryBuilderImpl()
-                    .withSource("csvtest/missingDataValue")
-                    .build();
-            new CsvInterpreter().readData(query, Charger.class);
+            result = new CsvInterpreter().readChargers("csvtest/missingDataValue");
         });
 
         // Check data is missing
@@ -145,10 +135,7 @@ public class CsvInterpreterTest {
     public void multipleErrorMessagesCombineTest() {
         // Check exception is thrown
         IOException exception = assertThrows(IOException.class, () -> {
-            Query query = new QueryBuilderImpl()
-                    .withSource("csvtest/multipleErrorMessagesCombine")
-                    .build();
-            new CsvInterpreter().readData(query, Charger.class);
+            result = new CsvInterpreter().readChargers("csvtest/multipleErrorMessagesCombine");
         });
 
         // Check invalid data type
@@ -162,7 +149,7 @@ public class CsvInterpreterTest {
      */
     @Test
     public void convertsToValidObjectTest() {
-        for (Object o : result) {
+        for (Storable o : result) {
             assertEquals(Charger.class, o.getClass());
         }
     }

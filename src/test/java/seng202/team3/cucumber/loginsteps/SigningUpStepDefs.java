@@ -22,7 +22,9 @@ import seng202.team3.cucumber.CucumberFxBase;
 import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
+import seng202.team3.data.entity.EntityType;
 import seng202.team3.data.entity.PermissionLevel;
+import seng202.team3.data.entity.Storable;
 import seng202.team3.data.entity.User;
 import seng202.team3.gui.LoginSignupController;
 import seng202.team3.gui.MainWindow;
@@ -92,10 +94,9 @@ public class SigningUpStepDefs extends CucumberFxBase {
 
     @Given("account with username: {string} does not exist")
     public void accountWithUsernameDoesNotExist(String username) throws IOException {
-        List<Object> users = db.readData(new QueryBuilderImpl()
-                .withSource("user")
-                .withFilter("username", username, ComparisonType.EQUAL).build(),
-                User.class);
+        List<Storable> users = db.readData(new QueryBuilderImpl()
+                .withSource(EntityType.USER)
+                .withFilter("username", username, ComparisonType.EQUAL).build());
         assertTrue(users.isEmpty());
     }
 
@@ -118,11 +119,10 @@ public class SigningUpStepDefs extends CucumberFxBase {
 
     @Then("an account with username: {string} and email: {string} is created")
     public void anAccountWithUsernameAndEmail(String username, String email) throws IOException {
-        List<Object> users = db.readData(new QueryBuilderImpl()
-                .withSource("user")
-                .withFilter("username", username, ComparisonType.EQUAL).build(),
-                User.class);
-        assertTrue(users.size() == 1);
+        List<Storable> users = db.readData(new QueryBuilderImpl()
+                .withSource(EntityType.USER)
+                .withFilter("username", username, ComparisonType.EQUAL).build());
+        assertEquals(1, users.size());
 
         if (users.get(0) instanceof User) {
             User user = (User) users.get(0);

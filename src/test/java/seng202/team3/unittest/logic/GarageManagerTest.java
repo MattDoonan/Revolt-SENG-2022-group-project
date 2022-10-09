@@ -16,6 +16,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import seng202.team3.data.database.SqlInterpreter;
+import seng202.team3.data.entity.EntityType;
 import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.data.entity.User;
 import seng202.team3.data.entity.Vehicle;
@@ -82,7 +83,7 @@ public class GarageManagerTest {
     public void tearDown() {
         for (Vehicle vehicle : vehicleList) {
             try {
-                SqlInterpreter.getInstance().deleteData("vehicle",
+                SqlInterpreter.getInstance().deleteData(EntityType.VEHICLE,
                         vehicle.getVehicleId());
                 vehicle = null;
             } catch (IOException e) {
@@ -148,7 +149,7 @@ public class GarageManagerTest {
         assertTrue(vehicles.contains(testVehicleDelete));
 
         try {
-            SqlInterpreter.getInstance().deleteData("vehicle",
+            SqlInterpreter.getInstance().deleteData(EntityType.VEHICLE,
                     testVehicleDelete.getVehicleId());
         } catch (IOException e) {
             logManager.error(e.getMessage());

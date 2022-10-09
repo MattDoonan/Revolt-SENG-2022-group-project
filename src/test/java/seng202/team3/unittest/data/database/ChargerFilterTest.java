@@ -13,6 +13,8 @@ import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.database.CsvInterpreter;
 import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.entity.Charger;
+import seng202.team3.data.entity.EntityType;
+import seng202.team3.data.entity.Storable;
 
 /**
  * Tests for ChargerFilter {@link ChargerFilter} Class
@@ -24,7 +26,7 @@ public class ChargerFilterTest {
     /**
      * Has a test object with classes
      */
-    List<Object> test;
+    List<Storable> test;
 
     /**
      * After each tear-down
@@ -42,13 +44,12 @@ public class ChargerFilterTest {
     public void testChargerId() throws IOException {
         test = new CsvInterpreter().readData(
                 new QueryBuilderImpl()
-                        .withSource("charger")
+                        .withSource(EntityType.CHARGER)
                         .withFilter("CHARGERID", "30", ComparisonType.LESS_THAN)
-                        .build(),
-                Charger.class);
+                        .build());
 
         int maximum = 0;
-        for (Object c : test) {
+        for (Storable c : test) {
             if (((Charger) c).getChargerId() > maximum) {
                 maximum = ((Charger) c).getChargerId();
             }
@@ -60,14 +61,13 @@ public class ChargerFilterTest {
     public void testUniqueChargerIds() throws IOException {
         test = new CsvInterpreter().readData(
                 new QueryBuilderImpl()
-                        .withSource("charger")
+                        .withSource(EntityType.CHARGER)
                         .withFilter("carparkcount", "2", ComparisonType.LESS_THAN)
-                        .build(),
-                Charger.class);
+                        .build());
 
         ArrayList<Integer> integers = new ArrayList<>();
         boolean isUnique = true;
-        for (Object c : test) {
+        for (Storable c : test) {
             if (integers.contains(((Charger) c).getChargerId())) {
                 isUnique = false;
             } else {
@@ -81,15 +81,14 @@ public class ChargerFilterTest {
     public void testDoubleFilters() throws IOException {
         test = new CsvInterpreter().readData(
                 new QueryBuilderImpl()
-                        .withSource("charger")
+                        .withSource(EntityType.CHARGER)
                         .withFilter("operator", "MERIDIAN ENERGY LIMITED", ComparisonType.CONTAINS)
                         .withFilter("latitude", "-40", ComparisonType.GREATER_THAN_EQUAL)
-                        .build(),
-                Charger.class);
+                        .build());
 
         boolean correct = true;
         double minimum = -40.0;
-        for (Object c : test) {
+        for (Storable c : test) {
             if ((((Charger) c).getLocation().getLat() < minimum)
                     || !(((Charger) c).getOperator().contains("MERIDIAN ENERGY LIMITED"))) {
                 correct = false;

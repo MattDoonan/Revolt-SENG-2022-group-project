@@ -10,6 +10,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import seng202.team3.data.database.CsvInterpreter;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
@@ -59,8 +61,7 @@ public class ChargerHandlerTest {
         manager = new ChargerHandler();
         mainManager = new MainManager();
         SqlInterpreter.getInstance().defaultDatabase();
-        SqlInterpreter.getInstance()
-                .addChargerCsvToData("csvtest/filtering");
+        new CsvInterpreter().importChargersToDatabase("csvtest/filtering");
     }
 
     /**
