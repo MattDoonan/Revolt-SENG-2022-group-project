@@ -66,7 +66,7 @@ public class AccountController {
      * Button to confirm changes to user info
      */
     @FXML
-    private Button confirm;
+    private Button confirmAccount;
 
     /**
      * distance travelled text
@@ -222,7 +222,7 @@ public class AccountController {
     public void editDetails() {
         if (editAccountButton.getText().equals("Edit Account")) {
             editAccountButton.setText("Back");
-            confirm.setVisible(true);
+            confirmAccount.setVisible(true);
             accountPassword.setVisible(true);
             if (UserManager.getUser().getLevel() != PermissionLevel.ADMIN) {
                 delete.setVisible(true);
@@ -234,7 +234,7 @@ public class AccountController {
 
         } else {
             editAccountButton.setText("Edit Account");
-            confirm.setVisible(false);
+            confirmAccount.setVisible(false);
             accountPassword.setVisible(false);
             delete.setVisible(false);
             accountName.setEditable(false);

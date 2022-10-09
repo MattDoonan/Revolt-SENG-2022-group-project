@@ -163,7 +163,7 @@ public class AccountPageStepDefs extends CucumberFxBase {
 
     @And("I want to save my information")
     public void saveAccountInfo() {
-        clickOn("#confirm");
+        clickOn("#confirmAccount");
     }
 
     @Then("My account name has changed to {string}")
