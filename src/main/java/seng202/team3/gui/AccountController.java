@@ -5,10 +5,14 @@ import java.sql.SQLException;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team3.data.entity.PermissionLevel;
@@ -62,7 +66,7 @@ public class AccountController {
      * Button to confirm changes to user info
      */
     @FXML
-    private Button confirm;
+    private Button confirmAccount;
 
     /**
      * distance travelled text
@@ -95,6 +99,12 @@ public class AccountController {
     private Button editAdmin;
 
     /**
+     * Delete button
+     */
+    @FXML
+    private Button delete;
+
+    /**
      * Borderpane to implement chargers
      */
     @FXML
@@ -117,6 +127,11 @@ public class AccountController {
     private static final String INVALID_STYLE = "-fx-border-color: #ff0000;";
 
     /**
+     * The controller
+     */
+    private MenuController mainController;
+
+    /**
      * Unused constructor
      */
     public AccountController() {
@@ -126,9 +141,10 @@ public class AccountController {
     /**
      * Initialize the window by getting the current User's Data
      *
-     * @param border the BorderPane
+     * @param c the controller
      */
-    public void init(BorderPane border) {
+    public void init(MenuController c) {
+        this.mainController = c;
         User user = UserManager.getUser();
         populateText(user);
         setChargerTable();
@@ -202,11 +218,15 @@ public class AccountController {
     /**
      * Makes it so you can edit your own details on click
      */
+    @FXML
     public void editDetails() {
         if (editAccountButton.getText().equals("Edit Account")) {
             editAccountButton.setText("Back");
-            confirm.setVisible(true);
+            confirmAccount.setVisible(true);
             accountPassword.setVisible(true);
+            if (UserManager.getUser().getLevel() != PermissionLevel.ADMIN) {
+                delete.setVisible(true);
+            }
             accountName.setEditable(true);
             accountEmail.setEditable(true);
             accountName.setStyle("-fx-border-color: #000000; -fx-background-color: #FFFFFF;");
@@ -214,8 +234,9 @@ public class AccountController {
 
         } else {
             editAccountButton.setText("Edit Account");
-            confirm.setVisible(false);
+            confirmAccount.setVisible(false);
             accountPassword.setVisible(false);
+            delete.setVisible(false);
             accountName.setEditable(false);
             accountEmail.setEditable(false);
             accountName.setStyle("-fx-border-color: transparent; "
@@ -229,6 +250,7 @@ public class AccountController {
     /**
      * Confirms the changes made from the user
      */
+    @FXML
     public void confirmChanges() {
         if (!UserManager.checkEmail(accountEmail.getText())) {
             accountEmail.setStyle(INVALID_STYLE);
@@ -267,6 +289,42 @@ public class AccountController {
         }
         tableRefresh();
         logManager.info("User information updated");
+    }
+
+    /**
+     * Called when delete account button pressed
+     */
+    @FXML
+    public void deleteAccount() {
+        loadPromptScreen("Are you sure you'd like to \n"
+                + "delete your account?\n\n");
+    }
+
+    /**
+     * Loads a generic prompt screen pop-up {@link seng202.team3.gui.PopUpWindow}
+     *
+     * @param prompt a String of the instructions
+     */
+    public void loadPromptScreen(String prompt) {
+        try {
+            FXMLLoader popUp = new FXMLLoader(getClass().getResource(
+                    "/fxml/generic_popup.fxml"));
+            VBox root = popUp.load();
+            Scene modalScene = new Scene(root);
+            Stage modal = new Stage();
+            modal.setScene(modalScene);
+            modal.setResizable(false);
+            modal.setTitle("Are you sure? ");
+            modal.initModality(Modality.APPLICATION_MODAL);
+            PopUpWindow popController = popUp.getController();
+            popController.addPrompt(prompt);
+            modal.showAndWait();
+            if (Boolean.TRUE.equals(popController.getClicked())) {
+                mainController.deleteUser();
+            }
+        } catch (IOException e) {
+            logManager.error(e.getMessage());
+        }
     }
 
     /**

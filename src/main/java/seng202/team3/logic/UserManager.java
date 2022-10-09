@@ -161,4 +161,16 @@ public class UserManager {
         }
     }
 
+    /**
+     * Call Delete function to delete user from database
+     */
+    public static void deleteCurrentUser() {
+        try {
+            SqlInterpreter.getInstance().deleteData("user", getUser().getUserid());
+            setUser(guest);
+        } catch (IOException e) {
+            logManager.error(e.getMessage());
+        }
+    }
+
 }

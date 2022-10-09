@@ -9,6 +9,7 @@ import java.util.stream.Stream;
 
 import javax.management.InstanceAlreadyExistsException;
 
+import javafx.scene.input.KeyCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -107,7 +108,8 @@ public class VehiclesPageFx extends TestFxBase {
     public void connectorOnlyInput() {
         clickOn("#openUpdate");
         clickOn("#connectorType");
-        moveBy(0, 40);
+        press(KeyCode.DOWN);
+        release(KeyCode.DOWN);
         clickOn();
         clickOn("#addConnectionBtn");
         clickOn("#saveChanges");
@@ -124,7 +126,8 @@ public class VehiclesPageFx extends TestFxBase {
         clickOn("#maxRangeText");
         write("500");
         clickOn("#connectorType");
-        moveBy(0, 40);
+        press(KeyCode.DOWN);
+        release(KeyCode.DOWN);
         clickOn();
         clickOn("#addConnectionBtn");
         clickOn("#saveChanges");
@@ -159,12 +162,9 @@ public class VehiclesPageFx extends TestFxBase {
             write("Y");
             clickOn("#maxRangeText");
             write("500");
-            clickOn("#selectImgBtn");
-            clickOn();
-            moveBy(20, 220);
-            clickOn();
             clickOn("#connectorType");
-            moveBy(0, 40);
+            press(KeyCode.DOWN);
+            release(KeyCode.DOWN);
             clickOn();
             clickOn("#addConnectionBtn");
             clickOn("#saveChanges");

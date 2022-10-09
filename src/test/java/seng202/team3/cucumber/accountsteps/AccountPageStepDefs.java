@@ -64,6 +64,8 @@ public class AccountPageStepDefs extends CucumberFxBase {
 
     private static List<Object> users;
 
+    private static User chargerOwner;
+
     /**
      * {@inheritDoc}
      *
@@ -92,7 +94,7 @@ public class AccountPageStepDefs extends CucumberFxBase {
         db.addChargerCsvToData("csvtest/filtering");
         db.writeUser(new User("Tester@gmail.com",
                 "MrTest", PermissionLevel.USER), "1234");
-        User chargerOwner = new User("chargerowner@gmail.com", "MrTestOwner",
+        chargerOwner = new User("chargerowner@gmail.com", "MrTestOwner",
                 PermissionLevel.CHARGEROWNER);
         db.writeUser(chargerOwner, UserManager.encryptThisString("qwerty"));
 
@@ -163,7 +165,7 @@ public class AccountPageStepDefs extends CucumberFxBase {
 
     @And("I want to save my information")
     public void saveAccountInfo() {
-        clickOn("#confirm");
+        clickOn("#confirmAccount");
     }
 
     @Then("My account name has changed to {string}")
@@ -407,6 +409,29 @@ public class AccountPageStepDefs extends CucumberFxBase {
     public void emptyTable() {
         TableView<Charger> table = (TableView<Charger>) find("#mainTable");
         assertTrue(table.getItems().isEmpty());
+    }
+
+    @When("The user confirms to delete there account")
+    public void deleteOwnAccount() {
+        clickOn("#editAccountButton");
+        clickOn("#delete");
+        clickOn("#confirm");
+    }
+
+    @Then("The users account has been deleted as well as chargers and vehicles")
+    public void checkIfDeleted() throws IOException {
+        List<Object> findUser =  db.readData(new QueryBuilderImpl().withSource("user")
+                .withFilter("userid", "" + chargerOwner.getUserid() + "",
+                        ComparisonType.EQUAL).build(), User.class);
+        assertEquals(0, findUser.size());
+        List<Object> chargers =  db.readData(new QueryBuilderImpl().withSource("charger")
+                .withFilter("owner", "" + chargerOwner.getUserid() + "",
+                        ComparisonType.EQUAL).build(), Charger.class);
+        assertEquals(0, chargers.size());
+        List<Object> vehicles =  db.readData(new QueryBuilderImpl().withSource("vehicle")
+                .withFilter("owner", "" + chargerOwner.getUserid() + "",
+                        ComparisonType.EQUAL).build(), Vehicle.class);
+        assertEquals(0, vehicles.size());
     }
 
 }

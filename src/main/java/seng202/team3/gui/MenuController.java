@@ -313,7 +313,7 @@ public class MenuController {
                         .getResource("/fxml/account.fxml"));
                 Parent accountViewParent = accountLoader.load();
                 AccountController accController = accountLoader.getController();
-                accController.init(menuWindow);
+                accController.init(this);
                 menuWindow.setCenter(accountViewParent);
                 MainWindow.setController(accController);
                 logManager.info("Switched to Account screen");
@@ -342,6 +342,16 @@ public class MenuController {
         loginSignout.setText(LOGIN_TITLE);
         initHome();
         logManager.info("The user has been successfully logged out");
+    }
+
+    /**
+     * Deletes the set user
+     */
+    public void deleteUser() {
+        loadHome();
+        UserManager.deleteCurrentUser();
+        loginSignout.setText(LOGIN_TITLE);
+        logManager.info("The user has been successfully deleted");
     }
 
 }

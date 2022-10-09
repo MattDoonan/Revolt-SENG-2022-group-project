@@ -58,6 +58,21 @@ public class GarageManager {
     }
 
     /**
+     * Edits query so it gets the selected vehicle
+     *
+     * @return the selected vehicle
+     */
+    public Vehicle getSelectedVehicle() {
+        vehicleDataQuery.withFilter("currVehicle", "true", ComparisonType.EQUAL);
+        getAllVehicles();
+        resetQuery();
+        if (getData().size() == 1) {
+            return getData().get(0);
+        }
+        return null;
+    }
+
+    /**
      * Create the vehicle list from the main Query
      *
      */
