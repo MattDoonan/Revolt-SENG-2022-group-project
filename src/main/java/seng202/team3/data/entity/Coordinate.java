@@ -44,7 +44,7 @@ public class Coordinate {
     /**
      * Constructor for coordinate without address
      *
-     * @see #Coordinate(Double, Double, Double, Double, String)
+     * @see #Coordinate( Double, Double, String)
      * @param lat a {@link java.lang.Double} object
      * @param lon a {@link java.lang.Double} object
      */

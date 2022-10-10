@@ -85,19 +85,11 @@ CREATE TABLE if not exists journey
 DROP TABLE IF EXISTS stop;
 --SPLIT
 CREATE TABLE if not exists stop
-(
+(   stopid INTEGER PRIMARY KEY AUTOINCREMENT,
     journeyid INTEGER NOT NULL references Journey(journeyid),
     position INTEGER NOT NULL,
-    chargerid INTEGER NOT NULL references Charger(chargerid),
-    PRIMARY KEY (journeyid, position)
+    lat REAL NOT NULL,
+    lon REAL NOT NULL,
+    chargerid INTEGER references Charger(chargerid),
+    UNIQUE(journeyid, position) ON CONFLICT REPLACE
     );
---SPLIT
-DROP TABLE IF EXISTS views;
---SPLIT
-CREATE TABLE views
-(
-    userid INTEGER NOT NULL REFERENCES user(userid),
-    chargerid INTEGER NOT NULL REFERENCES charger(chargerid),
-    times INTEGER,
-    PRIMARY KEY (userid, chargerid)
-    )

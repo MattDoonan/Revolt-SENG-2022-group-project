@@ -11,8 +11,8 @@ import seng202.team3.logic.UserManager;
  * @version 1.0.0, Aug 22
  */
 public class Journey extends Entity {
-    /** {@link Charger Chargers} used on journey */
-    private ArrayList<Charger> chargers = new ArrayList<>();
+    /** {@link Stop Stops} in the journey */
+    private ArrayList<Stop> stops = new ArrayList<>();
 
     /** {@link Vehicle Vehicle} used for journey */
     private Vehicle vehicle;
@@ -62,30 +62,30 @@ public class Journey extends Entity {
     }
 
     /**
-     * Get array of chargers used on journey
+     * Get array of stops used on journey
      *
-     * @return chargers in journey
+     * @return stops in journey
      */
-    public List<Charger> getChargers() {
-        return chargers;
+    public List<Stop> getStops() {
+        return stops;
     }
 
     /**
-     * Add new {@link Charger charger} to journey
+     * Add new {@link Stop stop} to journey
      *
-     * @param charger charger to add
+     * @param stop stop to add
      */
-    public void addCharger(Charger charger) {
-        chargers.add(charger);
+    public void addStop(Stop stop) {
+        stops.add(stop);
     }
 
     /**
-     * Remove a {@link Charger charger} from the journey
+     * Remove a {@link Stop stop} from the journey
      *
-     * @param charger charger to remove
+     * @param stop stop to remove
      */
-    public void removeCharger(Charger charger) {
-        chargers.remove(charger);
+    public void removeStop(Stop stop) {
+        stops.remove(stop);
     }
 
     /**
@@ -205,7 +205,7 @@ public class Journey extends Entity {
         } else {
             return false;
         }
-        return j.getChargers().equals(this.getChargers())
+        return j.getStops().equals(this.getStops())
                 && j.getVehicle().equals(this.getVehicle())
                 && j.getStartPosition().equals(this.getStartPosition())
                 && j.getEndPosition().equals(this.getEndPosition())
@@ -218,7 +218,7 @@ public class Journey extends Entity {
     @Override
     public int hashCode() {
         int result = (getId() ^ (getId() >>> 32));
-        result = 31 * result + chargers.hashCode();
+        result = 31 * result + stops.hashCode();
         result = 31 * result + vehicle.hashCode();
         result = 31 * result + startPosition.hashCode();
         result = 31 * result + endPosition.hashCode();

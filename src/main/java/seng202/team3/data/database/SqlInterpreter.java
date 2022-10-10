@@ -31,6 +31,7 @@ import seng202.team3.data.entity.Entity;
 import seng202.team3.data.entity.EntityType;
 import seng202.team3.data.entity.Journey;
 import seng202.team3.data.entity.PermissionLevel;
+import seng202.team3.data.entity.Stop;
 import seng202.team3.data.entity.User;
 import seng202.team3.data.entity.Vehicle;
 import seng202.team3.logic.UserManager;
@@ -224,6 +225,7 @@ public class SqlInterpreter implements DataReader {
      */
     private void createFile(String path) {
         try (Connection connection = DriverManager.getConnection(path)) {
+
             if (connection != null) {
                 DatabaseMetaData meta = connection.getMetaData();
                 String driverLog = String
@@ -231,10 +233,12 @@ public class SqlInterpreter implements DataReader {
                                 meta.getDriverName());
                 logManager.info(driverLog);
             }
+
         } catch (SQLException e) {
             logManager.error("Error creating new database file");
             logManager.error(e);
         }
+
     }
 
     /**
@@ -262,6 +266,7 @@ public class SqlInterpreter implements DataReader {
         Connection connection = null;
         try {
             connection = DriverManager.getConnection(url);
+
         } catch (SQLException e) {
             logManager.error(e);
         }
@@ -285,11 +290,13 @@ public class SqlInterpreter implements DataReader {
             String[] state = buff.toString().split("--SPLIT");
             try (Connection connection = createConnection();
                     Statement statement = connection.createStatement()) {
+
                 for (String single : state) {
                     statement.executeUpdate(single);
                 }
                 statement.close();
                 connection.close();
+
             }
         } catch (FileNotFoundException e) {
             logManager.error("File not found");
@@ -313,6 +320,7 @@ public class SqlInterpreter implements DataReader {
                 + " WHERE " + idName + " = " + id + ";";
         try (Connection connection = createConnection();
                 Statement stmt = connection.createStatement()) {
+
             switch (entity) {
                 case CHARGER:
                     stmt.executeUpdate("DELETE FROM connector WHERE chargerid = " + id + ";");
@@ -361,12 +369,17 @@ public class SqlInterpreter implements DataReader {
                         deleteData(EntityType.VEHICLE, ((Vehicle) o).getId());
                     }
                     break;
+
+                case STOP:
+                    stmt.executeUpdate("DELETE FROM stop WHERE stopid = " + id + ";");
+                    break;
                 default:
                     break;
             }
             stmt.executeUpdate(delete);
             stmt.close();
             connection.close();
+
         } catch (SQLException e) {
             throw new IOException(e.getMessage());
         }
@@ -446,6 +459,9 @@ public class SqlInterpreter implements DataReader {
                 case USER:
                     objects = asUser(rs);
                     break;
+                case STOP:
+                    objects = asStop(rs);
+                    break;
                 default: // Gets fields as list of strings
                     throw new IOException("Query source not defined");
             }
@@ -477,49 +493,54 @@ public class SqlInterpreter implements DataReader {
             if (observedChargers.contains(rs.getInt("chargerid"))) {
                 continue;
             }
-            Statement additional = createConnection().createStatement();
+            List<Entity> connectors;
+            try (Connection connection = createConnection();
+                    Statement additional = connection.createStatement()) {
+                ResultSet userRs;
+                userRs = additional
+                        .executeQuery("SELECT username FROM user WHERE userid = "
+                                + rs.getInt("owner") + ";");
 
-            ResultSet userRs;
-            userRs = additional
-                    .executeQuery("SELECT username FROM user WHERE userid = "
-                            + rs.getInt("owner") + ";");
+                // Make charger
+                Charger charger = new Charger();
+                charger.setId(rs.getInt("chargerid"));
+                charger.setDateOpened(rs.getString("datefirstoperational"));
+                charger.setName(rs.getString("name"));
+                charger.setLocation(new Coordinate(
+                        rs.getDouble("latitude"),
+                        rs.getDouble("longitude"),
+                        rs.getString("address")));
+                charger.setAvailableParks(rs.getInt("carparkcount"));
+                charger.setTimeLimit(rs.getDouble("maxtimelimit"));
+                charger.setOperator(rs.getString("operator"));
+                charger.setOwnerId(rs.getInt("owner"));
+                charger.setOwner(userRs.getString("username"));
+                charger.setHasAttraction(rs.getBoolean("hastouristattraction"));
+                charger.setAvailable24Hrs(rs.getBoolean("is24hours"));
+                charger.setParkingCost(rs.getBoolean("hascarparkcost"));
+                charger.setChargeCost(rs.getBoolean("haschargingcost"));
+                userRs.close();
 
-            // Make charger
-            Charger charger = new Charger();
-            charger.setId(rs.getInt("chargerid"));
-            charger.setDateOpened(rs.getString("datefirstoperational"));
-            charger.setName(rs.getString("name"));
-            charger.setLocation(new Coordinate(
-                    rs.getDouble("latitude"),
-                    rs.getDouble("longitude"),
-                    rs.getString("address")));
-            charger.setAvailableParks(rs.getInt("carparkcount"));
-            charger.setTimeLimit(rs.getDouble("maxtimelimit"));
-            charger.setOperator(rs.getString("operator"));
-            charger.setOwnerId(rs.getInt("owner"));
-            charger.setOwner(userRs.getString("username"));
-            charger.setHasAttraction(rs.getBoolean("hastouristattraction"));
-            charger.setAvailable24Hrs(rs.getBoolean("is24hours"));
-            charger.setParkingCost(rs.getBoolean("hascarparkcost"));
-            charger.setChargeCost(rs.getBoolean("haschargingcost"));
+                // // Get connectors
+                ResultSet connectorRs = additional
+                        .executeQuery("SELECT * FROM connector WHERE chargerid = "
+                                + rs.getInt("chargerid") + ";");
 
-            // // Get connectors
-            ResultSet connectorRs = additional
-                    .executeQuery("SELECT * FROM connector WHERE chargerid = "
-                            + rs.getInt("chargerid") + ";");
+                connectors = asConnector(connectorRs);
+                connectorRs.close();
 
-            List<Entity> connectors = asConnector(connectorRs);
-            connectorRs.close();
+                additional.close();
+                connection.close();
+                for (Entity c : connectors) {
+                    charger.addConnector((Connector) c);
+                }
+                charger.setCurrentType();
 
-            for (Entity c : connectors) {
-                charger.addConnector((Connector) c);
+                observedChargers.add(charger.getId());
+                chargers.add(charger);
+            } catch (SQLException e) {
+                logManager.error(e.getMessage());
             }
-            charger.setCurrentType();
-
-            userRs.close();
-            additional.close();
-            observedChargers.add(charger.getId());
-            chargers.add(charger);
 
         }
 
@@ -581,6 +602,47 @@ public class SqlInterpreter implements DataReader {
     }
 
     /**
+     * Reads ResultSet as stops
+     * 
+     * @param rs ResultSet to read from
+     * 
+     * @return list of stops
+     * @throws SQLException if sql interaction fails
+     */
+    private List<Entity> asStop(ResultSet rs) throws SQLException {
+        List<Entity> stops = new ArrayList<>();
+        while (rs.next()) {
+
+            rs.getInt("chargerid");
+
+            if (rs.wasNull()) { // if chargerid is null
+                stops.add(new Stop(rs.getDouble("lat"), rs.getDouble("lon")));
+            } else {
+                try (Connection connection = createConnection();
+                        Statement stmt = connection.createStatement();
+                        ResultSet chargerRs = stmt.executeQuery("SELECT * FROM charger "
+                                + " WHERE chargerid = "
+                                + rs.getInt("chargerid") + ";")) {
+                    Stop stop = new Stop((Charger) asCharger(chargerRs).get(0));
+                    stop.setId(rs.getInt("stopid"));
+                    stops.add(stop);
+
+                    chargerRs.close();
+                    stmt.close();
+                    connection.close();
+
+                } catch (SQLException e) {
+                    logManager.error(e.getMessage());
+                }
+            }
+
+        }
+
+        return stops;
+
+    }
+
+    /**
      * Reads ResultSet as journeys
      * 
      * @param rs ResultSet to read from
@@ -604,31 +666,38 @@ public class SqlInterpreter implements DataReader {
             journey.setStartDate(rs.getString("startDate"));
             journey.setTitle(rs.getString("title"));
 
-            // Get vehicle
-            ResultSet vehicleRs = createConnection().createStatement()
-                    .executeQuery("SELECT * FROM vehicle WHERE vehicleid = "
-                            + rs.getInt("vehicleid") + ";");
+            List<Entity> stops;
+            try (Connection connection = createConnection();
+                    Statement statement = connection.createStatement();
 
-            List<Entity> vehicles = asVehicle(vehicleRs);
-            vehicleRs.close();
-            if (vehicles.size() == 1) {
-                journey.setVehicle((Vehicle) vehicles.get(0));
-            } else {
-                throw new SQLException("Journey object is missing an associated vehicle");
+                    // Get vehicle
+                    ResultSet vehicleRs = statement
+                            .executeQuery("SELECT * FROM vehicle WHERE vehicleid = "
+                                    + rs.getInt("vehicleid") + ";")) {
+
+                List<Entity> vehicles = asVehicle(vehicleRs);
+                vehicleRs.close();
+
+                if (vehicles.size() == 1) {
+                    journey.setVehicle((Vehicle) vehicles.get(0));
+                } else {
+                    throw new SQLException("Journey object is missing an associated vehicle");
+                }
+
+                // Get stops
+                ResultSet stopRs = statement
+                        .executeQuery("SELECT * FROM stop "
+                                + " WHERE journeyid = "
+                                + rs.getInt("journeyid")
+                                + " ORDER BY position ASC;");
+
+                stops = asStop(stopRs);
+                stopRs.close();
+                statement.close();
             }
 
-            // Get stops
-            ResultSet stopRs = createConnection().createStatement()
-                    .executeQuery("SELECT * FROM stop "
-                            + " INNER JOIN charger ON charger.chargerid = stop.chargerid"
-                            + " WHERE journeyid = "
-                            + rs.getInt("journeyid")
-                            + " ORDER BY position ASC;");
-
-            List<Entity> stops = asCharger(stopRs);
-            stopRs.close();
-            for (Entity c : stops) {
-                journey.addCharger((Charger) c);
+            for (Entity s : stops) {
+                journey.addStop((Stop) s);
             }
 
             journeys.add(journey);
@@ -662,22 +731,6 @@ public class SqlInterpreter implements DataReader {
     }
 
     /**
-     * Gets the number of times a charger has been viewed
-     * 
-     * @param c the charger object
-     * @return the number of times viewed
-     * @throws SQLException if the database fails
-     */
-    public int getChargerViews(Charger c) throws SQLException {
-        ResultSet rs = createConnection().createStatement()
-                .executeQuery("Select SUM(times) FROM views "
-                        + "WHERE chargerid = " + c.getId() + "");
-        int result = rs.getInt(1);
-        rs.close();
-        return result;
-    }
-
-    /**
      * Adds a new charger to the database from a charger object
      *
      * @param c          charger object
@@ -696,6 +749,7 @@ public class SqlInterpreter implements DataReader {
                 + "currenttype = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(toAdd)) {
+
             if (c.getId() == 0) {
                 statement.setNull(1, 0);
             } else {
@@ -740,6 +794,8 @@ public class SqlInterpreter implements DataReader {
             if (c.getId() == 0) {
                 c.setId(statement.getGeneratedKeys().getInt(1));
             }
+            statement.close();
+
             writeConnector(connection, c.getConnectors(), c.getId());
 
         } catch (SQLException | NullPointerException e) {
@@ -754,7 +810,14 @@ public class SqlInterpreter implements DataReader {
      * @throws java.io.IOException fails to write to db
      */
     public void writeCharger(Charger c) throws IOException {
-        writeCharger(createConnection(), c);
+
+        try (Connection conn = createConnection()) {
+            writeCharger(conn, c);
+            conn.close();
+
+        } catch (SQLException e) {
+            logManager.error(e.getMessage());
+        }
     }
 
     /**
@@ -816,7 +879,10 @@ public class SqlInterpreter implements DataReader {
             try (Statement stmt = connection.createStatement();
                     ResultSet rs = stmt.executeQuery("SELECT chargerid "
                             + "FROM charger ORDER BY chargerid DESC LIMIT 0,1")) {
+
                 chargerId = rs.getInt("chargerid");
+                rs.close();
+                stmt.close();
 
             } catch (SQLException | NullPointerException e) {
                 throw new IOException(e.getMessage());
@@ -846,6 +912,9 @@ public class SqlInterpreter implements DataReader {
             if (c.getId() == 0) {
                 c.setId(statement.getGeneratedKeys().getInt(1));
             }
+
+            statement.close();
+
         } catch (SQLException | NullPointerException e) {
             throw new IOException(e.getMessage());
         }
@@ -879,7 +948,14 @@ public class SqlInterpreter implements DataReader {
      * @throws java.io.IOException if any.
      */
     public void writeConnector(ArrayList<Connector> connectors, int chargerId) throws IOException {
-        writeConnector(createConnection(), connectors, chargerId);
+
+        try (Connection conn = createConnection()) {
+            writeConnector(conn, connectors, chargerId);
+            conn.close();
+
+        } catch (SQLException e) {
+            logManager.error(e.getMessage());
+        }
     }
 
     /**
@@ -891,7 +967,13 @@ public class SqlInterpreter implements DataReader {
      * @throws java.io.IOException if any.
      */
     public void writeConnector(Connector connector, int chargerId) throws IOException {
-        writeConnector(createConnection(), connector, chargerId);
+        try (Connection conn = createConnection()) {
+            writeConnector(conn, connector, chargerId);
+            conn.close();
+
+        } catch (SQLException e) {
+            logManager.error(e.getMessage());
+        }
     }
 
     /**
@@ -909,6 +991,7 @@ public class SqlInterpreter implements DataReader {
                 + "currVehicle = ?";
         try (Connection connection = createConnection();
                 PreparedStatement statement = connection.prepareStatement(toAdd)) {
+
             if (v.getId() == 0) {
                 statement.setNull(1, 0);
             } else {
@@ -939,6 +1022,10 @@ public class SqlInterpreter implements DataReader {
             if (v.getId() == 0) {
                 v.setId(statement.getGeneratedKeys().getInt(1));
             }
+
+            statement.close();
+            connection.close();
+
         } catch (SQLException | NullPointerException e) {
             throw new IOException(e.getMessage());
         }
@@ -969,13 +1056,14 @@ public class SqlInterpreter implements DataReader {
                 + "values(?,?,?,?,?,?,?,?,?) ON CONFLICT(journeyid) DO UPDATE SET "
                 + "vehicleid = ?, startLat = ?, startLon = ?, endLat = ?, endLon = ?, "
                 + "startDate = ?, title = ?, userid = ?";
-        if (j.getChargers().size() < 1) {
+        if (j.getStops().size() < 1) {
             throw new IOException("Error writing journey. No stops found.");
         } else if (j.getVehicle() == null) {
             throw new IOException("Error writing journey. No Vehicle Attached.");
         }
         try (Connection connection = createConnection();
                 PreparedStatement addJourney = connection.prepareStatement(toAdd)) {
+
             if (j.getId() == 0) {
                 addJourney.setNull(1, 0);
             } else {
@@ -1002,34 +1090,65 @@ public class SqlInterpreter implements DataReader {
                 j.setId(addJourney.getGeneratedKeys().getInt(1));
             }
 
-            String stopQuery = "INSERT INTO stop (journeyid, chargerid, position) "
-                    + "values (?,?,?) ON CONFLICT(journeyid, position) DO UPDATE SET "
-                    + "journeyid = ?, chargerid = ?, position = ?";
-            PreparedStatement statement = connection.prepareStatement(stopQuery);
             int journeyIdForStop = j.getId();
             if (j.getId() == 0) {
-                try (Connection conn = createConnection();
-                        Statement stmt = conn.createStatement();
+                try (Statement stmt = connection.createStatement();
                         ResultSet rs = stmt.executeQuery("SELECT journeyid "
                                 + "FROM journey ORDER BY journeyid DESC LIMIT 0,1")) {
+
                     journeyIdForStop = rs.getInt("journeyid");
                     rs.close();
                     stmt.close();
-                    conn.close();
+
                 } catch (SQLException e) {
                     throw new IOException(e.getMessage());
                 }
             }
 
-            for (int i = 0; i < j.getChargers().size(); i++) {
-                statement.setInt(1, journeyIdForStop);
-                statement.setInt(2, j.getChargers().get(i).getId());
-                statement.setInt(3, i);
-                statement.setInt(4, j.getId());
-                statement.setInt(5, j.getChargers().get(i).getId());
-                statement.setInt(6, i);
-                statement.executeUpdate();
+            String stopQuery = "INSERT INTO stop (stopid, journeyid, chargerid, position,"
+                    + " lat, lon) "
+                    + "values (?,?,?,?,?,?) ON CONFLICT(stopid) DO UPDATE SET "
+                    + "stopid = ?, journeyid = ?, chargerid = ?, position = ?, lat = ?, lon = ?";
+            try (PreparedStatement statement = connection.prepareStatement(stopQuery)) {
+
+                for (int i = 0; i < j.getStops().size(); i++) {
+                    if (j.getStops().get(i).getId() == 0) {
+                        statement.setNull(1, 0);
+                    } else {
+                        statement.setInt(1, j.getStops().get(i).getId());
+                    }
+                    statement.setInt(2, journeyIdForStop);
+
+                    if (j.getStops().get(i).getCharger() != null) {
+                        statement.setInt(3, j.getStops().get(i).getCharger().getId());
+                    } else {
+                        statement.setNull(3, 0);
+                    }
+
+                    statement.setInt(4, i);
+                    statement.setDouble(5, j.getStops().get(i).getLat());
+                    statement.setDouble(6, j.getStops().get(i).getLon());
+                    if (j.getStops().get(i).getId() == 0) {
+                        statement.setNull(7, 0);
+                    } else {
+                        statement.setInt(7, j.getStops().get(i).getId());
+                    }
+                    statement.setInt(8, journeyIdForStop);
+
+                    if (j.getStops().get(i).getCharger() != null) {
+                        statement.setInt(9, j.getStops().get(i).getCharger().getId());
+                    } else {
+                        statement.setNull(9, 0);
+                    }
+
+                    statement.setInt(10, i);
+                    statement.setDouble(11, j.getStops().get(i).getLat());
+                    statement.setDouble(12, j.getStops().get(i).getLon());
+                    statement.executeUpdate();
+                }
+                statement.close();
             }
+            connection.close();
 
         } catch (SQLException | NullPointerException e) {
             throw new IOException(e.getMessage());
@@ -1051,6 +1170,7 @@ public class SqlInterpreter implements DataReader {
                 + " permissions = ?, carbonSaved = ?";
         try (Connection connection = createConnection();
                 PreparedStatement statement = connection.prepareStatement(toAdd)) {
+
             if (user.getId() == 0) {
                 statement.setNull(1, 0);
             } else {
@@ -1070,6 +1190,10 @@ public class SqlInterpreter implements DataReader {
             if (user.getId() == 0) {
                 user.setId(statement.getGeneratedKeys().getInt(1));
             }
+
+            statement.close();
+            connection.close();
+
         } catch (SQLException | NullPointerException e) {
             throw new IOException(e.getMessage());
         }
@@ -1079,25 +1203,31 @@ public class SqlInterpreter implements DataReader {
      * Updates existing user (does not require password)
      * 
      * @param user the user object
-     * @throws SQLException to check for errors
+     * @throws IOException to check for errors
      */
-    public void writeUser(User user) throws SQLException {
+    public void writeUser(User user) throws IOException {
         String toAdd = "UPDATE user SET "
                 + "email = ?, username = ?,"
                 + " permissions = ?, carbonSaved = ? WHERE userid = ?;";
-        Connection connection = createConnection();
-        PreparedStatement statement = connection.prepareStatement(toAdd);
-        statement.setString(1, user.getEmail());
-        statement.setString(2, user.getAccountName());
-        statement.setInt(3, user.getLevel().ordinal());
-        statement.setDouble(4, user.getCarbonSaved());
-        statement.setInt(5, user.getId());
-        statement.executeUpdate();
-        if (user.getId() == 0) {
-            user.setId(statement.getGeneratedKeys().getInt(1));
+        try (Connection connection = createConnection();
+                PreparedStatement statement = connection.prepareStatement(toAdd)) {
+
+            statement.setString(1, user.getEmail());
+            statement.setString(2, user.getAccountName());
+            statement.setInt(3, user.getLevel().ordinal());
+            statement.setDouble(4, user.getCarbonSaved());
+            statement.setInt(5, user.getId());
+            statement.executeUpdate();
+            if (user.getId() == 0) {
+                user.setId(statement.getGeneratedKeys().getInt(1));
+            }
+            statement.close();
+            connection.close();
+
+        } catch (SQLException e) {
+            logManager.error(e.getMessage());
+            throw new IOException(e);
         }
-        statement.close();
-        connection.close();
 
     }
 
@@ -1112,15 +1242,16 @@ public class SqlInterpreter implements DataReader {
     public User validatePassword(String username, String password)
             throws IOException {
         String correctPassword = null;
-        try {
-            Connection conn = createConnection();
-            Statement stmt = conn.createStatement();
-            ResultSet userRs = stmt.executeQuery("SELECT password FROM user WHERE username = '"
-                    + username + "' ");
+        try (Connection conn = createConnection();
+                Statement stmt = conn.createStatement();
+                ResultSet userRs = stmt.executeQuery("SELECT password FROM user WHERE username = '"
+                        + username + "' ")) {
+
             correctPassword = userRs.getString("password");
             userRs.close();
             stmt.close();
             conn.close();
+
         } catch (SQLException e) {
             throw new IOException(e.getMessage());
         }
@@ -1148,17 +1279,12 @@ public class SqlInterpreter implements DataReader {
         /**
          * Number of threads
          */
-        private static int threadCount = 1;
+        private static int threadCount = 4;
 
         /**
          * List of chargers to write
          */
         private ArrayList<Entity> chargersToWrite;
-
-        /**
-         * Thread db connection
-         */
-        private Connection conn;
 
         /**
          * Initialize thread
@@ -1167,7 +1293,6 @@ public class SqlInterpreter implements DataReader {
          */
         private WriteChargerThread(ArrayList<Entity> chargersToWrite) {
             this.chargersToWrite = chargersToWrite;
-            this.conn = createConnection();
         }
 
         /**
@@ -1185,26 +1310,28 @@ public class SqlInterpreter implements DataReader {
         @Override
         public void run() {
             // Disable auto commiting
-            try {
-                this.conn.setAutoCommit(false);
-            } catch (SQLException e) {
-                logManager.error(e.getMessage());
-            }
-
-            for (Entity c : chargersToWrite) { // Create SQL write statements
+            try (Connection conn = createConnection()) {
                 try {
-                    writeCharger(conn, (Charger) c);
-                } catch (IOException e) {
+                    conn.setAutoCommit(false);
+                } catch (SQLException e) {
                     logManager.error(e.getMessage());
                 }
-            }
 
-            // Pseudo-batch write all accumulated statements
-            try {
+                for (Entity c : chargersToWrite) { // Create SQL write statements
+                    try {
+                        writeCharger(conn, (Charger) c);
+                    } catch (IOException e) {
+                        logManager.error(e.getMessage());
+                    }
+                }
+
+                // Pseudo-batch write all accumulated statements
+
                 mutex.acquire();
-                this.conn.commit();
+                conn.commit();
                 mutex.release();
-                this.conn.close();
+                conn.close();
+
             } catch (SQLException | InterruptedException e) {
                 logManager.error(e.getMessage());
             }

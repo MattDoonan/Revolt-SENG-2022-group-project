@@ -31,7 +31,12 @@ public enum EntityType {
     /**
      * Vehicle entity type
      */
-    VEHICLE;
+    VEHICLE,
+
+    /**
+     * Stop entity type
+     */
+    STOP;
 
     /**
      * Gets the database table mapped to by the enum
@@ -39,17 +44,19 @@ public enum EntityType {
      * @return string name of the database table
      */
     public String getAsDatabase() {
-        switch (name()) {
-            case "CHARGER":
+        switch (this) {
+            case CHARGER:
                 return "charger";
-            case "CONNECTOR":
+            case CONNECTOR:
                 return "connector";
-            case "JOURNEY":
+            case JOURNEY:
                 return "journey";
-            case "USER":
+            case USER:
                 return "user";
-            case "VEHICLE":
+            case VEHICLE:
                 return "vehicle";
+            case STOP:
+                return "stop";
             default:
                 return null;
         }
@@ -62,16 +69,18 @@ public enum EntityType {
      * @return the csv file name
      */
     public String getAsCsv() {
-        switch (name()) {
-            case "CHARGER":
+        switch (this) {
+            case CHARGER:
                 return "charger";
-            case "CONNECTOR":
+            case CONNECTOR:
                 return null; // not implemented
-            case "JOURNEY":
+            case JOURNEY:
                 return null; // not implemented
-            case "USER":
+            case USER:
                 return null; // not implemented
-            case "VEHICLE":
+            case VEHICLE:
+                return null; // not implemented
+            case STOP:
                 return null; // not implemented
             default:
                 return null;

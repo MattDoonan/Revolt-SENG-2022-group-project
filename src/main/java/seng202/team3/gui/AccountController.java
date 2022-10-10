@@ -281,7 +281,7 @@ public class AccountController {
                 UserManager.setUser(user);
             }
             editDetails();
-        } catch (IOException | SQLException e) {
+        } catch (IOException e) {
             logManager.error(e.getMessage());
             accountPassword.setStyle(INVALID_STYLE);
             accountName.setStyle(INVALID_STYLE);

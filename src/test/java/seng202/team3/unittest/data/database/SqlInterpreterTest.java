@@ -38,10 +38,11 @@ import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
+import seng202.team3.data.entity.Entity;
 import seng202.team3.data.entity.EntityType;
 import seng202.team3.data.entity.Journey;
 import seng202.team3.data.entity.PermissionLevel;
-import seng202.team3.data.entity.Entity;
+import seng202.team3.data.entity.Stop;
 import seng202.team3.data.entity.User;
 import seng202.team3.data.entity.Vehicle;
 import seng202.team3.logic.UserManager;
@@ -65,6 +66,7 @@ public class SqlInterpreterTest {
     static Vehicle testVehicle;
     static Journey testJourney;
     static User testUser;
+    static Stop testStop;
 
     static final int DEFAULTID = 1;
 
@@ -93,6 +95,11 @@ public class SqlInterpreterTest {
             case "User":
                 db.writeUser((User) objectToTest, "admin"); // arbitrary password
                 break;
+            case "Stop":
+                testJourney.getStops().clear();
+                testJourney.addStop((Stop) objectToTest);
+                writeSingleEntity(testJourney);
+                break;
             default:
                 fail();
         }
@@ -109,7 +116,8 @@ public class SqlInterpreterTest {
                 Arguments.of(testConnector1, EntityType.CONNECTOR),
                 Arguments.of(testVehicle, EntityType.VEHICLE),
                 Arguments.of(testJourney, EntityType.JOURNEY),
-                Arguments.of(testUser, EntityType.USER));
+                Arguments.of(testUser, EntityType.USER),
+                Arguments.of(testStop, EntityType.STOP));
     }
 
     @BeforeAll
@@ -122,15 +130,14 @@ public class SqlInterpreterTest {
     @BeforeEach
     void reset() {
         db.defaultDatabase();
-        try {
-            Connection conn = db.createConnection();
+        try (Connection conn = db.createConnection();
+                Statement stmt = conn.createStatement();) {
 
-            conn.createStatement()
-                    .executeUpdate("DELETE FROM user;"); // remove default admin
+            stmt.executeUpdate("DELETE FROM user;"); // remove default admin
+            stmt.close();
             conn.close();
         } catch (SQLException e) {
             logManager.error(e.getMessage());
-            ;
         }
 
         testUser = new User("admin@admin.com", "admin",
@@ -143,7 +150,6 @@ public class SqlInterpreterTest {
             db.writeUser(testUser, "admin");
         } catch (IOException e) {
             logManager.error(e.getMessage());
-            ;
         }
 
         testConnector1 = new Connector("ChardaMo", "AC", "Available", "123", 3);
@@ -171,7 +177,10 @@ public class SqlInterpreterTest {
                 new Coordinate(-36.6543, 174.74532),
                 new Coordinate(-37.45543, 176.45652),
                 "2020/1/1 00:00:00", "2020/1/3 00:00:00");
-        testJourney.addCharger(testCharger);
+
+        testStop = new Stop(testCharger);
+        testStop.setId(DEFAULTID);
+        testJourney.addStop(testStop);
 
     }
 
@@ -263,13 +272,14 @@ public class SqlInterpreterTest {
         // Empty db
         QueryBuilder q = new QueryBuilderImpl().withSource(entity);
         if (objectToTest instanceof User) { // Remove default user
-            try {
-                Connection conn = db.createConnection();
-                conn.createStatement().executeUpdate("DELETE FROM user"); // remove default admin
+            try (Connection conn = db.createConnection();
+                    Statement stmt = conn.createStatement()) {
+
+                stmt.executeUpdate("DELETE FROM user"); // remove default admin
+                stmt.close();
                 conn.close();
             } catch (SQLException e) {
                 logManager.error(e.getMessage());
-                ;
             }
         }
 
@@ -285,33 +295,16 @@ public class SqlInterpreterTest {
      */
     @ParameterizedTest
     @MethodSource("dbSingleEntities")
-    // TODO: simplify with an 'entity' interface/superclass with getId etc.
     public void autoIncrementIdTest(Entity objectToTest, EntityType entity) throws IOException {
         if (objectToTest.getClass() == Journey.class) {
             ((Journey) objectToTest).setVehicle(testVehicle);
         }
         writeSingleEntity(objectToTest); // Write with DEFAULTID
 
-        // Set ids to null - different methods per entity
-        switch (objectToTest.getClass().getSimpleName()) {
-            case "Charger":
-                ((Charger) objectToTest).setId(0);
-                break;
-            case "Connector":
-                ((Connector) objectToTest).setId(0);
-                break;
-            case "Vehicle":
-                ((Vehicle) objectToTest).setId(0);
-                break;
-            case "Journey":
-                ((Journey) objectToTest).setId(0);
-                break;
-            case "User":
-                ((User) objectToTest).setId(0);
-                ((User) objectToTest).setAccountName("newName"); // username must be unique
-                break;
-            default:
-                fail();
+        objectToTest.setId(0);
+
+        if (objectToTest instanceof User) {
+            ((User) objectToTest).setAccountName("newName"); // unique username
         }
 
         writeSingleEntity(objectToTest); // Add 'newly created' object
@@ -403,10 +396,18 @@ public class SqlInterpreterTest {
     public void delJourneyTestForStops() throws SQLException, IOException {
         writeSingleEntity(testJourney);
         db.deleteData(EntityType.JOURNEY, testJourney.getId());
-        ResultSet result = db.createConnection().createStatement().executeQuery(
-                "SELECT * FROM stop WHERE journeyid = " + testJourney.getId() + ";");
-        assertFalse(result.getBoolean(1));
-        result.close();
+        try (Connection conn = db.createConnection();
+                Statement stmt = conn.createStatement();
+                ResultSet result = stmt.executeQuery(
+                        "SELECT * FROM stop WHERE journeyid = " + testJourney.getId() + ";")) {
+
+            assertFalse(result.getBoolean(1));
+            result.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            logManager.error(e.getMessage());
+        }
     }
 
     /**
@@ -416,10 +417,19 @@ public class SqlInterpreterTest {
     public void delChargerTestForStops() throws SQLException, IOException {
         db.writeCharger(testCharger);
         db.deleteData(EntityType.CHARGER, testCharger.getId());
-        ResultSet result = db.createConnection().createStatement().executeQuery(
-                "SELECT * FROM stop WHERE chargerid = " + testCharger.getId() + ";");
-        assertFalse(result.getBoolean(3));
-        result.close();
+        try (Connection conn = db.createConnection();
+                Statement stmt = conn.createStatement();
+                ResultSet result = stmt.executeQuery(
+                        "SELECT * FROM stop WHERE chargerid = " + testCharger.getId() + ";")) {
+
+            assertFalse(result.getBoolean(3));
+            result.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            logManager.error(e.getMessage());
+        }
+
     }
 
     /**
@@ -456,7 +466,7 @@ public class SqlInterpreterTest {
      */
     @Test
     public void noChargersForJourneyTest() throws IOException {
-        testJourney.removeCharger(testCharger);
+        testJourney.removeStop(testStop);
 
         Exception e = assertThrows(IOException.class, () -> {
             db.writeJourney(testJourney);
@@ -576,10 +586,12 @@ public class SqlInterpreterTest {
     @Test
     public void changeChargerJourneyTest() throws SQLException, IOException {
         writeSingleEntity(testJourney);
-        testJourney.getChargers().get(0).setName("New Name");
-        testJourney.getChargers().get(0).setOperator("New op");
-        testJourney.getChargers().get(0).setDateOpened("00:00:00 12/34/56");
-        writeSingleEntity(testJourney.getChargers().get(0));
+        Stop newStop = new Stop(-40.00, 170.00);
+        newStop.setId(2);
+        testJourney.getStops().clear();
+        testJourney.getStops().add(newStop);
+        writeSingleEntity(testJourney);
+        Journey j = testJourney;
         List<Entity> result = db.readData(
                 new QueryBuilderImpl().withSource(EntityType.JOURNEY).withFilter("journeyid",
                         String.valueOf(testJourney.getId()),
@@ -615,7 +627,8 @@ public class SqlInterpreterTest {
      */
     @ParameterizedTest
     @MethodSource("dbSingleEntities")
-    public void missingRequiredFieldTest(Entity objectToTest, EntityType entity) throws IOException {
+    public void missingRequiredFieldTest(Entity objectToTest, EntityType entity)
+            throws IOException {
 
         switch (objectToTest.getClass().getSimpleName()) {
             case "Charger":
@@ -632,15 +645,20 @@ public class SqlInterpreterTest {
                         new Coordinate(null, 177.77702, "testAddy1"));
                 break;
             case "User":
-                try { // remove default records
-                    Connection conn = db.createConnection();
-                    Statement stmt = conn.createStatement();
+                try (Connection conn = db.createConnection();
+                        Statement stmt = conn.createStatement()) { // remove default records
+
                     stmt.executeUpdate("DELETE FROM user"); // remove default admin
+                    stmt.close();
+                    conn.close();
                 } catch (SQLException e) {
                     logManager.error(e.getMessage());
-                    ;
                 }
+
                 ((User) objectToTest).setAccountName(null);
+                break;
+            case "Stop":
+                ((Stop) objectToTest).setLat(null);
                 break;
             default:
                 fail();
@@ -840,7 +858,7 @@ public class SqlInterpreterTest {
                             ComparisonType.EQUAL)
                     .build());
             assertEquals(testUser, (User) res.get(0));
-        } catch (SQLException | IOException e) {
+        } catch (IOException e) {
             Assertions.fail("Database failed");
         }
     }
@@ -853,7 +871,7 @@ public class SqlInterpreterTest {
         try {
             db.writeUser(null);
             Assertions.fail("Database shouldn't add null pointers");
-        } catch (SQLException e) {
+        } catch (IOException e) {
             Assertions.fail("Database failed");
         } catch (NullPointerException n) {
             Assertions.assertTrue(true);
@@ -869,7 +887,7 @@ public class SqlInterpreterTest {
                             ComparisonType.EQUAL)
                     .build());
             Assertions.assertEquals(0, res.size());
-        } catch (SQLException | IOException e) {
+        } catch (IOException e) {
             Assertions.fail("Database Failed");
         }
     }

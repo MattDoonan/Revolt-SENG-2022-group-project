@@ -29,7 +29,7 @@ Feature: User checking there account information
 
   Scenario: (AT_44) A user wants to update personal information
     Given I want to edit my information
-    When I want to change my account name to "MrTest"
+    When I want to change my account name to "MrTestOwner"
     And I want to save my information
     Then My account name has changed to "admin"
 

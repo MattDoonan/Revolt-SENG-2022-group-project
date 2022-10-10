@@ -103,7 +103,7 @@ public class UserManagerTest {
                             ComparisonType.EQUAL)
                     .build());
             Assertions.assertEquals((User) res.get(0), user);
-        } catch (SQLException e) {
+        } catch (IOException e) {
             Assertions.fail("Database failed");
         }
     }

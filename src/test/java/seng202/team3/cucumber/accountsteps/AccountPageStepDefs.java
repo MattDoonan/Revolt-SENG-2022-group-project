@@ -94,6 +94,7 @@ public class AccountPageStepDefs extends CucumberFxBase {
                 "MrTest", PermissionLevel.USER), "1234");
         chargerOwner = new User("chargerowner@gmail.com", "MrTestOwner",
                 PermissionLevel.CHARGEROWNER);
+        chargerOwner.setId(2);
         db.writeUser(chargerOwner, UserManager.encryptThisString("qwerty"));
 
         users = db.readData(new QueryBuilderImpl().withSource(EntityType.USER).build());
@@ -113,7 +114,6 @@ public class AccountPageStepDefs extends CucumberFxBase {
                 "2020/1/1 00:00:00", true,
                 false, false, false);
         testCharger.setOwnerId(chargerOwner.getId());
-        testCharger.setOwner("MrTestOwner");
         db.writeCharger(testCharger);
 
     }
@@ -353,7 +353,7 @@ public class AccountPageStepDefs extends CucumberFxBase {
     @Given("The user owns a charger")
     public void ownsCharger() throws IOException {
         List<Entity> chargers = db.readData(new QueryBuilderImpl().withSource(EntityType.CHARGER)
-                .withFilter("owner", "3", ComparisonType.EQUAL).build());
+                .withFilter("owner", "" + UserManager.getUser().getId(), ComparisonType.EQUAL).build());
         assertTrue(chargers.size() > 0);
         clickOn("#mainTable");
     }
@@ -395,7 +395,7 @@ public class AccountPageStepDefs extends CucumberFxBase {
     @Given("The user owns no chargers")
     public void noOwnedChargers() throws IOException {
         List<Entity> chargers = db.readData(new QueryBuilderImpl().withSource(EntityType.CHARGER)
-                .withFilter("owner", "3", ComparisonType.EQUAL).build());
+                .withFilter("owner", "" + UserManager.getUser().getId(), ComparisonType.EQUAL).build());
         for (Entity o : chargers) {
             db.deleteData(EntityType.CHARGER, ((Charger) o).getId());
         }
@@ -405,7 +405,7 @@ public class AccountPageStepDefs extends CucumberFxBase {
 
     @Then("The table is empty")
     public void emptyTable() {
-        TableView<Charger> table = (TableView<Charger>) find("#mainTable");
+        TableView<Charger> table = (TableView<Charger>) this.find("#mainTable");
         assertTrue(table.getItems().isEmpty());
     }
 
