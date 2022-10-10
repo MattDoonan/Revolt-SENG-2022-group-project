@@ -193,11 +193,6 @@ public class JourneyController {
     private JourneyUpdateManager journeyUpdateManager;
 
     /**
-     * The border pane of the controller
-     */
-    private BorderPane borderPane;
-
-    /**
      * Constructor for this class
      */
     public JourneyController() {
