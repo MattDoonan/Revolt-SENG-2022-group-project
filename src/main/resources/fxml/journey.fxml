@@ -73,7 +73,7 @@
                         </Text>
                         <TextField fx:id="tripName" layoutX="23.0" layoutY="43.0" stylesheets="@style.css" AnchorPane.leftAnchor="23.0" />
                         <Label layoutX="23.0" layoutY="26.0" text="Trip name" AnchorPane.leftAnchor="23.0" />
-                        <Slider fx:id="rangeSlider" layoutX="22.0" layoutY="158.0" majorTickUnit="20.0" minorTickCount="1" prefHeight="33.0" prefWidth="184.0" showTickLabels="true" showTickMarks="true" value="0.0" />
+                        <Slider fx:id="rangeSlider" layoutX="22.0" layoutY="158.0" majorTickUnit="20.0" minorTickCount="1" prefHeight="33.0" prefWidth="184.0" showTickLabels="true" showTickMarks="true" />
                         <Label layoutX="26.0" layoutY="134.0" text="Current Charge (%)" />
                         <Label layoutX="25.0" layoutY="78.0" text="Vehicle" />
                         <Label layoutX="156.0" layoutY="78.0" prefHeight="16.0" prefWidth="86.0" text="Max Range: " />
@@ -82,7 +82,7 @@
                   </AnchorPane>
                </content>
             </ScrollPane>
-            <AnchorPane maxWidth="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="530.0">
+            <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="530.0">
                <children>
                   <TableView fx:id="previousJourneyTable" layoutX="15.0" layoutY="14.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="195.0" prefWidth="500.0">
                      <columns>
