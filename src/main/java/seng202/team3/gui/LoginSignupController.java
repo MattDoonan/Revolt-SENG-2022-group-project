@@ -365,27 +365,15 @@ public class LoginSignupController {
         loginEmailField.setStyle(VALID_STYLE);
         loginPasswordField.setStyle(VALID_STYLE);
 
-        Point2D pointEmail = loginEmailField.localToScene(0.0, 0.0);
-        Point2D pointPass = loginPasswordField.localToScene(0.0, 0.0);
-
         if (loginEmailField.getText().isEmpty()) {
             loginEmailField.setStyle(INVALID_STYLE);
-            errors.get("nameError").show(loginEmailField,
-                    pointEmail.getX() + loginEmailField.getScene().getX()
-                            + loginEmailField.getScene().getWindow().getX()
-                            + loginEmailField.getWidth() + 25,
-                    pointEmail.getY() + loginEmailField.getScene().getY()
-                            + loginEmailField.getScene().getWindow().getY());
+            errors.displayError(loginEmailField, "nameError");
         }
         if (loginPasswordField.getText().isEmpty()) {
             errors.changeMessage("passError", "Password required.");
             loginPasswordField.setStyle(INVALID_STYLE);
-            errors.get("passError").show(loginPasswordField,
-                    pointPass.getX() + loginPasswordField.getScene().getX()
-                            + loginPasswordField.getScene().getWindow().getX()
-                            + loginPasswordField.getWidth() + 25,
-                    pointPass.getY() + loginPasswordField.getScene().getY()
-                            + loginPasswordField.getScene().getWindow().getY());
+            errors.displayError(loginPasswordField, "passError");
+
         }
 
     }

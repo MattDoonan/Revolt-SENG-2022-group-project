@@ -3,6 +3,8 @@ package seng202.team3.gui;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import javafx.geometry.Point2D;
+import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 
 /**
@@ -93,6 +95,24 @@ public class ErrorHandler {
      */
     public void changeMessage(String id, String message) {
         errorTooltips.get(id).setText(message);
+    }
+
+
+    /**
+     * Displays the error tooltip on the given textfield
+     * 
+     * @param textField the textfield to show the error for
+     * @param id the id of the error
+     */
+    public void displayError(TextField textField, String id) {
+        Point2D point = textField.localToScene(0.0, 0.0);
+
+        get(id).show(textField,
+            point.getX() + textField.getScene().getX()
+                + textField.getScene().getWindow().getX()
+                + textField.getWidth() + 25,
+            point.getY() + textField.getScene().getY()
+                + textField.getScene().getWindow().getY());
     }
 
     /**
