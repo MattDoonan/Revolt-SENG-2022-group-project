@@ -33,15 +33,10 @@ public class CsvInterpreter implements DataReader {
      * 
      * @param filename name of file to read
      * @return csv file object
-     * 
-     * @throws IOException if file cannot be read successfully
      */
-    private InputStreamReader readFile(String filename) throws IOException {
+    private InputStreamReader readFile(String filename) {
         // Initialize File
-        if (!filename.startsWith("/")) {
-            filename = "/" + filename + ".csv";
-        }
-        return new InputStreamReader(getClass().getResourceAsStream(filename));
+        return new InputStreamReader(getClass().getResourceAsStream(filename + ".csv"));
     }
 
     /**
@@ -60,33 +55,34 @@ public class CsvInterpreter implements DataReader {
         }
 
         // Compile messages from non lethal errors to send back
-        String errorMessage = "";
+        StringBuilder errorMessage = new StringBuilder();
         for (CsvException e : exceptions) {
             if (exceptions.indexOf(e) != 0) {
-                errorMessage += "\n";
+                errorMessage.append("\n");
             }
             // Add file name and line to message
-            errorMessage += String.format("CSV error reading file %s.csv on line %d: ",
-                    filename, e.getLineNumber());
+            errorMessage.append(
+                    String.format("CSV error reading file %s.csv on line %d: ",
+                            filename, e.getLineNumber()));
 
             // Switch is used here so other cases can be handled easily without refactor
-            switch (e.getClass().getSimpleName()) { // Custom error lines for internal exceptions
-                case "CsvDataTypeMismatchException": // Field is incorrect data type
-                    CsvDataTypeMismatchException exception = (CsvDataTypeMismatchException) e;
-                    errorMessage += String.format(
-                            "Value (%s) could not be converted to Type (%s)",
-                            exception.getSourceObject(),
-                            exception.getDestinationClass().getSimpleName());
-                    break;
 
-                default: // Missing required field
-                    errorMessage += e.getMessage();
-                    break;
+            // Custom error lines
+            // for internal exceptions
+            if (e instanceof CsvDataTypeMismatchException) {
+                CsvDataTypeMismatchException exception = (CsvDataTypeMismatchException) e;
+                errorMessage.append(String.format(
+                        "Value (%s) could not be converted to Type (%s)",
+                        exception.getSourceObject(),
+                        exception.getDestinationClass().getSimpleName()));
+            } else {
+                errorMessage.append(e.getMessage());
             }
         }
 
         // Throw error if error message has been populated
-        throw new IOException(errorMessage);
+        throw new IOException(errorMessage.toString());
+
     }
 
     /**
@@ -97,7 +93,7 @@ public class CsvInterpreter implements DataReader {
      * @throws IOException if the read/write operation fails
      */
     public void importChargersToDatabase(String filename) throws IOException {
-        SqlInterpreter.getInstance().writeCharger(new ArrayList<>(readChargers(filename)));
+        SqlInterpreter.getInstance().writeCharger(readChargers(filename));
     }
 
     /**

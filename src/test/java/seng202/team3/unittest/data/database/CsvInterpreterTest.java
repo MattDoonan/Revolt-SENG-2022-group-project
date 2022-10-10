@@ -49,7 +49,7 @@ public class CsvInterpreterTest {
         testUser.setId(1);
 
         UserManager.setUser(testUser);
-        result = new CsvInterpreter().readChargers("csvtest/validChargers");
+        result = new CsvInterpreter().readChargers("/csvtest/validChargers");
 
     }
 
@@ -86,7 +86,7 @@ public class CsvInterpreterTest {
         // Check exception is thrown
         IOException exception = assertThrows(IOException.class, () -> {
 
-            result = new CsvInterpreter().readChargers("csvtest/missingHeader");
+            result = new CsvInterpreter().readChargers("/csvtest/missingHeader");
         });
 
         // Check header is missing
@@ -102,7 +102,7 @@ public class CsvInterpreterTest {
     public void invalidDataTypeTest() {
         // Check exception is thrown
         IOException exception = assertThrows(IOException.class, () -> {
-            result = new CsvInterpreter().readChargers("csvtest/invalidDataType");
+            result = new CsvInterpreter().readChargers("/csvtest/invalidDataType");
         });
 
         // Check data cannot be converted
@@ -118,7 +118,7 @@ public class CsvInterpreterTest {
     public void missingDataValueTest() {
         // Check exception is thrown
         IOException exception = assertThrows(IOException.class, () -> {
-            result = new CsvInterpreter().readChargers("csvtest/missingDataValue");
+            result = new CsvInterpreter().readChargers("/csvtest/missingDataValue");
         });
 
         // Check data is missing
@@ -135,7 +135,7 @@ public class CsvInterpreterTest {
     public void multipleErrorMessagesCombineTest() {
         // Check exception is thrown
         IOException exception = assertThrows(IOException.class, () -> {
-            result = new CsvInterpreter().readChargers("csvtest/multipleErrorMessagesCombine");
+            result = new CsvInterpreter().readChargers("/csvtest/multipleErrorMessagesCombine");
         });
 
         // Check invalid data type

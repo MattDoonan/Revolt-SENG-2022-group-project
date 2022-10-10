@@ -69,7 +69,7 @@ public class CarChargeTestFx extends TestFxBase {
         SqlInterpreter.removeInstance();
         db = SqlInterpreter.initialiseInstanceWithUrl(
                 "jdbc:sqlite:./target/test-classes/test_database.db");
-        new CsvInterpreter().importChargersToDatabase("csvtest/filtering");
+        new CsvInterpreter().importChargersToDatabase("/csvtest/filtering");
         testUser = new User("admin@admin.com", "admin",
                 PermissionLevel.ADMIN);
         db.writeUser(testUser);

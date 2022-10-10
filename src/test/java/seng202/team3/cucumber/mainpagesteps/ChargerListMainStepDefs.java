@@ -65,7 +65,7 @@ public class ChargerListMainStepDefs extends CucumberFxBase {
     public void init() throws Exception {
         db = SqlInterpreter.getInstance();
         db.defaultDatabase();
-        new CsvInterpreter().importChargersToDatabase("csvtest/filtering");
+        new CsvInterpreter().importChargersToDatabase("/csvtest/filtering");
     }
 
     @Given("No charger has been selected")

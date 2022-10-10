@@ -52,7 +52,7 @@ public class MainSearchFilterTestFx extends TestFxBase {
                 "jdbc:sqlite:./target/test-classes/test_database.db");
         db.defaultDatabase();
 
-        new CsvInterpreter().importChargersToDatabase("csvtest/filtering");
+        new CsvInterpreter().importChargersToDatabase("/csvtest/filtering");
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
         Parent page = loader.load();

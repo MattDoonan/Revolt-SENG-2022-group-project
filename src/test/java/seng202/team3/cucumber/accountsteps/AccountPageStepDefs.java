@@ -89,7 +89,7 @@ public class AccountPageStepDefs extends CucumberFxBase {
     public void init() throws Exception {
         db = SqlInterpreter.getInstance();
         db.defaultDatabase();
-        new CsvInterpreter().importChargersToDatabase("csvtest/filtering");
+        new CsvInterpreter().importChargersToDatabase("/csvtest/filtering");
         db.writeUser(new User("Tester@gmail.com",
                 "MrTest", PermissionLevel.USER), "1234");
         chargerOwner = new User("chargerowner@gmail.com", "MrTestOwner",

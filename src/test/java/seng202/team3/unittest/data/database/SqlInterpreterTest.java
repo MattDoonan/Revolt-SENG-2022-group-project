@@ -235,11 +235,11 @@ public class SqlInterpreterTest {
 
     @Test
     public void writeChargersFromCsvTest() throws IOException {
-        new CsvInterpreter().importChargersToDatabase("csvtest/validChargers");
+        new CsvInterpreter().importChargersToDatabase("/csvtest/validChargers");
         QueryBuilder q = new QueryBuilderImpl().withSource(EntityType.CHARGER);
         List<Entity> result = db.readData(q.build());
 
-        List<Entity> expected = new CsvInterpreter().readChargers("csvtest/validChargers");
+        List<Entity> expected = new CsvInterpreter().readChargers("/csvtest/validChargers");
 
         for (Entity o : expected) {
             assertTrue(result.contains(o));
@@ -466,14 +466,14 @@ public class SqlInterpreterTest {
      * Checks what happens if there are no chargers in a journey
      */
     @Test
-    public void noChargersForJourneyTest() throws IOException {
-        testJourney.removeStop(testStop);
+    public void noEndForJourneyTest() throws IOException {
+        testJourney.setEndPosition(null);
 
         Exception e = assertThrows(IOException.class, () -> {
             db.writeJourney(testJourney);
         });
 
-        assertTrue(e.getMessage().contains("Error writing journey. No stops found."));
+        assertTrue(e.getMessage().contains("Error writing journey."));
     }
 
     /**
@@ -679,7 +679,7 @@ public class SqlInterpreterTest {
     public void allRecordsOnlyOnceTest() throws IOException {
         // objectToTest is unused but defined so existing methodsource can be used
 
-        new CsvInterpreter().importChargersToDatabase("csvtest/validChargers");
+        new CsvInterpreter().importChargersToDatabase("/csvtest/validChargers");
 
         List<Entity> result = db.readData(
                 new QueryBuilderImpl().withSource(EntityType.CHARGER).build());
@@ -695,7 +695,7 @@ public class SqlInterpreterTest {
 
     @Test
     public void singleFilterTest() throws IOException {
-        new CsvInterpreter().importChargersToDatabase("csvtest/filtering");
+        new CsvInterpreter().importChargersToDatabase("/csvtest/filtering");
 
         List<Entity> result = db.readData(
                 new QueryBuilderImpl().withSource(EntityType.CHARGER)
@@ -712,7 +712,7 @@ public class SqlInterpreterTest {
 
     @Test
     public void singleFilterCaseInsensitiveTest() throws IOException {
-        new CsvInterpreter().importChargersToDatabase("csvtest/filtering");
+        new CsvInterpreter().importChargersToDatabase("/csvtest/filtering");
 
         List<Entity> result = db.readData(
                 new QueryBuilderImpl().withSource(EntityType.CHARGER)
@@ -729,7 +729,7 @@ public class SqlInterpreterTest {
 
     @Test
     public void multipleFilterTest() throws IOException {
-        new CsvInterpreter().importChargersToDatabase("csvtest/filtering");
+        new CsvInterpreter().importChargersToDatabase("/csvtest/filtering");
 
         List<Entity> result = db.readData(
                 new QueryBuilderImpl().withSource(EntityType.CHARGER)
@@ -747,7 +747,7 @@ public class SqlInterpreterTest {
 
     @Test
     public void filterByColumnOnRelatedTableTest() throws IOException {
-        new CsvInterpreter().importChargersToDatabase("csvtest/filtering");
+        new CsvInterpreter().importChargersToDatabase("/csvtest/filtering");
 
         List<Entity> result = db.readData(
                 new QueryBuilderImpl().withSource(EntityType.CHARGER)
@@ -772,7 +772,7 @@ public class SqlInterpreterTest {
 
     @Test
     public void multipleFilterSameAttributeTest() throws IOException {
-        new CsvInterpreter().importChargersToDatabase("csvtest/filtering");
+        new CsvInterpreter().importChargersToDatabase("/csvtest/filtering");
 
         List<Entity> result = db.readData(
                 new QueryBuilderImpl().withSource(EntityType.CHARGER)
@@ -791,7 +791,7 @@ public class SqlInterpreterTest {
     @Test
     public void filterByNonExistentColumnTest() throws IOException {
 
-        new CsvInterpreter().importChargersToDatabase("csvtest/filtering");
+        new CsvInterpreter().importChargersToDatabase("/csvtest/filtering");
 
         assertThrows(IOException.class, () -> {
             db.readData(
@@ -803,9 +803,9 @@ public class SqlInterpreterTest {
 
     @Test
     public void allRecordsImported() throws IOException {
-        new CsvInterpreter().importChargersToDatabase("csvtest/filtering");
+        new CsvInterpreter().importChargersToDatabase("/csvtest/filtering");
 
-        List<Entity> expected = new CsvInterpreter().readChargers("csvtest/filtering");
+        List<Entity> expected = new CsvInterpreter().readChargers("/csvtest/filtering");
         List<Entity> actual = db.readData(new QueryBuilderImpl().withSource(EntityType.CHARGER)
                 .build());
 

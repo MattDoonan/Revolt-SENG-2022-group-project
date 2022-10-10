@@ -60,7 +60,7 @@ public class SearchFilterMainStepDefs extends CucumberFxBase {
         db = SqlInterpreter.getInstance();
         db.defaultDatabase();
 
-        new CsvInterpreter().importChargersToDatabase("csvtest/filtering");
+        new CsvInterpreter().importChargersToDatabase("/csvtest/filtering");
     }
 
     @Given("I have the app open")
