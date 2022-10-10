@@ -167,6 +167,7 @@ public class SqlInterpreterTest {
                 false,
                 true,
                 false);
+        testCharger.setId(DEFAULTID);
 
         testVehicle = new Vehicle(
                 "Nissan",
@@ -908,6 +909,22 @@ public class SqlInterpreterTest {
         } catch (IOException e) {
             Assertions.fail("Database failed");
         }
+    }
+
+    /**
+     * Checks chargers views can be updates
+     */
+    @Test
+    public void validViewUpdate() throws IOException {
+        writeSingleEntity(testCharger);
+        int current = testCharger.getViews();
+        testCharger.incrementViews();
+        db.updateChargerViews(testCharger);
+        List<Entity> result = db.readData(new QueryBuilderImpl().withSource(EntityType.CHARGER)
+                .withFilter("charger.chargerid", Integer.toString(testCharger.getId()),
+                        ComparisonType.EQUAL)
+                .build());
+        assertEquals(current + 1, ((Charger) result.get(0)).getViews());
     }
 
 }

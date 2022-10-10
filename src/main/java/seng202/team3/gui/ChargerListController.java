@@ -19,6 +19,7 @@ import org.apache.logging.log4j.Logger;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.logic.Calculations;
+import seng202.team3.logic.UserManager;
 
 /**
  * Class controls the charger list
@@ -208,7 +209,14 @@ public class ChargerListController {
         display.getChildren().add(chargerAddress);
 
         display.getChildren().add(new Text());
-        display.getChildren().add(new Text("Owner is: " + c.getOwner() + ""));
+        Text owner = new Text("Owner is: " + c.getOwner() + "");
+
+        if (c.getOwnerId() == UserManager.getUser().getId()) {
+            owner.setText(String.format("Views: %d", c.getViews()));
+        }
+
+        display.getChildren().add(owner);
+
         String word = manage.getManager().getConnectors(c);
         display.getChildren().add(new Text("Current types " + word + ""));
         display.getChildren().add(
@@ -227,6 +235,11 @@ public class ChargerListController {
      * @param c the charger to view
      */
     private void loadLargerChargerView(Charger c) {
+        if (UserManager.getUser().getId() != manage.getManager() // Increment views if not owner
+                .getSelectedCharger().getOwnerId()) {
+            manage.getManager().updateSelectedViews();
+        }
+
         ImageView chargerImg = getImage(200);
         largeDisplayInfo.getChildren().add(chargerImg);
 
@@ -239,6 +252,9 @@ public class ChargerListController {
         largeDisplayInfo.getChildren().add(chargerName);
 
         Text owner = new Text("Owner: " + c.getOwner() + "");
+        if (c.getOwnerId() == UserManager.getUser().getId()) {
+            owner.setText(String.format("Views: %d", c.getViews()));
+        }
         owner.setStyle("-fx-font-size : 20");
         owner.setWrappingWidth(480);
         largeDisplayInfo.getChildren().add(owner);

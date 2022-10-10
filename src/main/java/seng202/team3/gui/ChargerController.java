@@ -216,6 +216,12 @@ public class ChargerController {
     private Button deleteButton;
 
     /**
+     * Invisible label to store views for the new charger object
+     */
+    @FXML
+    private Label views;
+
+    /**
      * Initialises the ChargerController, loading in the charger info
      */
     public ChargerController() {
@@ -289,6 +295,7 @@ public class ChargerController {
             if (charger.getParkingCost()) {
                 costParks.setSelected(true);
             }
+            views.setText("" + charger.getViews());
         } else {
             address.setText(prevCoordinate.getAddress());
             if (GeoLocationHandler.getCoordinate() != GeoLocationHandler.DEFAULT_COORDINATE) {
@@ -297,6 +304,7 @@ public class ChargerController {
             }
             owner.setText(UserManager.getUser().getAccountName());
             deleteButton.setOpacity(0.0);
+            views.setText("0");
         }
         displayConnectorInfo();
     }
@@ -342,6 +350,7 @@ public class ChargerController {
         newCharger.setChargeCost(cost.isSelected());
         newCharger.setParkingCost(costParks.isSelected());
         newCharger.setHasAttraction(attractions.isSelected());
+        newCharger.setViews(Integer.parseInt(views.getText()));
 
         try {
             newCharger.setTimeLimit(Double.parseDouble(time.getText()));

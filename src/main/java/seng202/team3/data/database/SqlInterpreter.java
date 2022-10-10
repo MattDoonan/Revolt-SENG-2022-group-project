@@ -519,6 +519,7 @@ public class SqlInterpreter implements DataReader {
                 charger.setAvailable24Hrs(rs.getBoolean("is24hours"));
                 charger.setParkingCost(rs.getBoolean("hascarparkcost"));
                 charger.setChargeCost(rs.getBoolean("haschargingcost"));
+                charger.setViews(rs.getInt("views"));
                 userRs.close();
 
                 // // Get connectors
@@ -731,6 +732,24 @@ public class SqlInterpreter implements DataReader {
     }
 
     /**
+     * Updates the view count for the given charger
+     * Does nothing if charger does not exist in db
+     * 
+     * @param c charger to update
+     * @throws IOException if charger does not exist
+     */
+    public void updateChargerViews(Charger c) throws IOException {
+        try (Connection conn = createConnection();
+                Statement stmt = conn.createStatement();) {
+            stmt.executeUpdate("UPDATE " + EntityType.CHARGER.getAsDatabase()
+                    + " SET views = " + c.getViews()
+                    + " WHERE chargerid = " + c.getId());
+        } catch (SQLException e) {
+            throw new IOException(e.getMessage());
+        }
+    }
+
+    /**
      * Adds a new charger to the database from a charger object
      *
      * @param c          charger object
@@ -741,12 +760,12 @@ public class SqlInterpreter implements DataReader {
         String toAdd = "INSERT INTO charger "
                 + "(chargerid, name, operator, owner, address, is24hours, "
                 + "carparkcount, hascarparkcost, maxtimelimit, hastouristattraction, latitude, "
-                + "longitude, datefirstoperational, haschargingcost, currenttype)"
-                + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(chargerid) DO UPDATE SET"
+                + "longitude, datefirstoperational, haschargingcost, currenttype, views)"
+                + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(chargerid) DO UPDATE SET"
                 + " name = ?, operator = ?, owner = ?, address = ?, is24hours = ?, "
                 + "carparkcount = ?, hascarparkcost = ?, maxtimelimit = ?, hastouristattraction = ?"
                 + ", latitude = ?, longitude = ?, datefirstoperational = ?, haschargingcost = ?, "
-                + "currenttype = ?";
+                + "currenttype = ?, views = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(toAdd)) {
 
@@ -775,20 +794,22 @@ public class SqlInterpreter implements DataReader {
             statement.setString(13, c.getDateOpened());
             statement.setBoolean(14, c.getChargeCost());
             statement.setString(15, c.getCurrentType());
-            statement.setString(16, c.getName());
-            statement.setString(17, c.getOperator());
-            statement.setInt(18, c.getOwnerId());
-            statement.setString(19, c.getLocation().getAddress());
-            statement.setBoolean(20, c.getAvailable24Hrs());
-            statement.setInt(21, c.getAvailableParks());
-            statement.setBoolean(22, c.getParkingCost());
-            statement.setDouble(23, time);
-            statement.setBoolean(24, c.getHasAttraction());
-            statement.setDouble(25, c.getLocation().getLat());
-            statement.setDouble(26, c.getLocation().getLon());
-            statement.setString(27, c.getDateOpened());
-            statement.setBoolean(28, c.getChargeCost());
-            statement.setString(29, c.getCurrentType());
+            statement.setInt(16, c.getViews());
+            statement.setString(17, c.getName());
+            statement.setString(18, c.getOperator());
+            statement.setInt(19, c.getOwnerId());
+            statement.setString(20, c.getLocation().getAddress());
+            statement.setBoolean(21, c.getAvailable24Hrs());
+            statement.setInt(22, c.getAvailableParks());
+            statement.setBoolean(23, c.getParkingCost());
+            statement.setDouble(24, time);
+            statement.setBoolean(25, c.getHasAttraction());
+            statement.setDouble(26, c.getLocation().getLat());
+            statement.setDouble(27, c.getLocation().getLon());
+            statement.setString(28, c.getDateOpened());
+            statement.setBoolean(29, c.getChargeCost());
+            statement.setString(30, c.getCurrentType());
+            statement.setInt(31, c.getViews());
 
             statement.executeUpdate();
             if (c.getId() == 0) {

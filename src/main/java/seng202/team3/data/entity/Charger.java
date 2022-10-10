@@ -79,6 +79,11 @@ public class Charger extends Entity {
     private String currentType;
 
     /**
+     * Total number of views the charger has had
+     */
+    private int views = 0;
+
+    /**
      * Empty constructor for CSV object builder
      */
     public Charger() {
@@ -86,7 +91,6 @@ public class Charger extends Entity {
         setOwnerId(UserManager.getUser().getId());
         setOwner(UserManager.getUser().getAccountName());
     }
-
 
     /**
      * Constructor for a charger
@@ -449,6 +453,31 @@ public class Charger extends Entity {
         return currentType;
     }
 
+    /**
+     * Sets the current number of views of the charger
+     * 
+     * @param views current number of views
+     */
+    public void setViews(int views) {
+        this.views = views;
+    }
+
+    /**
+     * Gets the current number of views of the charger
+     * 
+     * @return current number of views
+     */
+    public int getViews() {
+        return views;
+    }
+
+    /**
+     * Increases the current number of views of the charger by one
+     */
+    public void incrementViews() {
+        views++;
+    }
+
     /** {@inheritDoc} */
     @Override
     public boolean equals(Object o) {
@@ -458,8 +487,7 @@ public class Charger extends Entity {
         } else {
             return false;
         }
-        c.getCurrentType();
-        this.getCurrentType();
+
         return c.getDateOpened().equals(this.getDateOpened())
                 && c.getName().equals(this.getName())
                 && c.getConnectors().equals(this.getConnectors())
@@ -473,7 +501,8 @@ public class Charger extends Entity {
                 && c.getHasAttraction() == this.getHasAttraction()
                 && c.getParkingCost() == this.getParkingCost()
                 && c.getChargeCost() == this.getChargeCost()
-                && c.getCurrentType().equals(this.getCurrentType());
+                && c.getCurrentType().equals(this.getCurrentType())
+                && c.getViews() == this.getViews();
     }
 
     /** {@inheritDoc} */

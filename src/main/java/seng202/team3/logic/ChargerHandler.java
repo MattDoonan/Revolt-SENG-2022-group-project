@@ -112,6 +112,7 @@ public class ChargerHandler {
      * Create the charger list from the main Query
      */
     public void makeAllChargers() {
+
         try {
             List<Charger> chargerList = new ArrayList<>();
             for (Entity o : SqlInterpreter.getInstance()
@@ -155,4 +156,17 @@ public class ChargerHandler {
         return word.toString();
     }
 
+    /**
+     * Updates the current views on java object and in database
+     * Chargers are reloaded on page refresh without event action so both need to
+     * be updated simultaneously or data will be lost
+     */
+    public void updateSelectedViews() {
+        selectedCharger.incrementViews();
+        try {
+            SqlInterpreter.getInstance().updateChargerViews(selectedCharger);
+        } catch (IOException e) {
+            logManager.warn(e.getMessage());
+        }
+    }
 }
