@@ -231,7 +231,8 @@ public class AdminController {
         }
 
         if (permissionsErr) {
-            errors.displayError(updatePermissions, PERMISSIONS_ERROR, -updatePermissions.getWidth(), updatePermissions.getHeight());
+            errors.displayError(updatePermissions, PERMISSIONS_ERROR, 
+                -updatePermissions.getWidth(), updatePermissions.getHeight());
         } else {
             manager.getSelectedUser().setLevel(manager.permissionLevel(menu.getText()));
             manager.updateUser();

@@ -249,7 +249,8 @@ public class ChargerController {
      * @param stage the stage this controller is on
      */
     public void init(Stage stage) {
-        errors.add("chargerAddressRequired", "Needs an address, e.g. 132 Science Road, Christchurch");
+        errors.add("chargerAddressRequired", 
+            "Needs an address, e.g. 132 Science Road, Christchurch");
         errors.add("chargerNameRequired", "Needs a name, e.g. Home");
         errors.add("chargerTimeRequired", "Needs a Time Limit");
         errors.add("chargerTimeFormat", "Time Limit is not a valid number");
@@ -357,7 +358,7 @@ public class ChargerController {
         } catch (NumberFormatException | NullPointerException e) {
             lat.setStyle(INVALID_STYLE);
             lon.setStyle(INVALID_STYLE);
-            errors.displayError(lat, "chargerCoordFormat", 5, lat.getHeight()/2);
+            errors.displayError(lat, "chargerCoordFormat", 5, lat.getHeight() / 2);
             fail = true;
         }
 
@@ -589,13 +590,13 @@ public class ChargerController {
     public void launchEditable(Connector connector) {
         try {
             FXMLLoader connectorEditRoot = new FXMLLoader(getClass().getResource(
-                    "/fxml/connector_info.fxml"));
+                "/fxml/connector_info.fxml"));
             BorderPane root = connectorEditRoot.load();
             ConnectorEditController controller = connectorEditRoot.getController();
             controller.setController(this);
-            controller.init();
             controller.addConnector(connector);
             connectorEdit.setCenter(root);
+            controller.init();
             controller.displayInfo();
         } catch (IOException e) {
             logManager.error(e.getMessage());

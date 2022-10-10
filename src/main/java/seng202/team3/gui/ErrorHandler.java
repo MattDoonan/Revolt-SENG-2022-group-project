@@ -103,6 +103,8 @@ public class ErrorHandler {
      * 
      * @param textField the textfield to show the error for
      * @param id the id of the error
+     * @param addX what to add to the tooltip's x position
+     * @param addY what to add to the tooltip's y position
      */
     public void displayError(Control textField, String id, double addX, double addY) {
         Point2D point = textField.localToScene(0.0, 0.0);

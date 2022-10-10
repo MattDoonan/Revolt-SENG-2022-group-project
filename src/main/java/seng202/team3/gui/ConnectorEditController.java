@@ -138,8 +138,6 @@ public class ConnectorEditController {
     @FXML
     public void saveConnection() {
         Connector changedConnector;
-        String powerString = wattageField.getText();
-        String currentString = currentField.getText();
         int points = 0;
         Boolean fail = false;
         errors.hideAll();
@@ -155,11 +153,13 @@ public class ConnectorEditController {
             errors.displayError(chargingPointsField, "connPointsFormat", 5, 0);
             fail = true;
         }
+        String currentString = currentField.getText();
         if (currentString.length() == 0) {
             currentField.setStyle(INVALID_STYLE);
             errors.displayError(currentField, "connCurrentRequired", 5, 0);
             fail = true;
         }
+        String powerString = wattageField.getText();
         if (powerString.length() == 0) {
             wattageField.setStyle(INVALID_STYLE);
             errors.displayError(wattageField, "connPowerRequired", 5, 0);

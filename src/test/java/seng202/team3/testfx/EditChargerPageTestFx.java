@@ -88,7 +88,7 @@ public class EditChargerPageTestFx extends TestFxBase {
         press(KeyCode.DOWN);
         clickOn("#deleteConnectorButton");
         clickOn("#saveButton");
-        clickOn("#okay");
+        // clickOn("#okay");
     }
 
     /**
@@ -98,7 +98,7 @@ public class EditChargerPageTestFx extends TestFxBase {
     public void editChargerSuccess() {
         clickOn("#open24");
         clickOn("#saveButton");
-        clickOn("#okay");
+        // clickOn("#okay");
     }
 
 }
