@@ -35,6 +35,8 @@ import seng202.team3.data.entity.Coordinate;
 import seng202.team3.data.entity.Journey;
 import seng202.team3.data.entity.Vehicle;
 import seng202.team3.logic.Calculations;
+import seng202.team3.logic.GeoLocationHandler;
+import seng202.team3.logic.JavaScriptBridge;
 import seng202.team3.logic.JourneyManager;
 import seng202.team3.logic.JourneyUpdateManager;
 import seng202.team3.logic.UserManager;
@@ -374,6 +376,8 @@ public class JourneyController {
         journeyManager.addCharger(charger);
         resetChargerDisplay();
         addWaypointsToDisplay();
+        journeyManager.makeRangeChargers();
+        mapController.addChargersOnMap();
         calculateRoute();
     }
 
@@ -383,6 +387,7 @@ public class JourneyController {
     public void addWaypointsToDisplay() {
 
         double remainingCharge = 100.0;
+        Coordinate coordinate = null;
 
 
         List<Charger> chargers = journeyManager.getSelectedJourney().getChargers();
@@ -410,6 +415,8 @@ public class JourneyController {
                     new Text("\n" + (int) remainingCharge + "% Battery Used\n"));
 
             journeyChargerTable.getChildren().add(text);
+
+            coordinate = chargers.get(i).getLocation();
         }
 
         Button btn = new Button("Remove Last Point");
@@ -420,20 +427,19 @@ public class JourneyController {
 
             double previousRange = journeyManager.getDesiredRange();
 
+            journeyManager.setCurrentCoordinate(coordinate);
             journeyManager.setDesiredRange(previousRange - remainingCharge
                     * journeyManager.getSelectedJourney().getVehicle().getMaxRange() / 100.0);
-
             rangeSlider.setValue(journeyManager.getDesiredRange()
                     / journeyManager.getSelectedJourney().getVehicle().getMaxRange() * 100.0);
+
         } else if (journeyManager.getStart() != null) {
+
             journeyManager.setCurrentCoordinate(journeyManager.getStart());
             journeyManager.setDesiredRange((double) journeyManager
                     .getSelectedJourney().getVehicle().getMaxRange());
             rangeSlider.setValue(100);
         }
-
-        journeyManager.makeRangeChargers();
-        mapController.addChargersOnMap();
     }
 
     /**
@@ -450,13 +456,19 @@ public class JourneyController {
      * @param e the event of button being clicked
      */
     public void removeFromDisplay(ActionEvent e) {
+
+        double desiredRange = journeyManager.getDesiredRange();
         journeyManager.removeLastCharger();
         resetChargerDisplay();
+        addWaypointsToDisplay();
         if (journeyManager.getSelectedJourney().getChargers().isEmpty()) {
             journeyChargerTable.getChildren().clear();
             mapController.removeRoute();
+        } else {
+            journeyManager.setDesiredRange(desiredRange);
         }
-        addWaypointsToDisplay();
+        journeyManager.makeRangeChargers();
+        mapController.addChargersOnMap();
         journeyManager.checkDistanceBetweenChargers();
         mapController.addRouteToScreen();
     }
@@ -502,6 +514,9 @@ public class JourneyController {
      * @param journeysToAdd Observable list of journey objects
      */
     private void addToDisplay(ObservableList<Journey> journeysToAdd) {
+
+        final Coordinate currentPosition = GeoLocationHandler.getCoordinate();
+
         previousJourneyTable.getItems().clear();
         previousJourneyTable.setItems(journeysToAdd);
         journeyNameCol.setCellValueFactory(journey -> new ReadOnlyStringWrapper(
@@ -510,16 +525,41 @@ public class JourneyController {
                 journey.getValue().getVehicle().getMake() + " "
                 + journey.getValue().getVehicle().getModel()));
         startCoordinateCol.setCellValueFactory(journey -> new ReadOnlyStringWrapper(
-                "{" + journey.getValue().getStartPosition().getLat() + ", "
-                + journey.getValue().getStartPosition().getLon() + "}"));
+                getAddressString(journey.getValue().getStartPosition())));
         endCoordinateCol.setCellValueFactory(journey -> new ReadOnlyStringWrapper(
-                "{" + journey.getValue().getEndPosition().getLat() + ", "
-                        + journey.getValue().getEndPosition().getLon() + "}"));
+                getAddressString(journey.getValue().getEndPosition())));
         journeyDateCol.setCellValueFactory(journey -> new ReadOnlyStringWrapper(
                 journey.getValue().getStartDate()));
         previousJourneyTable.getSortOrder().add(journeyDateCol);
         previousJourneyTable.sort();
+
+        GeoLocationHandler.setCoordinate(currentPosition, currentPosition.getAddress());
     }
+
+    /**
+     * Makes the coordinate into a string
+     *
+     * @param coordinate the coordinate to be turned into an address string
+     * @return a string of either the address or the coordinate if no map
+     */
+    private String getAddressString(Coordinate coordinate) {
+
+        String name;
+
+        //Reverse Geolocates if there is internet
+        if (MapHandler.isMapRequested()) {
+
+            GeoLocationHandler.setCoordinate(coordinate, "Coordinate");
+            new JavaScriptBridge().makeLocationName();
+            name = GeoLocationHandler.getCoordinate().getAddress();
+        } else {
+            name = "[" + coordinate.getLat() + ", " + coordinate.getLon() + "]";
+        }
+
+        return name;
+    }
+
+
 
     /**
      * Deletes the journey selected from the table
@@ -556,7 +596,25 @@ public class JourneyController {
             addWaypointsToDisplay();
             populateTable();
             mapController.addRouteToScreen();
-            //TODO reverse geolocate for address names at start and end
+
+            Coordinate currentPosition = GeoLocationHandler.getCoordinate();
+
+            //reverse geolocates if there is a map
+            if (MapHandler.isMapRequested()) {
+
+
+                GeoLocationHandler.setCoordinate(journeyManager.getSelectedJourney()
+                        .getStartPosition(), "Start Position");
+                new JavaScriptBridge().makeLocationName();
+                startLabel.setText(GeoLocationHandler.getCoordinate().getAddress());
+                GeoLocationHandler.setCoordinate(journeyManager.getSelectedJourney()
+                        .getStartPosition(), "End Position");
+                new JavaScriptBridge().makeLocationName();
+                endLabel.setText(GeoLocationHandler.getCoordinate().getAddress());
+
+                GeoLocationHandler.setCoordinate(currentPosition, currentPosition.getAddress());
+            }
+
             startLabel.setText(journeyManager.getSelectedJourney()
                     .getStartPosition().getAddress());
             endLabel.setText(journeyManager.getSelectedJourney()

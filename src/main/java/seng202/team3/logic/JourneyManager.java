@@ -245,6 +245,7 @@ public class JourneyManager extends ChargerHandler {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             LocalDateTime now = LocalDateTime.now();
             selectedJourney.setStartDate(dtf.format(now));
+            selectedJourney.setUser(UserManager.getUser().getUserid());
             SqlInterpreter.getInstance().writeJourney(selectedJourney);
             logManager.info("Saved journey successfully");
             //TODO now successfully saves and to throw confirmation prompt up
