@@ -155,6 +155,18 @@ public class ChargerController {
     private TextField lon;
 
     /**
+     * The lable for the connector section of the window
+     */
+    @FXML
+    private Label connectorPageLabel;
+
+    /**
+     * Invalid vehicle lable
+     */
+    @FXML
+    private Label invalidChargerLabel;
+
+    /**
      * Column mapping connectors to their currents
      */
     @FXML
@@ -408,7 +420,7 @@ public class ChargerController {
 
         if (connectors.isEmpty()) {
             addConnectorButton.setStyle(INVALID_STYLE);
-            errors.displayError(addConnectorButton, "chargerConnectorRequired", 5, 0);
+            errors.displayError(connectorPageLabel, "chargerConnectorRequired", 5, 0);
             fail = true;
         }
 
@@ -420,6 +432,8 @@ public class ChargerController {
             } catch (IOException e) {
                 logManager.error(e.getMessage());
             }
+        } else {
+            invalidChargerLabel.setVisible(true);
         }
     }
 
