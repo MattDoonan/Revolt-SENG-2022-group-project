@@ -389,8 +389,8 @@ public class ChargerController {
             fail = true;
         } catch (NumberFormatException e) {
             time.setStyle(INVALID_STYLE);
-            errors.changeMessage("chargerTimeRequired", "Time Limit is not a valid number");
-            errors.displayError(time, "chargerTimeRequired", 5, 0);
+            errors.changeMessage("chargerTimeFormat", "Time Limit is not a valid number");
+            errors.displayError(time, "chargerTimeFormat", 5, 0);
             fail = true;
         }
 
@@ -579,6 +579,7 @@ public class ChargerController {
             BorderPane root = connectorEditRoot.load();
             ConnectorEditController controller = connectorEditRoot.getController();
             controller.setController(this);
+            controller.init();
             controller.addConnector(connector);
             connectorEdit.setCenter(root);
             controller.displayInfo();
@@ -626,5 +627,15 @@ public class ChargerController {
                 stage.close();
             }
         }
+    }
+    
+
+    /**
+     * Gets error handling object for tooltip messages
+     * 
+     * @return errorhandler with entry field tooltip alerts
+     */
+    public ErrorHandler getErrors() {
+        return errors;
     }
 }

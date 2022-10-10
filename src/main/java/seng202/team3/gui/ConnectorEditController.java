@@ -66,15 +66,38 @@ public class ConnectorEditController {
     private ChargerController controller;
 
     /**
-     * List of errors to display
+     * Handler for error message tooltips
      */
-    private ArrayList<String> errors = new ArrayList<>();
+    private ErrorHandler errors = new ErrorHandler();
+
+    /**
+     * Styling for invalid fields
+     */
+    private static final String INVALID_STYLE = "-fx-border-color: #ff0000;";
+
+    /**
+     * Styling for valid fields
+     */
+    private static final String VALID_STYLE = "-fx-border-color: default;";
+
 
     /**
      * Initialises the Controller editing
      */
     public ConnectorEditController() {
         // unused
+    }
+
+    /**
+     * Initialises this controller
+     *
+     */
+    public void init() {
+        errors.add("connPointsFormat", "Number of Charging Points needs to be an integer");
+        errors.add("connCurrentRequired", "Must have a current, e.g. AC or DC");
+        errors.add("connPowerRequired", "Must have a wattage, e.g. 24 kW");
+        errors.add("connStatusRequired", "Must have a status, e.g. Operative");
+        errors.add("connTypeRequired", "Must have a charger type e.g. CHAdeMO");
     }
 
     /**
@@ -118,26 +141,43 @@ public class ConnectorEditController {
         String powerString = wattageField.getText();
         String currentString = currentField.getText();
         int points = 0;
+        Boolean fail = false;
+        errors.hideAll();
+        chargingPointsField.setStyle(VALID_STYLE);
+        currentField.setStyle(VALID_STYLE);
+        wattageField.setStyle(VALID_STYLE);
+        statusField.setStyle(VALID_STYLE);
+        typeField.setStyle(VALID_STYLE);
         try {
             points = Integer.parseInt(chargingPointsField.getText());
         } catch (NumberFormatException e) {
-            errors.add("Number of Charging Points needs to be an integer");
+            chargingPointsField.setStyle(INVALID_STYLE);
+            errors.displayError(chargingPointsField, "connPointsFormat", 5, 0);
+            fail = true;
         }
         if (currentString.length() == 0) {
-            errors.add("Must have a current, e.g. AC or DC");
+            currentField.setStyle(INVALID_STYLE);
+            errors.displayError(currentField, "connCurrentRequired", 5, 0);
+            fail = true;
         }
         if (powerString.length() == 0) {
-            errors.add("Must have a wattage, e.g. 24 kW");
+            wattageField.setStyle(INVALID_STYLE);
+            errors.displayError(wattageField, "connPowerRequired", 5, 0);
+            fail = true;
         }
         String statusString = statusField.getText();
         if (statusString.length() == 0) {
-            errors.add("Must have a status, e.g. Operative");
+            statusField.setStyle(INVALID_STYLE);
+            errors.displayError(statusField, "connStatusRequired", 5, 0);
+            fail = true;
         }
         String typeString = typeField.getText();
         if (typeString.length() == 0) {
-            errors.add("Must have a charger type e.g. CHAdeMO");
+            typeField.setStyle(INVALID_STYLE);
+            errors.displayError(typeField, "connTypeRequired", 5, 0);
+            fail = true;
         }
-        if (errors.isEmpty()) {
+        if (Boolean.FALSE.equals(fail)) {
             if (connector == null) {
                 changedConnector = new Connector(typeString, powerString,
                         statusString, currentString, points);
@@ -154,9 +194,6 @@ public class ConnectorEditController {
             }
 
             controller.resetPage();
-        } else {
-            launchErrorPopUps();
-            errors.clear();
         }
     }
 
@@ -168,36 +205,36 @@ public class ConnectorEditController {
         controller.resetPage();
     }
 
-    /**
-     * Launches an error popup when trying to do illegal things
-     */
-    public void launchErrorPopUps() {
-        Stage stage = (Stage) statusField.getScene().getWindow();
-        try {
-            stage.setAlwaysOnTop(false);
-            FXMLLoader error = new FXMLLoader(getClass().getResource(
-                    "/fxml/error_popup.fxml"));
-            AnchorPane base = error.load();
-            Scene modalScene = new Scene(base);
-            Stage modal = new Stage();
-            modal.setScene(modalScene);
-            modal.setResizable(false);
-            modal.setTitle("Error With Connectors:");
-            modal.initModality(Modality.APPLICATION_MODAL);
-            ErrorController errController = error.getController();
-            errController.init();
-            errController.setErrors(errors);
-            errController.setPromptType("error");
-            errController.displayErrors();
-            modal.setAlwaysOnTop(true);
-            modal.showAndWait();
+    // /**
+    //  * Launches an error popup when trying to do illegal things
+    //  */
+    // public void launchErrorPopUps() {
+    //     Stage stage = (Stage) statusField.getScene().getWindow();
+    //     try {
+    //         stage.setAlwaysOnTop(false);
+    //         FXMLLoader error = new FXMLLoader(getClass().getResource(
+    //                 "/fxml/error_popup.fxml"));
+    //         AnchorPane base = error.load();
+    //         Scene modalScene = new Scene(base);
+    //         Stage modal = new Stage();
+    //         modal.setScene(modalScene);
+    //         modal.setResizable(false);
+    //         modal.setTitle("Error With Connectors:");
+    //         modal.initModality(Modality.APPLICATION_MODAL);
+    //         ErrorController errController = error.getController();
+    //         errController.init();
+    //         errController.setErrors(errors);
+    //         errController.setPromptType("error");
+    //         errController.displayErrors();
+    //         modal.setAlwaysOnTop(true);
+    //         modal.showAndWait();
 
-            for (String e : errors) {
-                logManager.warn(e);
-            }
-        } catch (IOException e) {
-            logManager.error(e.getMessage());
-        }
-    }
+    //         for (String e : errors) {
+    //             logManager.warn(e);
+    //         }
+    //     } catch (IOException e) {
+    //         logManager.error(e.getMessage());
+    //     }
+    // }
 
 }

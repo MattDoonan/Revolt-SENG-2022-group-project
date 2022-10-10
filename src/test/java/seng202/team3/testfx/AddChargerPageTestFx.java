@@ -1,5 +1,7 @@
 package seng202.team3.testfx;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
@@ -14,6 +16,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import seng202.team3.data.database.SqlInterpreter;
@@ -89,9 +92,17 @@ public class AddChargerPageTestFx extends TestFxBase {
         GeoLocationHandler.setCoordinate(new Coordinate(1.1, 2.3, -43.60, 172.572),
                 "Trial location");
         clickOn("#saveButton");
-        clickOn("#okay");
+        // clickOn("#okay");
         // TODO: assert error
+
+        // At least one tooltip visible
+        // for (Tooltip t : controller.getErrors().getAll()) {
+        //     assertTrue(t.isShowing());
+        //     return;
+        // }
+        // fail("No error tooltips shown");
     }
+
 
     /**
      * Checks if adding a charger works
