@@ -39,7 +39,7 @@
 	-fx-color: white;
 }
 
-.text-area {
+/* .text-area {
 	-fx-background-color: transparent;
 	background-color: transparent;
 }
@@ -57,7 +57,7 @@
 .text-area .scroll-pane .content {
 	-fx-background-color: transparent;
 	background-color: transparent;
-}
+} */
 
 #filters,
 #modChargers,

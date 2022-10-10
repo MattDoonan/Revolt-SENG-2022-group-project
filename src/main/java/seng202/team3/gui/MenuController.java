@@ -76,7 +76,7 @@ public class MenuController {
     /**
      * Login title text
      */
-    private static final String LOGIN_TITLE = "LOGIN";
+    private static final String LOGIN_TITLE = "Login";
 
     /**
      * unused constructor
@@ -265,7 +265,7 @@ public class MenuController {
      */
     public void signOut() {
         UserManager.setUser(UserManager.getGuest());
-        loginSignout.setText(LOGIN_TITLE);
+        loginSignout.setText("LOGIN");
         initHome();
         logManager.info("The user has been successfully logged out");
     }
