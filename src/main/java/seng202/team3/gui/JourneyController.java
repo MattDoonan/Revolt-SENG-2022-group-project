@@ -284,9 +284,9 @@ public class JourneyController {
     public void setStart() {
         journeyManager.makeCoordinateName();
         Coordinate position = journeyManager.getPosition();
-        journeyManager.setDesiredRange(rangeSlider.getValue()
-                * journeyManager.getSelectedJourney().getVehicle().getMaxRange() / 100.0);
         if (position != null && journeyManager.getSelectedJourney().getVehicle() != null) {
+            journeyManager.setDesiredRange(rangeSlider.getValue()
+                    * journeyManager.getSelectedJourney().getVehicle().getMaxRange() / 100.0);
             journeyManager.setStart(position);
             mapController.positionMarker("Start");
             makeStart.setDisable(true);

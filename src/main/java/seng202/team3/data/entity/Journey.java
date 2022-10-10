@@ -61,7 +61,6 @@ public class Journey {
      * Unused constructor
      */
     public Journey() {
-        this.user = UserManager.getUser().getUserid();
     }
 
     /**
