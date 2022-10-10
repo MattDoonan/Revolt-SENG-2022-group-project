@@ -164,7 +164,7 @@ public class JourneyController {
     /**
      * List of user input errors for adding/editing vehicles
      */
-    private final ArrayList<String> errors = new ArrayList<>();
+    private ArrayList<String> errors = new ArrayList<>();
 
     /**
      * List of vehicles available for the journey
@@ -191,6 +191,11 @@ public class JourneyController {
      * Logic manager for journey loader
      */
     private JourneyUpdateManager journeyUpdateManager;
+
+    /**
+     * The border pane of the controller
+     */
+    private BorderPane borderPane;
 
     /**
      * Constructor for this class
@@ -359,7 +364,7 @@ public class JourneyController {
         rangeSlider.setDisable(false);
         vehicles.setDisable(false);
         populateVehicles();
-        rangeSlider.setValue(50.0);
+        rangeSlider.setValue(100.0);
         resetChargerDisplay();
     }
 
@@ -383,6 +388,7 @@ public class JourneyController {
     public void addWaypointsToDisplay() {
 
         double remainingCharge = 100.0;
+
 
         List<Charger> chargers = journeyManager.getSelectedJourney().getChargers();
 
@@ -413,11 +419,24 @@ public class JourneyController {
 
         Button btn = new Button("Remove Last Point");
         btn.setOnAction(this::removeFromDisplay);
-        journeyChargerTable.getChildren().add(btn);
 
-        rangeSlider.setValue(100 - remainingCharge);
-        journeyManager.setDesiredRange((100 - remainingCharge)
-                * journeyManager.getSelectedJourney().getVehicle().getMaxRange() / 100);
+        if (!chargers.isEmpty()) {
+            journeyChargerTable.getChildren().add(btn);
+
+            double previousRange = journeyManager.getDesiredRange();
+
+            journeyManager.setDesiredRange(previousRange - remainingCharge
+                    * journeyManager.getSelectedJourney().getVehicle().getMaxRange() / 100.0);
+
+            rangeSlider.setValue(journeyManager.getDesiredRange()
+                    / journeyManager.getSelectedJourney().getVehicle().getMaxRange() * 100.0);
+        } else if (journeyManager.getStart() != null) {
+            journeyManager.setCurrentCoordinate(journeyManager.getStart());
+            journeyManager.setDesiredRange((double) journeyManager
+                    .getSelectedJourney().getVehicle().getMaxRange());
+            rangeSlider.setValue(100);
+        }
+
         journeyManager.makeRangeChargers();
         mapController.addChargersOnMap();
     }
@@ -438,11 +457,11 @@ public class JourneyController {
     public void removeFromDisplay(ActionEvent e) {
         journeyManager.removeLastCharger();
         resetChargerDisplay();
-        addWaypointsToDisplay();
         if (journeyManager.getSelectedJourney().getChargers().isEmpty()) {
             journeyChargerTable.getChildren().clear();
             mapController.removeRoute();
         }
+        addWaypointsToDisplay();
         journeyManager.checkDistanceBetweenChargers();
         mapController.addRouteToScreen();
     }
@@ -452,6 +471,7 @@ public class JourneyController {
      */
     @FXML
     public void saveJourney() {
+        journeyManager.checkDistanceBetweenChargers();
         if (!(distanceError) && (journeyManager.getStart() != null)
                 && (journeyManager.getEnd() != null)) {
             journeyManager.getSelectedJourney().setEndDate(tripName.getText());
@@ -629,11 +649,6 @@ public class JourneyController {
                 }
             }
         }
-        System.out.println(e.getSource());
-        System.out.println(e.getSource().getClass());
-
-        System.out.println("1");
-
     }
 
     /**

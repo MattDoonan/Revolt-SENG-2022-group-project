@@ -260,6 +260,8 @@ public class JourneyManager extends ChargerHandler {
      * @return boolean true if there is an error
      */
     public boolean checkDistanceBetweenChargers() { // TODO possibly needs fixing
+        boolean error = false;
+
         ArrayList<Coordinate> coordinates = new ArrayList<>();
         coordinates.add(selectedJourney.getStartPosition());
         for (Charger charger : this.getSelectedJourney().getChargers()) {
@@ -268,9 +270,11 @@ public class JourneyManager extends ChargerHandler {
         if (selectedJourney.getEndPosition() != null) {
             coordinates.add(selectedJourney.getEndPosition());
         }
-        boolean error = Calculations.calculateDistance(
-                coordinates.get(0), coordinates.get(1)) >= selectedJourney
-                        .getVehicle().getMaxRange();
+        if (coordinates.size() > 1) {
+            error = Calculations.calculateDistance(
+                    coordinates.get(0), coordinates.get(1)) >= selectedJourney
+                    .getVehicle().getMaxRange();
+        }
 
         for (int i = 1; i < coordinates.size() - 1; i++) {
             if (Calculations.calculateDistance(
