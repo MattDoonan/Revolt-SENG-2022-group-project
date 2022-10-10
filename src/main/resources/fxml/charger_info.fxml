@@ -145,11 +145,6 @@
                               <Insets bottom="2.0" />
                            </padding>
                         </Label>
-                        <Label text="*" textFill="RED" GridPane.rowIndex="3">
-                           <padding>
-                              <Insets bottom="2.0" />
-                           </padding>
-                        </Label>
                         <Label text="*" textFill="RED" GridPane.rowIndex="4">
                            <padding>
                               <Insets bottom="2.0" />
