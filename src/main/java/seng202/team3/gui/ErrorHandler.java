@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import javafx.geometry.Point2D;
-import javafx.scene.control.TextField;
+import javafx.scene.control.Control;
 import javafx.scene.control.Tooltip;
 
 /**
@@ -104,15 +104,15 @@ public class ErrorHandler {
      * @param textField the textfield to show the error for
      * @param id the id of the error
      */
-    public void displayError(TextField textField, String id) {
+    public void displayError(Control textField, String id, double addX, double addY) {
         Point2D point = textField.localToScene(0.0, 0.0);
 
         get(id).show(textField,
             point.getX() + textField.getScene().getX()
                 + textField.getScene().getWindow().getX()
-                + textField.getWidth() + 25,
+                + textField.getWidth() + addX,
             point.getY() + textField.getScene().getY()
-                + textField.getScene().getWindow().getY());
+                + textField.getScene().getWindow().getY() + addY);
     }
 
     /**

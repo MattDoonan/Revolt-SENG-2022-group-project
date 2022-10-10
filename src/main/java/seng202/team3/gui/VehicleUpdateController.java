@@ -9,7 +9,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
-import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -314,33 +313,18 @@ public class VehicleUpdateController {
         maxRangeText.setStyle(VALID_STYLE);
         connectorType.setStyle(VALID_STYLE);
 
-        Point2D pointMake = makeText.localToScene(0.0, 0.0);
-        Point2D pointModel = modelText.localToScene(0.0, 0.0);
-        Point2D pointRange = maxRangeText.localToScene(0.0, 0.0);
-        Point2D pointConn = connectorType.localToScene(0.0, 0.0);
-
         Boolean fail = false;
 
         if (makeText.getText().isEmpty()) {
             makeText.setTooltip(errors.get(MAKE_ERROR));
             makeText.setStyle(INVALID_STYLE);
-            errors.get(MAKE_ERROR).show(makeText,
-                    pointMake.getX() + makeText.getScene().getX()
-                            + makeText.getScene().getWindow().getX()
-                            + makeText.getWidth() + 25,
-                    pointMake.getY() + makeText.getScene().getY()
-                            + makeText.getScene().getWindow().getY());
+            errors.displayError(makeText, MAKE_ERROR, 5, 0);
             fail = true;
         }
         if (modelText.getText().isEmpty()) {
             modelText.setStyle(INVALID_STYLE);
             modelText.setTooltip(errors.get(MODEL_ERROR));
-            errors.get(MODEL_ERROR).show(modelText,
-                    pointModel.getX() + modelText.getScene().getX()
-                            + modelText.getScene().getWindow().getX()
-                            + modelText.getWidth() + 25,
-                    pointModel.getY() + modelText.getScene().getY()
-                            + modelText.getScene().getWindow().getY());
+            errors.displayError(modelText, MODEL_ERROR, 5, 0);
             fail = true;
         }
         Boolean rangeFlag = false;
@@ -361,24 +345,14 @@ public class VehicleUpdateController {
         }
         if (Boolean.TRUE.equals(rangeFlag)) {
             maxRangeText.setStyle(INVALID_STYLE);
-            errors.get(RANGE_ERROR).show(maxRangeText,
-                    pointRange.getX() + maxRangeText.getScene().getX()
-                            + maxRangeText.getScene().getWindow().getX()
-                            + maxRangeText.getWidth() + 25,
-                    pointRange.getY() + maxRangeText.getScene().getY()
-                            + maxRangeText.getScene().getWindow().getY());
+            errors.displayError(maxRangeText, RANGE_ERROR, 5, 0);
             fail = true;
         }
 
         if (connections.isEmpty()) {
             connectorType.setStyle(INVALID_STYLE);
             connectorType.setTooltip(errors.get(CONNECTOR_ERROR));
-            errors.get(CONNECTOR_ERROR).show(connectorType,
-                    pointConn.getX() + connectorType.getScene().getX()
-                            + connectorType.getScene().getWindow().getX()
-                            + connectorType.getWidth() + 25,
-                    pointConn.getY() + connectorType.getScene().getY()
-                            + connectorType.getScene().getWindow().getY());
+            errors.displayError(connectorType, CONNECTOR_ERROR, 5, 0);
             fail = true;
         }
 

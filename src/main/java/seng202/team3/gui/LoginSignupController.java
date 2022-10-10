@@ -9,7 +9,6 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.Point2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -268,11 +267,6 @@ public class LoginSignupController {
         signupPasswordField.setStyle(VALID_STYLE);
         signupPasswordField.setStyle(VALID_STYLE);
 
-        Point2D pointName = signupUsernameField.localToScene(0.0, 0.0);
-        Point2D pointEmail = signupEmailField.localToScene(0.0, 0.0);
-        Point2D pointPass = signupPasswordField.localToScene(0.0, 0.0);
-        Point2D pointConf = confPassField.localToScene(0.0, 0.0);
-
         Boolean fail = false;
 
         if (!UserManager.checkEmail(signupEmailField.getText())) {
@@ -281,45 +275,25 @@ public class LoginSignupController {
                 errors.changeMessage("emailError", "Email Required.");
             }
             signupEmailField.setStyle(INVALID_STYLE);
-            errors.get("emailError").show(signupEmailField,
-                    pointEmail.getX() + signupEmailField.getScene().getX()
-                            + signupEmailField.getScene().getWindow().getX()
-                            + signupEmailField.getWidth() + 25,
-                    pointEmail.getY() + signupEmailField.getScene().getY()
-                            + signupEmailField.getScene().getWindow().getY());
+            errors.displayError(signupEmailField, "emailError", 25, 0);
             fail = true;
         }
         if (signupUsernameField.getText().isEmpty()) {
             signupUsernameField.setStyle(INVALID_STYLE);
-            errors.get("nameError").show(signupUsernameField,
-                    pointName.getX() + signupUsernameField.getScene().getX()
-                            + signupUsernameField.getScene().getWindow().getX()
-                            + signupUsernameField.getWidth() + 25,
-                    pointName.getY() + signupUsernameField.getScene().getY()
-                            + signupUsernameField.getScene().getWindow().getY());
+            errors.displayError(signupUsernameField, "nameError", 25, 0);
             fail = true;
         }
         if (signupPasswordField.getText().length() < 4) {
             errors.changeMessage("passError", "Password must be more than 4 characters.");
             signupPasswordField.setStyle(INVALID_STYLE);
             confPassField.setStyle(INVALID_STYLE);
-            errors.get("passError").show(signupPasswordField,
-                    pointPass.getX() + signupPasswordField.getScene().getX()
-                            + signupPasswordField.getScene().getWindow().getX()
-                            + signupPasswordField.getWidth() + 25,
-                    pointPass.getY() + signupPasswordField.getScene().getY()
-                            + signupPasswordField.getScene().getWindow().getY());
+            errors.displayError(signupPasswordField, "passError", 25, 0);
             fail = true;
         }
         if (confPassField.getText().isEmpty()
                 || !signupPasswordField.getText().equals(confPassField.getText())) {
             confPassField.setStyle(INVALID_STYLE);
-            errors.get("confPassError").show(confPassField,
-                    pointConf.getX() + confPassField.getScene().getX()
-                            + confPassField.getScene().getWindow().getX()
-                            + confPassField.getWidth() + 25,
-                    pointConf.getY() + confPassField.getScene().getY()
-                            + confPassField.getScene().getWindow().getY());
+            errors.displayError(confPassField, "confPassError", 25, 0);
             fail = true;
         }
 
@@ -367,15 +341,13 @@ public class LoginSignupController {
 
         if (loginEmailField.getText().isEmpty()) {
             loginEmailField.setStyle(INVALID_STYLE);
-            errors.displayError(loginEmailField, "nameError");
+            errors.displayError(loginEmailField, "nameError", 25, 0);
         }
         if (loginPasswordField.getText().isEmpty()) {
             errors.changeMessage("passError", "Password required.");
             loginPasswordField.setStyle(INVALID_STYLE);
-            errors.displayError(loginPasswordField, "passError");
-
+            errors.displayError(loginPasswordField, "passError", 25, 0);
         }
-
     }
 
     /**

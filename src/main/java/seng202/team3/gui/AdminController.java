@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Point2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -188,8 +187,6 @@ public class AdminController {
         errors.hideAll();
         setSelectedUser();
 
-        Point2D pointDelete = delete.localToScene(0.0, 0.0);
-
         boolean errorOccured = false;
         if (manager.getSelectedUser() == null) {
             errors.changeMessage(DELETE_ERROR, SELECT_USER);
@@ -200,12 +197,7 @@ public class AdminController {
         }
 
         if (errorOccured) {
-            errors.get(DELETE_ERROR).show(delete, pointDelete.getX()
-                    + delete.getScene().getX()
-                    + delete.getScene().getWindow().getX(),
-                    pointDelete.getY() + delete.getScene().getY()
-                            + delete.getScene().getWindow().getY()
-                            + delete.getHeight());
+            errors.displayError(delete, DELETE_ERROR, -delete.getWidth(), delete.getHeight());
         } else {
             loadPromptScreen("Are you sure you'd like to \n"
                     + "delete this user (and owned chargers)?\n\n");
@@ -222,9 +214,6 @@ public class AdminController {
     public void editPermissions() throws SQLException {
         errors.hideAll();
 
-        Point2D pointMenu = menu.localToScene(0.0, 0.0);
-        Point2D pointUpdate = updatePermissions.localToScene(0.0, 0.0);
-
         setSelectedUser();
 
         boolean permissionsErr = false;
@@ -238,21 +227,11 @@ public class AdminController {
 
         if (menu.getText().equals("Select...")) {
             permissionsErr = true;
-            errors.get("permissionsMenuError").show(menu, pointMenu.getX()
-                    + menu.getScene().getX()
-                    + menu.getScene().getWindow().getX(),
-                    pointMenu.getY() + menu.getScene().getY()
-                            + menu.getScene().getWindow().getY()
-                            + menu.getHeight());
+            errors.displayError(menu, "permissionsMenuError", -menu.getWidth(), menu.getHeight());
         }
 
         if (permissionsErr) {
-            errors.get(PERMISSIONS_ERROR).show(updatePermissions, pointUpdate.getX()
-                    + updatePermissions.getScene().getX()
-                    + updatePermissions.getScene().getWindow().getX(),
-                    pointUpdate.getY() + updatePermissions.getScene().getY()
-                            + updatePermissions.getScene().getWindow().getY()
-                            + updatePermissions.getHeight());
+            errors.displayError(updatePermissions, PERMISSIONS_ERROR, -updatePermissions.getWidth(), updatePermissions.getHeight());
         } else {
             manager.getSelectedUser().setLevel(manager.permissionLevel(menu.getText()));
             manager.updateUser();
