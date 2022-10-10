@@ -171,9 +171,7 @@ public class CsvInterpreterTest {
         ArrayList<Connector> expectedConnectors = new ArrayList<>(
                 Arrays.asList(new Connector("Type 2 Socketed", "22 kW", "Operative", "AC", 1)));
         Charger c = new Charger(expectedConnectors, "YHA MT COOK",
-                new Coordinate(1366541.235400,
-                        5153202.164200,
-                        -43.737450,
+                new Coordinate(-43.737450,
                         170.100913,
                         "4 Kitchener Dr, Mount Cook National Park 7999, New Zealand"),
                 1, 0.0, "MERIDIAN ENERGY LIMITED",

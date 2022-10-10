@@ -162,8 +162,7 @@ public class TableSearchFilterTestFx extends TestFxBase {
     public void editMultipleColumns() {
         boolean isValid = true;
         clickOn("#columnEdit");
-        clickOn("#showXpos");
-        clickOn("#showYpos");
+        clickOn("#showId");
         clickOn("#showAttraction");
         clickOn("#showLon");
         clickOn("#searchCharger");
@@ -176,8 +175,7 @@ public class TableSearchFilterTestFx extends TestFxBase {
             // Do Nothing
         }
         try {
-            clickOn("#xposCol");
-            clickOn("#yposCol");
+            clickOn("#idCol");
         } catch (FxRobotException e) {
             isValid = false;
         }

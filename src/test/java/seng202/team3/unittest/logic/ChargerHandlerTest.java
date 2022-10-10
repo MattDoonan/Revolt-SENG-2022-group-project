@@ -83,7 +83,7 @@ public class ChargerHandlerTest {
         mainManager.resetQuery();
         mainManager.setDistance(0);
         GeoLocationHandler.setCoordinate(
-                new Coordinate(null, null, -43.522518157958984, 172.5811767578125),
+                new Coordinate(-43.522518157958984, 172.5811767578125),
                 "Test Position");
         mainManager.makeAllChargers();
         assertTrue(mainManager.getData().size() > 48); // TODO: fix back to CloseChargerData
@@ -122,7 +122,7 @@ public class ChargerHandlerTest {
         connectorList.add(dummyConnector1);
         connectorList.add(dummyConnector2);
 
-        Coordinate testCoord = new Coordinate(1.1, 2.3, -43.53418, 172.627572, "CHHosp");
+        Coordinate testCoord = new Coordinate(-43.53418, 172.627572, "CHHosp");
         Charger testCharger = new Charger(connectorList, "Hosp", testCoord, 2, 1.2,
                 "operator", "01-01-2000",
                 true, true, true, true);

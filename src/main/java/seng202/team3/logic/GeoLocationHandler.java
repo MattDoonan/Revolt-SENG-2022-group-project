@@ -37,7 +37,7 @@ public class GeoLocationHandler {
      * Default coordinate all nz
      */
     public static final Coordinate DEFAULT_COORDINATE = new Coordinate(
-            null, null, -40.9006, 174.8860, "New Zealand");
+            -40.9006, 174.8860, "New Zealand");
 
     /**
      * DatabaseReader for geolocation data

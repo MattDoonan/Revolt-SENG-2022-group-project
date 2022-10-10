@@ -87,14 +87,6 @@ public class Charger extends Entity {
         setOwner(UserManager.getUser().getAccountName());
     }
 
-    /** Has warning for charger high cost */
-    boolean warningHighCost;
-
-    /** Has warning for charger long wait time */
-    boolean warningLongWait;
-
-    /** Has warning for charger low availabilty */
-    boolean warningLowAvailability;
 
     /**
      * Constructor for a charger

@@ -490,8 +490,6 @@ public class SqlInterpreter implements DataReader {
             charger.setDateOpened(rs.getString("datefirstoperational"));
             charger.setName(rs.getString("name"));
             charger.setLocation(new Coordinate(
-                    rs.getDouble("x"),
-                    rs.getDouble("y"),
                     rs.getDouble("latitude"),
                     rs.getDouble("longitude"),
                     rs.getString("address")));
@@ -598,13 +596,13 @@ public class SqlInterpreter implements DataReader {
             journey.setUser(rs.getInt("userid"));
             journey.setId(rs.getInt("journeyid"));
             journey.setStartPosition(
-                    new Coordinate(rs.getDouble("startX"), rs.getDouble("startY"),
+                    new Coordinate(
                             rs.getDouble("startLat"), rs.getDouble("startLon")));
             journey.setEndPosition(
-                    new Coordinate(rs.getDouble("endX"), rs.getDouble("endY"),
+                    new Coordinate(
                             rs.getDouble("endLat"), rs.getDouble("endLon")));
             journey.setStartDate(rs.getString("startDate"));
-            journey.setEndDate(rs.getString("endDate"));
+            journey.setTitle(rs.getString("title"));
 
             // Get vehicle
             ResultSet vehicleRs = createConnection().createStatement()
@@ -688,11 +686,11 @@ public class SqlInterpreter implements DataReader {
      */
     public void writeCharger(Connection connection, Charger c) throws IOException {
         String toAdd = "INSERT INTO charger "
-                + "(chargerid, x, y, name, operator, owner, address, is24hours, "
+                + "(chargerid, name, operator, owner, address, is24hours, "
                 + "carparkcount, hascarparkcost, maxtimelimit, hastouristattraction, latitude, "
                 + "longitude, datefirstoperational, haschargingcost, currenttype)"
-                + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(chargerid) DO UPDATE SET"
-                + " x = ?, y = ?, name = ?, operator = ?, owner = ?, address = ?, is24hours = ?, "
+                + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(chargerid) DO UPDATE SET"
+                + " name = ?, operator = ?, owner = ?, address = ?, is24hours = ?, "
                 + "carparkcount = ?, hascarparkcost = ?, maxtimelimit = ?, hastouristattraction = ?"
                 + ", latitude = ?, longitude = ?, datefirstoperational = ?, haschargingcost = ?, "
                 + "currenttype = ?";
@@ -709,38 +707,34 @@ public class SqlInterpreter implements DataReader {
             } else {
                 time = c.getTimeLimit();
             }
-            statement.setDouble(2, c.getLocation().getXpos());
-            statement.setDouble(3, c.getLocation().getYpos());
-            statement.setString(4, c.getName());
-            statement.setString(5, c.getOperator());
-            statement.setInt(6, c.getOwnerId());
-            statement.setString(7, c.getLocation().getAddress());
-            statement.setBoolean(8, c.getAvailable24Hrs());
-            statement.setInt(9, c.getAvailableParks());
-            statement.setBoolean(10, c.getParkingCost());
-            statement.setDouble(11, time);
-            statement.setBoolean(12, c.getHasAttraction());
-            statement.setDouble(13, c.getLocation().getLat());
-            statement.setDouble(14, c.getLocation().getLon());
-            statement.setString(15, c.getDateOpened());
-            statement.setBoolean(16, c.getChargeCost());
-            statement.setString(17, c.getCurrentType());
-            statement.setDouble(18, c.getLocation().getXpos());
-            statement.setDouble(19, c.getLocation().getYpos());
-            statement.setString(20, c.getName());
-            statement.setString(21, c.getOperator());
-            statement.setInt(22, c.getOwnerId());
-            statement.setString(23, c.getLocation().getAddress());
-            statement.setBoolean(24, c.getAvailable24Hrs());
-            statement.setInt(25, c.getAvailableParks());
-            statement.setBoolean(26, c.getParkingCost());
-            statement.setDouble(27, time);
-            statement.setBoolean(28, c.getHasAttraction());
-            statement.setDouble(29, c.getLocation().getLat());
-            statement.setDouble(30, c.getLocation().getLon());
-            statement.setString(31, c.getDateOpened());
-            statement.setBoolean(32, c.getChargeCost());
-            statement.setString(33, c.getCurrentType());
+            statement.setString(2, c.getName());
+            statement.setString(3, c.getOperator());
+            statement.setInt(4, c.getOwnerId());
+            statement.setString(5, c.getLocation().getAddress());
+            statement.setBoolean(6, c.getAvailable24Hrs());
+            statement.setInt(7, c.getAvailableParks());
+            statement.setBoolean(8, c.getParkingCost());
+            statement.setDouble(9, time);
+            statement.setBoolean(10, c.getHasAttraction());
+            statement.setDouble(11, c.getLocation().getLat());
+            statement.setDouble(12, c.getLocation().getLon());
+            statement.setString(13, c.getDateOpened());
+            statement.setBoolean(14, c.getChargeCost());
+            statement.setString(15, c.getCurrentType());
+            statement.setString(16, c.getName());
+            statement.setString(17, c.getOperator());
+            statement.setInt(18, c.getOwnerId());
+            statement.setString(19, c.getLocation().getAddress());
+            statement.setBoolean(20, c.getAvailable24Hrs());
+            statement.setInt(21, c.getAvailableParks());
+            statement.setBoolean(22, c.getParkingCost());
+            statement.setDouble(23, time);
+            statement.setBoolean(24, c.getHasAttraction());
+            statement.setDouble(25, c.getLocation().getLat());
+            statement.setDouble(26, c.getLocation().getLon());
+            statement.setString(27, c.getDateOpened());
+            statement.setBoolean(28, c.getChargeCost());
+            statement.setString(29, c.getCurrentType());
 
             statement.executeUpdate();
             if (c.getId() == 0) {
@@ -970,12 +964,11 @@ public class SqlInterpreter implements DataReader {
      */
     public void writeJourney(Journey j) throws IOException {
         String toAdd = "INSERT INTO journey (journeyid, vehicleid, startLat, "
-                + "startLon, startX, startY, "
-                + "endLat, endLon, endX, endY, startDate, endDate, userid) "
-                + "values(?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(journeyid) DO UPDATE SET "
-                + "vehicleid = ?, startLat = ?, startLon = ?, startX = ?,"
-                + " startY = ?, endLat = ?, endLon = ?, endX = ?, endY = ?, "
-                + "startDate = ?, endDate = ?, userid = ?";
+                + "startLon, "
+                + "endLat, endLon, startDate, title, userid) "
+                + "values(?,?,?,?,?,?,?,?,?) ON CONFLICT(journeyid) DO UPDATE SET "
+                + "vehicleid = ?, startLat = ?, startLon = ?, endLat = ?, endLon = ?, "
+                + "startDate = ?, title = ?, userid = ?";
         if (j.getChargers().size() < 1) {
             throw new IOException("Error writing journey. No stops found.");
         } else if (j.getVehicle() == null) {
@@ -991,27 +984,19 @@ public class SqlInterpreter implements DataReader {
             addJourney.setInt(2, j.getVehicle().getId());
             addJourney.setDouble(3, j.getStartPosition().getLat());
             addJourney.setDouble(4, j.getStartPosition().getLon());
-            addJourney.setDouble(5, j.getStartPosition().getXpos());
-            addJourney.setDouble(6, j.getStartPosition().getYpos());
-            addJourney.setDouble(7, j.getEndPosition().getLat());
-            addJourney.setDouble(8, j.getEndPosition().getLon());
-            addJourney.setDouble(9, j.getEndPosition().getXpos());
-            addJourney.setDouble(10, j.getEndPosition().getYpos());
-            addJourney.setString(11, j.getStartDate());
-            addJourney.setString(12, j.getEndDate());
-            addJourney.setInt(13, j.getUser());
-            addJourney.setInt(14, j.getVehicle().getId());
-            addJourney.setDouble(15, j.getStartPosition().getLat());
-            addJourney.setDouble(16, j.getStartPosition().getLon());
-            addJourney.setDouble(17, j.getStartPosition().getXpos());
-            addJourney.setDouble(18, j.getStartPosition().getYpos());
-            addJourney.setDouble(19, j.getEndPosition().getLat());
-            addJourney.setDouble(20, j.getEndPosition().getLon());
-            addJourney.setDouble(21, j.getEndPosition().getXpos());
-            addJourney.setDouble(22, j.getEndPosition().getYpos());
-            addJourney.setString(23, j.getStartDate());
-            addJourney.setString(24, j.getEndDate());
-            addJourney.setInt(25, j.getUser());
+            addJourney.setDouble(5, j.getEndPosition().getLat());
+            addJourney.setDouble(6, j.getEndPosition().getLon());
+            addJourney.setString(7, j.getStartDate());
+            addJourney.setString(8, j.getTitle());
+            addJourney.setInt(9, j.getUser());
+            addJourney.setInt(10, j.getVehicle().getId());
+            addJourney.setDouble(11, j.getStartPosition().getLat());
+            addJourney.setDouble(12, j.getStartPosition().getLon());
+            addJourney.setDouble(13, j.getEndPosition().getLat());
+            addJourney.setDouble(14, j.getEndPosition().getLon());
+            addJourney.setString(15, j.getStartDate());
+            addJourney.setString(16, j.getTitle());
+            addJourney.setInt(17, j.getUser());
             addJourney.executeUpdate();
             if (j.getId() == 0) {
                 j.setId(addJourney.getGeneratedKeys().getInt(1));

@@ -104,7 +104,7 @@ public class ChargerListMainStepDefs extends CucumberFxBase {
 
         clickOn("#menuButton");
         controller = (MainController) MainWindow.getController();
-        GeoLocationHandler.setCoordinate(new Coordinate(1366541.2354, 5153202.1642,
+        GeoLocationHandler.setCoordinate(new Coordinate(
                 -43.52246856689453, 172.5812225341797),
                 "University of Canterbury Waimairi Road, ChristChurch 8041, New Zealand Aotearoa");
         controller.getManager().setPosition();

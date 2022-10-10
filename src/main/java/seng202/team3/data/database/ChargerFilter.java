@@ -84,12 +84,6 @@ public class ChargerFilter implements BeanVerifier<Entity> {
             case "address":
                 result = compare(c.getLocation().getAddress());
                 break;
-            case "x":
-                result = compare(c.getLocation().getXpos());
-                break;
-            case "y":
-                result = compare(c.getLocation().getYpos());
-                break;
             case "latitude":
                 result = compare(c.getLocation().getLat());
                 break;

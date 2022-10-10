@@ -23,8 +23,6 @@ DROP TABLE IF EXISTS charger;
 CREATE TABLE IF NOT EXISTS charger
 (
     chargerid INTEGER PRIMARY KEY AUTOINCREMENT,
-    x REAL,
-    y REAL,
     operator VARCHAR(50),
     owner INTEGER NOT NULL references User(userid),
     address VARCHAR(255) NOT NULL,
@@ -77,14 +75,10 @@ CREATE TABLE if not exists journey
     vehicleid INTEGER NOT NULL references Vehicle(vehicleid),
     startLat REAL NOT NULL,
     startLon REAL NOT NULL,
-    startX REAL,
-    startY REAL,
     endLat REAL NOT NULL,
     endLon REAL NOT NULL,
-    endX REAL,
-    endY REAL,
     startDate TEXT,
-    endDate TEXT
+    title TEXT
     );
 --SPLIT
 

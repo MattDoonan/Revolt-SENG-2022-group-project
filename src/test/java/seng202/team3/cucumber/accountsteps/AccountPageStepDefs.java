@@ -107,7 +107,7 @@ public class AccountPageStepDefs extends CucumberFxBase {
         db.writeCharger(new ArrayList<>(chargerObject));
 
         Connector dummyConnector1 = new Connector("ChardaMo", "AC", "Available", "123", 3);
-        Coordinate coord1 = new Coordinate(1.1, 2.3, -43.53418, 172.627572, "TestCity");
+        Coordinate coord1 = new Coordinate(-43.53418, 172.627572, "TestCity");
         Charger testCharger = new Charger(
                 new ArrayList<>(List.of(dummyConnector1)), "Hosp", coord1, 1, 0.3, "Meridian",
                 "2020/1/1 00:00:00", true,

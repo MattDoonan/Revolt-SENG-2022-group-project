@@ -26,8 +26,8 @@ public class Journey extends Entity {
     /** Starting date and time */
     private String startDate;
 
-    /** Ending date and time */
-    private String endDate;
+    /** Name of the journey */
+    private String title;
 
     /**
      * id of user who took the journey
@@ -41,16 +41,16 @@ public class Journey extends Entity {
      * @param startPosition start coordinate of the journey
      * @param endPosition   end coordinate of the journey
      * @param startDate     start date of the journey
-     * @param endDate       end date of the journey
+     * @param title         name of the journey
      */
     public Journey(Vehicle vehicle, Coordinate startPosition,
             Coordinate endPosition, String startDate,
-            String endDate) {
+            String title) {
         this.startPosition = startPosition;
         this.endPosition = endPosition;
         this.vehicle = vehicle;
         this.startDate = startDate;
-        this.endDate = endDate;
+        this.title = title;
         this.user = UserManager.getUser().getId();
     }
 
@@ -165,17 +165,17 @@ public class Journey extends Entity {
      *
      * @return end date of journey
      */
-    public String getEndDate() {
-        return endDate;
+    public String getTitle() {
+        return title;
     }
 
     /**
      * Set end date of journey
      *
-     * @param endDate end date of journey
+     * @param title name of journey
      */
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     /**
@@ -210,7 +210,7 @@ public class Journey extends Entity {
                 && j.getStartPosition().equals(this.getStartPosition())
                 && j.getEndPosition().equals(this.getEndPosition())
                 && j.getStartDate().equals(this.getStartDate())
-                && j.getEndDate().equals(this.getEndDate())
+                && j.getTitle().equals(this.getTitle())
                 && j.getUser() == this.getUser();
     }
 
@@ -223,7 +223,7 @@ public class Journey extends Entity {
         result = 31 * result + startPosition.hashCode();
         result = 31 * result + endPosition.hashCode();
         result = 31 * result + startDate.hashCode();
-        result = 31 * result + endDate.hashCode();
+        result = 31 * result + title.hashCode();
 
         return result;
     }

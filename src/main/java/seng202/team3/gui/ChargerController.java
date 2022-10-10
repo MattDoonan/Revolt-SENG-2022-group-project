@@ -308,8 +308,6 @@ public class ChargerController {
     public void saveChanges() {
         Charger newCharger = new Charger();
         Coordinate coordinate = new Coordinate();
-        coordinate.setXpos(0.0);
-        coordinate.setYpos(0.0);
 
         try {
             coordinate.setLat(Double.parseDouble(lat.getText()));

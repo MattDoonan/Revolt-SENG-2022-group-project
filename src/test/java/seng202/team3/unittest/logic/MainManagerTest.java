@@ -86,7 +86,7 @@ public class MainManagerTest {
      */
     @Test
     public void positionTest1() {
-        Coordinate coordinate = new Coordinate(1.1, 2.3, -43.53418, 172.627572);
+        Coordinate coordinate = new Coordinate(-43.53418, 172.627572);
         GeoLocationHandler.setCoordinate(coordinate, "empty");
         manage.setPosition();
         assertEquals(coordinate, manage.getPosition());
@@ -95,7 +95,7 @@ public class MainManagerTest {
 
     @Test
     public void positionTest2() {
-        Coordinate coordinate = new Coordinate(4.4, 6.1, 23.2334, 32.3242);
+        Coordinate coordinate = new Coordinate(23.2334, 32.3242);
         GeoLocationHandler.setCoordinate(coordinate, "empty");
         manage.setPosition();
         assertEquals(coordinate, manage.getPosition());
@@ -109,7 +109,7 @@ public class MainManagerTest {
         Connector dummyConnector = new Connector("ChardaMo", "AC", "Available", "123", 3);
         ArrayList<Connector> connectorList = new ArrayList<>(1);
         connectorList.add(dummyConnector);
-        Coordinate coord = new Coordinate(4.5, 5.7, -36.85918, 174.76602);
+        Coordinate coord = new Coordinate(-36.85918, 174.76602);
         Charger c = new Charger(connectorList, "Test1", coord, 1, 0.3,
                 "Meridian", "2020/1/1 00:00:00", true, true, true, true);
         manage.setSelectedCharger(c);
@@ -157,7 +157,7 @@ public class MainManagerTest {
             chargerList.add((Charger) o);
         }
 
-        Coordinate coordinate = new Coordinate(1.1, 2.3, -43.53418, 172.627572);
+        Coordinate coordinate = new Coordinate(-43.53418, 172.627572);
         ArrayList<Charger> cc;
 
         cc = charge.getNearbyChargers(chargerList, coordinate, 50.0);
@@ -191,7 +191,7 @@ public class MainManagerTest {
             chargerList.add((Charger) o);
         }
 
-        Coordinate coordinate = new Coordinate(1.1, 2.3, -43.53418, 172.627572);
+        Coordinate coordinate = new Coordinate(-43.53418, 172.627572);
         cc = charge.getNearbyChargers(chargerList, coordinate, 90.0);
         GeoLocationHandler.setCoordinate(coordinate, "empty");
         manage.setPosition();

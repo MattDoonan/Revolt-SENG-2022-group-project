@@ -136,18 +136,6 @@ public class TableController {
     protected CheckBox showId;
 
     /**
-     * Toggle visibility of x field
-     */
-    @FXML
-    protected CheckBox showXpos;
-
-    /**
-     * Toggle visibility of y field
-     */
-    @FXML
-    protected CheckBox showYpos;
-
-    /**
      * Toggle visibility of operator field
      */
     @FXML
@@ -248,19 +236,6 @@ public class TableController {
      */
     @FXML
     protected final TableColumn<Charger, Integer> idCol = new TableColumn<>("Charger ID");
-
-    /**
-     * Maps charger to the x coord
-     */
-    @FXML
-    protected final TableColumn<Charger, Double> xposCol = new TableColumn<>("X coordinate");
-
-    /**
-     * Maps charger to the y coord
-     */
-    @FXML
-    protected final TableColumn<Charger, Double> yposCol = new TableColumn<>("Y coordinate");
-
     /**
      * Maps charger to the operator
      */
@@ -367,8 +342,6 @@ public class TableController {
      */
     private void mapCheckBoxes() {
         colSelectionMap.put(showId, idCol);
-        colSelectionMap.put(showXpos, xposCol);
-        colSelectionMap.put(showYpos, yposCol);
         colSelectionMap.put(showOperator, operatorCol);
         colSelectionMap.put(showAddress, addressCol);
         colSelectionMap.put(showOwner, ownerCol);
@@ -416,8 +389,6 @@ public class TableController {
      */
     private void setIdForTesting() {
         idCol.setId("idCol");
-        xposCol.setId("xposCol");
-        yposCol.setId("yposCol");
         operatorCol.setId("operatorCol");
         addressCol.setId("addressCol");
         ownerCol.setId("ownerCol");
@@ -464,8 +435,6 @@ public class TableController {
      */
     private void setColWidths(float width) {
         idCol.setMaxWidth(width);
-        xposCol.setMaxWidth(width);
-        yposCol.setMaxWidth(width);
         operatorCol.setMaxWidth(width);
         addressCol.setMaxWidth(width);
         ownerCol.setMaxWidth(width);
@@ -491,12 +460,6 @@ public class TableController {
         mainTable.setItems(chargersToAdd);
         idCol.setCellValueFactory(charger -> new ReadOnlyIntegerWrapper(
                 charger.getValue().getId()).asObject());
-        xposCol.setCellValueFactory(
-                charger -> new ReadOnlyDoubleWrapper(
-                        charger.getValue().getLocation().getXpos()).asObject());
-        yposCol.setCellValueFactory(
-                charger -> new ReadOnlyDoubleWrapper(
-                        charger.getValue().getLocation().getYpos()).asObject());
         operatorCol.setCellValueFactory(
                 charger -> new ReadOnlyStringWrapper(charger.getValue().getOperator()));
         addressCol.setCellValueFactory(

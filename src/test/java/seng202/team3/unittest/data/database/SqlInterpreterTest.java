@@ -152,7 +152,7 @@ public class SqlInterpreterTest {
         testCharger = new Charger(new ArrayList<Connector>(
                 Arrays.asList(testConnector1, testConnector2)),
                 "Test2",
-                new Coordinate(4.8, 6.2, -32.85658, 177.77702, "testAddy1"),
+                new Coordinate(-32.85658, 177.77702, "testAddy1"),
                 1,
                 0.3,
                 "Meridian",
@@ -168,8 +168,8 @@ public class SqlInterpreterTest {
                 100,
                 new ArrayList<String>(Arrays.asList("ChardaMo", "Type 2 Socketed")));
         testJourney = new Journey(testVehicle,
-                new Coordinate(5.6, 7.7, -36.6543, 174.74532),
-                new Coordinate(5.8, 7.2, -37.45543, 176.45652),
+                new Coordinate(-36.6543, 174.74532),
+                new Coordinate(-37.45543, 176.45652),
                 "2020/1/1 00:00:00", "2020/1/3 00:00:00");
         testJourney.addCharger(testCharger);
 
@@ -540,7 +540,7 @@ public class SqlInterpreterTest {
         writeSingleEntity(testJourney); // Write to database
 
         // Modify attributes
-        testJourney.setEndPosition(new Coordinate(4.56, 9.9, -50.6543, 154.74562));
+        testJourney.setEndPosition(new Coordinate(-50.6543, 154.74562));
         testJourney.setStartDate("1/1/1111 00:00:00");
 
         db.writeJourney(testJourney); // Update
@@ -629,7 +629,7 @@ public class SqlInterpreterTest {
                 break;
             case "Journey":
                 ((Journey) objectToTest).setStartPosition(
-                        new Coordinate(4.8, 6.2, null, 177.77702, "testAddy1"));
+                        new Coordinate(null, 177.77702, "testAddy1"));
                 break;
             case "User":
                 try { // remove default records

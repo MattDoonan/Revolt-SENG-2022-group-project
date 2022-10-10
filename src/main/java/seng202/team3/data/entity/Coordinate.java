@@ -9,14 +9,6 @@ import com.opencsv.bean.CsvBindByName;
  * @version 1.0.0, Aug 22
  */
 public class Coordinate {
-    /** X-Coordinate on Waka-Kotahi map */
-    @CsvBindByName(column = "X", required = true)
-    private Double xpos;
-
-    /** Y-Coordinate on Waka-Kotahi map */
-    @CsvBindByName(column = "Y", required = true)
-    private Double ypos;
-
     /** Latitude coordinate */
     @CsvBindByName(column = "latitude", required = true)
     private Double lat;
@@ -32,15 +24,11 @@ public class Coordinate {
     /**
      * Constructor for Coordinate
      *
-     * @param xpos    x coordinate on waka kotahi map
-     * @param ypos    y coordinate on waka kotahi map
      * @param lat     latitude
      * @param lon     longitude
      * @param address physical address
      */
-    public Coordinate(Double xpos, Double ypos, Double lat, Double lon, String address) {
-        setXpos(xpos);
-        setYpos(ypos);
+    public Coordinate(Double lat, Double lon, String address) {
         setLat(lat);
         setLon(lon);
         setAddress(address);
@@ -57,49 +45,11 @@ public class Coordinate {
      * Constructor for coordinate without address
      *
      * @see #Coordinate(Double, Double, Double, Double, String)
-     * @param xpos a {@link java.lang.Double} object
-     * @param ypos a {@link java.lang.Double} object
-     * @param lat  a {@link java.lang.Double} object
-     * @param lon  a {@link java.lang.Double} object
+     * @param lat a {@link java.lang.Double} object
+     * @param lon a {@link java.lang.Double} object
      */
-    public Coordinate(Double xpos, Double ypos, Double lat, Double lon) {
-        this(xpos, ypos, lat, lon, "");
-    }
-
-    /**
-     * Gets the Waka-Kotahi x coordinate
-     *
-     * @return X position on the Waka-Kotahi map
-     */
-    public Double getXpos() {
-        return xpos;
-    }
-
-    /**
-     * Sets the Waka-Kotahi x coordinate
-     *
-     * @param xpos new x position
-     */
-    public void setXpos(Double xpos) {
-        this.xpos = xpos;
-    }
-
-    /**
-     * Gets the Waka-Kotahi y coordinate
-     *
-     * @return Y position on the Waka-Kotahi map
-     */
-    public Double getYpos() {
-        return ypos;
-    }
-
-    /**
-     * Sets the Waka-Kotahi y coordinate
-     *
-     * @param ypos new y position
-     */
-    public void setYpos(Double ypos) {
-        this.ypos = ypos;
+    public Coordinate(Double lat, Double lon) {
+        this(lat, lon, "");
     }
 
     /**
@@ -166,9 +116,7 @@ public class Coordinate {
             return false;
         }
 
-        return c.getXpos().equals(this.getXpos())
-                && c.getYpos().equals(this.getYpos())
-                && c.getLat().equals(this.getLat())
+        return c.getLat().equals(this.getLat())
                 && c.getLon().equals(this.getLon())
                 && c.getAddress().equals(this.getAddress());
     }
@@ -177,8 +125,6 @@ public class Coordinate {
     @Override
     public int hashCode() {
         int result = (1 ^ (1 >>> 32));
-        result = 31 * result + xpos.hashCode();
-        result = 31 * result + ypos.hashCode();
         result = 31 * result + lat.hashCode();
         result = 31 * result + lon.hashCode();
         result = 31 * result + address.hashCode();
