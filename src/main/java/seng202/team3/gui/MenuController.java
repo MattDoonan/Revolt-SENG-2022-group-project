@@ -76,7 +76,7 @@ public class MenuController {
     /**
      * Login title text
      */
-    private static final String LOGIN_TITLE = "Login";
+    private static final String LOGIN_TITLE = "LOGIN";
 
     /**
      * unused constructor
@@ -256,8 +256,7 @@ public class MenuController {
      */
     public void setUser(User u) {
         UserManager.setUser(u);
-        loginSignout.setText("Logout");
-        loginSignout.setStyle("-fx-font-family: Didact Gothic;");
+        loginSignout.setText("LOGOUT");
         logManager.info("User has been successfully signed in");
     }
 

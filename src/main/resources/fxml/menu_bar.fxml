@@ -8,13 +8,13 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<SplitPane dividerPositions="0.10552763819095477" minHeight="100" minWidth="300" orientation="VERTICAL" prefHeight="461.0" prefWidth="701.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.MenuController">
+<SplitPane dividerPositions="0.10552763819095477" minHeight="100" minWidth="300" orientation="VERTICAL" prefHeight="461.0" prefWidth="701.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.MenuController">
     <items>
       <HBox id="menu-bar" fx:id="menuBar" alignment="CENTER" maxHeight="60.0" prefHeight="70.0">
          <children>
             <HBox alignment="CENTER_LEFT" minWidth="100.0" nodeOrientation="LEFT_TO_RIGHT" prefWidth="1920.0">
                <children>
-                  <Text id="REVOLT" fx:id="revoltTag" fill="WHITE" onMouseClicked="#loadHome" strokeType="OUTSIDE" strokeWidth="0.0" text="Revolt">
+                  <Text id="REVOLT" fx:id="revoltTag" fill="WHITE" onMouseClicked="#loadHome" strokeType="OUTSIDE" strokeWidth="0.0" text="REVOLT">
                      <font>
                         <Font size="30.0" />
                      </font>
@@ -27,28 +27,24 @@
                   <Insets left="30.0" />
                </padding>
             </HBox>
-            <HBox alignment="CENTER_LEFT" nodeOrientation="RIGHT_TO_LEFT" prefWidth="1920.0">
+            <HBox alignment="CENTER_LEFT" nodeOrientation="RIGHT_TO_LEFT" prefWidth="1920.0" spacing="10.0">
                <children>
-                  <Button id="loginSignout" fx:id="loginSignout" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#loginOut" prefHeight="30.0" prefWidth="80.0" styleClass="menu-button" text="LOGIN" textFill="WHITE">
+                  <Button id="loginSignout" fx:id="loginSignout" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#loginOut" prefHeight="30.0" prefWidth="80.0" styleClass="menu-bar-btn" text="LOGIN" textFill="WHITE">
                      <font>
                         <Font name="FreeSans" size="12.0" />
                      </font>
                   </Button>
-                  <Button fx:id="accountPage" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#loadAccountScreen" prefHeight="30.0" prefWidth="110.0" styleClass="menu-button" text="ACCOUNT" textFill="WHITE">
+                  <Button fx:id="accountPage" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#loadAccountScreen" prefHeight="30.0" prefWidth="110.0" styleClass="menu-bar-btn" text="ACCOUNT" textFill="WHITE">
                      <font>
                         <Font name="FreeSans" size="12.0" />
                      </font>
                   </Button>
-                  <Button fx:id="vehicleButton" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#loadVehicleScreen" prefHeight="30.0" prefWidth="93.0" styleClass="menu-button" text="GARAGE" textFill="WHITE">
+                  <Button fx:id="vehicleButton" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#loadVehicleScreen" prefHeight="30.0" prefWidth="93.0" styleClass="menu-bar-btn" text="GARAGE" textFill="WHITE">
                      <font>
                         <Font name="FreeSans" size="12.0" />
                      </font>
                   </Button>
-                  <Button fx:id="menuButton" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#loadHome" prefHeight="30.0" prefWidth="80.0" styleClass="menu-button" text="HOME" textFill="WHITE">
-                     <font>
-                        <Font size="12.0" />
-                     </font>
-                  </Button>
+                  <Button fx:id="menuButton" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#loadHome" prefHeight="30.0" prefWidth="80.0" styleClass="menu-bar-btn" stylesheets="@style.css" text="HOME" textFill="WHITE" />
                </children>
                <padding>
                   <Insets left="10.0" />
