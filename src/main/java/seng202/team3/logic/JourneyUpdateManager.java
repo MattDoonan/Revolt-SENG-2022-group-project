@@ -11,6 +11,7 @@ import seng202.team3.data.database.QueryBuilder;
 import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Journey;
+import seng202.team3.gui.JourneyMapController;
 
 /**
  * Manages the updating of previous journeys
@@ -36,6 +37,13 @@ public class JourneyUpdateManager {
     private QueryBuilder journeyDataQuery;
 
     /**
+     * Constructor method
+     */
+    public JourneyUpdateManager() {
+        resetQuery();
+    }
+
+    /**
      * Load the initial query
      */
     public void resetQuery() {
@@ -43,7 +51,7 @@ public class JourneyUpdateManager {
     }
 
     /**
-     * Loads previous journeys from the database
+     * Loads previous journeys from the database that belong to the user
      */
     private void loadJourneys() {
         try {
@@ -61,9 +69,9 @@ public class JourneyUpdateManager {
     }
 
     /**
-     * Gets previous journeys
+     * Gets previous journeys that belong to the user
      *
-     * @return all previous journeys
+     * @return all previous journeys for the user
      */
     public ObservableList<Journey> getData() {
         loadJourneys();
