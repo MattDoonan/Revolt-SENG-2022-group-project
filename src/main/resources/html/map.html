@@ -159,7 +159,7 @@
         function relocate(lat, lon, locationAccepted) {
             removeCoordinate();
             addCoordinate("Current Coordinate", lat, lon);
-            map.flyTo([lat, lon], zoomedIn);
+            map.flyTo([lat, lon], locationAccepted ? zoomedIn : defaultZoom);
         }
 
 

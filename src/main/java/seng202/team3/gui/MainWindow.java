@@ -55,6 +55,10 @@ public class MainWindow extends Application {
         primaryStage.show();
         MainWindow.setController(baseController);
         logManager.info("Application window initialized");
+
+        if (MapHandler.getLocationAccepted() == null) {
+            MenuController.getController().getMapController().getLocation();
+        }
     }
 
     /**

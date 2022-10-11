@@ -198,9 +198,6 @@ public class MainController {
         manage.makeAllChargers();
         manage.setPosition();
         initialRange();
-        if (MapHandler.getLocationAccepted() == null) {
-            getMapController().getLocation();
-        }
 
         if (GeoLocationHandler
                 .getCoordinate() == GeoLocationHandler.DEFAULT_COORDINATE) {
