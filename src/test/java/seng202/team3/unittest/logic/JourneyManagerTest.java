@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
@@ -14,6 +13,7 @@ import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
+import seng202.team3.data.entity.Stop;
 import seng202.team3.logic.JourneyManager;
 
 import java.util.ArrayList;
@@ -33,7 +33,6 @@ public class JourneyManagerTest {
     private Charger charger1;
     private Charger charger2;
 
-
     /**
      * null
      */
@@ -45,14 +44,13 @@ public class JourneyManagerTest {
         Connector dummyConnector = new Connector("ChardaMo", "AC", "Available", "123", 3);
         ArrayList<Connector> connectorList = new ArrayList<>(1);
         connectorList.add(dummyConnector);
-        Coordinate coord = new Coordinate(4.5, 5.7, -36.85918, 174.76602);
-        
+        Coordinate coord = new Coordinate(-36.85918, 174.76602);
+
         charger1 = new Charger(connectorList, "Test1", coord, 1, 0.3,
                 "Meridian", "2020/1/1 00:00:00", true, true, true, true);
         charger2 = new Charger(connectorList, "Test1", coord, 1, 0.3,
                 "Meridian", "2020/1/1 00:00:00", true, true, true, true);
     }
-
 
     /**
      * AfterEach, sets everything to null.
@@ -68,14 +66,14 @@ public class JourneyManagerTest {
      */
     @Test
     public void testRangeChargers() {
-        //ChargerHandler chargerHandler = new ChargerHandler();
-        //chargerHandler.makeAllChargers();
+        // ChargerHandler chargerHandler = new ChargerHandler();
+        // chargerHandler.makeAllChargers();
 
-        //chargerHandler.setPosition(5765876);
-        //manager.setDesiredRange(45476);
+        // chargerHandler.setPosition(5765876);
+        // manager.setDesiredRange(45476);
 
-        //list = new ChargerManager().getNearbyChargers(chargers,
-                //currentCoordinate, desiredRange);
+        // list = new ChargerManager().getNearbyChargers(chargers,
+        // currentCoordinate, desiredRange);
     }
 
     /**
@@ -84,17 +82,18 @@ public class JourneyManagerTest {
     @Test
     public void testRemovingCharger() {
 
-        manager.addCharger(charger1);
-        manager.addCharger(charger2);
-        manager.removeLastCharger(); // Removing with list size of 2
-        assertEquals(manager.getChargers().size(), 1);
-        //assertFalse(manager.getChargers().contains(charger2)); // TODO change to check if charger2 in list (was asserting true)
+        manager.addStop(new Stop(charger1));
+        manager.addStop(new Stop(charger2));
+        manager.removeLastStop(); // Removing with list size of 2
+        assertEquals(manager.getStops().size(), 1);
+        // assertFalse(manager.getStops().contains(charger2)); // TODO change to check
+        // if charger2 in list (was asserting true)
 
-        manager.removeLastCharger(); // Removing with list size of 1
-        assertEquals(manager.getChargers().size(), 0);
+        manager.removeLastStop(); // Removing with list size of 1
+        assertEquals(manager.getStops().size(), 0);
 
-        manager.removeLastCharger(); // Removing with list size of 0
-        assertEquals(manager.getChargers().size(), 0);
+        manager.removeLastStop(); // Removing with list size of 0
+        assertEquals(manager.getStops().size(), 0);
 
     }
 

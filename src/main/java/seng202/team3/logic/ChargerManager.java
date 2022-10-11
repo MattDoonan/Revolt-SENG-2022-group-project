@@ -95,26 +95,4 @@ public class ChargerManager {
 
         return (new ArrayList<>(sortedChargers));
     }
-
-    /**
-     * Changes the warnings of the selected charger
-     *
-     * @param warning the warning to change the state of
-     * @param state   boolean of state of warning to change to
-     */
-    public void toggleWarning(String warning, boolean state) {
-        switch (warning) {
-            case "high cost":
-                selectedCharger.setWarningHighCost(state);
-                break;
-            case "long wait":
-                selectedCharger.setWarningLongWait(state);
-                break;
-            case "low availability":
-                selectedCharger.setWarningLowAvailability(state);
-                break;
-            default:
-                throw new IllegalArgumentException("'high cost', 'long wait', 'low availability'");
-        }
-    }
 }

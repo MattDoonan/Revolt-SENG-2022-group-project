@@ -172,11 +172,7 @@
         function relocate(lat, lon, locationAccepted) {
             removeCoordinate();
             addCoordinate("Current Coordinate", lat, lon);
-            movePosition(lat, lon);
-            if (locationAccepted) {
-                changeZoom();
-            }
-
+            map.flyTo([lat, lon], zoomedIn);
         }
 
 

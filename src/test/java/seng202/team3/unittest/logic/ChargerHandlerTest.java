@@ -10,6 +10,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import seng202.team3.data.database.CsvInterpreter;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
@@ -53,14 +55,13 @@ public class ChargerHandlerTest {
     public void setUp() throws IOException {
         testUser = new User("admin@admin.com", "admin",
                 PermissionLevel.USER);
-        testUser.setUserid(1);
+        testUser.setId(1);
 
         UserManager.setUser(testUser);
         manager = new ChargerHandler();
         mainManager = new MainManager();
         SqlInterpreter.getInstance().defaultDatabase();
-        SqlInterpreter.getInstance()
-                .addChargerCsvToData("csvtest/filtering");
+        new CsvInterpreter().importChargersToDatabase("/csvtest/filtering.csv");
     }
 
     /**
@@ -82,10 +83,10 @@ public class ChargerHandlerTest {
         mainManager.resetQuery();
         mainManager.setDistance(0);
         GeoLocationHandler.setCoordinate(
-                new Coordinate(null, null, -43.522518157958984, 172.5811767578125),
+                new Coordinate(-43.522518157958984, 172.5811767578125),
                 "Test Position");
         mainManager.makeAllChargers();
-        assertTrue(mainManager.getData().size() > 48); // TODO: fix back to CloseChargerData
+        assertTrue(mainManager.getData().size() > 48);
     }
 
     /**
@@ -121,7 +122,7 @@ public class ChargerHandlerTest {
         connectorList.add(dummyConnector1);
         connectorList.add(dummyConnector2);
 
-        Coordinate testCoord = new Coordinate(1.1, 2.3, -43.53418, 172.627572, "CHHosp");
+        Coordinate testCoord = new Coordinate(-43.53418, 172.627572, "CHHosp");
         Charger testCharger = new Charger(connectorList, "Hosp", testCoord, 2, 1.2,
                 "operator", "01-01-2000",
                 true, true, true, true);

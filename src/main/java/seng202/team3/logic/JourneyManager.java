@@ -11,6 +11,7 @@ import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
 import seng202.team3.data.entity.Journey;
+import seng202.team3.data.entity.Stop;
 import seng202.team3.data.entity.Vehicle;
 
 /**
@@ -119,17 +120,17 @@ public class JourneyManager extends ChargerHandler {
     /**
      * Gets charger stops in from journey entity
      *
-     * @return a list of {@link Charger}s in the journey
+     * @return a list of {@link Stop}s in the journey
      */
-    public List<Charger> getChargers() {
-        return selectedJourney.getChargers();
+    public List<Stop> getStops() {
+        return selectedJourney.getStops();
     }
 
     /**
      * Clears charger stops in journey entity
      */
     public void clearChargers() {
-        selectedJourney.getChargers().clear();
+        selectedJourney.getStops().clear();
     }
 
     /**
@@ -151,20 +152,20 @@ public class JourneyManager extends ChargerHandler {
     }
 
     /**
-     * Gets a list of all the chargers in range
+     * Gets a list of all the stops in range
      *
-     * @return a list of {@link Charger}s in range
+     * @return a list of {@link Stop}s in range
      */
-    public ArrayList<Charger> getRangeChargers() {
+    public List<Charger> getRangeChargers() {
         return rangeChargers;
     }
 
     /**
-     * Makes a list of all chargers in range
+     * Makes a list of all stops in range
      */
     public void makeRangeChargers() {
         makeAllChargers();
-        ArrayList<Charger> chargers = new ArrayList<>(chargerData);
+        ArrayList<Charger> chargers = new ArrayList<>(getData());
         rangeChargers = chargers;
         if (currentCoordinate != null) {
             rangeChargers = new ChargerManager().getNearbyChargers(chargers,
@@ -184,13 +185,13 @@ public class JourneyManager extends ChargerHandler {
     }
 
     /**
-     * Removes the last charger
+     * Removes the last stop
      */
-    public void removeLastCharger() {
-        if (!selectedJourney.getChargers().isEmpty()) {
-            Charger charger = selectedJourney.getChargers()
-                    .get(selectedJourney.getChargers().size() - 1);
-            selectedJourney.removeCharger(charger);
+    public void removeLastStop() {
+        if (!selectedJourney.getStops().isEmpty()) {
+            Stop stop = selectedJourney.getStops()
+                    .get(selectedJourney.getStops().size() - 1);
+            selectedJourney.removeStop(stop);
         }
     }
 
@@ -204,21 +205,21 @@ public class JourneyManager extends ChargerHandler {
     }
 
     /**
-     * Adds charger to journey
+     * Adds stop to journey
      *
-     * @param charger charger to add to journey
+     * @param stop charger to add to journey
      */
-    public void addCharger(Charger charger) {
-        selectedJourney.addCharger(charger);
+    public void addStop(Stop stop) {
+        selectedJourney.addStop(stop);
     }
 
     /**
-     * Removes charger from journey
+     * Removes stop from journey
      *
-     * @param charger charger to remove from journey
+     * @param stop stop to remove from journey
      */
-    public void removeCharger(Charger charger) {
-        selectedJourney.removeCharger(charger);
+    public void removeStop(Stop stop) {
+        selectedJourney.removeStop(stop);
     }
 
     /**
@@ -245,10 +246,10 @@ public class JourneyManager extends ChargerHandler {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             LocalDateTime now = LocalDateTime.now();
             selectedJourney.setStartDate(dtf.format(now));
-            selectedJourney.setUser(UserManager.getUser().getUserid());
+            selectedJourney.setUser(UserManager.getUser().getId());
             SqlInterpreter.getInstance().writeJourney(selectedJourney);
             logManager.info("Saved journey successfully");
-            //TODO now successfully saves and to throw confirmation prompt up
+            // TODO now successfully saves and to throw confirmation prompt up
         } catch (IOException e) {
             logManager.warn(e.getMessage());
         }
@@ -265,8 +266,8 @@ public class JourneyManager extends ChargerHandler {
 
         ArrayList<Coordinate> coordinates = new ArrayList<>();
         coordinates.add(selectedJourney.getStartPosition());
-        for (Charger charger : this.getSelectedJourney().getChargers()) {
-            coordinates.add(charger.getLocation());
+        for (Stop stop : this.getSelectedJourney().getStops()) {
+            coordinates.add(stop.getLocation());
         }
         if (selectedJourney.getEndPosition() != null) {
             coordinates.add(selectedJourney.getEndPosition());
@@ -274,7 +275,7 @@ public class JourneyManager extends ChargerHandler {
         if (coordinates.size() > 1) {
             error = Calculations.calculateDistance(
                     coordinates.get(0), coordinates.get(1)) >= selectedJourney
-                    .getVehicle().getMaxRange();
+                            .getVehicle().getMaxRange();
         }
 
         for (int i = 1; i < coordinates.size() - 1; i++) {

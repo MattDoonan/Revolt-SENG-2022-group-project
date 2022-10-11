@@ -357,7 +357,7 @@ public class MenuController {
                         .getResource("/fxml/account.fxml"));
                 Parent accountViewParent = accountLoader.load();
                 AccountController accController = accountLoader.getController();
-                accController.init(menuWindow);
+                accController.init(this);
                 menuWindow.setCenter(accountViewParent);
                 MainWindow.setController(accController);
                 logManager.info("Switched to Account screen");
@@ -389,6 +389,16 @@ public class MenuController {
     }
 
     /**
+     * Deletes the set user
+     */
+    public void deleteUser() {
+        loadHome();
+        UserManager.deleteCurrentUser();
+        loginSignout.setText(LOGIN_TITLE);
+        logManager.info("The user has been successfully deleted");
+    }
+
+    /**
      * Loads the Journey Screen
      */
     public void loadJourneyScreen() {
@@ -409,6 +419,5 @@ public class MenuController {
             logManager.error(e.getMessage());
         }
     }
-
 
 }

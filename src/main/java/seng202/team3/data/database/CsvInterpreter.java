@@ -10,6 +10,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import org.javatuples.Triplet;
+import seng202.team3.data.entity.Charger;
+import seng202.team3.data.entity.Entity;
 
 /**
  * Manages data reading and parsing from CSV files
@@ -31,14 +33,9 @@ public class CsvInterpreter implements DataReader {
      * 
      * @param filename name of file to read
      * @return csv file object
-     * 
-     * @throws IOException if file cannot be read successfully
      */
-    private InputStreamReader readFile(String filename) throws IOException {
+    private InputStreamReader readFile(String filename) {
         // Initialize File
-        if (!filename.startsWith("/")) {
-            filename = "/" + filename + ".csv";
-        }
         return new InputStreamReader(getClass().getResourceAsStream(filename));
     }
 
@@ -58,58 +55,111 @@ public class CsvInterpreter implements DataReader {
         }
 
         // Compile messages from non lethal errors to send back
-        String errorMessage = "";
+        StringBuilder errorMessage = new StringBuilder();
         for (CsvException e : exceptions) {
             if (exceptions.indexOf(e) != 0) {
-                errorMessage += "\n";
+                errorMessage.append("\n");
             }
             // Add file name and line to message
-            errorMessage += String.format("CSV error reading file %s.csv on line %d: ",
-                    filename, e.getLineNumber());
+            errorMessage.append(
+                    String.format("CSV error reading file %s.csv on line %d: ",
+                            filename, e.getLineNumber()));
 
             // Switch is used here so other cases can be handled easily without refactor
-            switch (e.getClass().getSimpleName()) { // Custom error lines for internal exceptions
-                case "CsvDataTypeMismatchException": // Field is incorrect data type
-                    CsvDataTypeMismatchException exception = (CsvDataTypeMismatchException) e;
-                    errorMessage += String.format(
-                            "Value (%s) could not be converted to Type (%s)",
-                            exception.getSourceObject(),
-                            exception.getDestinationClass().getSimpleName());
-                    break;
 
-                default: // Missing required field
-                    errorMessage += e.getMessage();
-                    break;
+            // Custom error lines
+            // for internal exceptions
+            if (e instanceof CsvDataTypeMismatchException) {
+                CsvDataTypeMismatchException exception = (CsvDataTypeMismatchException) e;
+                errorMessage.append(String.format(
+                        "Value (%s) could not be converted to Type (%s)",
+                        exception.getSourceObject(),
+                        exception.getDestinationClass().getSimpleName()));
+            } else {
+                errorMessage.append(e.getMessage());
             }
         }
 
         // Throw error if error message has been populated
-        throw new IOException(errorMessage);
+        throw new IOException(errorMessage.toString());
+
+    }
+
+    /**
+     * Imports the chargers in the specified file into the database
+     * Currently only used in testing
+     * 
+     * @param filename filename to import into the database
+     * @throws IOException if the read/write operation fails
+     */
+    public void importChargersToDatabase(String filename) throws IOException {
+        SqlInterpreter.getInstance().writeCharger(readChargers(filename));
+    }
+
+    /**
+     * Reads in chargers from a user specified file
+     * Currently only used in testing
+     * 
+     * @param filename file to read from
+     * @return list of chargers that have been read
+     * @throws IOException if read/write operation fails
+     */
+    public List<Entity> readChargers(String filename) throws IOException {
+        List<Entity> data;
+
+        // Initialize the raw data to object converter
+        CsvToBean<Entity> builder = new CsvToBeanBuilder<Entity>(
+                readFile(filename))
+                .withThrowExceptions(false) // ignore exceptions to handle later
+                .withType(Charger.class)
+                .build();
+
+        // Convert the data
+        try {
+            data = builder.parse();
+        } catch (Exception e) {
+            // Lethal errors - most likely missing headers. Convert all errors to
+            // IOException to be handled by higher layer/displayed to user
+            throw new IOException(e.getCause().getMessage());
+        }
+
+        // Throws exception if any data is invalid
+        checkForProcessingErrors(filename, builder.getCapturedExceptions());
+
+        return data;
     }
 
     /** {@inheritDoc} */
     @Override
-    public List<Object> readData(Query query, Class<?> objectToInterpretAs)
+    public List<Entity> readData(Query query)
             throws IOException {
-        List<Object> data;
+        List<Entity> data;
 
         // Initialize the raw data to object converter
-        CsvToBean<Object> builder = new CsvToBeanBuilder<Object>(
-                readFile(query.getSource()))
+        CsvToBean<Entity> builder = new CsvToBeanBuilder<Entity>(
+                readFile(query.getSource().getAsCsv()))
                 .withThrowExceptions(false) // ignore exceptions to handle later
-                .withType(objectToInterpretAs)
+                .withType(query.getSource().getAsClass())
                 .build();
 
         // Interpret filters for CSV
-        ArrayList<BeanVerifier<Object>> csvFilters = new ArrayList<>();
-        switch (objectToInterpretAs.getSimpleName()) {
-            case "Charger": // Convert to charger filter
+        ArrayList<BeanVerifier<Entity>> csvFilters = new ArrayList<>();
+        switch (query.getSource()) {
+            case CHARGER: // Convert to charger filter
                 for (Triplet<String, String, ComparisonType> filter : query.getFilters()) {
                     csvFilters.add(new ChargerFilter(filter.getValue0(), // field
                             filter.getValue1(), // criteria
                             filter.getValue2())); // comparison method
                 }
                 break;
+            case CONNECTOR:
+                break; // Not implemented
+            case JOURNEY:
+                break; // Not implemented
+            case USER:
+                break; // Not implemented
+            case VEHICLE:
+                break; // Not implemented
             default:
                 break;
         }
@@ -119,16 +169,15 @@ public class CsvInterpreter implements DataReader {
 
         // Convert the data
         try {
-            data = builder.parse(); // Throws a Throwable on error, not Exception
-        } catch (Throwable e) {
+            data = builder.parse();
+        } catch (IllegalStateException e) {
             // Lethal errors - most likely missing headers. Convert all errors to
             // IOException to be handled by higher layer/displayed to user
-            e = e.getCause();
-            throw new IOException(e.getMessage());
+            throw new IOException(e.getCause().getMessage());
         }
 
         // Throws exception if any data is invalid
-        checkForProcessingErrors(query.getSource(), builder.getCapturedExceptions());
+        checkForProcessingErrors(query.getSource().getAsCsv(), builder.getCapturedExceptions());
 
         return data;
     }

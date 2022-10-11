@@ -69,7 +69,7 @@ public class EditChargerPageTestFx extends TestFxBase {
      * @throws IOException IO error handling
      */
     public void addChargers() throws IOException {
-        Coordinate coord1 = new Coordinate(1.1, 2.3, -43.53418, 172.627572);
+        Coordinate coord1 = new Coordinate(-43.53418, 172.627572);
         Connector connector = new Connector("ChardaMo", "AC", "Available", "123", 3);
 
         charger = new Charger(

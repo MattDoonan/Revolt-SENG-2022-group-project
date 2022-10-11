@@ -17,6 +17,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import seng202.team3.data.database.SqlInterpreter;
+import seng202.team3.data.entity.EntityType;
 import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.data.entity.User;
 import seng202.team3.data.entity.Vehicle;
@@ -60,7 +61,7 @@ public class UpdateVehicleManagerTest {
     public void setUp() {
         testUser = new User("admin@admin.com", "adminNew",
                 PermissionLevel.USER);
-        // testUser.setUserid(1);
+        // testUser.setId(1);
         UserManager.setUser(testUser);
 
         testVehicle = new Vehicle("TestMake", "TestModel",
@@ -86,8 +87,8 @@ public class UpdateVehicleManagerTest {
     public void tearDown() {
         for (Vehicle vehicle : vehicleList) {
             try {
-                SqlInterpreter.getInstance().deleteData("vehicle",
-                        vehicle.getVehicleId());
+                SqlInterpreter.getInstance().deleteData(EntityType.VEHICLE,
+                        vehicle.getId());
                 vehicle = null;
             } catch (IOException e) {
                 logManager.error(e.getMessage());
@@ -142,7 +143,7 @@ public class UpdateVehicleManagerTest {
         }
 
         for (Vehicle vehicle : vehicles) {
-            assertTrue(vehicle.getOwner() == testUser.getUserid());
+            assertTrue(vehicle.getOwner() == testUser.getId());
         }
     }
 

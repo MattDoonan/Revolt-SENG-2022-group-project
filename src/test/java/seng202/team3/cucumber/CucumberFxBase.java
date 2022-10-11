@@ -5,7 +5,6 @@ import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.testfx.api.FxToolkit;
@@ -36,7 +35,7 @@ public abstract class CucumberFxBase extends ApplicationTest {
     public static void setup() throws Exception {
         // Disable map by default
         MapHandler.setMapRequested(false);
-
+        MapHandler.setLocationAccepted(false);
         // Prevent application from loading with actual database
         SqlInterpreter.removeInstance();
         SqlInterpreter.initialiseInstanceWithUrl(

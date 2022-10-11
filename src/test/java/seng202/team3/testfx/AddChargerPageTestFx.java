@@ -43,7 +43,7 @@ public class AddChargerPageTestFx extends TestFxBase {
     public static void initialise() throws Exception {
         SqlInterpreter.removeInstance();
         User user = new User("admin@something.co", "trial", PermissionLevel.ADMIN);
-        user.setUserid(1);
+        user.setId(1);
         UserManager.setUser(user);
         database = SqlInterpreter.initialiseInstanceWithUrl(
                 "jdbc:sqlite:./target/test-classes/test_database.db");
@@ -86,7 +86,7 @@ public class AddChargerPageTestFx extends TestFxBase {
      */
     @Test
     public void addChargerFail() {
-        GeoLocationHandler.setCoordinate(new Coordinate(1.1, 2.3, -43.60, 172.572),
+        GeoLocationHandler.setCoordinate(new Coordinate(-43.60, 172.572),
                 "Trial location");
         clickOn("#saveButton");
         clickOn("#okay");
@@ -97,7 +97,7 @@ public class AddChargerPageTestFx extends TestFxBase {
      */
     @Test
     public void addChargerSuccess() {
-        GeoLocationHandler.setCoordinate(new Coordinate(1.1, 2.3, -43.60, 172.572),
+        GeoLocationHandler.setCoordinate(new Coordinate(-43.60, 172.572),
                 "Trial location");
         clickOn("#name");
         write("Trial");

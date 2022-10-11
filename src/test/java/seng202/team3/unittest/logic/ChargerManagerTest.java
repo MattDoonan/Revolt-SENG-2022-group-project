@@ -23,7 +23,9 @@ import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
+import seng202.team3.data.entity.EntityType;
 import seng202.team3.data.entity.PermissionLevel;
+import seng202.team3.data.entity.Entity;
 import seng202.team3.data.entity.User;
 import seng202.team3.logic.ChargerManager;
 import seng202.team3.logic.UserManager;
@@ -58,7 +60,7 @@ public class ChargerManagerTest {
     static void intialize() throws InstanceAlreadyExistsException, IOException {
         testUser = new User("admin@admin.com", "admin",
                 PermissionLevel.USER);
-        testUser.setUserid(1);
+        testUser.setId(1);
 
         UserManager.setUser(testUser);
 
@@ -70,7 +72,7 @@ public class ChargerManagerTest {
         Connector dummyConnector1 = new Connector("ChardaMo", "AC", "Available", "123", 3);
 
         // Christchurch Hospital
-        Coordinate coord1 = new Coordinate(1.1, 2.3, -43.53418, 172.627572);
+        Coordinate coord1 = new Coordinate(-43.53418, 172.627572);
         charge1 = new Charger(
                 new ArrayList<>(List.of(dummyConnector1)), "Hosp", coord1, 1, 0.3, "Meridian",
                 "2020/1/1 00:00:00", true,
@@ -79,7 +81,7 @@ public class ChargerManagerTest {
         Connector dummyConnector2 = new Connector("ChardaMo", "AC", "Available", "123", 3);
 
         // Christchurch Boys High School
-        Coordinate coord2 = new Coordinate(3.5, 4.4, -43.52425, 172.60019);
+        Coordinate coord2 = new Coordinate(-43.52425, 172.60019);
         charge2 = new Charger(
                 new ArrayList<>(List.of(dummyConnector2)), "Boys", coord2, 2, 3.5, "Someone",
                 "2020/1/1 00:00:00", true,
@@ -88,7 +90,7 @@ public class ChargerManagerTest {
         Connector dummyConnector3 = new Connector("ChardaMo", "AC", "Available", "123", 3);
 
         // Auckland Grammar School
-        Coordinate coord3 = new Coordinate(4.5, 5.7, -36.85918, 174.76602);
+        Coordinate coord3 = new Coordinate(-36.85918, 174.76602);
         charge3 = new Charger(
                 new ArrayList<>(List.of(dummyConnector3)), "Grammar", coord3, 5, 1.2, "Else",
                 "2020/1/1 00:00:00", true,
@@ -97,13 +99,13 @@ public class ChargerManagerTest {
         Connector dummyConnector4 = new Connector("ChardaMo", "AC", "Available", "123", 3);
 
         // Otago Boys School
-        Coordinate coord4 = new Coordinate(4.8, 7.7, -45.87135, 170.49551);
+        Coordinate coord4 = new Coordinate(-45.87135, 170.49551);
         charge4 = new Charger(
                 new ArrayList<>(List.of(dummyConnector4)), "Otago", coord4, 2, 35.1, "Us",
                 "2020/1/1 00:00:00", true, false,
                 false, false);
 
-        ArrayList<Object> chargers = new ArrayList<>();
+        ArrayList<Entity> chargers = new ArrayList<>();
         chargers.add(charge1);
         chargers.add(charge2);
         chargers.add(charge3);
@@ -118,21 +120,21 @@ public class ChargerManagerTest {
         strings.add("Otago");
 
         for (int i = 0; i < strings.size(); i++) {
-            QueryBuilder mainQuery = new QueryBuilderImpl().withSource("Charger")
+            QueryBuilder mainQuery = new QueryBuilderImpl().withSource(EntityType.CHARGER)
                     .withFilter("name", strings.get(i), ComparisonType.CONTAINS);
             try {
                 switch (i) {
                     case 0 -> {
-                        charge1 = (Charger) db.readData(mainQuery.build(), Charger.class).get(0);
+                        charge1 = (Charger) db.readData(mainQuery.build()).get(0);
                     }
                     case 1 -> {
-                        charge2 = (Charger) db.readData(mainQuery.build(), Charger.class).get(0);
+                        charge2 = (Charger) db.readData(mainQuery.build()).get(0);
                     }
                     case 2 -> {
-                        charge3 = (Charger) db.readData(mainQuery.build(), Charger.class).get(0);
+                        charge3 = (Charger) db.readData(mainQuery.build()).get(0);
                     }
                     case 3 -> {
-                        charge4 = (Charger) db.readData(mainQuery.build(), Charger.class).get(0);
+                        charge4 = (Charger) db.readData(mainQuery.build()).get(0);
                     }
                     default -> {
                         break;
@@ -201,7 +203,7 @@ public class ChargerManagerTest {
         double distance = 400.0;
 
         // Coordinate same as hospital
-        Coordinate coordinate = new Coordinate(1.1, 2.3, -43.53418, 172.627572);
+        Coordinate coordinate = new Coordinate(-43.53418, 172.627572);
 
         ArrayList<Charger> chargerList = new ArrayList<>();
         chargerList.add(charge1);
@@ -220,7 +222,7 @@ public class ChargerManagerTest {
 
         double distance = 1000.0;
         // Coordinate same as hospital
-        Coordinate coordinate = new Coordinate(1.1, 2.3, -43.53418, 172.627572);
+        Coordinate coordinate = new Coordinate(-43.53418, 172.627572);
 
         ArrayList<Charger> chargerList = new ArrayList<>();
         chargerList.add(charge4);
@@ -235,28 +237,5 @@ public class ChargerManagerTest {
                 && filteredChargers.get(1).equals(charge2)
                 && filteredChargers.get(2).equals(charge4)
                 && filteredChargers.get(3).equals(charge3));
-    }
-
-    /**
-     * Tests for toggleWarning
-     */
-    @Test
-    public void testToggleWarning() {
-        manager.setSelectedCharger(charge1);
-        manager.toggleWarning("low availability", true);
-        manager.toggleWarning("high cost", true);
-        manager.toggleWarning("long wait", false);
-        ArrayList<String> test = new ArrayList<>(Arrays.asList("high cost", "low availability"));
-        assertEquals(test, manager.getSelectedCharger().getWarnings());
-    }
-
-    @Test
-    public void testRemovalToggleWarning() {
-        manager.setSelectedCharger(charge1);
-        manager.toggleWarning("low availability", true);
-        manager.toggleWarning("high cost", true);
-        manager.toggleWarning("low availability", false);
-        ArrayList<String> test = new ArrayList<>(Arrays.asList("high cost"));
-        assertEquals(test, manager.getSelectedCharger().getWarnings());
     }
 }
