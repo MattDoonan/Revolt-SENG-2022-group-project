@@ -30,6 +30,7 @@ import seng202.team3.logic.GarageManager;
 import seng202.team3.logic.GeoLocationHandler;
 import seng202.team3.logic.MainManager;
 import seng202.team3.logic.MapManager;
+import seng202.team3.logic.StringFormatter;
 import seng202.team3.logic.UserManager;
 
 /**
@@ -320,8 +321,8 @@ public class MainController {
                     new BufferedInputStream(
                             getClass().getResourceAsStream("/images/charger.png"))));
             // Edits the width and height to 150px
-            chargerImg.setFitHeight(150);
-            chargerImg.setFitWidth(150);
+            chargerImg.setFitHeight(100);
+            chargerImg.setFitWidth(100);
             displayInfo.getChildren().add(chargerImg); // adds to the HBox
         } catch (NullPointerException e) {
             Label chargerImg = new Label("Image");
@@ -329,7 +330,7 @@ public class MainController {
             logManager.error(e.getMessage());
         }
         VBox display = new VBox(); // Creates Vbox to contain text
-        display.getChildren().add(new Text("" + c.getName() + ""));
+        display.getChildren().add(new Text("" + StringFormatter.capitalizeWord(c.getName()) + ""));
         display.getChildren().add(new Text("" + c.getLocation().getAddress() + "\n"));
         String word = manage.getConnectors(c);
         display.getChildren().add(new Text("Current types " + word + ""));
@@ -389,13 +390,17 @@ public class MainController {
 
             // adds the cached image
             if (image != null) {
-                add.getChildren().add(new ImageView(image));
+                ImageView chargerImg = new ImageView(image);
+                chargerImg.setFitWidth(75);
+                chargerImg.setFitHeight(75);
+                add.getChildren().add(chargerImg);
             } else {
                 Label substitueText = new Label("Image");
                 add.getChildren().add(substitueText); // adds to the HBox
             }
             // Create Vbox to contain the charger info
-            VBox content = new VBox(new Text(chargersToAdd.get(i).getName()),
+            VBox content = new VBox(new Text(
+                StringFormatter.capitalizeWord(chargersToAdd.get(i).getName())),
                     new Text(chargersToAdd.get(i).getLocation().getAddress()),
                     new Text(chargersToAdd.get(i).getOperator()),
                     new Text("\n" + Math.round(Calculations.calculateDistance(
