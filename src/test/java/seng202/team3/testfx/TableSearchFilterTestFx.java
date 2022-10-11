@@ -11,6 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import seng202.team3.data.database.CsvInterpreter;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.PermissionLevel;
@@ -35,14 +36,14 @@ public class TableSearchFilterTestFx extends TestFxBase {
     public void start(Stage stage) throws Exception {
         testUser = new User("admin@admin.com", "admin",
                 PermissionLevel.ADMIN);
-        testUser.setUserid(1);
+        testUser.setId(1);
         UserManager.setUser(testUser);
         SqlInterpreter.removeInstance();
         db = SqlInterpreter.initialiseInstanceWithUrl(
                 "jdbc:sqlite:./target/test-classes/test_database.db");
         db.defaultDatabase();
 
-        db.addChargerCsvToData("csvtest/filtering");
+        new CsvInterpreter().importChargersToDatabase("/csvtest/filtering.csv");
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main_table.fxml"));
         Parent page = loader.load();
@@ -161,8 +162,7 @@ public class TableSearchFilterTestFx extends TestFxBase {
     public void editMultipleColumns() {
         boolean isValid = true;
         clickOn("#columnEdit");
-        clickOn("#showXpos");
-        clickOn("#showYpos");
+        clickOn("#showId");
         clickOn("#showAttraction");
         clickOn("#showLon");
         clickOn("#searchCharger");
@@ -175,8 +175,7 @@ public class TableSearchFilterTestFx extends TestFxBase {
             // Do Nothing
         }
         try {
-            clickOn("#xposCol");
-            clickOn("#yposCol");
+            clickOn("#idCol");
         } catch (FxRobotException e) {
             isValid = false;
         }

@@ -6,9 +6,7 @@ package seng202.team3.data.entity;
  * @author Harrison Tyson
  * @version 1.0.0, Aug 22
  */
-public class Connector {
-    /** Unique identifier */
-    private int connectorId;
+public class Connector extends Entity {
 
     /** Plug style */
     private String type;
@@ -56,12 +54,12 @@ public class Connector {
      * @param id      a int
      */
     public Connector(String type, String power, String status, String current, int count, int id) {
+        super(id);
         setType(type);
         setPower(power);
         setOperational(status);
         setCurrent(current);
         setCount(count);
-        setId(id);
     }
 
     /**
@@ -154,24 +152,6 @@ public class Connector {
         count = newCount;
     }
 
-    /**
-     * Gets the id of the connector
-     *
-     * @return id of the connector
-     */
-    public int getId() {
-        return connectorId;
-    }
-
-    /**
-     * Sets the id of the connector
-     *
-     * @param connectorId id of the connector
-     */
-    public void setId(int connectorId) {
-        this.connectorId = connectorId;
-    }
-
     /** {@inheritDoc} */
     @Override
     public boolean equals(Object o) {
@@ -191,7 +171,7 @@ public class Connector {
     /** {@inheritDoc} */
     @Override
     public int hashCode() {
-        int result = (connectorId ^ (connectorId >>> 32));
+        int result = (getId() ^ (getId() >>> 32));
         result = 31 * result + type.hashCode();
         result = 31 * result + current.hashCode();
         result = 31 * result + powerDraw.hashCode();

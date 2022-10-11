@@ -2,10 +2,14 @@ package seng202.team3.testfx;
 
 import static org.testfx.api.FxAssert.verifyThat;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -18,6 +22,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import seng202.team3.data.database.CsvInterpreter;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.data.entity.User;
@@ -25,6 +30,8 @@ import seng202.team3.data.entity.Vehicle;
 import seng202.team3.gui.MainController;
 import seng202.team3.gui.MapHandler;
 import seng202.team3.logic.UserManager;
+
+import javax.management.InstanceAlreadyExistsException;
 
 public class CarChargeTestFx extends TestFxBase {
 
@@ -35,25 +42,13 @@ public class CarChargeTestFx extends TestFxBase {
 
     static Stage stage;
 
+    static Vehicle testV;
+
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) throws IOException {
         this.stage = stage;
-        SqlInterpreter.removeInstance();
-        db = SqlInterpreter.initialiseInstanceWithUrl(
-                "jdbc:sqlite:./target/test-classes/test_database.db");
-        db.addChargerCsvToData("csvtest/filtering");
-        testUser = new User("admin@admin.com", "admin",
-                PermissionLevel.ADMIN);
-        db.writeUser(testUser);
-        ArrayList<String> connectors = new ArrayList<String>();
-        connectors.add("Test");
-        Vehicle testV = new Vehicle("Tesla", "S", 300, connectors);
-        testV.setOwner(testUser.getUserid());
-        db.writeVehicle(testV);
         UserManager.setUser(testUser);
-
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
-
         MapHandler.resetPermission();
         MapHandler.setLocationAccepted(true);
         Parent page = loader.load();
@@ -67,6 +62,23 @@ public class CarChargeTestFx extends TestFxBase {
         controller = loader.getController();
         BorderPane b = new BorderPane();
         controller.init(stage, b);
+    }
+
+    @BeforeAll
+    public static void setup() throws InstanceAlreadyExistsException, IOException, SQLException {
+        SqlInterpreter.removeInstance();
+        db = SqlInterpreter.initialiseInstanceWithUrl(
+                "jdbc:sqlite:./target/test-classes/test_database.db");
+        new CsvInterpreter().importChargersToDatabase("/csvtest/filtering.csv");
+        testUser = new User("admin@admin.com", "admin",
+                PermissionLevel.ADMIN);
+        db.writeUser(testUser);
+        ArrayList<String> connectors = new ArrayList<String>();
+        connectors.add("Test");
+        testV = new Vehicle("Tesla", "S", 300, connectors);
+        testV.setOwner(testUser.getId());
+        testV.setcurrVehicle(true);
+        db.writeVehicle(testV);
     }
 
     @Test

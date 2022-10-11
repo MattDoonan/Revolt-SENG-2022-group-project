@@ -21,3 +21,8 @@ Feature: User checking there account information
     Given The user owns no chargers
     Then The table is empty
 
+  Scenario: (AT_50) A user wants to delete there account
+    Given I navigate to the account screen
+    When The user confirms to delete there account
+    Then The users account has been deleted as well as chargers and vehicles
+

@@ -48,10 +48,24 @@ public class MapViewController extends MapHandler {
     private Button routing;
 
     /**
+     * Relocate pos button
+     */
+    @FXML
+    private Button relocatePosBtn;
+
+    /**
      * The add Charger button
      */
     @FXML
     private Button addButton;
+
+    /** Hover set style */
+    private static final String ON_HOVER = "-fx-background-color:#FFF8EB;"
+            + "-fx-border-color:  #9b9b9b;";
+
+    /** Hover exit style */
+    private static final String EXIT_HOVER = "-fx-background-color:#FFFFFF;"
+            + "-fx-border-color:  #9b9b9b;";
 
     /**
      * JavaScript function to add selected location to route
@@ -83,6 +97,48 @@ public class MapViewController extends MapHandler {
     }
 
     /**
+     * On hover for create route
+     */
+    public void createRouteHoverOn() {
+        routing.setStyle(ON_HOVER);
+    }
+
+    /**
+     * On exit hover for relocate pos
+     */
+    public void createRouteExitHover() {
+        routing.setStyle(EXIT_HOVER);
+    }
+
+    /**
+     * On hover for relocate button
+     */
+    public void relocateHoverOn() {
+        relocatePosBtn.setStyle(ON_HOVER);
+    }
+
+    /**
+     * On exit hover for relocate button
+     */
+    public void relocateExitHover() {
+        relocatePosBtn.setStyle(EXIT_HOVER);
+    }
+
+    /**
+     * On hover for add charger
+     */
+    public void addChargerHoverOn() {
+        addButton.setStyle(ON_HOVER);
+    }
+
+    /**
+     * On exit hover for add charger button
+     */
+    public void addChargerExitHover() {
+        addButton.setStyle(EXIT_HOVER);
+    }
+
+    /**
      * {@inheritDoc}
      * Adds all chargers on the map
      */
@@ -98,7 +154,7 @@ public class MapViewController extends MapHandler {
         if (UserManager.getUser().getLevel() == PermissionLevel.ADMIN) {
             userId = -1;
         } else if (UserManager.getUser().getLevel() == PermissionLevel.CHARGEROWNER) {
-            userId = UserManager.getUser().getUserid();
+            userId = UserManager.getUser().getId();
         }
 
         if (Boolean.TRUE.equals(!MapHandler.isMapRequested()) || javaScriptConnector == null) {
@@ -117,7 +173,7 @@ public class MapViewController extends MapHandler {
             }
             javaScriptConnector.call("addMarker", charger.getLocation().getAddress(),
                     charger.getLocation().getLat(), charger.getLocation().getLon(),
-                    charger.getChargerId(), hasPermission);
+                    charger.getId(), hasPermission);
         }
 
     }
@@ -195,7 +251,7 @@ public class MapViewController extends MapHandler {
                         coord.getAddress(), "p", 0);
                 javaScriptConnector.call(ADD_LOCATION_TO_ROUTE,
                         chargerCoord.getLat(), chargerCoord.getLon(),
-                        charger.getChargerId(), "c", 1);
+                        charger.getId(), "c", 1);
                 javaScriptConnector.call("addRoute");
             }
             logManager.info("Route added to map");
@@ -243,13 +299,13 @@ public class MapViewController extends MapHandler {
                     || UserManager.getUser().getLevel() == PermissionLevel.CHARGEROWNER) {
                 addButton.setOpacity(100.0);
             }
-            routing.setText("Route To Charger");
-            routing.setStyle("-fx-background-color:#3ea055;");
+            routing.setText("Create Route");
+            routing.setStyle("-fx-background-color:#FFFFFF; -fx-border-color: #9b9b9b;");
         } else {
             addButton.setOpacity(0.0);
             addRouteToCharger();
             routing.setText("Stop Routing");
-            routing.setStyle("-fx-background-color:#FF3131;");
+            routing.setStyle("-fx-background-color:#e06666; -fx-border-color: #9b9b9b;");
         }
     }
 
@@ -290,7 +346,7 @@ public class MapViewController extends MapHandler {
                 addChargersOnMap();
                 addCoordinateName();
             }
-            MenuController.getController().viewChargers(null);
+            MenuController.getController().getListController().viewChargers(null);
         }
     }
 
@@ -321,7 +377,6 @@ public class MapViewController extends MapHandler {
         }
         this.getUserLocation();
         map.getController().setPosition();
-
         makeCoordinate(GeoLocationHandler.getCoordinate());
     }
 

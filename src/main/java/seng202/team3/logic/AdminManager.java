@@ -15,6 +15,8 @@ import org.apache.logging.log4j.Logger;
 import seng202.team3.data.database.QueryBuilder;
 import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
+import seng202.team3.data.entity.Entity;
+import seng202.team3.data.entity.EntityType;
 import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.data.entity.User;
 
@@ -49,6 +51,7 @@ public class AdminManager {
      * Initialises the admin manager
      */
     public AdminManager() {
+        // Unused
     }
 
     /**
@@ -64,16 +67,16 @@ public class AdminManager {
      * Makes a list of all the users
      */
     public void makeUsers() {
-        QueryBuilder mainDataQuery = new QueryBuilderImpl().withSource("user");
+        QueryBuilder mainDataQuery = new QueryBuilderImpl().withSource(EntityType.USER);
         try {
-            List<User> userList = new ArrayList<>();
-            for (Object o : SqlInterpreter.getInstance()
-                    .readData(mainDataQuery.build(), User.class)) {
-                userList.add((User) o);
+            List<User> users = new ArrayList<>();
+            for (Entity o : SqlInterpreter.getInstance()
+                    .readData(mainDataQuery.build())) {
+                users.add((User) o);
             }
 
             this.userList = FXCollections
-                    .observableList(userList);
+                    .observableList(users);
         } catch (IOException e) {
             logManager.error(e.getMessage());
         }
@@ -120,7 +123,7 @@ public class AdminManager {
      */
     public void deleteUser() {
         try {
-            SqlInterpreter.getInstance().deleteData("user", selectedUser.getUserid());
+            SqlInterpreter.getInstance().deleteData(EntityType.USER, selectedUser.getId());
             logManager.info("User has been deleted");
         } catch (IOException e) {
             logManager.error(e.getMessage());
@@ -157,7 +160,7 @@ public class AdminManager {
             case CHARGEROWNER -> "Charger Owner";
             case ADMIN -> "Administration";
             default -> {
-                logManager.warn("Unknown permission level: " + permission);
+                logManager.warn("Unknown permission level: %s", permission);
                 throw new IllegalStateException("No permisson allowed: " + permission);
             }
         };

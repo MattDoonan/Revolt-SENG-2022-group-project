@@ -57,36 +57,36 @@ public class JourneyUpdateManagerTest {
      */
     @BeforeEach
     public void setUp() {
-        testCoordinateStart = new Coordinate(1.0, 1.0, 2.9342, 5.1247);
-        testCoordinateEnd = new Coordinate(1.0, 1.0, 3.9342, 4.1247);
-        testCoordinateCharger = new Coordinate(1.0, 1.0, 3.92523, 2.23423);
+        testCoordinateStart = new Coordinate(2.9342, 5.1247);
+        testCoordinateEnd = new Coordinate(3.9342, 4.1247);
+        testCoordinateCharger = new Coordinate(3.92523, 2.23423);
         testCharger = new Charger();
         testUserOne = new User("admin@admin.com", "adminNew",
                 PermissionLevel.USER);
-        testUserOne.setUserid(1);
+        testUserOne.setId(1);
         testUserTwo = new User("admin@admin.com", "adminNew",
                 PermissionLevel.USER);
-        testUserTwo.setUserid(2);
+        testUserTwo.setId(2);
         testVehicle = new Vehicle("TestMake", "TestModel",
                 555, new ArrayList<String>(Arrays.asList("Type 1 Tethered")));
         testVehicle.setImgPath("null");
         testJourneyOne = new Journey(testVehicle, testCoordinateStart,
                 testCoordinateEnd, "10/10/2002", "Name");
-        testJourneyOne.addCharger(testCharger);
+        testJourneyOne.addStop(new Stop(testCharger));
         testJourneyTwo = new Journey(testVehicle, testCoordinateStart,
                 testCoordinateEnd, "10/10/2002", "Name");
-        testJourneyTwo.addCharger(testCharger);
+        testJourneyTwo.addStop(new Stop(testCharger));
         testJourneyThree = new Journey(testVehicle, testCoordinateStart,
                 testCoordinateEnd, "10/10/2002", "Name");
-        testJourneyThree.addCharger(testCharger);
+        testJourneyThree.addStop(new Stop(testCharger));
         try {
             SqlInterpreter.getInstance().defaultDatabase();
-        } catch(IOException e) {
+        } catch (IOException e) {
             logManager.error(e.getMessage());
         }
         try {
             SqlInterpreter.getInstance().writeVehicle(testVehicle);
-        } catch(IOException e) {
+        } catch (IOException e) {
             logManager.error(e.getMessage());
         }
         manager.resetQuery();
@@ -154,7 +154,8 @@ public class JourneyUpdateManagerTest {
     }
 
     /**
-     * Tests that if journeys are made, that when logging in again you still have your journeys
+     * Tests that if journeys are made, that when logging in again you still have
+     * your journeys
      * and are only given your journeys
      */
     @Test
@@ -172,8 +173,5 @@ public class JourneyUpdateManagerTest {
         UserManager.setUser(testUserTwo);
         assertEquals(2, manager.getData().size());
     }
-
-
-
 
 }

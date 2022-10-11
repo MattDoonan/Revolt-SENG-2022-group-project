@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +12,8 @@ import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.database.CsvInterpreter;
 import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.entity.Charger;
+import seng202.team3.data.entity.Entity;
+import seng202.team3.data.entity.EntityType;
 
 /**
  * Tests for ChargerFilter {@link ChargerFilter} Class
@@ -24,7 +25,7 @@ public class ChargerFilterTest {
     /**
      * Has a test object with classes
      */
-    List<Object> test;
+    List<Entity> test;
 
     /**
      * After each tear-down
@@ -42,54 +43,31 @@ public class ChargerFilterTest {
     public void testChargerId() throws IOException {
         test = new CsvInterpreter().readData(
                 new QueryBuilderImpl()
-                        .withSource("charger")
+                        .withSource(EntityType.CHARGER)
                         .withFilter("CHARGERID", "30", ComparisonType.LESS_THAN)
-                        .build(),
-                Charger.class);
+                        .build());
 
         int maximum = 0;
-        for (Object c : test) {
-            if (((Charger) c).getChargerId() > maximum) {
-                maximum = ((Charger) c).getChargerId();
+        for (Entity c : test) {
+            if (((Charger) c).getId() > maximum) {
+                maximum = ((Charger) c).getId();
             }
         }
         assertTrue(maximum < 30);
     }
 
     @Test
-    public void testUniqueChargerIds() throws IOException {
-        test = new CsvInterpreter().readData(
-                new QueryBuilderImpl()
-                        .withSource("charger")
-                        .withFilter("carparkcount", "2", ComparisonType.LESS_THAN)
-                        .build(),
-                Charger.class);
-
-        ArrayList<Integer> integers = new ArrayList<>();
-        boolean isUnique = true;
-        for (Object c : test) {
-            if (integers.contains(((Charger) c).getChargerId())) {
-                isUnique = false;
-            } else {
-                integers.add(((Charger) c).getChargerId());
-            }
-        }
-        assertTrue(isUnique);
-    }
-
-    @Test
     public void testDoubleFilters() throws IOException {
         test = new CsvInterpreter().readData(
                 new QueryBuilderImpl()
-                        .withSource("charger")
+                        .withSource(EntityType.CHARGER)
                         .withFilter("operator", "MERIDIAN ENERGY LIMITED", ComparisonType.CONTAINS)
                         .withFilter("latitude", "-40", ComparisonType.GREATER_THAN_EQUAL)
-                        .build(),
-                Charger.class);
+                        .build());
 
         boolean correct = true;
         double minimum = -40.0;
-        for (Object c : test) {
+        for (Entity c : test) {
             if ((((Charger) c).getLocation().getLat() < minimum)
                     || !(((Charger) c).getOperator().contains("MERIDIAN ENERGY LIMITED"))) {
                 correct = false;

@@ -3,6 +3,7 @@ package seng202.team3.gui;
 import javafx.stage.Stage;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
+import seng202.team3.data.entity.Stop;
 import seng202.team3.logic.GeoLocationHandler;
 import seng202.team3.logic.JavaScriptBridge;
 
@@ -66,7 +67,7 @@ public class JourneyMapController extends MapHandler {
         for (Charger charger : journeyController.getManager().getRangeChargers()) {
             javaScriptConnector.call("addMarker", charger.getLocation().getAddress(),
                     charger.getLocation().getLat(), charger.getLocation().getLon(),
-                    charger.getChargerId(), isEditable);
+                    charger.getId(), isEditable);
         }
         if (journeyController.getManager().getCurrentCoordinate() != null) {
             addCircle();
@@ -114,9 +115,9 @@ public class JourneyMapController extends MapHandler {
                     start.getAddress(), "p", 0);
 
             int i = 1;
-            for (Charger charger : journeyController.getManager().getChargers()) {
-                javaScriptConnector.call("addLocationToRoute", charger.getLocation().getLat(),
-                        charger.getLocation().getLon(), charger.getChargerId(), "c", i);
+            for (Stop stop : journeyController.getManager().getStops()) {
+                javaScriptConnector.call("addLocationToRoute", stop.getLocation().getLat(),
+                        stop.getLocation().getLon(), stop.getId(), "c", i);
                 i += 1;
             }
 

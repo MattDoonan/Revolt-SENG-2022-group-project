@@ -5,10 +5,15 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.regex.Pattern;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import seng202.team3.data.database.ComparisonType;
+import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
+import seng202.team3.data.entity.Entity;
+import seng202.team3.data.entity.EntityType;
 import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.data.entity.User;
 
@@ -39,6 +44,7 @@ public class UserManager {
      * Initialize UserManager
      */
     public UserManager() {
+        // Unused
     }
 
     /**
@@ -116,12 +122,26 @@ public class UserManager {
      * Updates a pre-existing user
      *
      * @param user the user to update
-     * @throws IOException  on sql fail
-     * @throws SQLException on sql fail
+     * @throws IOException on sql fail
      */
-    public void updateUser(User user) throws IOException, SQLException {
+    public void updateUser(User user) throws IOException {
         SqlInterpreter.getInstance().writeUser(user);
+        setUser(getUserFromDatabase(user.getId()));
         logManager.info("User has been updated");
+    }
+
+    /**
+     * Get a user from the database
+     * 
+     * @param id id of the user to get
+     * @return the user
+     * @throws IOException on sql fail
+     */
+    public User getUserFromDatabase(int id) throws IOException {
+        List<Entity> usr = SqlInterpreter.getInstance().readData(
+                new QueryBuilderImpl().withSource(EntityType.USER)
+                        .withFilter("userid", "" + id, ComparisonType.EQUAL).build());
+        return (User) usr.get(0);
     }
 
     /**
@@ -157,7 +177,20 @@ public class UserManager {
 
         } catch (NoSuchAlgorithmException e) {
             // For specifying wrong message digest algorithms
-            throw new RuntimeException(e);
+            logManager.warn(e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Call Delete function to delete user from database
+     */
+    public static void deleteCurrentUser() {
+        try {
+            SqlInterpreter.getInstance().deleteData(EntityType.USER, getUser().getId());
+            setUser(guest);
+        } catch (IOException e) {
+            logManager.error(e.getMessage());
         }
     }
 

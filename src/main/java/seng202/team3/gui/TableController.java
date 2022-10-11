@@ -24,9 +24,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.entity.Charger;
+import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.data.entity.User;
 import seng202.team3.logic.JavaScriptBridge;
 import seng202.team3.logic.TableManager;
+import seng202.team3.logic.UserManager;
 
 /**
  * A TableController class that deals with the display of the table objects
@@ -136,18 +138,6 @@ public class TableController {
     protected CheckBox showId;
 
     /**
-     * Toggle visibility of x field
-     */
-    @FXML
-    protected CheckBox showXpos;
-
-    /**
-     * Toggle visibility of y field
-     */
-    @FXML
-    protected CheckBox showYpos;
-
-    /**
      * Toggle visibility of operator field
      */
     @FXML
@@ -226,12 +216,6 @@ public class TableController {
     protected CheckBox showCurrent;
 
     /**
-     * Toggle visibility of the chargers views
-     */
-    @FXML
-    protected CheckBox showViews;
-
-    /**
      * Search bar to search for addresses
      */
     @FXML
@@ -248,19 +232,6 @@ public class TableController {
      */
     @FXML
     protected final TableColumn<Charger, Integer> idCol = new TableColumn<>("Charger ID");
-
-    /**
-     * Maps charger to the x coord
-     */
-    @FXML
-    protected final TableColumn<Charger, Double> xposCol = new TableColumn<>("X coordinate");
-
-    /**
-     * Maps charger to the y coord
-     */
-    @FXML
-    protected final TableColumn<Charger, Double> yposCol = new TableColumn<>("Y coordinate");
-
     /**
      * Maps charger to the operator
      */
@@ -278,6 +249,12 @@ public class TableController {
      */
     @FXML
     protected final TableColumn<Charger, String> ownerCol = new TableColumn<>("Owner");
+
+    /**
+     * Maps charger to the views
+     */
+    @FXML
+    protected final TableColumn<Charger, Integer> viewsCol = new TableColumn<>("Views");
 
     /**
      * Maps charger to the hours open
@@ -367,11 +344,17 @@ public class TableController {
      */
     private void mapCheckBoxes() {
         colSelectionMap.put(showId, idCol);
-        colSelectionMap.put(showXpos, xposCol);
-        colSelectionMap.put(showYpos, yposCol);
         colSelectionMap.put(showOperator, operatorCol);
         colSelectionMap.put(showAddress, addressCol);
-        colSelectionMap.put(showOwner, ownerCol);
+
+        if (UserManager.getUser().getLevel().equals(PermissionLevel.CHARGEROWNER)) {
+            colSelectionMap.put(showOwner, viewsCol);
+            showOwner.setText("Show Views");
+        } else {
+            colSelectionMap.put(showOwner, ownerCol);
+            showOwner.setText("Show Owner");
+        }
+
         colSelectionMap.put(showHoursOpen, hoursCol);
         colSelectionMap.put(showCarparks, carparkCol);
         colSelectionMap.put(showTimeLimit, timeLimitCol);
@@ -416,11 +399,10 @@ public class TableController {
      */
     private void setIdForTesting() {
         idCol.setId("idCol");
-        xposCol.setId("xposCol");
-        yposCol.setId("yposCol");
         operatorCol.setId("operatorCol");
         addressCol.setId("addressCol");
         ownerCol.setId("ownerCol");
+        viewsCol.setId("viewsCol");
         hoursCol.setId("hoursCol");
         carparkCol.setId("carparkCol");
         carparkCostCol.setId("carparkCostCol");
@@ -437,15 +419,15 @@ public class TableController {
      * Initializes the table and columns
      */
     private void tableMaker() {
-        mainTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        setColWidths(1f * Integer.MAX_VALUE * 10);
-        mainTable.getColumns().removeAll(mainTable.getColumns());
-
         // Set up mapping between columns and checkboxes
         if (colSelectionMap == null) {
             colSelectionMap = new HashMap<>();
             mapCheckBoxes();
         }
+
+        mainTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        setColWidths(1f * Integer.MAX_VALUE * 10);
+        mainTable.getColumns().removeAll(mainTable.getColumns());
 
         // Checks if the user wants to view the column
         for (Entry<CheckBox, TableColumn<Charger, ?>> check : colSelectionMap.entrySet()) {
@@ -463,22 +445,9 @@ public class TableController {
      * @param width width to set to
      */
     private void setColWidths(float width) {
-        idCol.setMaxWidth(width);
-        xposCol.setMaxWidth(width);
-        yposCol.setMaxWidth(width);
-        operatorCol.setMaxWidth(width);
-        addressCol.setMaxWidth(width);
-        ownerCol.setMaxWidth(width);
-        hoursCol.setMaxWidth(width);
-        carparkCol.setMaxWidth(width);
-        carparkCostCol.setMaxWidth(width);
-        timeLimitCol.setMaxWidth(width);
-        attractionCol.setMaxWidth(width);
-        latitudeCol.setMaxWidth(width);
-        longitudeCol.setMaxWidth(width);
-        openCol.setMaxWidth(width);
-        chargcostCol.setMaxWidth(width);
-        currentsCol.setMaxWidth(width);
+        for (TableColumn<Charger, ?> c : colSelectionMap.values()) {
+            c.setMaxWidth(width);
+        }
     }
 
     /**
@@ -490,13 +459,7 @@ public class TableController {
         mainTable.getItems().clear();
         mainTable.setItems(chargersToAdd);
         idCol.setCellValueFactory(charger -> new ReadOnlyIntegerWrapper(
-                charger.getValue().getChargerId()).asObject());
-        xposCol.setCellValueFactory(
-                charger -> new ReadOnlyDoubleWrapper(
-                        charger.getValue().getLocation().getXpos()).asObject());
-        yposCol.setCellValueFactory(
-                charger -> new ReadOnlyDoubleWrapper(
-                        charger.getValue().getLocation().getYpos()).asObject());
+                charger.getValue().getId()).asObject());
         operatorCol.setCellValueFactory(
                 charger -> new ReadOnlyStringWrapper(charger.getValue().getOperator()));
         addressCol.setCellValueFactory(
@@ -504,6 +467,8 @@ public class TableController {
                         charger.getValue().getLocation().getAddress()));
         ownerCol.setCellValueFactory(
                 charger -> new ReadOnlyStringWrapper(charger.getValue().getOwner()));
+        viewsCol.setCellValueFactory(charger -> new ReadOnlyIntegerWrapper(
+                charger.getValue().getViews()).asObject());
         hoursCol.setCellValueFactory(
                 charger -> new ReadOnlyBooleanWrapper(charger.getValue().getAvailable24Hrs()));
         carparkCol.setCellValueFactory(

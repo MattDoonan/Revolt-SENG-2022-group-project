@@ -13,6 +13,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import seng202.team3.cucumber.CucumberFxBase;
+import seng202.team3.data.database.CsvInterpreter;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.gui.MainController;
@@ -59,7 +60,7 @@ public class SearchFilterMainStepDefs extends CucumberFxBase {
         db = SqlInterpreter.getInstance();
         db.defaultDatabase();
 
-        db.addChargerCsvToData("csvtest/filtering");
+        new CsvInterpreter().importChargersToDatabase("/csvtest/filtering.csv");
     }
 
     @Given("I have the app open")

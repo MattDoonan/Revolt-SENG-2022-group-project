@@ -32,7 +32,9 @@ import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
+import seng202.team3.data.entity.EntityType;
 import seng202.team3.data.entity.Journey;
+import seng202.team3.data.entity.Stop;
 import seng202.team3.data.entity.Vehicle;
 import seng202.team3.logic.Calculations;
 import seng202.team3.logic.GeoLocationHandler;
@@ -178,7 +180,6 @@ public class JourneyController {
      */
     private boolean distanceError = false;
 
-
     /**
      * GUI controller for map
      */
@@ -223,7 +224,6 @@ public class JourneyController {
      * Add vehicle button text
      */
     private static final String ADD_VEHICLE = "Add Vehicle...";
-
 
     /**
      * Gets the logic manager for journeys
@@ -373,7 +373,7 @@ public class JourneyController {
     public void addCharger(Charger charger) {
 
         // TODO decide on maximum number of stops in a journey and implement handle
-        journeyManager.addCharger(charger);
+        journeyManager.addStop(new Stop(charger));
         resetChargerDisplay();
         addWaypointsToDisplay();
         journeyManager.makeRangeChargers();
@@ -389,24 +389,23 @@ public class JourneyController {
         double remainingCharge = 100.0;
         Coordinate coordinate = null;
 
+        List<Stop> stops = journeyManager.getSelectedJourney().getStops();
 
-        List<Charger> chargers = journeyManager.getSelectedJourney().getChargers();
-
-        for (int i = 0; i < chargers.size(); i++) {
-            double dist = Math.floor(Calculations.calculateDistance(chargers.get(i).getLocation(),
+        for (int i = 0; i < stops.size(); i++) {
+            double dist = Math.floor(Calculations.calculateDistance(stops.get(i).getLocation(),
                     journeyManager.getStart()) * 100) / 100;
             if (i != 0) {
-                dist = Math.floor(Calculations.calculateDistance(chargers.get(i - 1).getLocation(),
-                        chargers.get(i).getLocation()) * 100) / 100;
+                dist = Math.floor(Calculations.calculateDistance(stops.get(i - 1).getLocation(),
+                        stops.get(i).getLocation()) * 100) / 100;
             }
 
             remainingCharge = Math.ceil(dist / journeyManager.getSelectedJourney()
                     .getVehicle().getMaxRange() * 100);
 
-            Label addressBox = new Label("\n" + chargers.get(i).getLocation().getAddress());
+            Label addressBox = new Label("\n" + stops.get(i).getLocation().getAddress());
             addressBox.setWrapText(true);
 
-            Label nameBox = new Label("\n" + chargers.get(i).getName());
+            Label nameBox = new Label("\n" + stops.get(i).getCharger().getName());
             nameBox.setWrapText(true);
 
             VBox text = new VBox(nameBox,
@@ -416,13 +415,13 @@ public class JourneyController {
 
             journeyChargerTable.getChildren().add(text);
 
-            coordinate = chargers.get(i).getLocation();
+            coordinate = stops.get(i).getLocation();
         }
 
         Button btn = new Button("Remove Last Point");
         btn.setOnAction(this::removeFromDisplay);
 
-        if (!chargers.isEmpty()) {
+        if (!stops.isEmpty()) {
             journeyChargerTable.getChildren().add(btn);
 
             double previousRange = journeyManager.getDesiredRange();
@@ -458,10 +457,10 @@ public class JourneyController {
     public void removeFromDisplay(ActionEvent e) {
 
         double desiredRange = journeyManager.getDesiredRange();
-        journeyManager.removeLastCharger();
+        journeyManager.removeLastStop();
         resetChargerDisplay();
         addWaypointsToDisplay();
-        if (journeyManager.getSelectedJourney().getChargers().isEmpty()) {
+        if (journeyManager.getSelectedJourney().getStops().isEmpty()) {
             journeyChargerTable.getChildren().clear();
             mapController.removeRoute();
         } else {
@@ -481,7 +480,7 @@ public class JourneyController {
         journeyManager.checkDistanceBetweenChargers();
         if (!(distanceError) && (journeyManager.getStart() != null)
                 && (journeyManager.getEnd() != null)) {
-            journeyManager.getSelectedJourney().setEndDate(tripName.getText());
+            journeyManager.getSelectedJourney().setTitle(tripName.getText());
             journeyManager.saveJourney();
             populateTable();
         } else {
@@ -505,11 +504,11 @@ public class JourneyController {
     public void populateTable() {
         journeyUpdateManager.resetQuery();
         addToDisplay(journeyUpdateManager.getData());
-        //TODO setIdForTesting();
+        // TODO: setIdForTesting();
     }
 
     /**
-     * adds chargers to the display
+     * adds stops to the display
      *
      * @param journeysToAdd Observable list of journey objects
      */
@@ -520,10 +519,10 @@ public class JourneyController {
         previousJourneyTable.getItems().clear();
         previousJourneyTable.setItems(journeysToAdd);
         journeyNameCol.setCellValueFactory(journey -> new ReadOnlyStringWrapper(
-                journey.getValue().getEndDate()));
+                journey.getValue().getTitle()));
         journeyVehicleCol.setCellValueFactory(journey -> new ReadOnlyStringWrapper(
                 journey.getValue().getVehicle().getMake() + " "
-                + journey.getValue().getVehicle().getModel()));
+                        + journey.getValue().getVehicle().getModel()));
         startCoordinateCol.setCellValueFactory(journey -> new ReadOnlyStringWrapper(
                 getAddressString(journey.getValue().getStartPosition())));
         endCoordinateCol.setCellValueFactory(journey -> new ReadOnlyStringWrapper(
@@ -546,7 +545,7 @@ public class JourneyController {
 
         String name;
 
-        //Reverse Geolocates if there is internet
+        // Reverse Geolocates if there is internet
         if (MapHandler.isMapRequested()) {
 
             GeoLocationHandler.setCoordinate(coordinate, "Coordinate");
@@ -559,8 +558,6 @@ public class JourneyController {
         return name;
     }
 
-
-
     /**
      * Deletes the journey selected from the table
      */
@@ -570,7 +567,7 @@ public class JourneyController {
             journeyUpdateManager.deleteJourney(previousJourneyTable
                     .getSelectionModel().getSelectedItem());
             populateTable();
-            //TODO feedback after clicking button
+            // TODO feedback after clicking button
         }
     }
 
@@ -578,7 +575,7 @@ public class JourneyController {
      * Loads the journey selected from the table into the map and sidebar
      */
     public void loadJourney() {
-        //TODO warning that current journey will be lost
+        // TODO warning that current journey will be lost
         if (previousJourneyTable.getSelectionModel()
                 .getSelectedItem() != null) {
             mapController.removeRoute();
@@ -587,9 +584,10 @@ public class JourneyController {
             journeyManager.setSelectedJourney(previousJourneyTable
                     .getSelectionModel().getSelectedItem());
             journeyManager.setCurrentCoordinate(journeyManager
-                    .getSelectedJourney().getChargers()
+                    .getSelectedJourney().getStops()
                     .get(journeyManager.getSelectedJourney()
-                    .getChargers().size() - 1).getLocation());
+                            .getStops().size() - 1)
+                    .getLocation());
             journeyManager.makeRangeChargers();
             mapController.addChargersOnMap();
             resetChargerDisplay();
@@ -599,9 +597,8 @@ public class JourneyController {
 
             Coordinate currentPosition = GeoLocationHandler.getCoordinate();
 
-            //reverse geolocates if there is a map
+            // reverse geolocates if there is a map
             if (MapHandler.isMapRequested()) {
-
 
                 GeoLocationHandler.setCoordinate(journeyManager.getSelectedJourney()
                         .getStartPosition(), "Start Position");
@@ -619,14 +616,14 @@ public class JourneyController {
                     .getStartPosition().getAddress());
             endLabel.setText(journeyManager.getSelectedJourney()
                     .getEndPosition().getAddress());
-            tripName.setText(journeyManager.getSelectedJourney().getEndDate());
+            tripName.setText(journeyManager.getSelectedJourney().getTitle());
             vehicles.setText(journeyManager.getSelectedJourney()
                     .getVehicle().getMake()
                     + " " + journeyManager.getSelectedJourney()
-                    .getVehicle().getModel());
+                            .getVehicle().getModel());
             maxRange.setText(Integer.toString(journeyManager
                     .getSelectedJourney().getVehicle().getMaxRange()));
-            //TODO feedback after clicking button
+            // TODO feedback after clicking button
         }
     }
 
@@ -640,10 +637,11 @@ public class JourneyController {
         try {
             List<Vehicle> vehicleData = new ArrayList<>();
             for (Object o : SqlInterpreter.getInstance()
-                .readData(new QueryBuilderImpl().withSource("vehicle")
-                .withFilter("owner",
-                    Integer.toString(UserManager.getUser().getUserid()), ComparisonType.EQUAL)
-                .build(), Vehicle.class)) {
+                    .readData(new QueryBuilderImpl().withSource(EntityType.VEHICLE)
+                            .withFilter("owner",
+                                    Integer.toString(UserManager.getUser().getId()),
+                                    ComparisonType.EQUAL)
+                            .build())) {
                 vehicleData.add((Vehicle) o);
             }
             vehicleList = FXCollections.observableList(vehicleData);
@@ -651,9 +649,9 @@ public class JourneyController {
             logManager.error(e.getMessage());
         }
 
-
-        Vehicle favVehicle = vehicleList.stream().filter(element -> 
-            Boolean.TRUE.equals(element.getCurrVehicle())).findFirst().orElse(null);
+        Vehicle favVehicle = vehicleList.stream().filter(
+                element -> Boolean.TRUE.equals(element.getCurrVehicle()))
+                .findFirst().orElse(null);
 
         if (favVehicle != null) {
             vehicleList.remove(favVehicle);
@@ -670,11 +668,11 @@ public class JourneyController {
             for (Vehicle vehicle : vehicleList) {
                 String title = vehicle.getMake() + ' ' + vehicle.getModel();
                 MenuItem item = new MenuItem(title);
-                item.setId(Integer.toString(vehicle.getVehicleId()));
+                item.setId(Integer.toString(vehicle.getId()));
                 item.setOnAction(this::configureVehicleItem);
                 vehicles.getItems().add(item);
             }
-        }  
+        }
         MenuItem custom = new MenuItem(ADD_VEHICLE);
         custom.setId("add");
         custom.setOnAction(this::configureVehicleItem);
@@ -696,7 +694,7 @@ public class JourneyController {
         } else {
             for (Vehicle vehicle : vehicleList) {
                 rangeSlider.setDisable(false);
-                if (vehicle.getVehicleId() == Integer.parseInt(item.getId())) {
+                if (vehicle.getId() == Integer.parseInt(item.getId())) {
                     journeyManager.selectVehicle(vehicle);
                     maxRange.setText(vehicle.getMaxRange() + " km");
                 }
@@ -755,12 +753,11 @@ public class JourneyController {
         journeyManager.setDesiredRange(rangeSlider.getValue()
                 * journeyManager.getSelectedJourney().getVehicle().getMaxRange() / 100.0);
         if (journeyManager.getSelectedJourney().getStartPosition() != null) {
-            List<Charger> chargers = journeyManager.getSelectedJourney().getChargers();
-            if (chargers.size() == 0) {
+            List<Stop> stops = journeyManager.getSelectedJourney().getStops();
+            if (stops.isEmpty()) {
                 mapController.addChargersOnMap();
             } else {
-                journeyManager.setCurrentCoordinate(chargers.get(chargers.size() - 1)
-                        .getLocation());
+                journeyManager.setCurrentCoordinate(stops.get((stops.size() - 1)).getLocation());
                 journeyManager.makeRangeChargers();
                 mapController.addChargersOnMap();
             }

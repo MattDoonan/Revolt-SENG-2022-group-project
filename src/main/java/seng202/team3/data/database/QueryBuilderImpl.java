@@ -2,6 +2,7 @@ package seng202.team3.data.database;
 
 import java.util.ArrayList;
 import org.javatuples.Triplet;
+import seng202.team3.data.entity.EntityType;
 
 /**
  * Implementation of the {@link QueryBuilder query builder}.
@@ -12,7 +13,7 @@ import org.javatuples.Triplet;
  */
 public class QueryBuilderImpl implements QueryBuilder {
     /** Source of the query */
-    private String source;
+    private EntityType source;
 
     /** Filters of the query */
     private ArrayList<Triplet<String, String, ComparisonType>> filters = new ArrayList<>();
@@ -26,7 +27,7 @@ public class QueryBuilderImpl implements QueryBuilder {
 
     /** {@inheritDoc} */
     @Override
-    public QueryBuilder withSource(String source) {
+    public QueryBuilder withSource(EntityType source) {
         this.source = source;
         return this;
     }

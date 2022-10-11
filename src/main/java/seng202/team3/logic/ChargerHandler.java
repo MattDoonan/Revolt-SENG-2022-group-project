@@ -13,6 +13,8 @@ import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
+import seng202.team3.data.entity.Entity;
+import seng202.team3.data.entity.EntityType;
 
 /**
  * A class that deals with querying charger data and positional data
@@ -103,17 +105,18 @@ public class ChargerHandler {
      * Load the initial query
      */
     public void resetQuery() {
-        mainDataQuery = new QueryBuilderImpl().withSource("charger");
+        mainDataQuery = new QueryBuilderImpl().withSource(EntityType.CHARGER);
     }
 
     /**
      * Create the charger list from the main Query
      */
     public void makeAllChargers() {
+
         try {
             List<Charger> chargerList = new ArrayList<>();
-            for (Object o : SqlInterpreter.getInstance()
-                    .readData(mainDataQuery.build(), Charger.class)) {
+            for (Entity o : SqlInterpreter.getInstance()
+                    .readData(mainDataQuery.build())) {
                 chargerList.add((Charger) o);
             }
 
@@ -153,4 +156,17 @@ public class ChargerHandler {
         return word.toString();
     }
 
+    /**
+     * Updates the current views on java object and in database
+     * Chargers are reloaded on page refresh without event action so both need to
+     * be updated simultaneously or data will be lost
+     */
+    public void updateSelectedViews() {
+        selectedCharger.incrementViews();
+        try {
+            SqlInterpreter.getInstance().updateChargerViews(selectedCharger);
+        } catch (IOException e) {
+            logManager.warn(e.getMessage());
+        }
+    }
 }

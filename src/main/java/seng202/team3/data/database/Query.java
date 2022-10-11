@@ -2,6 +2,7 @@ package seng202.team3.data.database;
 
 import java.util.List;
 import org.javatuples.Triplet;
+import seng202.team3.data.entity.EntityType;
 
 /**
  * Represents a request to retrieve information from data storage
@@ -11,7 +12,7 @@ import org.javatuples.Triplet;
  */
 public class Query {
     /** Location to get information from */
-    private String source;
+    private EntityType source;
 
     /**
      * Filter criteria for the query
@@ -25,7 +26,7 @@ public class Query {
      * @param source  Location to get information from
      * @param filters Filter criteria for the query
      */
-    public Query(String source, List<Triplet<String, String, ComparisonType>> filters) {
+    public Query(EntityType source, List<Triplet<String, String, ComparisonType>> filters) {
         this.source = source;
         this.filters = filters;
     }
@@ -35,7 +36,7 @@ public class Query {
      *
      * @return source of the query
      */
-    public String getSource() {
+    public EntityType getSource() {
         return source;
     }
 

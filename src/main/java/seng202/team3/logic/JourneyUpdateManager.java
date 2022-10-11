@@ -10,8 +10,8 @@ import org.apache.logging.log4j.Logger;
 import seng202.team3.data.database.QueryBuilder;
 import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
+import seng202.team3.data.entity.EntityType;
 import seng202.team3.data.entity.Journey;
-import seng202.team3.gui.JourneyMapController;
 
 /**
  * Manages the updating of previous journeys
@@ -47,7 +47,7 @@ public class JourneyUpdateManager {
      * Load the initial query
      */
     public void resetQuery() {
-        journeyDataQuery = new QueryBuilderImpl().withSource("journey");
+        journeyDataQuery = new QueryBuilderImpl().withSource(EntityType.JOURNEY);
     }
 
     /**
@@ -57,8 +57,8 @@ public class JourneyUpdateManager {
         try {
             List<Journey> journeyList = new ArrayList<>();
             for (Object o : SqlInterpreter.getInstance()
-                    .readData(journeyDataQuery.build(), Journey.class)) {
-                if (UserManager.getUser().getUserid() == ((Journey) o).getUser()) {
+                    .readData(journeyDataQuery.build())) {
+                if (UserManager.getUser().getId() == ((Journey) o).getUser()) {
                     journeyList.add((Journey) o);
                 }
             }
@@ -85,8 +85,8 @@ public class JourneyUpdateManager {
      */
     public void deleteJourney(Journey journey) {
         try {
-            SqlInterpreter.getInstance().deleteData("journey",
-                    journey.getJourneyId());
+            SqlInterpreter.getInstance().deleteData(EntityType.JOURNEY,
+                    journey.getId());
             logManager.info("Journey has been deleted");
         } catch (IOException e) {
             logManager.error(e.getMessage());
