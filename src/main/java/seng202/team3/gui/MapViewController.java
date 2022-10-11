@@ -244,12 +244,12 @@ public class MapViewController extends MapHandler {
                 addButton.setOpacity(100.0);
             }
             routing.setText("Route To Charger");
-            routing.setStyle("-fx-background-color:#3ea055;");
+            routing.setStyle("-fx-background-color:#009679;");
         } else {
             addButton.setOpacity(0.0);
             addRouteToCharger();
             routing.setText("Stop Routing");
-            routing.setStyle("-fx-background-color:#FF3131;");
+            routing.setStyle("-fx-background-color:#AC0028;");
         }
     }
 
