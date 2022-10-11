@@ -8,15 +8,15 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1500.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.GarageController">
+<AnchorPane stylesheets="@garage.css" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1500.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.GarageController">
    <children>
       <Label layoutX="688.0" layoutY="103.0" text="My Garage">
          <font>
             <Font size="24.0" />
          </font>
       </Label>
-      <Button fx:id="nextBtn" layoutX="1227.0" layoutY="380.0" mnemonicParsing="false" onAction="#nextBtnClicked" prefHeight="40.0" prefWidth="42.0" text="&gt;&gt;" />
-      <Button fx:id="prevBtn" layoutX="228.0" layoutY="400.0" mnemonicParsing="false" onAction="#prevBtnClicked" prefHeight="40.0" prefWidth="42.0" text="&lt;&lt;" />
+      <Button fx:id="nextBtn" layoutX="1227.0" layoutY="380.0" mnemonicParsing="false" onAction="#nextBtnClicked" prefHeight="40.0" prefWidth="42.0" text="&gt;&gt;" styleClass="white-btn" />
+      <Button fx:id="prevBtn" layoutX="228.0" layoutY="400.0" mnemonicParsing="false" onAction="#prevBtnClicked" prefHeight="40.0" prefWidth="42.0" text="&lt;&lt;" styleClass="white-btn" />
       <AnchorPane fx:id="anchorTwo" layoutX="615.0" layoutY="189.0" prefHeight="416.0" prefWidth="262.0" style="-fx-border-color: black;">
          <children>
             <Button fx:id="editCarTwo" layoutX="153.0" layoutY="376.0" mnemonicParsing="false" onAction="#setEdit" text="Edit" />
@@ -50,7 +50,7 @@
             <Button fx:id="currEvThree" layoutX="14.0" layoutY="376.0" mnemonicParsing="false" onAction="#setCurr" text="Select" />
          </children>
       </AnchorPane>
-      <Button fx:id="openUpdate" layoutX="713.0" layoutY="626.0" mnemonicParsing="false" onAction="#launchUpdate" text="Add New" />
+      <Button fx:id="openUpdate" layoutX="713.0" layoutY="626.0" mnemonicParsing="false" onAction="#launchUpdate" text="Add New" styleClass="white-btn" />
    </children>
    <opaqueInsets>
       <Insets />
