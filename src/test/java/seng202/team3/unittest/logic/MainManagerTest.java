@@ -126,7 +126,7 @@ public class MainManagerTest {
      */
     @Test
     public void originalListTest() throws IOException {
-        new CsvInterpreter().importChargersToDatabase("/csvtest/filtering");
+        new CsvInterpreter().importChargersToDatabase("/csvtest/filtering.csv");
 
         QueryBuilder q = new QueryBuilderImpl().withSource(EntityType.CHARGER);
         ArrayList<Charger> chargerList = new ArrayList<>();
@@ -148,7 +148,7 @@ public class MainManagerTest {
      */
     @Test
     public void distanceOriginalListTest() throws IOException {
-        new CsvInterpreter().importChargersToDatabase("/csvtest/filtering");
+        new CsvInterpreter().importChargersToDatabase("/csvtest/filtering.csv");
 
         QueryBuilder q = new QueryBuilderImpl().withSource(EntityType.CHARGER);
         ArrayList<Charger> chargerList = new ArrayList<>();
@@ -181,7 +181,7 @@ public class MainManagerTest {
      */
     @Test
     public void changeDistanceTest() throws IOException {
-        new CsvInterpreter().importChargersToDatabase("/csvtest/filtering");
+        new CsvInterpreter().importChargersToDatabase("/csvtest/filtering.csv");
 
         QueryBuilder q = new QueryBuilderImpl().withSource(EntityType.CHARGER);
         ArrayList<Charger> chargerList = new ArrayList<>();
@@ -214,7 +214,7 @@ public class MainManagerTest {
      */
     @Test
     public void addAcTypeQuery() throws IOException {
-        new CsvInterpreter().importChargersToDatabase("/csvtest/filtering");
+        new CsvInterpreter().importChargersToDatabase("/csvtest/filtering.csv");
 
         QueryBuilder q = new QueryBuilderImpl().withSource(EntityType.CHARGER)
                 .withFilter("connectorcurrent", "AC", ComparisonType.CONTAINS);
@@ -239,7 +239,7 @@ public class MainManagerTest {
      */
     @Test
     public void addDcTypeQuery() throws IOException {
-        new CsvInterpreter().importChargersToDatabase("/csvtest/filtering");
+        new CsvInterpreter().importChargersToDatabase("/csvtest/filtering.csv");
 
         QueryBuilder q = new QueryBuilderImpl().withSource(EntityType.CHARGER)
                 .withFilter("connectorcurrent", "DC", ComparisonType.CONTAINS);
@@ -267,7 +267,7 @@ public class MainManagerTest {
      */
     @Test
     public void addAttractionQuery() throws IOException {
-        new CsvInterpreter().importChargersToDatabase("/csvtest/filtering");
+        new CsvInterpreter().importChargersToDatabase("/csvtest/filtering.csv");
         QueryBuilder q = new QueryBuilderImpl().withSource(EntityType.CHARGER)
                 .withFilter("hastouristattraction", "True", ComparisonType.CONTAINS);
         ArrayList<Charger> chargerList = new ArrayList<>();
@@ -295,7 +295,7 @@ public class MainManagerTest {
      */
     @Test
     public void addChargingCostQuery() throws IOException {
-        new CsvInterpreter().importChargersToDatabase("/csvtest/filtering");
+        new CsvInterpreter().importChargersToDatabase("/csvtest/filtering.csv");
         QueryBuilder q = new QueryBuilderImpl().withSource(EntityType.CHARGER)
                 .withFilter("haschargingcost", "False", ComparisonType.CONTAINS);
         ArrayList<Charger> chargerList = new ArrayList<>();
@@ -322,7 +322,7 @@ public class MainManagerTest {
      */
     @Test
     public void queryChargeCostWithCurrentTest() throws IOException {
-        new CsvInterpreter().importChargersToDatabase("/csvtest/filtering");
+        new CsvInterpreter().importChargersToDatabase("/csvtest/filtering.csv");
         QueryBuilder q = new QueryBuilderImpl().withSource(EntityType.CHARGER)
                 .withFilter("haschargingcost", "False", ComparisonType.CONTAINS)
                 .withFilter("connectorcurrent", "DC", ComparisonType.CONTAINS);
@@ -346,7 +346,7 @@ public class MainManagerTest {
 
     @Test
     public void queryTouristAttractionWithCurrentTest() throws IOException {
-        new CsvInterpreter().importChargersToDatabase("/csvtest/filtering");
+        new CsvInterpreter().importChargersToDatabase("/csvtest/filtering.csv");
         QueryBuilder q = new QueryBuilderImpl().withSource(EntityType.CHARGER)
                 .withFilter("hastouristattraction", "True", ComparisonType.CONTAINS)
                 .withFilter("connectorcurrent", "AC", ComparisonType.CONTAINS);
@@ -375,7 +375,7 @@ public class MainManagerTest {
      */
     @Test
     public void positionNull() throws IOException {
-        new CsvInterpreter().importChargersToDatabase("/csvtest/filtering");
+        new CsvInterpreter().importChargersToDatabase("/csvtest/filtering.csv");
         QueryBuilder q = new QueryBuilderImpl().withSource(EntityType.CHARGER);
         ArrayList<Charger> chargerList = new ArrayList<>();
         try {

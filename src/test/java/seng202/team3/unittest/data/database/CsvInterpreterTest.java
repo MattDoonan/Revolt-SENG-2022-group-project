@@ -19,8 +19,8 @@ import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
-import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.data.entity.Entity;
+import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.data.entity.User;
 import seng202.team3.logic.UserManager;
 
@@ -49,7 +49,7 @@ public class CsvInterpreterTest {
         testUser.setId(1);
 
         UserManager.setUser(testUser);
-        result = new CsvInterpreter().readChargers("/csvtest/validChargers");
+        result = new CsvInterpreter().readChargers("/csvtest/validChargers.csv");
 
     }
 
@@ -86,7 +86,7 @@ public class CsvInterpreterTest {
         // Check exception is thrown
         IOException exception = assertThrows(IOException.class, () -> {
 
-            result = new CsvInterpreter().readChargers("/csvtest/missingHeader");
+            result = new CsvInterpreter().readChargers("/csvtest/missingHeader.csv");
         });
 
         // Check header is missing
@@ -102,7 +102,7 @@ public class CsvInterpreterTest {
     public void invalidDataTypeTest() {
         // Check exception is thrown
         IOException exception = assertThrows(IOException.class, () -> {
-            result = new CsvInterpreter().readChargers("/csvtest/invalidDataType");
+            result = new CsvInterpreter().readChargers("/csvtest/invalidDataType.csv");
         });
 
         // Check data cannot be converted
@@ -118,7 +118,7 @@ public class CsvInterpreterTest {
     public void missingDataValueTest() {
         // Check exception is thrown
         IOException exception = assertThrows(IOException.class, () -> {
-            result = new CsvInterpreter().readChargers("/csvtest/missingDataValue");
+            result = new CsvInterpreter().readChargers("/csvtest/missingDataValue.csv");
         });
 
         // Check data is missing
@@ -135,7 +135,7 @@ public class CsvInterpreterTest {
     public void multipleErrorMessagesCombineTest() {
         // Check exception is thrown
         IOException exception = assertThrows(IOException.class, () -> {
-            result = new CsvInterpreter().readChargers("/csvtest/multipleErrorMessagesCombine");
+            result = new CsvInterpreter().readChargers("/csvtest/multipleErrorMessagesCombine.csv");
         });
 
         // Check invalid data type

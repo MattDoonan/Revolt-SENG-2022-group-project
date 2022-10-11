@@ -36,7 +36,7 @@ public class CsvInterpreter implements DataReader {
      */
     private InputStreamReader readFile(String filename) {
         // Initialize File
-        return new InputStreamReader(getClass().getResourceAsStream(filename + ".csv"));
+        return new InputStreamReader(getClass().getResourceAsStream(filename));
     }
 
     /**

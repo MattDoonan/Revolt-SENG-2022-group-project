@@ -71,7 +71,7 @@ public enum EntityType {
     public String getAsCsv() {
         switch (this) {
             case CHARGER:
-                return "/charger";
+                return "/charger.csv";
             case CONNECTOR:
                 return null; // not implemented
             case JOURNEY:

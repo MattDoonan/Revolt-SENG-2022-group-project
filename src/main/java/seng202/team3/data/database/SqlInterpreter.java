@@ -19,7 +19,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.Semaphore;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import javax.management.InstanceAlreadyExistsException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -60,9 +61,9 @@ public class SqlInterpreter implements DataReader {
     private static SqlInterpreter instance = null;
 
     /**
-     * Control db write access
+     * Number of threads
      */
-    static Semaphore mutex = new Semaphore(1);
+    private static int threadCount = 6;
 
     /**
      * Username field constant
@@ -868,37 +869,35 @@ public class SqlInterpreter implements DataReader {
      * @param chargers array list of charger objects
      */
     public void writeCharger(List<Entity> chargers) {
-        int sizePerThread = chargers.size() / WriteChargerThread.threadCount;
-        WriteChargerThread[] activeThreads = new WriteChargerThread[WriteChargerThread.threadCount];
+        int sizePerThread = chargers.size() / threadCount;
+        WriteChargerThread[] activeThreads = new WriteChargerThread[threadCount];
 
         // Split array into sub arrays per thread
         int i = 0;
-        for (; i < WriteChargerThread.threadCount; i++) {
-            activeThreads[i] = new WriteChargerThread(new ArrayList<>(
-                    chargers.subList(i * sizePerThread,
+        for (; i < threadCount; i++) {
+            activeThreads[i] = new WriteChargerThread(
+                    new ArrayList<>(chargers.subList(i * sizePerThread,
                             (i + 1) * sizePerThread)));
         }
 
         // Distribute remaining chargers evenly
         List<Entity> remChargers = chargers.subList(i * sizePerThread, chargers.size());
         for (int j = 0; j < remChargers.size(); j++) {
-            activeThreads[j % WriteChargerThread.threadCount]
+            activeThreads[j % threadCount]
                     .addCharger((Charger) remChargers.get(j));
         }
 
-        for (Thread t : activeThreads) { // Run threads
-            t.start();
+        ExecutorService executor = Executors.newFixedThreadPool(threadCount);
+        for (WriteChargerThread t : activeThreads) {
+            Runnable worker = t;
+            executor.execute(worker);
         }
 
-        for (Thread t : activeThreads) { // Wait for threads to finish
-            try {
-                t.join();
-            } catch (InterruptedException e) {
-                logManager.error("Charger write threads interrupted");
-                logManager.error(e.getMessage());
-                Thread.currentThread().interrupt();
-            }
+        executor.shutdown();
+        while (!executor.isTerminated()) {
+            // Wait for threads
         }
+        logManager.info("All charger write threads have terminated");
     }
 
     /**
@@ -1323,10 +1322,6 @@ public class SqlInterpreter implements DataReader {
      * @version 1.2.0, Sep 22
      */
     private class WriteChargerThread extends Thread {
-        /**
-         * Number of threads
-         */
-        private static int threadCount = 4;
 
         /**
          * List of chargers to write
@@ -1365,12 +1360,9 @@ public class SqlInterpreter implements DataReader {
                 }
 
                 // Pseudo-batch write all accumulated statements
-
-                mutex.acquire();
                 conn.commit();
-                mutex.release();
 
-            } catch (IOException | SQLException | InterruptedException e) {
+            } catch (IOException | SQLException e) {
                 logManager.error(e.getMessage());
                 Thread.currentThread().interrupt();
             }
