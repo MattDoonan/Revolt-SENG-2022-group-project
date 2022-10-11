@@ -65,6 +65,31 @@ public class SqlInterpreter implements DataReader {
     static Semaphore mutex = new Semaphore(1);
 
     /**
+     * Username field constant
+     */
+    private static final String USERNAME_FIELD = "username";
+
+    /**
+     * Owner field constant
+     */
+    private static final String OWNER_FIELD = "owner";
+
+    /**
+     * Userid field constant
+     */
+    private static final String USERID_FIELD = "userid";
+
+    /**
+     * Chargerid field constant
+     */
+    private static final String CHARGERID_FIELD = "chargerid";
+
+    /**
+     * Journeyid field constant
+     */
+    private static final String JOURNEYID_FIELD = "journeyid";
+
+    /**
      * Initializes the SqlInterpreter and checks if the url is null
      * calls createAFile and defaultDatabase if the database doesn't exist
      * 
@@ -133,7 +158,7 @@ public class SqlInterpreter implements DataReader {
 
         // rewrites Admin with no deformed password
         writeUser((User) readData(new QueryBuilderImpl().withSource(EntityType.USER)
-                .withFilter("username", "admin",
+                .withFilter(USERNAME_FIELD, "admin",
                         ComparisonType.EQUAL)
                 .build()).get(0), UserManager.encryptThisString("admin"));
 
@@ -340,7 +365,7 @@ public class SqlInterpreter implements DataReader {
                 case USER:
                     List<Entity> charger = readData(new QueryBuilderImpl()
                             .withSource(EntityType.CHARGER)
-                            .withFilter("owner", " " + id + " ",
+                            .withFilter(OWNER_FIELD, " " + id + " ",
                                     ComparisonType.EQUAL)
                             .build());
                     for (Entity o : charger) {
@@ -349,7 +374,7 @@ public class SqlInterpreter implements DataReader {
 
                     List<Entity> journey = readData(new QueryBuilderImpl()
                             .withSource(EntityType.JOURNEY)
-                            .withFilter("userid", "" + id + "",
+                            .withFilter(USERID_FIELD, "" + id + "",
                                     ComparisonType.EQUAL)
                             .build());
 
@@ -359,7 +384,7 @@ public class SqlInterpreter implements DataReader {
 
                     List<Entity> vehicles = readData(new QueryBuilderImpl()
                             .withSource(EntityType.VEHICLE)
-                            .withFilter("owner", "" + id + "",
+                            .withFilter(OWNER_FIELD, "" + id + "",
                                     ComparisonType.EQUAL)
                             .build());
                     for (Entity o : vehicles) {
@@ -380,6 +405,52 @@ public class SqlInterpreter implements DataReader {
         }
     }
 
+    /**
+     * Converts filter from query to sql string
+     * 
+     * @param filter filter to convert
+     * @return string representation
+     */
+    private String filterToString(Triplet<String, String, ComparisonType> filter) {
+        String result;
+        switch (filter.getValue2()) {
+            case CONTAINS:
+                result = "UPPER(" + filter.getValue0() + ") LIKE UPPER('%"
+                        + filter.getValue1() + "%')";
+                break;
+            case EQUAL:
+                try {
+                    Integer.parseInt(filter.getValue1());
+                    result = filter.getValue0() + " = " + filter.getValue1();
+                } catch (NumberFormatException e) {
+                    if (filter.getValue1().equalsIgnoreCase("False")
+                            || filter.getValue1().equalsIgnoreCase("True")) {
+                        result = filter.getValue0() + " = " + filter.getValue1();
+                    } else {
+                        result = filter.getValue0() + " = " + "'" + filter.getValue1() + "'";
+                    }
+                }
+                break;
+            case GREATER_THAN:
+                result = filter.getValue0() + " > " + filter.getValue1();
+                break;
+            case GREATER_THAN_EQUAL:
+                result = filter.getValue0() + " >= " + filter.getValue1();
+                break;
+            case LESS_THAN:
+                result = filter.getValue0() + " < " + filter.getValue1();
+                break;
+            case LESS_THAN_EQUAL:
+                result = filter.getValue0() + " <= " + filter.getValue1();
+                break;
+            default:
+                result = null;
+                break;
+        }
+
+        return result;
+    }
+
     /** {@inheritDoc} */
     @Override
     public List<Entity> readData(Query query) throws IOException {
@@ -398,39 +469,7 @@ public class SqlInterpreter implements DataReader {
                 sql.append(" AND ");
             }
 
-            switch (filter.getValue2()) {
-                case CONTAINS:
-                    sql.append("UPPER(" + filter.getValue0() + ") LIKE UPPER('%"
-                            + filter.getValue1() + "%')");
-                    break;
-                case EQUAL:
-                    try {
-                        Integer.parseInt(filter.getValue1());
-                        sql.append(filter.getValue0() + " = " + filter.getValue1());
-                    } catch (NumberFormatException e) {
-                        if (filter.getValue1().equalsIgnoreCase("False")
-                                || filter.getValue1().equalsIgnoreCase("True")) {
-                            sql.append(filter.getValue0() + " = " + filter.getValue1());
-                        } else {
-                            sql.append(filter.getValue0() + " = " + "'" + filter.getValue1() + "'");
-                        }
-                    }
-                    break;
-                case GREATER_THAN:
-                    sql.append(filter.getValue0() + " > " + filter.getValue1());
-                    break;
-                case GREATER_THAN_EQUAL:
-                    sql.append(filter.getValue0() + " >= " + filter.getValue1());
-                    break;
-                case LESS_THAN:
-                    sql.append(filter.getValue0() + " < " + filter.getValue1());
-                    break;
-                case LESS_THAN_EQUAL:
-                    sql.append(filter.getValue0() + " <= " + filter.getValue1());
-                    break;
-                default:
-                    break;
-            }
+            sql.append(filterToString(filter));
 
         }
 
@@ -482,7 +521,7 @@ public class SqlInterpreter implements DataReader {
         List<Integer> observedChargers = new ArrayList<>();
         while (rs.next()) {
             // Skip record if already processed
-            if (observedChargers.contains(rs.getInt("chargerid"))) {
+            if (observedChargers.contains(rs.getInt(CHARGERID_FIELD))) {
                 continue;
             }
             List<Entity> connectors;
@@ -491,11 +530,11 @@ public class SqlInterpreter implements DataReader {
                 ResultSet userRs;
                 userRs = additional
                         .executeQuery("SELECT username FROM user WHERE userid = "
-                                + rs.getInt("owner") + ";");
+                                + rs.getInt(OWNER_FIELD) + ";");
 
                 // Make charger
                 Charger charger = new Charger();
-                charger.setId(rs.getInt("chargerid"));
+                charger.setId(rs.getInt(CHARGERID_FIELD));
                 charger.setDateOpened(rs.getString("datefirstoperational"));
                 charger.setName(rs.getString("name"));
                 charger.setLocation(new Coordinate(
@@ -505,8 +544,8 @@ public class SqlInterpreter implements DataReader {
                 charger.setAvailableParks(rs.getInt("carparkcount"));
                 charger.setTimeLimit(rs.getDouble("maxtimelimit"));
                 charger.setOperator(rs.getString("operator"));
-                charger.setOwnerId(rs.getInt("owner"));
-                charger.setOwner(userRs.getString("username"));
+                charger.setOwnerId(rs.getInt(OWNER_FIELD));
+                charger.setOwner(userRs.getString(USERNAME_FIELD));
                 charger.setHasAttraction(rs.getBoolean("hastouristattraction"));
                 charger.setAvailable24Hrs(rs.getBoolean("is24hours"));
                 charger.setParkingCost(rs.getBoolean("hascarparkcost"));
@@ -517,7 +556,7 @@ public class SqlInterpreter implements DataReader {
                 // // Get connectors
                 ResultSet connectorRs = additional
                         .executeQuery("SELECT * FROM connector WHERE chargerid = "
-                                + rs.getInt("chargerid") + ";");
+                                + rs.getInt(CHARGERID_FIELD) + ";");
 
                 connectors = asConnector(connectorRs);
                 connectorRs.close();
@@ -572,7 +611,7 @@ public class SqlInterpreter implements DataReader {
         List<Entity> vehicles = new ArrayList<>();
         while (rs.next()) {
             Vehicle v = new Vehicle();
-            v.setOwner(rs.getInt("owner"));
+            v.setOwner(rs.getInt(OWNER_FIELD));
             v.setMake(rs.getString("make"));
             v.setModel(rs.getString("model"));
             v.setMaxRange(rs.getInt("rangeKM"));
@@ -604,7 +643,7 @@ public class SqlInterpreter implements DataReader {
         List<Entity> stops = new ArrayList<>();
         while (rs.next()) {
 
-            rs.getInt("chargerid");
+            rs.getInt(CHARGERID_FIELD);
 
             if (rs.wasNull()) { // if chargerid is null
                 stops.add(new Stop(rs.getDouble("lat"), rs.getDouble("lon")));
@@ -613,7 +652,7 @@ public class SqlInterpreter implements DataReader {
                         Statement stmt = connection.createStatement();
                         ResultSet chargerRs = stmt.executeQuery("SELECT * FROM charger "
                                 + " WHERE chargerid = "
-                                + rs.getInt("chargerid") + ";")) {
+                                + rs.getInt(CHARGERID_FIELD) + ";")) {
                     Stop stop = new Stop((Charger) asCharger(chargerRs).get(0));
                     stop.setId(rs.getInt("stopid"));
                     stops.add(stop);
@@ -642,8 +681,8 @@ public class SqlInterpreter implements DataReader {
 
         while (rs.next()) {
             Journey journey = new Journey();
-            journey.setUser(rs.getInt("userid"));
-            journey.setId(rs.getInt("journeyid"));
+            journey.setUser(rs.getInt(USERID_FIELD));
+            journey.setId(rs.getInt(JOURNEYID_FIELD));
             journey.setStartPosition(
                     new Coordinate(
                             rs.getDouble("startLat"), rs.getDouble("startLon")));
@@ -674,7 +713,7 @@ public class SqlInterpreter implements DataReader {
                 ResultSet stopRs = statement
                         .executeQuery("SELECT * FROM stop "
                                 + " WHERE journeyid = "
-                                + rs.getInt("journeyid")
+                                + rs.getInt(JOURNEYID_FIELD)
                                 + " ORDER BY position ASC;");
 
                 stops = asStop(stopRs);
@@ -704,8 +743,8 @@ public class SqlInterpreter implements DataReader {
         List<Entity> users = new ArrayList<>();
         while (rs.next()) {
             User user = new User();
-            user.setId(rs.getInt("userid"));
-            user.setAccountName(rs.getString("username"));
+            user.setId(rs.getInt(USERID_FIELD));
+            user.setAccountName(rs.getString(USERNAME_FIELD));
             user.setEmail(rs.getString("email"));
             user.setCarbonSaved(rs.getInt("carbonSaved"));
             user.setLevel(PermissionLevel.fromValue(rs.getInt("permissions")));
@@ -884,7 +923,7 @@ public class SqlInterpreter implements DataReader {
                     ResultSet rs = stmt.executeQuery("SELECT chargerid "
                             + "FROM charger ORDER BY chargerid DESC LIMIT 0,1")) {
 
-                chargerId = rs.getInt("chargerid");
+                chargerId = rs.getInt(CHARGERID_FIELD);
 
             } catch (SQLException | NullPointerException e) {
                 throw new IOException(e.getMessage());
@@ -1091,51 +1130,64 @@ public class SqlInterpreter implements DataReader {
                 journeyIdForStop = getMostRecentJourneyId(connection);
             }
 
-            String stopQuery = "INSERT INTO stop (stopid, journeyid, chargerid, position,"
-                    + " lat, lon) "
-                    + "values (?,?,?,?,?,?) ON CONFLICT(stopid) DO UPDATE SET "
-                    + "stopid = ?, journeyid = ?, chargerid = ?, position = ?, lat = ?, lon = ?";
-            try (PreparedStatement statement = connection.prepareStatement(stopQuery)) {
-
-                for (int i = 0; i < j.getStops().size(); i++) {
-                    if (j.getStops().get(i).getId() == 0) {
-                        statement.setNull(1, 0);
-                    } else {
-                        statement.setInt(1, j.getStops().get(i).getId());
-                    }
-                    statement.setInt(2, journeyIdForStop);
-
-                    if (j.getStops().get(i).getCharger() != null) {
-                        statement.setInt(3, j.getStops().get(i).getCharger().getId());
-                    } else {
-                        statement.setNull(3, 0);
-                    }
-
-                    statement.setInt(4, i);
-                    statement.setDouble(5, j.getStops().get(i).getLat());
-                    statement.setDouble(6, j.getStops().get(i).getLon());
-                    if (j.getStops().get(i).getId() == 0) {
-                        statement.setNull(7, 0);
-                    } else {
-                        statement.setInt(7, j.getStops().get(i).getId());
-                    }
-                    statement.setInt(8, journeyIdForStop);
-
-                    if (j.getStops().get(i).getCharger() != null) {
-                        statement.setInt(9, j.getStops().get(i).getCharger().getId());
-                    } else {
-                        statement.setNull(9, 0);
-                    }
-
-                    statement.setInt(10, i);
-                    statement.setDouble(11, j.getStops().get(i).getLat());
-                    statement.setDouble(12, j.getStops().get(i).getLon());
-                    statement.executeUpdate();
-                }
-            }
+            writeStops(connection, j.getStops(), journeyIdForStop);
 
         } catch (SQLException | NullPointerException e) {
             throw new IOException(e.getMessage());
+        }
+    }
+
+    /**
+     * Writes stops to the database
+     * 
+     * @param connection connection to the database
+     * @param stops      stops to write
+     * @param journeyId  journey to attach stops to
+     * @throws SQLException if db write doesn't exist
+     */
+    private void writeStops(Connection connection, List<Stop> stops, int journeyId)
+            throws SQLException {
+        String stopQuery = "INSERT INTO stop (stopid, journeyid, chargerid, position,"
+                + " lat, lon) "
+                + "values (?,?,?,?,?,?) ON CONFLICT(stopid) DO UPDATE SET "
+                + "stopid = ?, journeyid = ?, chargerid = ?, position = ?, lat = ?, lon = ?";
+        try (PreparedStatement statement = connection.prepareStatement(stopQuery)) {
+
+            for (int i = 0; i < stops.size(); i++) {
+                if (stops.get(i).getId() == 0) {
+                    statement.setNull(1, 0);
+                } else {
+                    statement.setInt(1, stops.get(i).getId());
+                }
+                statement.setInt(2, journeyId);
+
+                if (stops.get(i).getCharger() != null) {
+                    statement.setInt(3, stops.get(i).getCharger().getId());
+                } else {
+                    statement.setNull(3, 0);
+                }
+
+                statement.setInt(4, i);
+                statement.setDouble(5, stops.get(i).getLat());
+                statement.setDouble(6, stops.get(i).getLon());
+                if (stops.get(i).getId() == 0) {
+                    statement.setNull(7, 0);
+                } else {
+                    statement.setInt(7, stops.get(i).getId());
+                }
+                statement.setInt(8, journeyId);
+
+                if (stops.get(i).getCharger() != null) {
+                    statement.setInt(9, stops.get(i).getCharger().getId());
+                } else {
+                    statement.setNull(9, 0);
+                }
+
+                statement.setInt(10, i);
+                statement.setDouble(11, stops.get(i).getLat());
+                statement.setDouble(12, stops.get(i).getLon());
+                statement.executeUpdate();
+            }
         }
     }
 
@@ -1151,7 +1203,7 @@ public class SqlInterpreter implements DataReader {
                 ResultSet rs = stmt.executeQuery("SELECT journeyid "
                         + "FROM journey ORDER BY journeyid DESC LIMIT 0,1")) {
 
-            return rs.getInt("journeyid");
+            return rs.getInt(JOURNEYID_FIELD);
 
         } catch (SQLException e) {
             throw new IOException(e.getMessage());
@@ -1255,7 +1307,7 @@ public class SqlInterpreter implements DataReader {
         }
         if (password.equals(correctPassword)) {
             List<Entity> result = readData(new QueryBuilderImpl().withSource(EntityType.USER)
-                    .withFilter("username", username, ComparisonType.EQUAL)
+                    .withFilter(USERNAME_FIELD, username, ComparisonType.EQUAL)
                     .build());
             if (result.size() == 1) {
                 return (User) result.get(0);

@@ -177,7 +177,8 @@ public class UserManager {
 
         } catch (NoSuchAlgorithmException e) {
             // For specifying wrong message digest algorithms
-            throw new RuntimeException(e);
+            logManager.warn(e.getMessage());
+            return null;
         }
     }
 

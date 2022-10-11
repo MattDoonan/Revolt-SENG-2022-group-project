@@ -86,7 +86,7 @@ public class ChargerHandlerTest {
                 new Coordinate(-43.522518157958984, 172.5811767578125),
                 "Test Position");
         mainManager.makeAllChargers();
-        assertTrue(mainManager.getData().size() > 48); // TODO: fix back to CloseChargerData
+        assertTrue(mainManager.getData().size() > 48);
     }
 
     /**

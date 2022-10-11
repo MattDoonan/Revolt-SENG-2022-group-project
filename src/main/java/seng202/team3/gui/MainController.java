@@ -274,7 +274,6 @@ public class MainController {
             updateChargerDisplay();
         } catch (NullPointerException e) {
             logManager.info("Loading the main manager for the first time");
-            return;
         }
     }
 
@@ -429,7 +428,7 @@ public class MainController {
      * Updates the display of chargers
      */
     public void updateChargerDisplay() {
-        if (listController.getChargerTable()) {
+        if (Boolean.TRUE.equals(listController.getChargerTable())) {
             listController.addChargersToDisplay(manage.getCloseChargerData());
         }
         if (Boolean.TRUE.equals(MapHandler.isMapRequested())) {

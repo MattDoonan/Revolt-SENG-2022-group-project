@@ -60,11 +60,11 @@ public class MapViewController extends MapHandler {
     private Button addButton;
 
     /** Hover set style */
-    private static final String onHover = "-fx-background-color:#FFF8EB;"
+    private static final String ON_HOVER = "-fx-background-color:#FFF8EB;"
             + "-fx-border-color:  #9b9b9b;";
 
     /** Hover exit style */
-    private static final String exitHover = "-fx-background-color:#FFFFFF;"
+    private static final String EXIT_HOVER = "-fx-background-color:#FFFFFF;"
             + "-fx-border-color:  #9b9b9b;";
 
     /**
@@ -100,42 +100,42 @@ public class MapViewController extends MapHandler {
      * On hover for create route
      */
     public void createRouteHoverOn() {
-        routing.setStyle(onHover);
+        routing.setStyle(ON_HOVER);
     }
 
     /**
      * On exit hover for relocate pos
      */
     public void createRouteExitHover() {
-        routing.setStyle(exitHover);
+        routing.setStyle(EXIT_HOVER);
     }
 
     /**
      * On hover for relocate button
      */
     public void relocateHoverOn() {
-        relocatePosBtn.setStyle(onHover);
+        relocatePosBtn.setStyle(ON_HOVER);
     }
 
     /**
      * On exit hover for relocate button
      */
     public void relocateExitHover() {
-        relocatePosBtn.setStyle(exitHover);
+        relocatePosBtn.setStyle(EXIT_HOVER);
     }
 
     /**
      * On hover for add charger
      */
     public void addChargerHoverOn() {
-        addButton.setStyle(onHover);
+        addButton.setStyle(ON_HOVER);
     }
 
     /**
      * On exit hover for add charger button
      */
     public void addChargerExitHover() {
-        addButton.setStyle(exitHover);
+        addButton.setStyle(EXIT_HOVER);
     }
 
     /**

@@ -45,7 +45,7 @@ public class CsvInterpreterTest {
     @BeforeEach
     public void setUp() throws IOException {
         testUser = new User("admin@admin.com", "admin",
-                PermissionLevel.ADMIN); // TODO: get user from db
+                PermissionLevel.ADMIN);
         testUser.setId(1);
 
         UserManager.setUser(testUser);

@@ -51,6 +51,7 @@ public class AdminManager {
      * Initialises the admin manager
      */
     public AdminManager() {
+        // Unused
     }
 
     /**
@@ -159,7 +160,7 @@ public class AdminManager {
             case CHARGEROWNER -> "Charger Owner";
             case ADMIN -> "Administration";
             default -> {
-                logManager.warn("Unknown permission level: " + permission);
+                logManager.warn("Unknown permission level: %s", permission);
                 throw new IllegalStateException("No permisson allowed: " + permission);
             }
         };

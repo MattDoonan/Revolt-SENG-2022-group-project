@@ -291,14 +291,6 @@ public class LoginSignupController {
     }
 
     /**
-     * Allowing user to reset password
-     */
-    @FXML
-    public void forgotPassword() {
-        // TODO
-    }
-
-    /**
      * Closes this window.
      */
     public void close() {

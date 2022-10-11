@@ -325,7 +325,7 @@ public class ChargerListController {
      * @return array list of texts
      */
     private ArrayList<Text> getMainText(Charger c) {
-        ArrayList<Text> texts = new ArrayList<Text>();
+        ArrayList<Text> texts = new ArrayList<>();
         // If statements are there to make different text depending on the charger info
         if (c.getChargeCost()) {
             texts.add(new Text("Charger has a cost"));
@@ -430,9 +430,6 @@ public class ChargerListController {
      * @return boolean for if it is null
      */
     public Boolean getChargerTable() {
-        if (chargerTable == null) {
-            return false;
-        }
-        return true;
+        return chargerTable != null;
     }
 }

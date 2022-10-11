@@ -230,7 +230,7 @@ public class VehicleUpdateController {
             if (selectedImg != null) {
                 selectedVehicle.setImgPath(IMGPATH + selectedImg);
             } else {
-                selectedVehicle.setImgPath(IMGPATH + "car_one.png");
+                selectedVehicle.setImgPath(IMGPATH + imgNames[0]);
             }
             vehicle = selectedVehicle;
         } else {
@@ -285,7 +285,7 @@ public class VehicleUpdateController {
         if (selectedImg != null) {
             vehicle.setImgPath(IMGPATH + selectedImg);
         } else {
-            vehicle.setImgPath(IMGPATH + "car_one.png");
+            vehicle.setImgPath(IMGPATH + imgNames[0]);
         }
 
         Boolean errorOccurred = false;
@@ -527,7 +527,6 @@ public class VehicleUpdateController {
                 Region filler = new Region();
                 HBox.setHgrow(filler, Priority.ALWAYS);
                 hbox.getChildren().addAll(label, filler, button);
-                // addedConnections.getItems().add(hbox);
 
                 GridPane gridpane = new GridPane();
                 gridpane.add(label, 1, 0);
