@@ -399,7 +399,8 @@ public class MainController {
                 add.getChildren().add(substitueText); // adds to the HBox
             }
             // Create Vbox to contain the charger info
-            VBox content = new VBox(new Text(StringFormatter.capitalizeWord(chargersToAdd.get(i).getName())),
+            VBox content = new VBox(new Text(
+                StringFormatter.capitalizeWord(chargersToAdd.get(i).getName())),
                     new Text(chargersToAdd.get(i).getLocation().getAddress()),
                     new Text(chargersToAdd.get(i).getOperator()),
                     new Text("\n" + Math.round(Calculations.calculateDistance(
