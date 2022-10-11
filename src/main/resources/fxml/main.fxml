@@ -15,13 +15,13 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<SplitPane dividerPositions="0.3" minWidth="200.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.MainController">
+<SplitPane dividerPositions="0.3" minWidth="200.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.MainController">
     <items>
-        <SplitPane dividerPositions="0.10287081339712918, 0.21291866028708134, 0.5" maxWidth="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefWidth="530.0">
+        <SplitPane dividerPositions="0.10287081339712918, 0.21291866028708134, 0.5" maxWidth="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefWidth="400.0">
             <items>
   <SplitPane dividerPositions="0.7294685990338164" maxHeight="40.0">
     <items>
-        <TextField fx:id="searchCharger" prefHeight="40" prefWidth="420" promptText="Search Charger" />
+        <TextField fx:id="searchCharger" prefHeight="40.0" prefWidth="400.0" promptText="Search Charger" />
         <Button fx:id="executeSearch" minWidth="82.0" mnemonicParsing="false" onAction="#executeSearch" prefHeight="39.0" prefWidth="82.0" text="Search" />
     </items>
   </SplitPane>
@@ -141,7 +141,7 @@
                   <TextField fx:id="batteryPercent" maxHeight="-Infinity" maxWidth="-Infinity" onKeyTyped="#checkForNumber" prefHeight="40.0" prefWidth="100.0" promptText="Charge" />
     </items>
   </SplitPane>
-            <ScrollPane maxHeight="180.0" minHeight="180.0" prefWidth="530.0">
+            <ScrollPane maxHeight="180.0" minHeight="180.0">
                <content>
                   <HBox fx:id="displayInfo" maxHeight="50.0" onMouseClicked="#editCharger" prefWidth="530.0" spacing="20.0" style="-fx-background-color: #FFFFFF;">
                      <padding>
@@ -150,7 +150,7 @@
                   </HBox>
                </content>
             </ScrollPane>
-            <ScrollPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: white;">
+            <ScrollPane prefHeight="200.0" style="-fx-background-color: white;">
                <content>
                   <VBox fx:id="chargerTable" prefWidth="530.0" style="-fx-background-color: #FFFFFF; -fx-fill-width: true;" />
                </content>
