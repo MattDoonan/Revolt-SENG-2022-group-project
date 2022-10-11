@@ -67,8 +67,8 @@ public class GarageManager {
         vehicleDataQuery.withFilter("currVehicle", "true", ComparisonType.EQUAL);
         getAllVehicles();
         resetQuery();
-        if (getData().size() == 1) {
-            return getData().get(0);
+        if (vehicleData.size() == 1) {
+            return vehicleData.get(0);
         }
         return null;
     }
