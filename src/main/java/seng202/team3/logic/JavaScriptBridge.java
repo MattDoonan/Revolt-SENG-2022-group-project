@@ -215,7 +215,6 @@ public class JavaScriptBridge {
 
         if (!chargerList.isEmpty()) {
             Charger selectedCharger = chargerList.get(0);
-            journeyController.getManager().setCurrentCoordinate(selectedCharger.getLocation());
             journeyController.addCharger(selectedCharger);
         } else {
             logManager.error("Charger is not in range, should not have been selected: " + id);

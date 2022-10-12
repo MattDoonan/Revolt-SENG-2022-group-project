@@ -373,14 +373,30 @@ public class JourneyController {
      * @param charger charger
      */
     public void addCharger(Charger charger) {
-
-        // TODO decide on maximum number of stops in a journey and implement handle
-        journeyManager.addStop(new Stop(charger));
-        resetChargerDisplay();
-        addWaypointsToDisplay();
-        journeyManager.makeRangeChargers();
-        mapController.addChargersOnMap();
-        calculateRoute();
+        Stop stop = new Stop(charger);
+        if (!journeyManager.getSelectedJourney().getStops().isEmpty()) {
+            if (journeyManager.getSelectedJourney().getStops()
+                    .get(journeyManager.getSelectedJourney().getStops().size() - 1)
+                    .getCharger() != null) {
+                if (journeyManager.getSelectedJourney().getStops()
+                        .get(journeyManager.getSelectedJourney().getStops().size() - 1)
+                        .getCharger().getId() == charger.getId()) {
+                    errors.add("Cannot add the same charger consecutively.");
+                }
+            }
+        }
+        if (errors.isEmpty()) {
+            journeyManager.addStop(stop);
+            journeyManager.setCurrentCoordinate(charger.getLocation());
+            resetChargerDisplay();
+            addWaypointsToDisplay();
+            journeyManager.makeRangeChargers();
+            mapController.addChargersOnMap();
+            calculateRoute();
+        } else {
+            displayErrorPopups();
+            errors.clear();
+        }
     }
 
     /**
@@ -391,6 +407,8 @@ public class JourneyController {
     public void addStop(Coordinate coordinate) {
         if (journeyManager.getStart() == null) {
             errors.add("Please select a start point");
+        } else if (coordinate.equals(journeyManager.getCurrentCoordinate())) {
+            errors.add("Cannot add the same stop consecutively.");
         } else if (Calculations.calculateDistance(coordinate, journeyManager.getCurrentCoordinate())
                 <= journeyManager.getDesiredRange()) {
             journeyManager.addNoChargerStop(coordinate);
@@ -441,15 +459,10 @@ public class JourneyController {
 
             if (stops.get(i).getCharger() != null) {
                 nameBox.setText("\n" + stops.get(i).getCharger().getName());
-                addressBox.setText("\n" + stops.get(i).getLocation().getAddress());
             } else {
-                GeoLocationHandler.setCoordinate(new Coordinate(stops.get(i).getLocation().getLat(),
-                        stops.get(i).getLocation().getLon()), "Coordinate");
-                new JavaScriptBridge().makeLocationName();
-                journeyManager.getStops().get(i).setLocation(GeoLocationHandler.getCoordinate());
                 nameBox.setText("\nStop:");
-                addressBox.setText("\n" + GeoLocationHandler.getCoordinate().getAddress());
             }
+            addressBox.setText("\n" + stops.get(i).getLocation().getAddress());
             nameBox.setWrapText(true);
             addressBox.setWrapText(true);
 
@@ -648,12 +661,7 @@ public class JourneyController {
                     .get(journeyManager.getSelectedJourney()
                             .getStops().size() - 1)
                     .getLocation());
-            journeyManager.makeRangeChargers();
-            mapController.addChargersOnMap();
-            resetChargerDisplay();
-            addWaypointsToDisplay();
-            populateTable();
-            mapController.addRouteToScreen();
+
 
             Coordinate currentPosition = GeoLocationHandler.getCoordinate();
 
@@ -669,8 +677,21 @@ public class JourneyController {
                 new JavaScriptBridge().makeLocationName();
                 endLabel.setText(GeoLocationHandler.getCoordinate().getAddress());
 
+                for (Stop stop : journeyManager.getStops()) {
+                    if (stop.getCharger() == null) {
+                        GeoLocationHandler.setCoordinate(stop.getLocation(), "Stop");
+                        new JavaScriptBridge().makeLocationName();
+                        stop.setLocation(GeoLocationHandler.getCoordinate());
+                    }
+                }
+
                 GeoLocationHandler.setCoordinate(currentPosition, currentPosition.getAddress());
             }
+
+            resetChargerDisplay();
+            addWaypointsToDisplay();
+            populateTable();
+            mapController.addRouteToScreen();
 
             startLabel.setText(journeyManager.getSelectedJourney()
                     .getStartPosition().getAddress());
@@ -749,7 +770,6 @@ public class JourneyController {
         MenuItem item = ((MenuItem) e.getSource());
         vehicles.setText(item.getText());
         if (item.getText().equals(ADD_VEHICLE)) {
-            rangeSlider.setDisable(true);
             loadVehicleScreen();
         } else {
             for (Vehicle vehicle : vehicleList) {
