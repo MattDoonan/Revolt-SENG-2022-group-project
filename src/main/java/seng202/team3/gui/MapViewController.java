@@ -372,7 +372,7 @@ public class MapViewController extends MapHandler {
      */
     @FXML
     public void getLocation() {
-        if (MapHandler.getLocationAccepted() == null || !MapHandler.getLocationAccepted()) {
+        if (Boolean.FALSE.equals(MapHandler.getLocationAccepted())) {
             MapHandler.setLocationAccepted(null);
         }
         this.getUserLocation();

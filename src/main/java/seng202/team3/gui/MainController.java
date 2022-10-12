@@ -198,7 +198,6 @@ public class MainController {
         manage.makeAllChargers();
         manage.setPosition();
         initialRange();
-
         if (GeoLocationHandler
                 .getCoordinate() == GeoLocationHandler.DEFAULT_COORDINATE) {
             manage.setDistance(0);
@@ -207,8 +206,9 @@ public class MainController {
             manage.setDistance(changeDistance.getValue() * buffer);
             distanceDisplay.setSelected(true);
         }
-        updateChargerDisplay();
-        change();
+
+        MenuController.getController().updateChargerDisplay();
+        MenuController.getController().change();
 
     }
 
