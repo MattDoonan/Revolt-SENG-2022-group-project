@@ -2,6 +2,7 @@ package seng202.team3.gui;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
+
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -330,7 +331,7 @@ public class MainController {
             logManager.error(e.getMessage());
         }
         VBox display = new VBox(); // Creates Vbox to contain text
-        display.getChildren().add(new Text("" + StringFormatter.capitalizeWord(c.getName()) + ""));
+        display.getChildren().add(new Text("" + StringFormatter.toTitleCase(c.getName()) + ""));
         display.getChildren().add(new Text("" + c.getLocation().getAddress() + "\n"));
         String word = manage.getConnectors(c);
         display.getChildren().add(new Text("Current types " + word + ""));
@@ -398,10 +399,12 @@ public class MainController {
                 Label substitueText = new Label("Image");
                 add.getChildren().add(substitueText); // adds to the HBox
             }
+
+
             // Create Vbox to contain the charger info
             VBox content = new VBox(new Text(
-                StringFormatter.capitalizeWord(chargersToAdd.get(i).getName())),
-                    new Text(chargersToAdd.get(i).getLocation().getAddress()),
+                StringFormatter.toTitleCase(chargersToAdd.get(i).getName())),
+                    new Text("\n" + chargersToAdd.get(i).getLocation().getAddress().replace(", ", "\n")),
                     new Text(chargersToAdd.get(i).getOperator()),
                     new Text("\n" + Math.round(Calculations.calculateDistance(
                             manage.getPosition(), chargersToAdd.get(i).getLocation()))

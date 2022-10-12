@@ -16,12 +16,11 @@ public class StringFormatter {
     }
 
     /**
-     * Takes and string and capitalizes the first
-     * letter of every word
+     * Takes a string and converts it to title case
      * @param str input string
      * @return formatted string
      */
-    public static String capitalizeWord(String str) {
+    public static String toTitleCase(String str) {
         String[] words = str.split("\s");  
         String capitalizeWord = "";  
         for (String w : words) {  

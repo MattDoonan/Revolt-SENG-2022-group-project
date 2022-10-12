@@ -1,7 +1,7 @@
 * {
 	font-family: "SansSerif";
 	-fx-font-family: "SansSerif";
-	/* -fx-font-size: 12px; */
+	-fx-font-size: 14px;
 	/* -fx-color: #ffffff; */
 	/* -fx-background-color: #ffffff; */
 	-fx-font-color: #2b2d42;
@@ -139,10 +139,14 @@
 	-fx-fill: white;
 }
 
-#loginSignout {
-	font-weight: 650;
-	-fx-font-weight: 650;
+#REVOLT:hover {
+	cursor: hand;
+	-fx-cursor: hand;
 }
+
+/* #loginSignout {
+	<font-weight>: 650;
+} */
 
 .split-pane-divider {
 	cursor: default;
