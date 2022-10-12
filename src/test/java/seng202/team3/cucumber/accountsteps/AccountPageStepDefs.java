@@ -28,6 +28,7 @@ import javafx.collections.transformation.SortedList;
 import javafx.geometry.VerticalDirection;
 import javafx.scene.Node;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import seng202.team3.cucumber.CucumberFxBase;
@@ -155,6 +156,16 @@ public class AccountPageStepDefs extends CucumberFxBase {
 
     @When("I want to change my account name to {string}")
     public void changeAccountName(String newName) {
+        doubleClickOn("#accountName");
+        press(KeyCode.BACK_SPACE).release(KeyCode.BACK_SPACE);
+        doubleClickOn("#accountName");
+        press(KeyCode.BACK_SPACE).release(KeyCode.BACK_SPACE);
+        doubleClickOn("#accountName");
+        press(KeyCode.BACK_SPACE).release(KeyCode.BACK_SPACE);
+        doubleClickOn("#accountName");
+        press(KeyCode.BACK_SPACE).release(KeyCode.BACK_SPACE);
+        doubleClickOn("#accountName");
+        press(KeyCode.BACK_SPACE).release(KeyCode.BACK_SPACE);
         doubleClickOn("#accountName");
         press(KeyCode.BACK_SPACE).release(KeyCode.BACK_SPACE);
         clickOn("#accountName");

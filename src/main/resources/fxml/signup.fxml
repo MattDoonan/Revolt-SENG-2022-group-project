@@ -1,28 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.LoginSignupController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="600.0" styleClass="loginBase" stylesheets="@login.css" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.LoginSignupController"> 
 <center>
    <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="600.0">
    <children>
-            <Label fx:id="invalidSignup" layoutX="204.0" layoutY="116.0" text="Invalid information entered" textFill="RED" visible="false">
+            <Label fx:id="invalidSignup" layoutX="215.0" layoutY="103.0" text="Invalid information entered" textFill="RED" visible="false">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-      <Label layoutX="137.0" layoutY="65.0" text="Create an Account">
+      <Label layoutX="154.0" layoutY="49.0" text="Create an Account">
          <font>
             <Font size="36.0" />
          </font>
       </Label>
-      <Button fx:id="signUpBtn" layoutX="270.0" layoutY="296.0" mnemonicParsing="false" onAction="#signUp" text="Sign Up" />
-      <Separator layoutX="122.0" layoutY="339.0" prefHeight="10.0" prefWidth="356.0" />
-      <Label layoutX="163.0" layoutY="349.0" text="Already have an Account?">
+      <Button fx:id="signUpBtn" layoutX="270.0" layoutY="281.0" mnemonicParsing="false" onAction="#signUp" styleClass="white-btn" text="Sign Up" />
+      <Separator layoutX="123.0" layoutY="330.0" prefHeight="10.0" prefWidth="356.0" />
+      <Label layoutX="164.0" layoutY="354.0" text="Already have an Account?">
          <font>
             <Font size="24.0" />
          </font>
@@ -32,9 +40,9 @@
             <Font size="14.0" />
          </font>
       </Label>
-      <Button fx:id="logInRedirect" layoutX="275.0" layoutY="436.0" mnemonicParsing="false" onAction="#loginRedirect" text="Log In" />
+      <Button fx:id="logInRedirect" layoutX="275.0" layoutY="436.0" mnemonicParsing="false" onAction="#loginRedirect" styleClass="white-btn" text="Log In" />
       <ImageView fx:id="logo" fitHeight="62.0" fitWidth="166.0" layoutX="217.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
-      <GridPane layoutX="109.0" layoutY="146.0" prefHeight="134.0" prefWidth="405.0">
+      <GridPane layoutX="123.0" layoutY="126.0" prefHeight="134.0" prefWidth="405.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="187.20001220703125" minWidth="10.0" prefWidth="184.79998779296875" />
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="257.6" minWidth="10.0" prefWidth="184.80001220703127" />
@@ -51,7 +59,7 @@
             <TextField fx:id="signupEmailField" prefHeight="26.0" prefWidth="191.0" promptText="Email" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <PasswordField fx:id="signupPasswordField" prefHeight="26.0" prefWidth="166.0" promptText="Password" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <TextField fx:id="showPassFieldSignup" editable="false" prefHeight="26.0" prefWidth="166.0" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <PasswordField fx:id="confPassField" promptText="Confirm Password" GridPane.columnIndex="1" GridPane.rowIndex="3" onAction="#signing"/>
+            <PasswordField fx:id="confPassField" onAction="#signing" promptText="Confirm Password" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <TextField fx:id="showConfPassFieldSignup" editable="false" prefHeight="26.0" prefWidth="166.0" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <Label text="Username:">
                <font>
@@ -105,24 +113,24 @@
                   <Font size="14.0" />
                </font>
             </Label>
-                  <Button fx:id="showPassSignup" mnemonicParsing="false" onAction="#showPassword" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                  <Button fx:id="showPassSignup" mnemonicParsing="false" onAction="#showPassword" styleClass="eye-btn" GridPane.columnIndex="2" GridPane.rowIndex="2">
                      <GridPane.margin>
                         <Insets left="4.0" />
                      </GridPane.margin>
                   </Button>
-                  <Button fx:id="showConfPassSignup" mnemonicParsing="false" onAction="#showPassword" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                  <Button fx:id="showConfPassSignup" mnemonicParsing="false" onAction="#showPassword" styleClass="eye-btn" GridPane.columnIndex="2" GridPane.rowIndex="3">
                      <GridPane.margin>
                         <Insets left="4.0" />
                      </GridPane.margin>
                   </Button>
          </children>
       </GridPane>
-            <Label layoutX="109.0" layoutY="320.0" text="*" textFill="RED">
+            <Label layoutX="112.0" layoutY="310.0" text="*" textFill="RED">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label layoutX="113.0" layoutY="320.0" text="Required inputs">
+            <Label layoutX="111.0" layoutY="310.0" text="Required inputs">
                <font>
                   <Font size="14.0" />
                </font>

@@ -1,0 +1,42 @@
+.text-area {
+	-fx-background-color: transparent;
+	background-color: transparent;
+}
+
+.text-area .scroll-pane {
+	-fx-background-color: transparent;
+	background-color: transparent;
+}
+
+.text-area .scroll-pane .viewport {
+	-fx-background-color: transparent;
+	background-color: transparent;
+}
+
+.text-area .scroll-pane .content {
+	-fx-background-color: transparent;
+	background-color: transparent;
+}
+
+
+.white-btn {
+	background-color: #ffffff;
+	-fx-background-color: #ffffff;
+	border-color: #2b2d42;
+	-fx-border-color: #2b2d42;
+	border-width: 0.5px;
+	-fx-border-width: 0.5px;
+	border-radius: 1px;
+	-fx-border-radius: 1px;
+}
+
+.white-btn:hover {
+	background-color: #ffeff2;
+	-fx-background-color: #ffeff2;
+	border-color: #2b2d42;
+	-fx-border-color: #2b2d42;
+	border-width: 0.5px;
+	-fx-border-width: 0.5px;
+	border-radius: 1px;
+	-fx-border-radius: 1px;
+}
