@@ -2,7 +2,6 @@ package seng202.team3.gui;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
-
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -404,9 +403,11 @@ public class MainController {
             // Create Vbox to contain the charger info
             VBox content = new VBox(new Text(
                 StringFormatter.toTitleCase(chargersToAdd.get(i).getName())),
-                    new Text("\n" + chargersToAdd.get(i).getLocation().getAddress().replace(", ", "\n")),
+                    new Text("\n"
+                     + chargersToAdd.get(i).getLocation().getAddress().replace(", ", "\n")),
                     new Text(chargersToAdd.get(i).getOperator()),
-                    new Text("\n" + Math.round(Calculations.calculateDistance(
+                    new Text("\n"
+                    + Math.round(Calculations.calculateDistance(
                             manage.getPosition(), chargersToAdd.get(i).getLocation()))
                             * 10.0 / 10.0 + "km"));
             add.getChildren().add(content); // Adds charger content to HBox
