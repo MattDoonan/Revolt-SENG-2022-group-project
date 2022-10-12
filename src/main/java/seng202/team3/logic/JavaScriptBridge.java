@@ -187,25 +187,6 @@ public class JavaScriptBridge {
         }
     }
 
-    /**
-     * Zooms to a point
-     *
-     * @param latlng string representation of a physical coordinate
-     */
-    public void zoomToPoint(String latlng) {
-        MainController controller = MenuController.getController();
-        controller.getMapController().changePosition(parseCoordinate(latlng));
-    }
-
-    /**
-     * Adds a stop into the route
-     *
-     * @param latlng the String from the route.
-     */
-    public void addStopInRoute(String latlng) {
-        MainController controller = MenuController.getController();
-        controller.getMapController().addStopInRoute(parseCoordinate(latlng));
-    }
 
     /**
      * Loads the charger information on a separate pop-up
@@ -237,8 +218,19 @@ public class JavaScriptBridge {
             journeyController.getManager().setCurrentCoordinate(selectedCharger.getLocation());
             journeyController.addCharger(selectedCharger);
         } else {
-            logManager.error("Charger does not exist, should not have been selected: " + id);
+            logManager.error("Charger is not in range, should not have been selected: " + id);
         }
+    }
+
+    /**
+     * Adds a stop into the journey of the geolocation point
+     *
+     */
+    public void addStopInJourney() {
+
+        makeLocationName();
+        MenuController.getJourneyController().addStop(GeoLocationHandler.getCoordinate());
+
     }
 
     /**

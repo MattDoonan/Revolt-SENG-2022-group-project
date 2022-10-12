@@ -284,6 +284,7 @@ public class JourneyController {
      */
     @FXML
     public void setStart() {
+        journeyManager.setCurrentCoordinate(GeoLocationHandler.getCoordinate());
         journeyManager.makeCoordinateName();
         Coordinate position = journeyManager.getPosition();
         if (position != null && journeyManager.getSelectedJourney().getVehicle() != null) {
@@ -309,6 +310,7 @@ public class JourneyController {
      */
     @FXML
     public void setDestination() {
+        journeyManager.setCurrentCoordinate(GeoLocationHandler.getCoordinate());
         journeyManager.makeCoordinateName();
         Coordinate position = journeyManager.getPosition();
         if (position != null && journeyManager.getSelectedJourney().getVehicle() != null) {
@@ -382,12 +384,44 @@ public class JourneyController {
     }
 
     /**
+     * Adds a stop which is not a charger; checks to see if in range of last coordinate or not first
+     *
+     * @param coordinate the stop to be added
+     */
+    public void addStop(Coordinate coordinate) {
+        if (journeyManager.getStart() == null) {
+            errors.add("Please select a start point");
+        } else if (Calculations.calculateDistance(coordinate, journeyManager.getCurrentCoordinate())
+                <= journeyManager.getDesiredRange()) {
+            journeyManager.addNoChargerStop(coordinate);
+            journeyManager.setCurrentCoordinate(coordinate);
+            logManager.info("Coordinate: " + coordinate.getAddress());
+            mapController.positionMarker("Stop");
+            resetChargerDisplay();
+            addWaypointsToDisplay();
+            journeyManager.makeRangeChargers();
+            mapController.addChargersOnMap();
+            calculateRoute();
+        } else {
+            errors.add("Selected stop is out of range");
+            logManager.info("Selected Stop is out of range for vehicle. ");
+        }
+
+        if (!errors.isEmpty()) {
+            displayErrorPopups();
+            errors.clear();
+        }
+    }
+
+    /**
      * Shows all the added waypoints to the display
      */
     public void addWaypointsToDisplay() {
 
         double remainingCharge = 100.0;
-        Coordinate coordinate = null;
+        Stop lastStop = null;
+
+        rangeSlider.setDisable(false);
 
         List<Stop> stops = journeyManager.getSelectedJourney().getStops();
 
@@ -402,11 +436,22 @@ public class JourneyController {
             remainingCharge = Math.ceil(dist / journeyManager.getSelectedJourney()
                     .getVehicle().getMaxRange() * 100);
 
-            Label addressBox = new Label("\n" + stops.get(i).getLocation().getAddress());
-            addressBox.setWrapText(true);
+            Label nameBox = new Label();
+            Label addressBox = new Label();
 
-            Label nameBox = new Label("\n" + stops.get(i).getCharger().getName());
+            if (stops.get(i).getCharger() != null) {
+                nameBox.setText("\n" + stops.get(i).getCharger().getName());
+                addressBox.setText("\n" + stops.get(i).getLocation().getAddress());
+            } else {
+                GeoLocationHandler.setCoordinate(new Coordinate(stops.get(i).getLocation().getLat(),
+                        stops.get(i).getLocation().getLon()), "Coordinate");
+                new JavaScriptBridge().makeLocationName();
+                journeyManager.getStops().get(i).setLocation(GeoLocationHandler.getCoordinate());
+                nameBox.setText("\nStop:");
+                addressBox.setText("\n" + GeoLocationHandler.getCoordinate().getAddress());
+            }
             nameBox.setWrapText(true);
+            addressBox.setWrapText(true);
 
             VBox text = new VBox(nameBox,
                     addressBox,
@@ -415,25 +460,40 @@ public class JourneyController {
 
             journeyChargerTable.getChildren().add(text);
 
-            coordinate = stops.get(i).getLocation();
+            lastStop = stops.get(i);
         }
 
         Button btn = new Button("Remove Last Point");
         btn.setOnAction(this::removeFromDisplay);
 
-        if (!stops.isEmpty()) {
+        if (lastStop != null) {
             journeyChargerTable.getChildren().add(btn);
+        }
 
+        adjustRanges(lastStop, remainingCharge);
+    }
+
+    /**
+     * Adjusts the range sliders sets the desired ranges appropriately
+     *
+     * @param lastStop The last stop on the list of chargers
+     * @param remainingCharge the remaining charger percentage
+     */
+    private void adjustRanges(Stop lastStop, double remainingCharge) {
+        if (lastStop != null) {
             double previousRange = journeyManager.getDesiredRange();
 
-            journeyManager.setCurrentCoordinate(coordinate);
+            journeyManager.setCurrentCoordinate(lastStop.getLocation());
             journeyManager.setDesiredRange(previousRange - remainingCharge
                     * journeyManager.getSelectedJourney().getVehicle().getMaxRange() / 100.0);
             rangeSlider.setValue(journeyManager.getDesiredRange()
                     / journeyManager.getSelectedJourney().getVehicle().getMaxRange() * 100.0);
 
-        } else if (journeyManager.getStart() != null) {
+            if (lastStop.getCharger() == null) {
+                rangeSlider.setDisable(true);
+            }
 
+        } else if (journeyManager.getStart() != null) {
             journeyManager.setCurrentCoordinate(journeyManager.getStart());
             journeyManager.setDesiredRange((double) journeyManager
                     .getSelectedJourney().getVehicle().getMaxRange());
@@ -750,6 +810,11 @@ public class JourneyController {
      * Handles updates of vehicle range slider
      */
     public void sliderUpdated() {
+        if (journeyManager.getSelectedJourney().getEndPosition() == journeyManager
+                .getCurrentCoordinate() && journeyManager
+                .getSelectedJourney().getStops().isEmpty()) {
+            journeyManager.setCurrentCoordinate(journeyManager.getStart());
+        }
         journeyManager.setDesiredRange(rangeSlider.getValue()
                 * journeyManager.getSelectedJourney().getVehicle().getMaxRange() / 100.0);
         if (journeyManager.getSelectedJourney().getStartPosition() != null) {

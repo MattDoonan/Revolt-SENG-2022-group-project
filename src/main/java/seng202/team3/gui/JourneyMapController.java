@@ -69,6 +69,11 @@ public class JourneyMapController extends MapHandler {
                     charger.getLocation().getLat(), charger.getLocation().getLon(),
                     charger.getId(), isEditable);
         }
+        for (Stop stop : journeyController.getManager().getStops()) {
+
+            javaScriptConnector.call("addPoint", stop.getLocation().getAddress(),
+                    stop.getLocation().getLat(), stop.getLocation().getLon());
+        }
         if (journeyController.getManager().getCurrentCoordinate() != null) {
             addCircle();
         }
@@ -78,7 +83,7 @@ public class JourneyMapController extends MapHandler {
     /**
      * Adds a marker either at the start or destination according to string input
      *
-     * @param position a String of either "Start" or "Destination"
+     * @param position a String of either "Start" or "Destination" or "Stop"
      */
     public void positionMarker(String position) {
         javaScriptConnector.call("addCoordinate", position + ":" + "\n"
@@ -116,8 +121,13 @@ public class JourneyMapController extends MapHandler {
 
             int i = 1;
             for (Stop stop : journeyController.getManager().getStops()) {
-                javaScriptConnector.call("addLocationToRoute", stop.getLocation().getLat(),
-                        stop.getLocation().getLon(), stop.getId(), "c", i);
+                if (stop.getCharger() != null) {
+                    javaScriptConnector.call("addLocationToRoute", stop.getLocation().getLat(),
+                            stop.getLocation().getLon(), stop.getCharger().getId(), "c", i);
+                } else {
+                    javaScriptConnector.call("addLocationToRoute", stop.getLocation().getLat(),
+                            stop.getLocation().getLon(), stop.getId(), "p", i);
+                }
                 i += 1;
             }
 

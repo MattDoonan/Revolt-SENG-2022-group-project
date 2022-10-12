@@ -116,7 +116,7 @@
 
             map.on("click", (map_event) => {
                 let latlng = map.mouseEventToLatLng(map_event.originalEvent)
-                if (!isRoute && !setJourney()) {
+                if (!isRoute || isJourney) {
                     javaScriptBridge.addCoordinateFromClick(`{"lat": ${latlng.lat}, "lng": ${latlng.lng}}`)
                     addCoordinate("Selected Coordinate", latlng.lat, latlng.lng)
                     javaScriptBridge.refreshTable()
@@ -241,9 +241,17 @@
          * @param lng longitude to place coordinate marker at
          */
         function addCoordinate(title, lat, lng) {
+			let popup = title + ": [" + lat.toFixed(4) + ", " + lng.toFixed(4) + "]"
+
+			if (isJourney) {
+				popup += "<br><center><button type='button' style='background: #c61c1c; color: white;"
+						+" border-radius: 5px;' onclick='javaScriptBridge.addStopInJourney("
+						+ ")'>Add a Stop</button></center>"
+			}
+
             removeCoordinate()
             coordinate = new L.Marker([lat, lng], { icon: redIcon })
-            coordinate.bindPopup(title + ": [" + lat.toFixed(4) + ", " + lng.toFixed(4) + "]")
+            coordinate.bindPopup(popup)
             coordinate.on("click", function (ev) { coordinate.openPopup() })
             coordinate.addTo(map)
         }

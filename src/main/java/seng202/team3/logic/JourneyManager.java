@@ -185,6 +185,15 @@ public class JourneyManager extends ChargerHandler {
     }
 
     /**
+     * Adds a stop without a charger
+     *
+     * @param coordinate the coordinate of the stop
+     */
+    public void addNoChargerStop(Coordinate coordinate) {
+        selectedJourney.addStop(new Stop(coordinate.getLat(), coordinate.getLon()));
+    }
+
+    /**
      * Removes the last stop
      */
     public void removeLastStop() {
