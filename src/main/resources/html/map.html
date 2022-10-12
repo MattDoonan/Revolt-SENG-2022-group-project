@@ -64,6 +64,13 @@
 				popupAnchor: [0, -38],
 			});
 
+			let larheChargerMarker = L.icon({
+				iconUrl: "icons/charger_marker.png",
+				iconSize: [40, 60],
+				iconAnchor: [19, 38],
+				popupAnchor: [0, -38],
+			});
+
 			/**
 			 * This object can be returned to our java code, where we can call the functions we define inside of it
 			 */
@@ -214,6 +221,9 @@
 				m.on("mouseover", function (ev) {
 					m.openPopup();
 				});
+				// m.on("click", function () {
+				// 	m.setIcon(larheChargerMarker);
+				// });
 				m.addTo(map).on("click", (e) =>
 					javaScriptBridge.chargerHandler(id)
 				);
