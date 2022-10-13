@@ -21,6 +21,7 @@ import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.data.entity.User;
 import seng202.team3.gui.AdminController;
 import seng202.team3.logic.AdminManager;
+import javafx.scene.control.TableView;
 
 /**
  * AdminPageTestFx for {@link seng202.team3.gui.AdminController}
@@ -108,11 +109,7 @@ public class AdminPageTestFx extends TestFxBase {
     public void changePermissions() {
         clickOn("#menu");
         clickOn("#admin");
-        clickOn("#table");
-        for (int i = 0; i < 3; i++) {
-            press(KeyCode.DOWN);
-            release(KeyCode.DOWN);
-        }
+        clickOn("userOne");
         clickOn("#updatePermissions");
         assertEquals(PermissionLevel.ADMIN, manager.getUserList().get(3).getLevel());
     }
@@ -151,11 +148,7 @@ public class AdminPageTestFx extends TestFxBase {
      */
     @Test
     public void deleteCurrentAdmin() {
-        clickOn("#table");
-        press(KeyCode.DOWN);
-        release(KeyCode.DOWN);
-        press(KeyCode.UP);
-        release(KeyCode.UP);
+        ((TableView<?>) this.find("#table")).getSelectionModel().select(0);
         clickOn("#delete");
         clickOn("#okay");
     }
