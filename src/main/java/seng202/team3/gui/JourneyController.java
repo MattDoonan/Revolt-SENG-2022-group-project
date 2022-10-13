@@ -32,6 +32,7 @@ import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
+import seng202.team3.data.entity.Entity;
 import seng202.team3.data.entity.EntityType;
 import seng202.team3.data.entity.Journey;
 import seng202.team3.data.entity.Stop;
@@ -285,7 +286,6 @@ public class JourneyController {
     @FXML
     public void setStart() {
         journeyManager.setCurrentCoordinate(GeoLocationHandler.getCoordinate());
-        journeyManager.makeCoordinateName();
         Coordinate position = journeyManager.getPosition();
         if (position != null && journeyManager.getSelectedJourney().getVehicle() != null) {
             journeyManager.setDesiredRange(rangeSlider.getValue()
@@ -312,7 +312,6 @@ public class JourneyController {
     @FXML
     public void setDestination() {
         journeyManager.setCurrentCoordinate(GeoLocationHandler.getCoordinate());
-        journeyManager.makeCoordinateName();
         Coordinate position = journeyManager.getPosition();
         Coordinate prevPoint = null;
 
@@ -605,7 +604,6 @@ public class JourneyController {
     public void populateTable() {
         journeyUpdateManager.resetQuery();
         addToDisplay(journeyUpdateManager.getData());
-        // TODO: setIdForTesting();
     }
 
     /**
@@ -614,8 +612,6 @@ public class JourneyController {
      * @param journeysToAdd Observable list of journey objects
      */
     private void addToDisplay(ObservableList<Journey> journeysToAdd) {
-
-        final Coordinate currentPosition = GeoLocationHandler.getCoordinate();
 
         previousJourneyTable.getItems().clear();
         previousJourneyTable.setItems(journeysToAdd);
@@ -632,8 +628,6 @@ public class JourneyController {
                 journey.getValue().getStartDate()));
         previousJourneyTable.getSortOrder().add(journeyDateCol);
         previousJourneyTable.sort();
-
-        GeoLocationHandler.setCoordinate(currentPosition);
     }
 
     /**
@@ -702,7 +696,7 @@ public class JourneyController {
 
         try {
             List<Vehicle> vehicleData = new ArrayList<>();
-            for (Object o : SqlInterpreter.getInstance()
+            for (Entity o : SqlInterpreter.getInstance()
                     .readData(new QueryBuilderImpl().withSource(EntityType.VEHICLE)
                             .withFilter("owner",
                                     Integer.toString(UserManager.getUser().getId()),
