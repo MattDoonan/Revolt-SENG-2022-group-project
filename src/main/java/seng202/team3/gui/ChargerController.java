@@ -31,6 +31,8 @@ import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
+import seng202.team3.data.entity.Entity;
+import seng202.team3.data.entity.EntityType;
 import seng202.team3.logic.GeoLocationHandler;
 import seng202.team3.logic.UserManager;
 
@@ -215,6 +217,12 @@ public class ChargerController {
     private Button deleteButton;
 
     /**
+     * Invisible label to store views for the new charger object
+     */
+    @FXML
+    private Label views;
+
+    /**
      * Initialises the ChargerController, loading in the charger info
      */
     public ChargerController() {
@@ -288,6 +296,7 @@ public class ChargerController {
             if (charger.getParkingCost()) {
                 costParks.setSelected(true);
             }
+            views.setText("" + charger.getViews());
         } else {
             address.setText(prevCoordinate.getAddress());
             if (GeoLocationHandler.getCoordinate() != GeoLocationHandler.DEFAULT_COORDINATE) {
@@ -296,6 +305,7 @@ public class ChargerController {
             }
             owner.setText(UserManager.getUser().getAccountName());
             deleteButton.setOpacity(0.0);
+            views.setText("0");
         }
         displayConnectorInfo();
     }
@@ -307,8 +317,6 @@ public class ChargerController {
     public void saveChanges() {
         Charger newCharger = new Charger();
         Coordinate coordinate = new Coordinate();
-        coordinate.setXpos(0.0);
-        coordinate.setYpos(0.0);
 
         try {
             coordinate.setLat(Double.parseDouble(lat.getText()));
@@ -318,7 +326,7 @@ public class ChargerController {
         }
 
         if (charger == null) {
-            newCharger.setOwnerId(UserManager.getUser().getUserid());
+            newCharger.setOwnerId(UserManager.getUser().getId());
             newCharger.setDateOpened(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss")
                     .format(Date.from(Instant.now())));
         } else {
@@ -327,7 +335,7 @@ public class ChargerController {
             coordinate.setLon(location.getLon());
             newCharger.setOwnerId(charger.getOwnerId());
             newCharger.setDateOpened(charger.getDateOpened());
-            newCharger.setChargerId(charger.getChargerId());
+            newCharger.setId(charger.getId());
         }
         coordinate.setAddress(address.getText());
         if (address.getText().length() == 0) {
@@ -343,6 +351,7 @@ public class ChargerController {
         newCharger.setChargeCost(cost.isSelected());
         newCharger.setParkingCost(costParks.isSelected());
         newCharger.setHasAttraction(attractions.isSelected());
+        newCharger.setViews(Integer.parseInt(views.getText()));
 
         try {
             newCharger.setTimeLimit(Double.parseDouble(time.getText()));
@@ -387,12 +396,12 @@ public class ChargerController {
     public void makeConnectors() {
         ArrayList<Connector> connectArray = new ArrayList<>();
         if (charger != null) {
-            QueryBuilder query = new QueryBuilderImpl().withSource("connector")
-                    .withFilter("chargerid", Integer.toString(charger.getChargerId()),
+            QueryBuilder query = new QueryBuilderImpl().withSource(EntityType.CONNECTOR)
+                    .withFilter("chargerid", Integer.toString(charger.getId()),
                             ComparisonType.EQUAL);
             try {
-                for (Object object : SqlInterpreter.getInstance()
-                        .readData(query.build(), Connector.class)) {
+                for (Entity object : SqlInterpreter.getInstance()
+                        .readData(query.build())) {
                     connectArray.add((Connector) object);
                 }
             } catch (IOException e) {

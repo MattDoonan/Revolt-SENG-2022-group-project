@@ -45,7 +45,7 @@ public class MapManager {
                 coordinate.getAddress());
 
         manager.setPosition();
-        MenuController.getController().refreshTable();
+        MenuController.getController().getListController().refreshTable();
     }
 
 }

@@ -11,6 +11,7 @@ import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.database.QueryBuilder;
 import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
+import seng202.team3.data.entity.EntityType;
 import seng202.team3.data.entity.User;
 import seng202.team3.data.entity.Vehicle;
 
@@ -53,8 +54,23 @@ public class GarageManager {
      * Load the initial query
      */
     public void resetQuery() {
-        vehicleDataQuery = new QueryBuilderImpl().withSource("vehicle")
-                .withFilter("owner", Integer.toString(user.getUserid()), ComparisonType.EQUAL);
+        vehicleDataQuery = new QueryBuilderImpl().withSource(EntityType.VEHICLE)
+                .withFilter("owner", Integer.toString(user.getId()), ComparisonType.EQUAL);
+    }
+
+    /**
+     * Edits query so it gets the selected vehicle
+     *
+     * @return the selected vehicle
+     */
+    public Vehicle getSelectedVehicle() {
+        vehicleDataQuery.withFilter("currVehicle", "true", ComparisonType.EQUAL);
+        getAllVehicles();
+        resetQuery();
+        if (vehicleData.size() == 1) {
+            return vehicleData.get(0);
+        }
+        return null;
     }
 
     /**
@@ -65,7 +81,7 @@ public class GarageManager {
         try {
             List<Vehicle> vehicleList = new ArrayList<>();
             for (Object o : SqlInterpreter.getInstance()
-                    .readData(vehicleDataQuery.build(), Vehicle.class)) {
+                    .readData(vehicleDataQuery.build())) {
                 vehicleList.add((Vehicle) o);
             }
 

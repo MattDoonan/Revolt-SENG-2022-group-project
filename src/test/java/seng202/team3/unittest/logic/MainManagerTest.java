@@ -17,12 +17,14 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import seng202.team3.data.database.ComparisonType;
+import seng202.team3.data.database.CsvInterpreter;
 import seng202.team3.data.database.QueryBuilder;
 import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
+import seng202.team3.data.entity.EntityType;
 import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.data.entity.User;
 import seng202.team3.logic.ChargerManager;
@@ -61,7 +63,7 @@ public class MainManagerTest {
     public void setUp() {
         testUser = new User("admin@admin.com", "admin",
                 PermissionLevel.USER);
-        testUser.setUserid(1);
+        testUser.setId(1);
 
         UserManager.setUser(testUser);
 
@@ -84,7 +86,7 @@ public class MainManagerTest {
      */
     @Test
     public void positionTest1() {
-        Coordinate coordinate = new Coordinate(1.1, 2.3, -43.53418, 172.627572);
+        Coordinate coordinate = new Coordinate(-43.53418, 172.627572);
         GeoLocationHandler.setCoordinate(coordinate, "empty");
         manage.setPosition();
         assertEquals(coordinate, manage.getPosition());
@@ -93,7 +95,7 @@ public class MainManagerTest {
 
     @Test
     public void positionTest2() {
-        Coordinate coordinate = new Coordinate(4.4, 6.1, 23.2334, 32.3242);
+        Coordinate coordinate = new Coordinate(23.2334, 32.3242);
         GeoLocationHandler.setCoordinate(coordinate, "empty");
         manage.setPosition();
         assertEquals(coordinate, manage.getPosition());
@@ -107,7 +109,7 @@ public class MainManagerTest {
         Connector dummyConnector = new Connector("ChardaMo", "AC", "Available", "123", 3);
         ArrayList<Connector> connectorList = new ArrayList<>(1);
         connectorList.add(dummyConnector);
-        Coordinate coord = new Coordinate(4.5, 5.7, -36.85918, 174.76602);
+        Coordinate coord = new Coordinate(-36.85918, 174.76602);
         Charger c = new Charger(connectorList, "Test1", coord, 1, 0.3,
                 "Meridian", "2020/1/1 00:00:00", true, true, true, true);
         manage.setSelectedCharger(c);
@@ -124,11 +126,11 @@ public class MainManagerTest {
      */
     @Test
     public void originalListTest() throws IOException {
-        db.addChargerCsvToData("csvtest/filtering");
+        new CsvInterpreter().importChargersToDatabase("/csvtest/filtering.csv");
 
-        QueryBuilder q = new QueryBuilderImpl().withSource("charger");
+        QueryBuilder q = new QueryBuilderImpl().withSource(EntityType.CHARGER);
         ArrayList<Charger> chargerList = new ArrayList<>();
-        for (Object o : SqlInterpreter.getInstance().readData(q.build(), Charger.class)) {
+        for (Object o : SqlInterpreter.getInstance().readData(q.build())) {
             chargerList.add((Charger) o);
         }
 
@@ -146,16 +148,16 @@ public class MainManagerTest {
      */
     @Test
     public void distanceOriginalListTest() throws IOException {
-        db.addChargerCsvToData("csvtest/filtering");
+        new CsvInterpreter().importChargersToDatabase("/csvtest/filtering.csv");
 
-        QueryBuilder q = new QueryBuilderImpl().withSource("charger");
+        QueryBuilder q = new QueryBuilderImpl().withSource(EntityType.CHARGER);
         ArrayList<Charger> chargerList = new ArrayList<>();
 
-        for (Object o : SqlInterpreter.getInstance().readData(q.build(), Charger.class)) {
+        for (Object o : SqlInterpreter.getInstance().readData(q.build())) {
             chargerList.add((Charger) o);
         }
 
-        Coordinate coordinate = new Coordinate(1.1, 2.3, -43.53418, 172.627572);
+        Coordinate coordinate = new Coordinate(-43.53418, 172.627572);
         ArrayList<Charger> cc;
 
         cc = charge.getNearbyChargers(chargerList, coordinate, 50.0);
@@ -179,17 +181,17 @@ public class MainManagerTest {
      */
     @Test
     public void changeDistanceTest() throws IOException {
-        db.addChargerCsvToData("csvtest/filtering");
+        new CsvInterpreter().importChargersToDatabase("/csvtest/filtering.csv");
 
-        QueryBuilder q = new QueryBuilderImpl().withSource("charger");
+        QueryBuilder q = new QueryBuilderImpl().withSource(EntityType.CHARGER);
         ArrayList<Charger> chargerList = new ArrayList<>();
         ArrayList<Charger> cc;
 
-        for (Object o : SqlInterpreter.getInstance().readData(q.build(), Charger.class)) {
+        for (Object o : SqlInterpreter.getInstance().readData(q.build())) {
             chargerList.add((Charger) o);
         }
 
-        Coordinate coordinate = new Coordinate(1.1, 2.3, -43.53418, 172.627572);
+        Coordinate coordinate = new Coordinate(-43.53418, 172.627572);
         cc = charge.getNearbyChargers(chargerList, coordinate, 90.0);
         GeoLocationHandler.setCoordinate(coordinate, "empty");
         manage.setPosition();
@@ -212,12 +214,12 @@ public class MainManagerTest {
      */
     @Test
     public void addAcTypeQuery() throws IOException {
-        db.addChargerCsvToData("csvtest/filtering");
+        new CsvInterpreter().importChargersToDatabase("/csvtest/filtering.csv");
 
-        QueryBuilder q = new QueryBuilderImpl().withSource("charger")
+        QueryBuilder q = new QueryBuilderImpl().withSource(EntityType.CHARGER)
                 .withFilter("connectorcurrent", "AC", ComparisonType.CONTAINS);
         ArrayList<Charger> chargerList = new ArrayList<>();
-        for (Object o : SqlInterpreter.getInstance().readData(q.build(), Charger.class)) {
+        for (Object o : SqlInterpreter.getInstance().readData(q.build())) {
             chargerList.add((Charger) o);
         }
 
@@ -237,13 +239,13 @@ public class MainManagerTest {
      */
     @Test
     public void addDcTypeQuery() throws IOException {
-        db.addChargerCsvToData("csvtest/filtering");
+        new CsvInterpreter().importChargersToDatabase("/csvtest/filtering.csv");
 
-        QueryBuilder q = new QueryBuilderImpl().withSource("charger")
+        QueryBuilder q = new QueryBuilderImpl().withSource(EntityType.CHARGER)
                 .withFilter("connectorcurrent", "DC", ComparisonType.CONTAINS);
         ArrayList<Charger> chargerList = new ArrayList<>();
         try {
-            for (Object o : SqlInterpreter.getInstance().readData(q.build(), Charger.class)) {
+            for (Object o : SqlInterpreter.getInstance().readData(q.build())) {
                 chargerList.add((Charger) o);
             }
         } catch (IOException e) {
@@ -265,12 +267,12 @@ public class MainManagerTest {
      */
     @Test
     public void addAttractionQuery() throws IOException {
-        db.addChargerCsvToData("csvtest/filtering");
-        QueryBuilder q = new QueryBuilderImpl().withSource("charger")
+        new CsvInterpreter().importChargersToDatabase("/csvtest/filtering.csv");
+        QueryBuilder q = new QueryBuilderImpl().withSource(EntityType.CHARGER)
                 .withFilter("hastouristattraction", "True", ComparisonType.CONTAINS);
         ArrayList<Charger> chargerList = new ArrayList<>();
         try {
-            for (Object o : SqlInterpreter.getInstance().readData(q.build(), Charger.class)) {
+            for (Object o : SqlInterpreter.getInstance().readData(q.build())) {
                 chargerList.add((Charger) o);
             }
         } catch (IOException e) {
@@ -293,12 +295,12 @@ public class MainManagerTest {
      */
     @Test
     public void addChargingCostQuery() throws IOException {
-        db.addChargerCsvToData("csvtest/filtering");
-        QueryBuilder q = new QueryBuilderImpl().withSource("charger")
+        new CsvInterpreter().importChargersToDatabase("/csvtest/filtering.csv");
+        QueryBuilder q = new QueryBuilderImpl().withSource(EntityType.CHARGER)
                 .withFilter("haschargingcost", "False", ComparisonType.CONTAINS);
         ArrayList<Charger> chargerList = new ArrayList<>();
         try {
-            for (Object o : SqlInterpreter.getInstance().readData(q.build(), Charger.class)) {
+            for (Object o : SqlInterpreter.getInstance().readData(q.build())) {
                 chargerList.add((Charger) o);
             }
         } catch (IOException e) {
@@ -320,13 +322,13 @@ public class MainManagerTest {
      */
     @Test
     public void queryChargeCostWithCurrentTest() throws IOException {
-        db.addChargerCsvToData("csvtest/filtering");
-        QueryBuilder q = new QueryBuilderImpl().withSource("charger")
+        new CsvInterpreter().importChargersToDatabase("/csvtest/filtering.csv");
+        QueryBuilder q = new QueryBuilderImpl().withSource(EntityType.CHARGER)
                 .withFilter("haschargingcost", "False", ComparisonType.CONTAINS)
                 .withFilter("connectorcurrent", "DC", ComparisonType.CONTAINS);
         ArrayList<Charger> chargerList = new ArrayList<>();
         try {
-            for (Object o : SqlInterpreter.getInstance().readData(q.build(), Charger.class)) {
+            for (Object o : SqlInterpreter.getInstance().readData(q.build())) {
                 chargerList.add((Charger) o);
             }
         } catch (IOException e) {
@@ -344,13 +346,13 @@ public class MainManagerTest {
 
     @Test
     public void queryTouristAttractionWithCurrentTest() throws IOException {
-        db.addChargerCsvToData("csvtest/filtering");
-        QueryBuilder q = new QueryBuilderImpl().withSource("charger")
+        new CsvInterpreter().importChargersToDatabase("/csvtest/filtering.csv");
+        QueryBuilder q = new QueryBuilderImpl().withSource(EntityType.CHARGER)
                 .withFilter("hastouristattraction", "True", ComparisonType.CONTAINS)
                 .withFilter("connectorcurrent", "AC", ComparisonType.CONTAINS);
         ArrayList<Charger> chargerList = new ArrayList<>();
         try {
-            for (Object o : SqlInterpreter.getInstance().readData(q.build(), Charger.class)) {
+            for (Object o : SqlInterpreter.getInstance().readData(q.build())) {
                 chargerList.add((Charger) o);
             }
         } catch (IOException e) {
@@ -373,11 +375,11 @@ public class MainManagerTest {
      */
     @Test
     public void positionNull() throws IOException {
-        db.addChargerCsvToData("csvtest/filtering");
-        QueryBuilder q = new QueryBuilderImpl().withSource("charger");
+        new CsvInterpreter().importChargersToDatabase("/csvtest/filtering.csv");
+        QueryBuilder q = new QueryBuilderImpl().withSource(EntityType.CHARGER);
         ArrayList<Charger> chargerList = new ArrayList<>();
         try {
-            for (Object o : SqlInterpreter.getInstance().readData(q.build(), Charger.class)) {
+            for (Object o : SqlInterpreter.getInstance().readData(q.build())) {
                 chargerList.add((Charger) o);
             }
         } catch (IOException e) {

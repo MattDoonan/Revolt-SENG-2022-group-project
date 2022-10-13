@@ -1,335 +1,330 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>Map</title>
-		<link
-			rel="stylesheet"
-			href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
-		/>
-		<link
-			rel="stylesheet"
-			href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css"
-		/>
-		<link
-			rel="stylesheet"
-			href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css"
-		/>
 
-		<meta name="viewport" content="initial-scale=1.0" />
-		<meta charset="utf-8" />
-		<style>
-			html,
-			body {
-				height: 100%;
-				margin: 0;
-				padding: 0;
-			}
+<head>
+	<title>Map</title>
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" />
+	<link rel="stylesheet"
+		href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+	<link rel="stylesheet"
+		href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
 
-			#map {
-				height: 100%;
-			}
-		</style>
-	</head>
+	<meta name="viewport" content="initial-scale=1.0" />
+	<meta charset="utf-8" />
+	<style>
+		html,
+		body {
+			height: 100%;
+			margin: 0;
+			padding: 0;
+		}
 
-	<body>
-		<div id="map"></div>
-		<script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
-		<script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
-		<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
-		<script>
-			let map;
-			let defaultZoom = 6;
-			let zoomedIn = 13;
-			let markers = [];
-			let coordinate;
-			var javaScriptBridge; // must be declared as var (will not be correctly assigned in java with let keyword)
-			let isRoute;
-			let routeToCharger;
-			let pointCoordinates = []; // contains a list of all the coordinates in a route in order.
+		#map {
+			height: 100%;
+		}
+	</style>
+</head>
 
-			/**
-			 * Creates a red icon
-			 */
-			let redIcon = L.icon({
-				iconUrl: "icons/red_icon.png",
-				iconSize: [38, 38],
-				iconAnchor: [19, 38],
-				popupAnchor: [0, -38],
-			});
+<body>
+	<div id="map"></div>
+	<script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
+	<script
+		src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+	<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+	<script>
+		let map;
+		let defaultZoom = 6;
+		let zoomedIn = 13;
+		let markers = [];
+		let coordinate;
+		var javaScriptBridge; // must be declared as var (will not be correctly assigned in java with let keyword)
+		let isRoute;
+		let routeToCharger;
+		let pointCoordinates = []; // contains a list of all the coordinates in a route in order.
 
-			let chargerMarker = L.icon({
-				iconUrl: "icons/charger_marker.png",
-				iconSize: [32, 47],
-				iconAnchor: [19, 38],
-				popupAnchor: [0, -38],
-			});
+		/**
+		 * Creates a red icon
+		 */
+		let redIcon = L.icon({
+			iconUrl: "icons/red_icon.png",
+			iconSize: [38, 38],
+			iconAnchor: [19, 38],
+			popupAnchor: [0, -38],
+		});
 
-			/**
-			 * This object can be returned to our java code, where we can call the functions we define inside of it
-			 */
-			let jsConnector = {
-				addMarker,
-				addCoordinate,
-				removeCoordinate,
-				movePosition,
-				addRoute,
-				removeRoute,
-				initMap,
-				changeZoom,
-				clearMarkers,
-				addLocationToRoute,
-				relocate,
+		let chargerMarker = L.icon({
+			iconUrl: "icons/charger_marker.png",
+			iconSize: [32, 47],
+			iconAnchor: [19, 38],
+			popupAnchor: [0, -38],
+		});
+
+		/**
+		 * This object can be returned to our java code, where we can call the functions we define inside of it
+		 */
+		let jsConnector = {
+			addMarker,
+			addCoordinate,
+			removeCoordinate,
+			movePosition,
+			addRoute,
+			removeRoute,
+			initMap,
+			changeZoom,
+			clearMarkers,
+			addLocationToRoute,
+			relocate,
+		};
+
+		/**
+		 * Creates an object with the lat, lon, id and type attributes
+		 *
+		 * @param lat the latitude of the object
+		 * @param lon the longitude of the object
+		 * @param id the id of the object according to the database, or address of coordinate for now
+		 * @param type the type of object ("p" = coordinate, "c" = charger)
+		 * @constructor
+		 */
+		function Location(lat, lon, id, type) {
+			this.lat = lat;
+			this.lon = lon;
+			this.id = id;
+			this.type = type;
+		}
+
+		/**
+		 * creates and initialises the Google map, also defines on click event that calls java code
+		 *
+		 */
+		function initMap(lat, lon, zoomed) {
+			let mapOptions = {
+				center: [lat, lon],
+				zoom: defaultZoom,
 			};
 
-			/**
-			 * Creates an object with the lat, lon, id and type attributes
-			 *
-			 * @param lat the latitude of the object
-			 * @param lon the longitude of the object
-			 * @param id the id of the object according to the database, or address of coordinate for now
-			 * @param type the type of object ("p" = coordinate, "c" = charger)
-			 * @constructor
-			 */
-			function Location(lat, lon, id, type) {
-				this.lat = lat;
-				this.lon = lon;
-				this.id = id;
-				this.type = type;
+			if (zoomed) {
+				mapOptions.zoom = zoomedIn;
 			}
 
-			/**
-			 * creates and initialises the Google map, also defines on click event that calls java code
-			 *
-			 */
-			function initMap(lat, lon, zoomed) {
-				let mapOptions = {
-					center: [lat, lon],
-					zoom: defaultZoom,
-				};
-
-				if (zoomed) {
-					mapOptions.zoom = zoomedIn;
+			map = new L.map("map", mapOptions);
+			new L.TileLayer(
+				"https://tile.csse.canterbury.ac.nz/hot/{z}/{x}/{y}.png",
+				{
+					// UCs tilemap server
+					attribution:
+						"© OpenStreetMap contributors<br>Served by University of Canterbury",
 				}
+			).addTo(map);
 
-				map = new L.map("map", mapOptions);
-				new L.TileLayer(
-					"https://tile.csse.canterbury.ac.nz/hot/{z}/{x}/{y}.png",
-					{
-						// UCs tilemap server
-						attribution:
-							"© OpenStreetMap contributors<br>Served by University of Canterbury",
-					}
-				).addTo(map);
+			createBar().addTo(map);
+			addCoordinate("Current location: ", lat, lon);
 
-				createBar().addTo(map);
-				addCoordinate("Current location: ", lat, lon);
-
-				map.on("click", (map_event) => {
-					let latlng = map.mouseEventToLatLng(
-						map_event.originalEvent
-					);
-					if (!isRoute) {
-						javaScriptBridge.addCoordinateFromClick(
-							`{"lat": ${latlng.lat}, "lng": ${latlng.lng}}`
-						);
-						addCoordinate(
-							"Selected Coordinate",
-							latlng.lat,
-							latlng.lng
-						);
-						javaScriptBridge.refreshTable();
-					}
-				});
-			}
-
-			/**
-			 * Creates and sets a searchBar for basic geolocation needs and parsing
-			 */
-			function createBar() {
-				let searchBar = L.Control.geocoder({
-					geocoder: new L.Control.Geocoder.Nominatim({
-						geocodingQueryParams: {
-							countrycodes: "nz",
-						},
-					}),
-					defaultMarkGeocode: false,
-					position: "topleft",
-					collapsed: false,
-					placeholder: "Search location",
-				}).on("markgeocode", function (e) {
-					let latlng = e.geocode.center;
+			map.on("click", (map_event) => {
+				let latlng = map.mouseEventToLatLng(
+					map_event.originalEvent
+				);
+				if (!isRoute) {
 					javaScriptBridge.addCoordinateFromClick(
 						`{"lat": ${latlng.lat}, "lng": ${latlng.lng}}`
 					);
-					addCoordinate(e.geocode.name, latlng.lat, latlng.lng);
-					javaScriptBridge.addLocationName(e.geocode.name);
-					movePosition(latlng.lat, latlng.lng);
-				});
-				return searchBar;
-			}
-
-			/**
-			 * Updates the zoom
-			 *
-			 * @param zoom an integer referencing the zoom level
-			 */
-			function changeZoom() {
-				map.setZoom(zoomedIn);
-			}
-
-			/**
-			 * Relocates user view to new position and adds marker
-			 */
-			function relocate(lat, lon, locationAccepted) {
-				removeCoordinate();
-				addCoordinate("Current Coordinate", lat, lon);
-				movePosition(lat, lon);
-				if (locationAccepted) {
-					changeZoom();
+					addCoordinate(
+						"Selected Coordinate",
+						latlng.lat,
+						latlng.lng
+					);
+					javaScriptBridge.refreshTable();
 				}
-			}
+			});
+		}
 
-			/**
-			 * Adds a charger marker to the map and stores it in the markers array for later use (e.g. removal)
-			 *
-			 * @param title tooltip to display on hover
-			 * @param lat latitude to place marker at
-			 * @param lng longitude to place marker at
-			 * @param id the id of the marker (charger id)
-			 * @param isEditable true if editable
-			 */
-			function addMarker(title, lat, lng, id, isEditable) {
-				let m = new L.Marker([lat, lng], { icon: chargerMarker });
-				m.id = id;
-				let textOutput = "";
-
-				//Allocates the text output on button according to permission level
-				if (isEditable) {
-					textOutput =
-						"<br><button type='button' onclick='javaScriptBridge.loadMoreInfo(" +
-						id +
-						")'>Edit Charger</button>";
-				}
-				m.bindPopup("Address: " + title + textOutput);
-				m.on("mouseover", function (ev) {
-					m.openPopup();
-				});
-				m.addTo(map).on("click", (e) =>
-					javaScriptBridge.chargerHandler(id)
+		/**
+		 * Creates and sets a searchBar for basic geolocation needs and parsing
+		 */
+		function createBar() {
+			let searchBar = L.Control.geocoder({
+				geocoder: new L.Control.Geocoder.Nominatim({
+					geocodingQueryParams: {
+						countrycodes: "nz",
+					},
+				}),
+				defaultMarkGeocode: false,
+				position: "topleft",
+				collapsed: false,
+				placeholder: "Search location",
+			}).on("markgeocode", function (e) {
+				let latlng = e.geocode.center;
+				javaScriptBridge.addCoordinateFromClick(
+					`{"lat": ${latlng.lat}, "lng": ${latlng.lng}}`
 				);
-				markers.push(m);
-				if (coordinate) {
-					coordinate.addTo(map);
-				}
-			}
+				addCoordinate(e.geocode.name, latlng.lat, latlng.lng);
+				javaScriptBridge.addLocationName(e.geocode.name);
+				movePosition(latlng.lat, latlng.lng);
+			});
+			return searchBar;
+		}
 
-			/**
-			 * Clears the markers
-			 */
-			function clearMarkers() {
-				markers.forEach(function (item, index) {
-					item.remove();
-				});
-				markers = [];
-			}
+		/**
+		 * Updates the zoom
+		 *
+		 * @param zoom an integer referencing the zoom level
+		 */
+		function changeZoom() {
+			map.setZoom(zoomedIn);
+		}
 
-			/**
-			 * Adds a coordinate to the map and stores it by itself
-			 * @param title tooltip to display on hover
-			 * @param lat latitude to place coordinate marker at
-			 * @param lng longitude to place coordinate marker at
-			 */
-			function addCoordinate(title, lat, lng) {
-				removeCoordinate();
-				coordinate = new L.Marker([lat, lng], { icon: redIcon });
-				coordinate.bindPopup(
-					title + ": [" + lat.toFixed(4) + ", " + lng.toFixed(4) + "]"
-				);
-				coordinate.on("click", function (ev) {
-					coordinate.openPopup();
-				});
+		/**
+		 * Relocates user view to new position and adds marker
+		 */
+		function relocate(lat, lon, locationAccepted) {
+			removeCoordinate();
+			addCoordinate("Current Coordinate", lat, lon);
+			if (locationAccepted) {
+				map.flyTo([lat, lon], zoomedIn);
+			}
+		}
+
+		/**
+		 * Adds a charger marker to the map and stores it in the markers array for later use (e.g. removal)
+		 *
+		 * @param title tooltip to display on hover
+		 * @param lat latitude to place marker at
+		 * @param lng longitude to place marker at
+		 * @param id the id of the marker (charger id)
+		 * @param isEditable true if editable
+		 */
+		function addMarker(title, lat, lng, id, isEditable) {
+			let m = new L.Marker([lat, lng], { icon: chargerMarker });
+			m.id = id;
+			let textOutput = "";
+
+			//Allocates the text output on button according to permission level
+			if (isEditable) {
+				textOutput =
+					"<br><button type='button' onclick='javaScriptBridge.loadMoreInfo(" +
+					id +
+					")'>Edit Charger</button>";
+			}
+			m.bindPopup("Address: " + title + textOutput);
+			m.on("mouseover", function (ev) {
+				m.openPopup();
+			});
+			m.addTo(map).on("click", (e) =>
+				javaScriptBridge.chargerHandler(id)
+			);
+			markers.push(m);
+			if (coordinate) {
 				coordinate.addTo(map);
 			}
+		}
 
-			/**
-			 * Remove coordinate
-			 */
-			function removeCoordinate() {
-				if (coordinate) {
-					coordinate.remove();
-				}
-			}
+		/**
+		 * Clears the markers
+		 */
+		function clearMarkers() {
+			markers.forEach(function (item, index) {
+				item.remove();
+			});
+			markers = [];
+		}
 
-			/**
-			 * Moves position of centre of map
-			 */
-			function movePosition(lat, lon) {
-				map.panTo(new L.LatLng(lat, lon));
-			}
+		/**
+		 * Adds a coordinate to the map and stores it by itself
+		 * @param title tooltip to display on hover
+		 * @param lat latitude to place coordinate marker at
+		 * @param lng longitude to place coordinate marker at
+		 */
+		function addCoordinate(title, lat, lng) {
+			removeCoordinate();
+			coordinate = new L.Marker([lat, lng], { icon: redIcon });
+			coordinate.bindPopup(
+				title + ": [" + lat.toFixed(4) + ", " + lng.toFixed(4) + "]"
+			);
+			coordinate.on("click", function (ev) {
+				coordinate.openPopup();
+			});
+			coordinate.addTo(map);
+		}
 
-			/**
-			 * Adds a location object to the route using an index to determine location.
-			 *
-			 * @param lat the latitude of the coordinate/charger
-			 * @param lon the longitude of the coordinate/charger
-			 * @param id the id of the coordinate/charger
-			 * @param type the type of object ("p" for coordinate, "c" for charger)
-			 * @param index the index of the object for the list.
-			 */
-			function addLocationToRoute(lat, lon, id, type, index) {
-				let location = new Location(lat, lon, id, type);
-				pointCoordinates.splice(index, 0, location);
-				refreshRoute();
+		/**
+		 * Remove coordinate
+		 */
+		function removeCoordinate() {
+			if (coordinate) {
+				coordinate.remove();
 			}
+		}
 
-			/**
-			 * Refreshes the route to display all points
-			 */
-			function refreshRoute() {
-				if (routeToCharger) {
-					routeToCharger.remove();
-				}
-				let coordinates = [];
-				for (i = 0; i < pointCoordinates.length; i++) {
-					coordinates.push(
-						new L.latLng(
-							pointCoordinates[i].lat,
-							pointCoordinates[i].lon
-						)
-					);
-				}
-				routeToCharger = L.Routing.control({
-					waypoints: coordinates,
-					serviceUrl: "https://tile.csse.canterbury.ac.nz/route/v1",
-					routeWhileDragging: true,
-					geocoder: new L.Control.Geocoder.Nominatim({
-						geocodingQueryParams: {
-							countrycodes: "nz",
-						},
-					}),
-				}).addTo(map);
-			}
+		/**
+		 * Moves position of centre of map
+		 */
+		function movePosition(lat, lon) {
+			map.panTo(new L.LatLng(lat, lon));
+		}
 
-			/**
-			 * Adds a selected route to charger onto the map with selected waypoints
-			 *
-			 */
-			function addRoute() {
-				isRoute = true;
-				refreshRoute();
-			}
+		/**
+		 * Adds a location object to the route using an index to determine location.
+		 *
+		 * @param lat the latitude of the coordinate/charger
+		 * @param lon the longitude of the coordinate/charger
+		 * @param id the id of the coordinate/charger
+		 * @param type the type of object ("p" for coordinate, "c" for charger)
+		 * @param index the index of the object for the list.
+		 */
+		function addLocationToRoute(lat, lon, id, type, index) {
+			let location = new Location(lat, lon, id, type);
+			pointCoordinates.splice(index, 0, location);
+			refreshRoute();
+		}
 
-			/**
-			 * Removes all points on all routes and resets to default
-			 *
-			 */
-			function removeRoute() {
-				isRoute = false;
-				if (routeToCharger) {
-					routeToCharger.remove();
-					pointCoordinates = [];
-				}
+		/**
+		 * Refreshes the route to display all points
+		 */
+		function refreshRoute() {
+			if (routeToCharger) {
+				routeToCharger.remove();
 			}
-		</script>
-	</body>
+			let coordinates = [];
+			for (i = 0; i < pointCoordinates.length; i++) {
+				coordinates.push(
+					new L.latLng(
+						pointCoordinates[i].lat,
+						pointCoordinates[i].lon
+					)
+				);
+			}
+			routeToCharger = L.Routing.control({
+				waypoints: coordinates,
+				serviceUrl: "https://tile.csse.canterbury.ac.nz/route/v1",
+				routeWhileDragging: true,
+				geocoder: new L.Control.Geocoder.Nominatim({
+					geocodingQueryParams: {
+						countrycodes: "nz",
+					},
+				}),
+			}).addTo(map);
+		}
+
+		/**
+		 * Adds a selected route to charger onto the map with selected waypoints
+		 *
+		 */
+		function addRoute() {
+			isRoute = true;
+			refreshRoute();
+		}
+
+		/**
+		 * Removes all points on all routes and resets to default
+		 *
+		 */
+		function removeRoute() {
+			isRoute = false;
+			if (routeToCharger) {
+				routeToCharger.remove();
+				pointCoordinates = [];
+			}
+		}
+	</script>
+</body>
+
 </html>

@@ -38,21 +38,21 @@ public class CalculationsTest {
     @BeforeEach
     public void setUp() {
         // Christchurch Hospital
-        coord1 = new Coordinate(1.1, 2.3, -43.53418, 172.627572, "CHHosp");
+        coord1 = new Coordinate(-43.53418, 172.627572, "CHHosp");
         // Christchurch Boys High School
-        coord2 = new Coordinate(3.5, 4.4, -43.52425, 172.60019, "CHBoys");
+        coord2 = new Coordinate(-43.52425, 172.60019, "CHBoys");
         // Auckland Grammar School
-        coord3 = new Coordinate(4.5, 5.7, -36.85918, 174.76602, "Auckland");
+        coord3 = new Coordinate(-36.85918, 174.76602, "Auckland");
         // Otago Boys School
-        coord4 = new Coordinate(4.8, 7.7, -45.87135, 170.49551, "Otago");
+        coord4 = new Coordinate(-45.87135, 170.49551, "Otago");
         // NZMCA Park, Weedons
-        coord5 = new Coordinate(5.7, 54.5, -43.56326, 172.43662, "Weedons");
+        coord5 = new Coordinate(-43.56326, 172.43662, "Weedons");
         // Ashburton Domain
-        coord6 = new Coordinate(5.9898, 53.2, -43.89523, 171.76171, "Ashburt");
+        coord6 = new Coordinate(-43.89523, 171.76171, "Ashburt");
         // Rakaia Domain
-        coord7 = new Coordinate(5.935, 545.2, -43.74852, 172.02586, "Rakaia");
+        coord7 = new Coordinate(-43.74852, 172.02586, "Rakaia");
         // Ellesmere College
-        coord8 = new Coordinate(65.514, 54.125, -43.75682, 172.28899, "Elles");
+        coord8 = new Coordinate(-43.75682, 172.28899, "Elles");
 
     }
 

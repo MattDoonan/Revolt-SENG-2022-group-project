@@ -2,12 +2,15 @@ package seng202.team3.cucumber.accountsteps;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.testfx.api.FxAssert.verifyThat;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -21,10 +24,6 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.cucumber.java.mk_latn.No;
-import javafx.application.Platform;
-import javafx.collections.ObservableList;
-import javafx.collections.transformation.SortedList;
 import javafx.geometry.VerticalDirection;
 import javafx.scene.Node;
 import javafx.scene.control.TableView;
@@ -33,21 +32,20 @@ import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import seng202.team3.cucumber.CucumberFxBase;
 import seng202.team3.data.database.ComparisonType;
+import seng202.team3.data.database.CsvInterpreter;
 import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
-import seng202.team3.data.entity.*;
+import seng202.team3.data.entity.Charger;
+import seng202.team3.data.entity.Connector;
+import seng202.team3.data.entity.Coordinate;
+import seng202.team3.data.entity.EntityType;
+import seng202.team3.data.entity.PermissionLevel;
+import seng202.team3.data.entity.Entity;
+import seng202.team3.data.entity.User;
 import seng202.team3.gui.AccountController;
 import seng202.team3.gui.MainWindow;
 import seng202.team3.gui.MapHandler;
 import seng202.team3.logic.UserManager;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.testfx.api.FxAssert.verifyThat;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Cucumber Tests designed to check acceptance tests for the account page
@@ -61,9 +59,11 @@ public class AccountPageStepDefs extends CucumberFxBase {
 
     static SqlInterpreter db;
 
-    private static List<Object> chargerObject;
+    private static List<Entity> chargerObject;
 
-    private static List<Object> users;
+    private static List<Entity> users;
+
+    private static User chargerOwner;
 
     /**
      * {@inheritDoc}
@@ -90,32 +90,31 @@ public class AccountPageStepDefs extends CucumberFxBase {
     public void init() throws Exception {
         db = SqlInterpreter.getInstance();
         db.defaultDatabase();
-        db.addChargerCsvToData("csvtest/filtering");
+        new CsvInterpreter().importChargersToDatabase("/csvtest/filtering.csv");
         db.writeUser(new User("Tester@gmail.com",
                 "MrTest", PermissionLevel.USER), "1234");
-        User chargerOwner = new User("chargerowner@gmail.com", "MrTestOwner",
+        chargerOwner = new User("chargerowner@gmail.com", "MrTestOwner",
                 PermissionLevel.CHARGEROWNER);
+        chargerOwner.setId(2);
         db.writeUser(chargerOwner, UserManager.encryptThisString("qwerty"));
 
-        users = db.readData(new QueryBuilderImpl().withSource("user").build(), User.class);
+        users = db.readData(new QueryBuilderImpl().withSource(EntityType.USER).build());
 
-        chargerObject = db.readData(new QueryBuilderImpl().withSource("charger")
-                .build(),
-                Charger.class);
+        chargerObject = db.readData(new QueryBuilderImpl().withSource(EntityType.CHARGER)
+                .build());
 
-        for (Object o : chargerObject) {
+        for (Entity o : chargerObject) {
             ((Charger) o).setOwnerId(1); // Set owner to admin
         }
         db.writeCharger(new ArrayList<>(chargerObject));
 
         Connector dummyConnector1 = new Connector("ChardaMo", "AC", "Available", "123", 3);
-        Coordinate coord1 = new Coordinate(1.1, 2.3, -43.53418, 172.627572, "TestCity");
+        Coordinate coord1 = new Coordinate(-43.53418, 172.627572, "TestCity");
         Charger testCharger = new Charger(
                 new ArrayList<>(List.of(dummyConnector1)), "Hosp", coord1, 1, 0.3, "Meridian",
                 "2020/1/1 00:00:00", true,
                 false, false, false);
-        testCharger.setOwnerId(chargerOwner.getUserid());
-        testCharger.setOwner("MrTestOwner");
+        testCharger.setOwnerId(chargerOwner.getId());
         db.writeCharger(testCharger);
 
     }
@@ -174,7 +173,7 @@ public class AccountPageStepDefs extends CucumberFxBase {
 
     @And("I want to save my information")
     public void saveAccountInfo() {
-        clickOn("#confirm");
+        clickOn("#confirmAccount");
     }
 
     @Then("My account name has changed to {string}")
@@ -285,7 +284,7 @@ public class AccountPageStepDefs extends CucumberFxBase {
         clickOn("#addCharger");
     }
 
-    @When("the user inputs the charger’s details, and clicks the ‘add charger’ button")
+    @When("the user inputs the charger's details, and clicks the 'add charger' button")
     public void inputChargerInfo() {
         clickOn("#name");
         write("Test Charger");
@@ -319,14 +318,14 @@ public class AccountPageStepDefs extends CucumberFxBase {
 
     @Then("The charger is added to the table")
     public void checkTableForCharger() throws IOException {
-        List<Object> newCharger = db.readData(new QueryBuilderImpl().withSource("charger")
-                        .withFilter("name", "Test Charger", ComparisonType.EQUAL)
-                        .build(),
-                Charger.class);
-        assertFalse(chargerObject.contains(newCharger));
+        List<Entity> newCharger = db.readData(new QueryBuilderImpl()
+                .withSource(EntityType.CHARGER)
+                .withFilter("name", "Test Charger", ComparisonType.EQUAL)
+                .build());
+        assertFalse(Arrays.equals(chargerObject.toArray(), newCharger.toArray()));
     }
 
-    @Given("There is sufficient reason to change a user’s status")
+    @Given("There is sufficient reason to change a user's status")
     public void goToPermissions() {
         clickOn("#editAdmin");
         clickOn("#table");
@@ -344,7 +343,8 @@ public class AccountPageStepDefs extends CucumberFxBase {
 
     @Then("The user now has access to different functionality of the app")
     public void checkPermission() throws IOException {
-        List<Object> user = db.readData(new QueryBuilderImpl().withSource("user").build(), User.class);
+        List<Entity> user = db.readData(new QueryBuilderImpl()
+                .withSource(EntityType.USER).build());
         assertEquals(PermissionLevel.CHARGEROWNER, ((User) user.get(1)).getLevel());
     }
 
@@ -357,14 +357,14 @@ public class AccountPageStepDefs extends CucumberFxBase {
 
     @Then("The account is deleted")
     public void checkDeletedAccount() throws IOException {
-        List<Object> change = db.readData(new QueryBuilderImpl().withSource("user").build(), User.class);
-        assertEquals(users.size()-1, change.size());
+        List<Entity> change = db.readData(new QueryBuilderImpl().withSource(EntityType.USER).build());
+        assertEquals(users.size() - 1, change.size());
     }
 
     @Given("The user owns a charger")
     public void ownsCharger() throws IOException {
-        List<Object> chargers =  db.readData(new QueryBuilderImpl().withSource("charger")
-                .withFilter("owner", "3", ComparisonType.EQUAL).build(), Charger.class);
+        List<Entity> chargers = db.readData(new QueryBuilderImpl().withSource(EntityType.CHARGER)
+                .withFilter("owner", "" + UserManager.getUser().getId(), ComparisonType.EQUAL).build());
         assertTrue(chargers.size() > 0);
         clickOn("#mainTable");
     }
@@ -384,8 +384,8 @@ public class AccountPageStepDefs extends CucumberFxBase {
 
     @Then("The charger details are saved")
     public void checkChargerDetails() throws IOException {
-        List<Object> chargers =  db.readData(new QueryBuilderImpl().withSource("charger")
-                .withFilter("name", "NewName", ComparisonType.EQUAL).build(), Charger.class);
+        List<Entity> chargers = db.readData(new QueryBuilderImpl().withSource(EntityType.CHARGER)
+                .withFilter("name", "NewName", ComparisonType.EQUAL).build());
         assertEquals(10, ((Charger) chargers.get(0)).getAvailableParks());
     }
 
@@ -398,17 +398,17 @@ public class AccountPageStepDefs extends CucumberFxBase {
 
     @Then("The charger details are deleted")
     public void noChargerExists() throws IOException {
-        List<Object> chargers =  db.readData(new QueryBuilderImpl().withSource("charger")
-                .withFilter("owner", "2", ComparisonType.EQUAL).build(), Charger.class);
+        List<Entity> chargers = db.readData(new QueryBuilderImpl().withSource(EntityType.CHARGER)
+                .withFilter("owner", "2", ComparisonType.EQUAL).build());
         assertEquals(0, chargers.size());
     }
 
     @Given("The user owns no chargers")
     public void noOwnedChargers() throws IOException {
-        List<Object> chargers =  db.readData(new QueryBuilderImpl().withSource("charger")
-                .withFilter("owner", "3", ComparisonType.EQUAL).build(), Charger.class);
-        for (Object o : chargers) {
-            db.deleteData("charger", ((Charger) o).getChargerId());
+        List<Entity> chargers = db.readData(new QueryBuilderImpl().withSource(EntityType.CHARGER)
+                .withFilter("owner", "" + UserManager.getUser().getId(), ComparisonType.EQUAL).build());
+        for (Entity o : chargers) {
+            db.deleteData(EntityType.CHARGER, ((Charger) o).getId());
         }
         clickOn("#menuButton");
         clickOn("#accountPage");
@@ -416,8 +416,34 @@ public class AccountPageStepDefs extends CucumberFxBase {
 
     @Then("The table is empty")
     public void emptyTable() {
-        TableView<Charger> table = (TableView<Charger>) find("#mainTable");
+        TableView<Charger> table = (TableView<Charger>) this.find("#mainTable");
         assertTrue(table.getItems().isEmpty());
+    }
+
+    @When("The user confirms to delete there account")
+    public void deleteOwnAccount() {
+        clickOn("#editAccountButton");
+        clickOn("#delete");
+        clickOn("#confirm");
+    }
+
+    @Then("The users account has been deleted as well as chargers and vehicles")
+    public void checkIfDeleted() throws IOException {
+        List<Entity> findUser = db.readData(new QueryBuilderImpl().withSource(EntityType.USER)
+                .withFilter("userid", "" + chargerOwner.getId() + "",
+                        ComparisonType.EQUAL)
+                .build());
+        assertEquals(0, findUser.size());
+        List<Entity> chargers = db.readData(new QueryBuilderImpl().withSource(EntityType.CHARGER)
+                .withFilter("owner", "" + chargerOwner.getId() + "",
+                        ComparisonType.EQUAL)
+                .build());
+        assertEquals(0, chargers.size());
+        List<Entity> vehicles = db.readData(new QueryBuilderImpl().withSource(EntityType.VEHICLE)
+                .withFilter("owner", "" + chargerOwner.getId() + "",
+                        ComparisonType.EQUAL)
+                .build());
+        assertEquals(0, vehicles.size());
     }
 
 }
