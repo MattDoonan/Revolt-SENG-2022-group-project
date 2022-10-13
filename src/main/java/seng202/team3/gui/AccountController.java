@@ -129,17 +129,17 @@ public class AccountController {
     private static final String VALID_STYLE = "-fx-border-color: default;";
 
     /**
-     * id for invalid make
+     * id for invalid username
      */
     private static final String NAME_ERROR = "accountNameError";
 
     /**
-     * id for invalid make
+     * id for invalid email
      */
     private static final String EMAIL_ERROR = "accountEmailError";
 
     /**
-     * id for invalid make
+     * id for invalid password
      */
     private static final String PASSWORD_ERROR = "accountPassError";
 
