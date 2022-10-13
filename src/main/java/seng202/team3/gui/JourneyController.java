@@ -290,6 +290,7 @@ public class JourneyController {
         if (position != null && journeyManager.getSelectedJourney().getVehicle() != null) {
             journeyManager.setDesiredRange(rangeSlider.getValue()
                     * journeyManager.getSelectedJourney().getVehicle().getMaxRange() / 100.0);
+            position.setAddress(new JavaScriptBridge().makeLocationName());
             journeyManager.setStart(position);
             mapController.positionMarker("Start");
             makeStart.setDisable(true);
@@ -336,6 +337,7 @@ public class JourneyController {
         }
 
         if (errors.isEmpty()) {
+            position.setAddress(new JavaScriptBridge().makeLocationName());
             journeyManager.setEnd(position);
             mapController.positionMarker("Destination");
             makeEnd.setDisable(true);
@@ -631,7 +633,7 @@ public class JourneyController {
         previousJourneyTable.getSortOrder().add(journeyDateCol);
         previousJourneyTable.sort();
 
-        GeoLocationHandler.setCoordinate(currentPosition, currentPosition.getAddress());
+        GeoLocationHandler.setCoordinate(currentPosition);
     }
 
     /**
@@ -659,32 +661,16 @@ public class JourneyController {
             makeEnd.setDisable(true);
             journeyManager.setSelectedJourney(previousJourneyTable
                     .getSelectionModel().getSelectedItem());
-            journeyManager.setCurrentCoordinate(journeyManager
-                    .getSelectedJourney().getStops()
-                    .get(journeyManager.getSelectedJourney()
-                            .getStops().size() - 1)
-                    .getLocation());
-
-            Coordinate currentPosition = GeoLocationHandler.getCoordinate();
-
-            // reverse geolocates if there is a map
-            if (MapHandler.isMapRequested()) {
-
-                GeoLocationHandler.setCoordinate(journeyManager.getSelectedJourney()
-                        .getStartPosition(), "Start Position");
-                startLabel.setText(GeoLocationHandler.getCoordinate().getAddress());
-                GeoLocationHandler.setCoordinate(journeyManager.getSelectedJourney()
-                        .getStartPosition(), "End Position");
-                endLabel.setText(GeoLocationHandler.getCoordinate().getAddress());
-
-                for (Stop stop : journeyManager.getStops()) {
-                    if (stop.getCharger() == null) {
-                        GeoLocationHandler.setCoordinate(stop.getLocation(), "Stop");
-                        stop.setLocation(GeoLocationHandler.getCoordinate());
-                    }
-                }
-
-                GeoLocationHandler.setCoordinate(currentPosition, currentPosition.getAddress());
+            if (journeyManager
+                    .getSelectedJourney().getStops().isEmpty()) {
+                journeyManager.setCurrentCoordinate(journeyManager
+                        .getSelectedJourney().getEndPosition());
+            } else {
+                journeyManager.setCurrentCoordinate(
+                        journeyManager.getSelectedJourney().getStops()
+                                .get(journeyManager.getSelectedJourney()
+                                        .getStops().size() - 1)
+                                .getLocation());
             }
 
             resetChargerDisplay();

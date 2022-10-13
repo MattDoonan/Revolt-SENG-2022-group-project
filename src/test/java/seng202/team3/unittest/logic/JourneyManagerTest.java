@@ -40,7 +40,6 @@ public class JourneyManagerTest {
     static User testUserOne;
     private JourneyManager journeyManager;
 
-
     /**
      * null
      */
@@ -134,7 +133,7 @@ public class JourneyManagerTest {
 
     @Test
     public void testMakeCoordinateName() {
-        GeoLocationHandler.setCoordinate(testCoordinateStart, "test");
+        GeoLocationHandler.setCoordinate(testCoordinateStart);
         journeyManager.makeCoordinateName();
         Assertions.assertEquals(testCoordinateStart, journeyManager.getCurrentCoordinate());
     }
@@ -161,7 +160,7 @@ public class JourneyManagerTest {
         journeyManager.addNoChargerStop(testCoordinateCharger);
         int size = journeyManager.getSelectedJourney().getStops().size();
         journeyManager.removeLastStop();
-        Assertions.assertEquals(size-1,
+        Assertions.assertEquals(size - 1,
                 journeyManager.getSelectedJourney().getStops().size());
     }
 
@@ -183,8 +182,9 @@ public class JourneyManagerTest {
         journeyManager.getSelectedJourney().setTitle("Test Journey");
         journeyManager.addStop(new Stop(testCharger));
         journeyManager.saveJourney();
-        List<Entity> journeys = SqlInterpreter.getInstance().readData(new QueryBuilderImpl().withSource(EntityType.JOURNEY)
-                .withFilter("userid", Integer.toString(testUserOne.getId()), ComparisonType.EQUAL).build());
+        List<Entity> journeys = SqlInterpreter.getInstance()
+                .readData(new QueryBuilderImpl().withSource(EntityType.JOURNEY)
+                        .withFilter("userid", Integer.toString(testUserOne.getId()), ComparisonType.EQUAL).build());
         if (journeys.size() == 1) {
             Journey compare = (Journey) journeys.get(0);
             Assertions.assertEquals(journeyManager.getSelectedJourney(), compare);
@@ -197,8 +197,9 @@ public class JourneyManagerTest {
     public void saveInvalidJourneyTest() throws IOException {
         UserManager.setUser(testUserOne);
         journeyManager.saveJourney();
-        List<Entity> journeys = SqlInterpreter.getInstance().readData(new QueryBuilderImpl().withSource(EntityType.JOURNEY)
-                .withFilter("userid", Integer.toString(testUserOne.getId()), ComparisonType.EQUAL).build());
+        List<Entity> journeys = SqlInterpreter.getInstance()
+                .readData(new QueryBuilderImpl().withSource(EntityType.JOURNEY)
+                        .withFilter("userid", Integer.toString(testUserOne.getId()), ComparisonType.EQUAL).build());
         assertEquals(0, journeys.size());
     }
 

@@ -78,12 +78,11 @@ public class GeoLocationHandler {
      *
      * @param coordinate the {@link seng202.team3.data.entity.Coordinate} to set the
      *                   coordinate
-     * @param name       the address of the coordinate
      */
-    public static void setCoordinate(Coordinate coordinate, String name) {
-        // TODO remove set positions
+    public static void setCoordinate(Coordinate coordinate) {
         GeoLocationHandler.coordinate = coordinate;
-        String[] splitAddress = name.split(",", 10);
+        String name = "";
+        String[] splitAddress = coordinate.getAddress().split(",", 10);
         if (splitAddress.length > 6) {
             name = "";
             name += splitAddress[0] + splitAddress[1] + ", "
@@ -118,7 +117,7 @@ public class GeoLocationHandler {
         location.setLat(response.getLocation().getLatitude());
         location.setLon(response.getLocation().getLongitude());
         location.setAddress("My Position");
-        GeoLocationHandler.setCoordinate(location, location.getAddress());
+        GeoLocationHandler.setCoordinate(location);
         logManager.info("Current position set: {}, {}", location.getLat(), location.getLon());
     }
 

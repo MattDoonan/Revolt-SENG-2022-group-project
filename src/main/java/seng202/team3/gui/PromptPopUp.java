@@ -55,9 +55,9 @@ public class PromptPopUp extends PopUpWindow {
             case "add" -> {
                 stage.setOpacity(0.0);
                 JavaScriptBridge bridge = new JavaScriptBridge();
+                GeoLocationHandler.getCoordinate().setAddress(bridge.makeLocationName());
                 GeoLocationHandler.setCoordinate(
-                        GeoLocationHandler.getCoordinate(),
-                        bridge.makeLocationName());
+                        GeoLocationHandler.getCoordinate());
                 controller.getManager().addCharger();
                 cancel();
             }

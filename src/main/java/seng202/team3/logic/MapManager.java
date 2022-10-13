@@ -41,8 +41,7 @@ public class MapManager {
      * @param coordinate the coordinate associated
      */
     public void makeCoordinate(Coordinate coordinate) {
-        GeoLocationHandler.setCoordinate(coordinate,
-                coordinate.getAddress());
+        GeoLocationHandler.setCoordinate(coordinate);
 
         manager.setPosition();
         MenuController.getController().getListController().refreshTable();

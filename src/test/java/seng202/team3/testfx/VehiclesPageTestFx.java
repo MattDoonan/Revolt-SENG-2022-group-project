@@ -32,7 +32,7 @@ import seng202.team3.gui.GarageController;
  * @author Matthew Doonan
  * @version 1.0.0, Sep 22
  */
-public class VehiclesPageFx extends TestFxBase {
+public class VehiclesPageTestFx extends TestFxBase {
 
     private GarageController controller;
 

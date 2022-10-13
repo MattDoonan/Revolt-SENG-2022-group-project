@@ -55,7 +55,7 @@ public class JavaScriptBridge {
      * @param latlng the string created with latitude and longitude
      */
     public void addCoordinateFromClick(String latlng) {
-        GeoLocationHandler.setCoordinate(parseCoordinate(latlng), "Coordinate");
+        GeoLocationHandler.setCoordinate(parseCoordinate(latlng));
         refreshCoordinates();
     }
 
@@ -88,6 +88,7 @@ public class JavaScriptBridge {
             float lng = ((Double) latlngJson.get("lng")).floatValue();
             coord.setLat((double) lat);
             coord.setLon((double) lng);
+            coord.setAddress("Coordinate");
         } catch (ParseException e) {
             logManager.error(e.getMessage());
             return null;
@@ -103,15 +104,7 @@ public class JavaScriptBridge {
      * @param address String of the address
      */
     public void addLocationName(String address) {
-        String[] splitAddress = address.split(",", 10);
-        if (splitAddress.length > 6) {
-            address = "";
-            address += splitAddress[0] + splitAddress[1] + ", "
-                    + splitAddress[2] + ", " + splitAddress[3] + ", "
-                    + splitAddress[splitAddress.length - 2] + ", "
-                    + splitAddress[splitAddress.length - 1];
-        }
-        GeoLocationHandler.setCoordinate(GeoLocationHandler.getCoordinate(), address);
+        GeoLocationHandler.setCoordinate(GeoLocationHandler.getCoordinate());
         refreshCoordinates();
     }
 
@@ -187,7 +180,6 @@ public class JavaScriptBridge {
         }
     }
 
-
     /**
      * Loads the charger information on a separate pop-up
      *
@@ -239,7 +231,9 @@ public class JavaScriptBridge {
      * @param name   the address of the coordinate to set
      */
     public void setCoordinate(String latlng, String name) {
-        GeoLocationHandler.setCoordinate(parseCoordinate(latlng), name);
+        Coordinate point = parseCoordinate(latlng);
+        point.setAddress(name);
+        GeoLocationHandler.setCoordinate(point);
         MainManager main = MenuController.getController().getManager();
         loadChargerEdit(main.getSelectedCharger());
     }

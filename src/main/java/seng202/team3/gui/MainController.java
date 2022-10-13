@@ -198,7 +198,7 @@ public class MainController {
         manage.makeAllChargers();
         manage.setPosition();
         initialRange();
-        if (MapHandler.getLocationAccepted() == null) {
+        if (MapHandler.getLocationAccepted() == null && MapHandler.isMapRequested()) {
             getMapController().getLocation();
         }
 

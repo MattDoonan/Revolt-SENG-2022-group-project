@@ -86,8 +86,8 @@ public class AddChargerPageTestFx extends TestFxBase {
      */
     @Test
     public void addChargerFail() {
-        GeoLocationHandler.setCoordinate(new Coordinate(-43.60, 172.572),
-                "Trial location");
+        GeoLocationHandler.setCoordinate(new Coordinate(-43.60, 172.572,
+                "Trial location"));
         clickOn("#saveButton");
         clickOn("#okay");
     }
@@ -97,12 +97,15 @@ public class AddChargerPageTestFx extends TestFxBase {
      */
     @Test
     public void addChargerSuccess() {
-        GeoLocationHandler.setCoordinate(new Coordinate(-43.60, 172.572),
-                "Trial location");
+        GeoLocationHandler.setCoordinate(new Coordinate(-43.60, 172.572,
+                "Trial location"));
         clickOn("#name");
         write("Trial");
         clickOn("#operator");
         write("Me");
+        ((TextField) this.find("#address")).clear();
+        clickOn("#address");
+        write("123 Main Street, Suburb, City");
         clickOn("#parks");
         write("2");
         clickOn("#time");

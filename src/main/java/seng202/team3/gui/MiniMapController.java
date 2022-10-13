@@ -61,9 +61,8 @@ public class MiniMapController extends MapHandler {
      */
     @FXML
     public void getCoordinateWithAddress() {
-        GeoLocationHandler.setCoordinate(
-                GeoLocationHandler.getCoordinate(),
-                javaScriptBridge.makeLocationName());
+        GeoLocationHandler.getCoordinate().setAddress(javaScriptBridge.makeLocationName());
+        GeoLocationHandler.setCoordinate(GeoLocationHandler.getCoordinate());
         manager.setAdding(true);
         stage.close();
     }

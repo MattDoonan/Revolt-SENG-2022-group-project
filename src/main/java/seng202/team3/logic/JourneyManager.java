@@ -179,7 +179,8 @@ public class JourneyManager extends ChargerHandler {
     public void makeCoordinateName() {
         Coordinate position = GeoLocationHandler.getCoordinate();
         if (position != null) {
-            GeoLocationHandler.setCoordinate(position, new JavaScriptBridge().makeLocationName());
+            position.setAddress(new JavaScriptBridge().makeLocationName());
+            GeoLocationHandler.setCoordinate(position);
             currentCoordinate = position;
         }
     }

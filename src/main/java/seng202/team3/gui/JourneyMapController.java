@@ -114,7 +114,7 @@ public class JourneyMapController extends MapHandler {
      * selected start and end coordinates.
      */
     public void addRouteToScreen() {
-        if (!MapHandler.isMapRequested()) {
+        if (Boolean.FALSE.equals(MapHandler.isMapRequested())) {
             return;
         }
         javaScriptConnector.call("removeRoute");
@@ -144,7 +144,6 @@ public class JourneyMapController extends MapHandler {
 
             javaScriptConnector.call("addRoute");
         }
-        // TODO add pop up if missing either start or end
     }
 
     /**
