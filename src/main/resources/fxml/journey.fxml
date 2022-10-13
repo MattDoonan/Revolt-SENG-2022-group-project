@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<SplitPane dividerPositions="0.9003378378378378" maxHeight="Infinity" prefHeight="709.0" prefWidth="594.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.JourneyController">
+<SplitPane dividerPositions="0.9003378378378378" maxHeight="Infinity" prefHeight="709.0" prefWidth="594.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.JourneyController">
    <items>
       <SplitPane dividerPositions="0.57625" maxWidth="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="707.0" prefWidth="586.0">
          <items>

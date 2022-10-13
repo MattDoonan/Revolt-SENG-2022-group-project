@@ -762,16 +762,20 @@ public class JourneyController {
      */
     public void loadVehicleScreen() {
         try {
-            FXMLLoader garageLoader = new FXMLLoader(getClass()
-                    .getResource("/fxml/garage.fxml"));
-            Parent garageViewParent = garageLoader.load();
-            GarageController garageController = garageLoader.getController();
-            garageController.init();
-            borderPane.setCenter(garageViewParent);
-            MainWindow.setController(garageController);
-            logManager.info("Switched to Garage screen");
+            FXMLLoader vehicleEdit = new FXMLLoader(getClass().getResource(
+                    "/fxml/vehicle_update.fxml"));
+            AnchorPane root = vehicleEdit.load();
+            Scene modalScene = new Scene(root);
+            Stage editPopup = new Stage();
+            editPopup.setScene(modalScene);
+            editPopup.setResizable(false);
+            editPopup.setTitle("Vehicle Information");
+            editPopup.initModality(Modality.APPLICATION_MODAL);
+            editPopup.showAndWait();
         } catch (IOException e) {
             logManager.error(e.getMessage());
+        } finally {
+            populateVehicles();
         }
     }
 
