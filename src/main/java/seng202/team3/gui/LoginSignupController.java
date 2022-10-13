@@ -94,18 +94,6 @@ public class LoginSignupController {
     private Button showLoginPassword;
 
     /**
-     * Button to show signup password
-     */
-    @FXML
-    private Button showPassSignup;
-
-    /**
-     * Button to show signup password
-     */
-    @FXML
-    private Button showConfPassSignup;
-
-    /**
      * The current stage
      */
     private Stage stage;
@@ -146,21 +134,6 @@ public class LoginSignupController {
      * Styling for valid fields
      */
     private static final String VALID_STYLE = "-fx-border-color: default;";
-
-    /**
-     * Login label text
-     */
-    private static final String LOGIN_LABEL = "login";
-
-    /**
-     * Sign up label text
-     */
-    private static final String SIGNUP_LABEL = "signup";
-
-    /**
-     * Confirm label text
-     */
-    private static final String SIGNUP_CONFIRM_LABEL = "signupconf";
 
     /**
      * Manages all error tooltips
@@ -214,10 +187,7 @@ public class LoginSignupController {
         errors.add("passError", "Password must be more than 4 characters.");
 
         if (showPassLogin != null) {
-            setIcon(LOGIN_LABEL, "show");
-        } else if (showPassSignup != null) {
-            setIcon(SIGNUP_LABEL, "show");
-            setIcon(SIGNUP_CONFIRM_LABEL, "show");
+            setIcon("show");
         }
     }
 
@@ -367,14 +337,6 @@ public class LoginSignupController {
     }
 
     /**
-     * Allowing user to reset password
-     */
-    @FXML
-    public void forgotPassword() {
-        // TODO: forgot password
-    }
-
-    /**
      * Closes this window.
      */
     public void close() {
@@ -389,60 +351,28 @@ public class LoginSignupController {
      */
     @FXML
     public void showPassword(ActionEvent event) {
-        String source = ((Button) event.getSource()).getId();
-        TextField passTextField = new TextField();
-        PasswordField passField = new PasswordField();
-        String popup = "";
-        switch (source) {
-            case "showLoginPassword":
-                passTextField = showPassLogin;
-                passField = loginPasswordField;
-                popup = LOGIN_LABEL;
-                break;
-            case "showPassSignup":
-                passTextField = showPassFieldSignup;
-                passField = signupPasswordField;
-                popup = SIGNUP_LABEL;
-                break;
-            case "showConfPassSignup":
-                passTextField = showConfPassFieldSignup;
-                passField = confPassField;
-                popup = SIGNUP_CONFIRM_LABEL;
-                break;
-            default:
-                break;
-        }
-
-        if (passTextField.isVisible()) {
-            passTextField.setVisible(false);
-            passTextField.setText(null);
-            setIcon(popup, "show");
-        } else if (!passField.getText().equals("")) {
-            passTextField.setVisible(true);
-            passTextField.setText(passField.getText());
-            setIcon(popup, "hide");
+        if (showPassLogin.isVisible()) {
+            showPassLogin.setVisible(false);
+            showPassLogin.setText(null);
+            setIcon("show");
+        } else if (!loginPasswordField.getText().equals("")) {
+            showPassLogin.setVisible(true);
+            showPassLogin.setText(loginPasswordField.getText());
+            setIcon("hide");
         }
     }
 
     /**
      * Set the button icon
      * 
-     * @param popup the password field to add the icon to
      * @param type  the type the icon should be
      */
-    public void setIcon(String popup, String type) {
-        Button button = new Button();
-        if (popup.equals(LOGIN_LABEL)) {
-            button = showLoginPassword;
-        } else if (popup.equals(SIGNUP_LABEL)) {
-            button = showPassSignup;
-        } else if (popup.equals(SIGNUP_CONFIRM_LABEL)) {
-            button = showConfPassSignup;
-        }
+    public void setIcon(String type) {
+
         if (type.equals("show")) {
-            GlyphsDude.setIcon(button, FontAwesomeIcon.EYE);
+            GlyphsDude.setIcon(showLoginPassword, FontAwesomeIcon.EYE);
         } else {
-            GlyphsDude.setIcon(button, FontAwesomeIcon.EYE_SLASH);
+            GlyphsDude.setIcon(showLoginPassword, FontAwesomeIcon.EYE_SLASH);
         }
     }
 

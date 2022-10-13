@@ -96,11 +96,11 @@ public class AddChargerPageTestFx extends TestFxBase {
         // TODO: assert error
 
         // At least one tooltip visible
-        // for (Tooltip t : controller.getErrors().getAll()) {
-        //     assertTrue(t.isShowing());
-        //     return;
-        // }
-        // fail("No error tooltips shown");
+        for (Tooltip t : controller.getErrors().getAll()) {
+            assertTrue(t.isShowing());
+            return;
+        }
+        fail("No error tooltips shown");
     }
 
 
