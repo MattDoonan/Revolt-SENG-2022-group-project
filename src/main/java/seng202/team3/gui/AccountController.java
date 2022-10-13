@@ -129,6 +129,21 @@ public class AccountController {
     private static final String VALID_STYLE = "-fx-border-color: default;";
 
     /**
+     * id for invalid make
+     */
+    private static final String NAME_ERROR = "accountEmailError";
+
+    /**
+     * id for invalid make
+     */
+    private static final String EMAIL_ERROR = "accountNameError";
+
+    /**
+     * id for invalid make
+     */
+    private static final String PASSWORD_ERROR = "accountPassError";
+
+    /**
      * Stores all of the tooltips used for error messages
      */
     private ErrorHandler errors = new ErrorHandler();
@@ -153,9 +168,9 @@ public class AccountController {
         if (user.getLevel() == PermissionLevel.ADMIN) {
             editAdmin.setVisible(true);
         }
-        errors.add("accountEmailError", "Invalid email.");
-        errors.add("accountNameError", "Username cannot be empty.");
-        errors.add("accountPassError", "Password must be more than 4 characters.");
+        errors.add(EMAIL_ERROR, "Invalid email.");
+        errors.add(NAME_ERROR, "Username cannot be empty.");
+        errors.add(PASSWORD_ERROR, "Password must be more than 4 characters.");
     }
 
     /**
@@ -302,22 +317,21 @@ public class AccountController {
         Boolean fail = false;
 
         if (!UserManager.checkEmail(accountEmail.getText())) {
-            errors.changeMessage("accountEmailError", "Invalid email.");
+            errors.changeMessage(EMAIL_ERROR, "Invalid email.");
             if (accountEmail.getText().isEmpty()) {
-                errors.changeMessage("accountEmailError", "Email cannot be empty.");
+                errors.changeMessage(EMAIL_ERROR, "Email cannot be empty.");
             }
             accountEmail.setStyle(INVALID_STYLE);
-            errors.displayError(accountEmail, "accountEmailError", 25, 0);
+            errors.displayError(accountEmail, EMAIL_ERROR, 25, 0);
             fail = true;
         }
         if (accountName.getText().isEmpty()) {
             accountName.setStyle(INVALID_STYLE);
-            errors.displayError(accountName, "accountNameError", 25, 0);
+            errors.displayError(accountName, NAME_ERROR, 25, 0);
             fail = true;
         }
-        System.out.println(accountPassword.getText().length());
         if (accountPassword.getText().length() < 4 && accountPassword.getText().length() > 0) {
-            errors.displayError(accountPassword, "accountPassError", 25, 0);
+            errors.displayError(accountPassword, PASSWORD_ERROR, 25, 0);
             accountPassword.setStyle(INVALID_STYLE);
             fail = true;
         }
