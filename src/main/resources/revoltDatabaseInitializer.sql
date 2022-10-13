@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS user;
 --SPLIT
 CREATE TABLE if not exists user
 (
-   userid INTEGER constraint dk_users PRIMARY KEY AUTOINCREMENT,
+   userid INTEGER NOT NULL constraint dk_users PRIMARY KEY AUTOINCREMENT,
    email VARCHAR(250) NOT NULL,
    username VARCHAR(50) NOT NULL UNIQUE,
    password VARCHAR(170) NOT NULL,
@@ -22,9 +22,7 @@ DROP TABLE IF EXISTS charger;
 --SPLIT
 CREATE TABLE IF NOT EXISTS charger
 (
-    chargerid INTEGER PRIMARY KEY AUTOINCREMENT,
-    x REAL,
-    y REAL,
+    chargerid INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     operator VARCHAR(50),
     owner INTEGER NOT NULL references User(userid),
     address VARCHAR(255) NOT NULL,
@@ -38,14 +36,15 @@ CREATE TABLE IF NOT EXISTS charger
     longitude INTEGER,
     datefirstoperational TEXT,
     haschargingcost BIT,
-    currenttype VARCHAR(20)
+    currenttype VARCHAR(20),
+    views INTEGER default 0
     );
 --SPLIT
 DROP TABLE IF EXISTS connector;
 --SPLIT
 CREATE TABLE IF NOT EXISTS connector
 (
-    connectorid INTEGER constraint dk_connector PRIMARY KEY AUTOINCREMENT,
+    connectorid INTEGER NOT NULL constraint dk_connector PRIMARY KEY AUTOINCREMENT,
     connectorcurrent VARCHAR(50) NOT NULL,
     connectorpowerdraw VARCHAR(50) NOT NULL,
     count INTEGER,
@@ -58,7 +57,7 @@ DROP TABLE IF EXISTS vehicle;
 --SPLIT
 CREATE TABLE if not exists vehicle
 (
-    vehicleid INTEGER constraint dk_Veh PRIMARY KEY AUTOINCREMENT,
+    vehicleid INTEGER NOT NULL constraint dk_Veh PRIMARY KEY AUTOINCREMENT,
     owner INTEGER NOT NULL references user(userid),
     make VARCHAR(10),
     model VARCHAR(10),
@@ -72,38 +71,26 @@ DROP TABLE IF EXISTS journey;
 --SPLIT
 CREATE TABLE if not exists journey
 (
-    journeyid INTEGER constraint dk_journey PRIMARY KEY AUTOINCREMENT,
+    journeyid INTEGER NOT NULL constraint dk_journey PRIMARY KEY AUTOINCREMENT,
     userid INTEGER NOT NULL references user(userid),
     vehicleid INTEGER NOT NULL references Vehicle(vehicleid),
     startLat REAL NOT NULL,
     startLon REAL NOT NULL,
-    startX REAL,
-    startY REAL,
     endLat REAL NOT NULL,
     endLon REAL NOT NULL,
-    endX REAL,
-    endY REAL,
     startDate TEXT,
-    endDate TEXT
+    title TEXT
     );
 --SPLIT
 
 DROP TABLE IF EXISTS stop;
 --SPLIT
 CREATE TABLE if not exists stop
-(
+(   stopid INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     journeyid INTEGER NOT NULL references Journey(journeyid),
     position INTEGER NOT NULL,
-    chargerid INTEGER NOT NULL references Charger(chargerid),
-    PRIMARY KEY (journeyid, position)
+    lat REAL NOT NULL,
+    lon REAL NOT NULL,
+    chargerid INTEGER references Charger(chargerid),
+    UNIQUE(journeyid, position) ON CONFLICT REPLACE
     );
---SPLIT
-DROP TABLE IF EXISTS views;
---SPLIT
-CREATE TABLE views
-(
-    userid INTEGER NOT NULL REFERENCES user(userid),
-    chargerid INTEGER NOT NULL REFERENCES charger(chargerid),
-    times INTEGER,
-    PRIMARY KEY (userid, chargerid)
-    )

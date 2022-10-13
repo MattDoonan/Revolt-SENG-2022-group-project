@@ -10,9 +10,9 @@ import seng202.team3.logic.UserManager;
  * @author Angus Kirtlan
  * @version 1.0.0, Aug 22
  */
-public class Journey {
-    /** {@link Charger Chargers} used on journey */
-    private ArrayList<Charger> chargers = new ArrayList<>();
+public class Journey extends Entity {
+    /** {@link Stop Stops} in the journey */
+    private ArrayList<Stop> stops = new ArrayList<>();
 
     /** {@link Vehicle Vehicle} used for journey */
     private Vehicle vehicle;
@@ -26,11 +26,8 @@ public class Journey {
     /** Starting date and time */
     private String startDate;
 
-    /** Ending date and time */
-    private String endDate;
-
-    /** the journeys id number **/
-    private int journeyId;
+    /** Name of the journey */
+    private String title;
 
     /**
      * id of user who took the journey
@@ -44,17 +41,17 @@ public class Journey {
      * @param startPosition start coordinate of the journey
      * @param endPosition   end coordinate of the journey
      * @param startDate     start date of the journey
-     * @param endDate       end date of the journey
+     * @param title         name of the journey
      */
     public Journey(Vehicle vehicle, Coordinate startPosition,
             Coordinate endPosition, String startDate,
-            String endDate) {
+            String title) {
         this.startPosition = startPosition;
         this.endPosition = endPosition;
         this.vehicle = vehicle;
         this.startDate = startDate;
-        this.endDate = endDate;
-        this.user = UserManager.getUser().getUserid();
+        this.title = title;
+        this.user = UserManager.getUser().getId();
     }
 
     /**
@@ -65,30 +62,30 @@ public class Journey {
     }
 
     /**
-     * Get array of chargers used on journey
+     * Get array of stops used on journey
      *
-     * @return chargers in journey
+     * @return stops in journey
      */
-    public List<Charger> getChargers() {
-        return chargers;
+    public List<Stop> getStops() {
+        return stops;
     }
 
     /**
-     * Add new {@link Charger charger} to journey
+     * Add new {@link Stop stop} to journey
      *
-     * @param charger charger to add
+     * @param stop stop to add
      */
-    public void addCharger(Charger charger) {
-        chargers.add(charger);
+    public void addStop(Stop stop) {
+        stops.add(stop);
     }
 
     /**
-     * Remove a {@link Charger charger} from the journey
+     * Remove a {@link Stop stop} from the journey
      *
-     * @param charger charger to remove
+     * @param stop stop to remove
      */
-    public void removeCharger(Charger charger) {
-        chargers.remove(charger);
+    public void removeStop(Stop stop) {
+        stops.remove(stop);
     }
 
     /**
@@ -168,35 +165,17 @@ public class Journey {
      *
      * @return end date of journey
      */
-    public String getEndDate() {
-        return endDate;
+    public String getTitle() {
+        return title;
     }
 
     /**
      * Set end date of journey
      *
-     * @param endDate end date of journey
+     * @param title name of journey
      */
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
-    }
-
-    /**
-     * sets the ID number
-     *
-     * @param number integer for the id
-     */
-    public void setJourneyId(int number) {
-        this.journeyId = number;
-    }
-
-    /**
-     * returns the unique id number
-     *
-     * @return the integer id number
-     */
-    public int getJourneyId() {
-        return this.journeyId;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     /**
@@ -226,26 +205,25 @@ public class Journey {
         } else {
             return false;
         }
-        return j.getChargers().equals(this.getChargers())
+        return j.getStops().equals(this.getStops())
                 && j.getVehicle().equals(this.getVehicle())
                 && j.getStartPosition().equals(this.getStartPosition())
                 && j.getEndPosition().equals(this.getEndPosition())
                 && j.getStartDate().equals(this.getStartDate())
-                && j.getEndDate().equals(this.getEndDate())
-                && j.getJourneyId() == this.getJourneyId()
+                && j.getTitle().equals(this.getTitle())
                 && j.getUser() == this.getUser();
     }
 
     /** {@inheritDoc} */
     @Override
     public int hashCode() {
-        int result = (journeyId ^ (journeyId >>> 32));
-        result = 31 * result + chargers.hashCode();
+        int result = (getId() ^ (getId() >>> 32));
+        result = 31 * result + stops.hashCode();
         result = 31 * result + vehicle.hashCode();
         result = 31 * result + startPosition.hashCode();
         result = 31 * result + endPosition.hashCode();
         result = 31 * result + startDate.hashCode();
-        result = 31 * result + endDate.hashCode();
+        result = 31 * result + title.hashCode();
 
         return result;
     }

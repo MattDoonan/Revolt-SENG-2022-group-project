@@ -186,7 +186,7 @@ public class AdminController {
     public void deleteUser() {
         setSelectedUser();
         if (manager.getSelectedUser() != null) {
-            if (manager.getAdmin().getUserid() == manager.getSelectedUser().getUserid()) {
+            if (manager.getAdmin().getId() == manager.getSelectedUser().getId()) {
                 errors.add("Cannot delete current user");
             }
         } else {
@@ -211,7 +211,7 @@ public class AdminController {
     public void editPermissions() throws SQLException {
         setSelectedUser();
         if (manager.getSelectedUser() != null) {
-            if (manager.getAdmin().getUserid() == manager.getSelectedUser().getUserid()) {
+            if (manager.getAdmin().getId() == manager.getSelectedUser().getId()) {
                 errors.add("Cannot edit your own permissions!");
             } else if (menu.getText().equals("Select...")) {
                 errors.add("Select a permission level.");

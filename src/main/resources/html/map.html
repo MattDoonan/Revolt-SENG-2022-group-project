@@ -60,15 +60,8 @@
 			let chargerMarker = L.icon({
 				iconUrl: "icons/charger_marker.png",
 				iconSize: [32, 47],
-				iconAnchor: [19, 38],
-				popupAnchor: [0, -38],
-			});
-
-			let larheChargerMarker = L.icon({
-				iconUrl: "icons/charger_marker.png",
-				iconSize: [40, 60],
-				iconAnchor: [19, 38],
-				popupAnchor: [0, -38],
+				iconAnchor: [16, 47],
+				popupAnchor: [0, -47],
 			});
 
 			/**
@@ -190,9 +183,8 @@
 			function relocate(lat, lon, locationAccepted) {
 				removeCoordinate();
 				addCoordinate("Current Coordinate", lat, lon);
-				movePosition(lat, lon);
 				if (locationAccepted) {
-					changeZoom();
+					map.flyTo([lat, lon], zoomedIn);
 				}
 			}
 
@@ -221,9 +213,6 @@
 				m.on("mouseover", function (ev) {
 					m.openPopup();
 				});
-				// m.on("click", function () {
-				// 	m.setIcon(larheChargerMarker);
-				// });
 				m.addTo(map).on("click", (e) =>
 					javaScriptBridge.chargerHandler(id)
 				);

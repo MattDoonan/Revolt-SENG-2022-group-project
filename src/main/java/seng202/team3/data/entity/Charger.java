@@ -14,11 +14,7 @@ import seng202.team3.logic.UserManager;
  * @author Harrison Tyson
  * @version 1.0.1, Aug 22
  */
-public class Charger {
-
-    /** Unique identifier */
-    @CsvBindByName(column = "CHARGERID", required = true)
-    private int chargerId;
+public class Charger extends Entity {
 
     /** When the charger was first available */
     @CsvBindByName(column = "dateFirstOperational")
@@ -83,22 +79,18 @@ public class Charger {
     private String currentType;
 
     /**
+     * Total number of views the charger has had
+     */
+    private int views = 0;
+
+    /**
      * Empty constructor for CSV object builder
      */
     public Charger() {
         connectors = new ArrayList<>();
-        setOwnerId(UserManager.getUser().getUserid());
+        setOwnerId(UserManager.getUser().getId());
         setOwner(UserManager.getUser().getAccountName());
     }
-
-    /** Has warning for charger high cost */
-    boolean warningHighCost;
-
-    /** Has warning for charger long wait time */
-    boolean warningLongWait;
-
-    /** Has warning for charger low availabilty */
-    boolean warningLowAvailability;
 
     /**
      * Constructor for a charger
@@ -130,27 +122,9 @@ public class Charger {
         setParkingCost(hasParkingCost);
         setAvailable24Hrs(is24Hrs);
         setCurrentType();
-        setOwnerId(UserManager.getUser().getUserid());
+        setOwnerId(UserManager.getUser().getId());
         setOwner(UserManager.getUser().getAccountName());
         demoOwner = null;
-    }
-
-    /**
-     * Get unique identifier for the charger
-     *
-     * @return unique identification number
-     */
-    public int getChargerId() {
-        return chargerId;
-    }
-
-    /**
-     * Set unique identifier for the charger
-     *
-     * @param chargerId unique identifier for the charger
-     */
-    public void setChargerId(int chargerId) {
-        this.chargerId = chargerId;
     }
 
     /**
@@ -421,52 +395,6 @@ public class Charger {
     }
 
     /**
-     * Set warning high cost
-     *
-     * @param warningHighCost bool indicating high cost warning
-     */
-    public void setWarningHighCost(boolean warningHighCost) {
-        this.warningHighCost = warningHighCost;
-    }
-
-    /**
-     * Set warning high cost
-     *
-     * @param warningLongWait bool indicating long wait warning
-     */
-    public void setWarningLongWait(boolean warningLongWait) {
-        this.warningLongWait = warningLongWait;
-    }
-
-    /**
-     * Set warning high cost
-     *
-     * @param warningLowAvailability bool indicating low availability warning
-     */
-    public void setWarningLowAvailability(boolean warningLowAvailability) {
-        this.warningLowAvailability = warningLowAvailability;
-    }
-
-    /**
-     * Gets boolean warnings that are set to true
-     *
-     * @return ArrayList of boolean warnings
-     */
-    public List<String> getWarnings() {
-        ArrayList<String> warnings = new ArrayList<>();
-        if (this.warningHighCost) {
-            warnings.add("high cost");
-        }
-        if (this.warningLongWait) {
-            warnings.add("long wait");
-        }
-        if (this.warningLowAvailability) {
-            warnings.add("low availability");
-        }
-        return warnings;
-    }
-
-    /**
      * Get the name of the charger
      *
      * @return name of the charger
@@ -525,6 +453,31 @@ public class Charger {
         return currentType;
     }
 
+    /**
+     * Sets the current number of views of the charger
+     * 
+     * @param views current number of views
+     */
+    public void setViews(int views) {
+        this.views = views;
+    }
+
+    /**
+     * Gets the current number of views of the charger
+     * 
+     * @return current number of views
+     */
+    public int getViews() {
+        return views;
+    }
+
+    /**
+     * Increases the current number of views of the charger by one
+     */
+    public void incrementViews() {
+        views++;
+    }
+
     /** {@inheritDoc} */
     @Override
     public boolean equals(Object o) {
@@ -534,10 +487,8 @@ public class Charger {
         } else {
             return false;
         }
-        c.getCurrentType();
-        this.getCurrentType();
-        return c.getChargerId() == this.getChargerId()
-                && c.getDateOpened().equals(this.getDateOpened())
+
+        return c.getDateOpened().equals(this.getDateOpened())
                 && c.getName().equals(this.getName())
                 && c.getConnectors().equals(this.getConnectors())
                 && c.getLocation().equals(this.getLocation())
@@ -550,14 +501,14 @@ public class Charger {
                 && c.getHasAttraction() == this.getHasAttraction()
                 && c.getParkingCost() == this.getParkingCost()
                 && c.getChargeCost() == this.getChargeCost()
-                && c.getWarnings().equals(this.getWarnings())
-                && c.getCurrentType().equals(this.getCurrentType());
+                && c.getCurrentType().equals(this.getCurrentType())
+                && c.getViews() == this.getViews();
     }
 
     /** {@inheritDoc} */
     @Override
     public int hashCode() {
-        int result = (chargerId ^ (chargerId >>> 32));
+        int result = (getId() ^ (getId() >>> 32));
         result = 31 * result + dateOpened.hashCode();
         result = 31 * result + name.hashCode();
         result = 31 * result + connectors.hashCode();

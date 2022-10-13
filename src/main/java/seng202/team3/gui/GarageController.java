@@ -268,7 +268,6 @@ public class GarageController {
             manage.saveCurrVehicle(vehicle);
         }
         String source = ((Button) event.getSource()).getId();
-        // System.out.println("source: " + source);
         Vehicle currVehicle = new Vehicle();
         switch (source) {
             case "currEvOne":
@@ -546,19 +545,31 @@ public class GarageController {
                 default:
                     break;
             }
-            try {
-                if (vehicleData.get(index).getImgPath().equals(
-                        "/images/null")) {
-                    imageview.setImage(null);
-                } else {
-                    Image image = new Image(new BufferedInputStream(
-                            getClass().getResourceAsStream(vehicleData.get(index).getImgPath())));
-                    imageview.setImage(image);
-                }
 
-            } catch (NullPointerException e) {
-                logManager.error(e.getMessage());
+            setImg(index, imageview);
+
+        }
+    }
+
+    /**
+     * Set the image of the pane
+     * 
+     * @param index     pane to set
+     * @param imageview image view to populate
+     */
+    private void setImg(int index, ImageView imageview) {
+        try {
+            if (vehicleData.get(index).getImgPath().equals(
+                    "/images/null")) {
+                imageview.setImage(null);
+            } else {
+                Image image = new Image(new BufferedInputStream(
+                        getClass().getResourceAsStream(vehicleData.get(index).getImgPath())));
+                imageview.setImage(image);
             }
+
+        } catch (NullPointerException e) {
+            logManager.error(e.getMessage());
         }
     }
 

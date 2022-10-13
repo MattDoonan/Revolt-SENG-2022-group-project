@@ -8,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
+import seng202.team3.data.entity.EntityType;
 import seng202.team3.data.entity.PermissionLevel;
 
 /**
@@ -108,7 +109,8 @@ public class MainManager extends ChargerHandler implements ChargerInterface {
     public void deleteCharger() {
         if (selectedCharger != null) {
             try {
-                SqlInterpreter.getInstance().deleteData("charger", selectedCharger.getChargerId());
+                SqlInterpreter.getInstance()
+                        .deleteData(EntityType.CHARGER, selectedCharger.getId());
                 selectedCharger = null;
                 logManager.info("Charger has been deleted");
                 makeAllChargers();
@@ -128,9 +130,9 @@ public class MainManager extends ChargerHandler implements ChargerInterface {
         if (getSelectedCharger() == null) {
             // Do nothing
         } else if ((UserManager.getUser().getLevel() == PermissionLevel.ADMIN)
-                || (getSelectedCharger().getOwnerId() == UserManager.getUser().getUserid())) {
+                || (getSelectedCharger().getOwnerId() == UserManager.getUser().getId())) {
             JavaScriptBridge bridge = new JavaScriptBridge();
-            bridge.loadMoreInfo(getSelectedCharger().getChargerId());
+            bridge.loadMoreInfo(getSelectedCharger().getId());
             makeAllChargers();
         }
     }

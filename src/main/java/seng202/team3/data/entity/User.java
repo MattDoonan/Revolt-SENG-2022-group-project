@@ -6,10 +6,7 @@ package seng202.team3.data.entity;
  * @author Matthew Doonan
  * @version 1.0.0, Sep 2022
  */
-public class User {
-
-    /** users id in database */
-    private int userid;
+public class User extends Entity {
 
     /** String for the email of the user */
     private String email;
@@ -42,24 +39,6 @@ public class User {
      */
     public User() {
         // Unused
-    }
-
-    /**
-     * sets the user id to an int
-     * 
-     * @param id the user if to be set to
-     */
-    public void setUserid(int id) {
-        userid = id;
-    }
-
-    /**
-     * Gets the userid
-     * 
-     * @return integer for the user id
-     */
-    public int getUserid() {
-        return userid;
     }
 
     /**
@@ -143,8 +122,7 @@ public class User {
             return false;
         }
 
-        return u.getUserid() == this.getUserid()
-                && u.getEmail().equals(this.getEmail())
+        return u.getEmail().equals(this.getEmail())
                 && u.getAccountName().equals(this.getAccountName())
                 && u.getCarbonSaved() == this.getCarbonSaved()
                 && u.getLevel().equals(this.getLevel());
@@ -153,7 +131,7 @@ public class User {
     /** {@inheritDoc} */
     @Override
     public int hashCode() {
-        int result = (userid ^ (userid >>> 32));
+        int result = (getId() ^ (getId() >>> 32));
         result = 31 * result + email.hashCode();
         result = 31 * result + accountName.hashCode();
 

@@ -1,5 +1,7 @@
 package seng202.team3.data.database;
 
+import seng202.team3.data.entity.EntityType;
+
 /**
  * Builder pattern to create custom query objects
  *
@@ -13,7 +15,7 @@ public interface QueryBuilder {
      * @param source string representation of the source
      * @return QueryBuilder with a defined source
      */
-    QueryBuilder withSource(String source);
+    QueryBuilder withSource(EntityType source);
 
     /**
      * Add a new filter criteria to the query.
