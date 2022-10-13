@@ -28,6 +28,7 @@ import javafx.collections.transformation.SortedList;
 import javafx.geometry.VerticalDirection;
 import javafx.scene.Node;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import seng202.team3.cucumber.CucumberFxBase;
@@ -188,6 +189,11 @@ public class AccountPageStepDefs extends CucumberFxBase {
     public void changeAccountPassword(String password) {
         clickOn("#accountPassword");
         write(password);
+    }
+
+    @Then("I am informed that my password is invalid")
+    public void invalidAccountPassword() {
+        assertTrue(controller.getErrors().isShowing("accountPassError"));
     }
 
     @Then("I logout of the app")

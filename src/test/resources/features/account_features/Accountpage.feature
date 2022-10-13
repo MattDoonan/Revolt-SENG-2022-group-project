@@ -21,6 +21,12 @@ Feature: User checking there account information
 
   Scenario: (AT_43 3) A user wants to update personal information
     Given I want to edit my information
+    When I want to change my password to "123"
+    And I want to save my information
+    Then I am informed that my password is invalid
+
+  Scenario: (AT_43 4) A user wants to update personal information
+    Given I want to edit my information
     When I want to change my password to "1234"
     And I want to save my information
     Then I logout of the app

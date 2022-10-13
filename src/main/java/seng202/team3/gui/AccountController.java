@@ -153,6 +153,9 @@ public class AccountController {
      */
     public AccountController() {
         // Unused
+        errors.add(EMAIL_ERROR, "Invalid email.");
+        errors.add(NAME_ERROR, "Username cannot be empty.");
+        errors.add(PASSWORD_ERROR, "Password must be more than 4 characters.");
     }
 
     /**
@@ -168,9 +171,6 @@ public class AccountController {
         if (user.getLevel() == PermissionLevel.ADMIN) {
             editAdmin.setVisible(true);
         }
-        errors.add(EMAIL_ERROR, "Invalid email.");
-        errors.add(NAME_ERROR, "Username cannot be empty.");
-        errors.add(PASSWORD_ERROR, "Password must be more than 4 characters.");
     }
 
     /**
@@ -347,5 +347,14 @@ public class AccountController {
                 || UserManager.getUser().getLevel() == PermissionLevel.CHARGEROWNER) {
             controller.refreshTable();
         }
+    }
+
+    /**
+     * Gets error handling object for tooltip messages
+     * 
+     * @return errorhandler with entry field tooltip alerts
+     */
+    public ErrorHandler getErrors() {
+        return errors;
     }
 }
