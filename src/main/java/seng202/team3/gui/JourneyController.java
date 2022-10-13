@@ -313,7 +313,29 @@ public class JourneyController {
         journeyManager.setCurrentCoordinate(GeoLocationHandler.getCoordinate());
         journeyManager.makeCoordinateName();
         Coordinate position = journeyManager.getPosition();
-        if (position != null && journeyManager.getSelectedJourney().getVehicle() != null) {
+        Coordinate prevPoint = null;
+
+        if (!journeyManager.getStops().isEmpty()) {
+            prevPoint = journeyManager.getStops()
+                    .get(journeyManager.getStops().size() - 1).getLocation();
+        } else if (journeyManager.getStart() != null) {
+            prevPoint = journeyManager.getStart();
+        }
+
+        if (prevPoint == null) {
+            errors.add("No starting point selected");
+        } else if (position == null) {
+            errors.add("No end point selected");
+        } else if (journeyManager.getSelectedJourney().getVehicle() == null) {
+            errors.add("Please select a vehicle.");
+        } else if (Calculations
+                .calculateDistance(position, prevPoint) > journeyManager.getDesiredRange()) {
+            errors.add("Selected end point is out of range");
+        } else if (prevPoint.equals(position)) {
+            errors.add("Cannot set previous position to end");
+        }
+
+        if (errors.isEmpty()) {
             journeyManager.setEnd(position);
             mapController.positionMarker("Destination");
             makeEnd.setDisable(true);
@@ -323,9 +345,11 @@ public class JourneyController {
                 tripName.setText("Trip to " + position.getAddress().split(",")[0]);
             }
             calculateRoute();
-        } else if (journeyManager.getSelectedJourney().getVehicle() == null) {
-            errors.add("Please select a vehicle.");
+        } else {
+            displayErrorPopups();
+            errors.clear();
         }
+
     }
 
     /**
