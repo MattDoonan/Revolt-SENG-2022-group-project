@@ -68,12 +68,23 @@ public class JourneyTestFx extends TestFxBase {
         journeyController.init(stage);
     }
 
-//    /**
-//     * Tests the start journey button hides itself
-//     */
-//    @Test
-//    public void startJourneyHide() {
-//        clickOn("#makeStart");
-//        verifyThat("#error", Node::isVisible);
-//    }
+    /**
+     * Tests the start shows an error prompt when clicked without a vehicle created / selected
+     */
+    @Test
+    public void startJourneyError() {
+        clickOn("#makeStart");
+        verifyThat("#prompt", Node::isVisible);
+    }
+
+    /**
+     * Tests the end shows an error prompt when clicked without a start selected
+     */
+    @Test
+    public void endJourneyError() {
+        clickOn("#makeEnd");
+        verifyThat("#prompt", Node::isVisible);
+    }
+
+
 }
