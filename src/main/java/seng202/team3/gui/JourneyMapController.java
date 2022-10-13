@@ -48,6 +48,9 @@ public class JourneyMapController extends MapHandler {
      */
     @Override
     public void addChargersOnMap() {
+        if (!MapHandler.isMapRequested()) {
+            return;
+        }
         javaScriptConnector.call("setJourney");
         javaScriptConnector.call("clearMarkers");
         javaScriptConnector.call("removeRoute");
@@ -86,6 +89,9 @@ public class JourneyMapController extends MapHandler {
      * @param position a String of either "Start" or "Destination" or "Stop"
      */
     public void positionMarker(String position) {
+        if (!MapHandler.isMapRequested()) {
+            return;
+        }
         javaScriptConnector.call("addCoordinate", position + ":" + "\n"
                 + GeoLocationHandler.getCoordinate().getAddress(),
                 GeoLocationHandler.getCoordinate().getLat(),
@@ -108,7 +114,9 @@ public class JourneyMapController extends MapHandler {
      * selected start and end coordinates.
      */
     public void addRouteToScreen() {
-
+        if (!MapHandler.isMapRequested()) {
+            return;
+        }
         javaScriptConnector.call("removeRoute");
 
         Coordinate start = journeyController.getManager().getSelectedJourney().getStartPosition();
@@ -143,6 +151,9 @@ public class JourneyMapController extends MapHandler {
      * Removes the route and circles
      */
     public void removeRoute() {
+        if (!MapHandler.isMapRequested()) {
+            return;
+        }
         javaScriptConnector.call("removeRoute");
         javaScriptConnector.call("removeCircle");
     }
