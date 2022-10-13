@@ -104,7 +104,7 @@ public class JavaScriptBridge {
      * @param address String of the address
      */
     public void addLocationName(String address) {
-        GeoLocationHandler.setCoordinate(GeoLocationHandler.getCoordinate());
+        GeoLocationHandler.getCoordinate().setAddress(address);
         refreshCoordinates();
     }
 

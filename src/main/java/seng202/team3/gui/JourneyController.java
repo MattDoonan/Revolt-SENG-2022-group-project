@@ -383,6 +383,7 @@ public class JourneyController {
         makeEnd.setDisable(false);
         startLabel.setText("Start not set");
         endLabel.setText("End not set");
+        tripName.clear();
         errorText.setVisible(false);
         distanceError = false;
         rangeSlider.setDisable(false);
