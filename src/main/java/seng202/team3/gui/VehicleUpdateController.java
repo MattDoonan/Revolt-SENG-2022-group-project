@@ -297,6 +297,8 @@ public class VehicleUpdateController {
             popupStage.close();
         }
 
+        System.out.println("Errors: " + errors.getAll() + "\n");
+
     }
 
     /**

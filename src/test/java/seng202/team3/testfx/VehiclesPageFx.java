@@ -125,7 +125,7 @@ public class VehiclesPageFx extends TestFxBase {
         clickOn("#addConnectionBtn");
         clickOn("#saveChanges");
         assertFalse(((VehicleUpdateController) MainWindow.getController())
-                .getErrors().isShowing("connectorError"));
+                .getErrors().getHash().containsKey("connectorError"));
     }
 
     @Test

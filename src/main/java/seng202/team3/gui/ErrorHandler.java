@@ -91,6 +91,15 @@ public class ErrorHandler {
     }
 
     /**
+     * Get all error tooltip-key hashes in the handler
+     * 
+     * @return HashMap of all errors
+     */
+    public HashMap<String, Tooltip> getHash() {
+        return errorTooltips;
+    }
+
+    /**
      * Changes the message of a tooltip
      * 
      * @param id      id of tooltip to change
