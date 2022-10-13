@@ -812,6 +812,14 @@ public class JourneyController {
     }
 
     /**
+     * Updates slider value when clicked
+     */
+    @FXML
+    public void sliderClicked() {
+        sliderUpdated();
+    }
+
+    /**
      * Handles updates of vehicle range slider
      */
     public void sliderUpdated() {
