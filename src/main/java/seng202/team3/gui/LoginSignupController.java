@@ -261,8 +261,10 @@ public class LoginSignupController {
             errors.add(PASSWORD_ERROR, signupPasswordField, "Password required");
             signupPasswordField.setStyle(INVALID_STYLE);
             fail = true;
-        } else if (signupPasswordField.getText().length() < 4 && signupPasswordField.getText().length() > 0) {
-            errors.add(PASSWORD_ERROR, signupPasswordField, "Password must be more than 4 characters.");
+        } else if (signupPasswordField.getText().length() < 4 
+            && signupPasswordField.getText().length() > 0) {
+            errors.add(PASSWORD_ERROR, signupPasswordField, 
+                "Password must be more than 4 characters.");
             signupPasswordField.setStyle(INVALID_STYLE);
             fail = true;
         }

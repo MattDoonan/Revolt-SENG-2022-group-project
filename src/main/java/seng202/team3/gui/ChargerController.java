@@ -248,17 +248,6 @@ public class ChargerController {
      * @param stage the stage this controller is on
      */
     public void init(Stage stage) {
-        errors.add("chargerAddressRequired", address,
-                "Needs an address, e.g. 132 Science Road, Christchurch");
-        errors.add("chargerNameRequired", name, "Needs a name, e.g. Home");
-        errors.add("chargerTimeRequired", time, "Needs a Time Limit");
-        // "Time Limit is not a valid number"
-        errors.add("chargerParksFormat", parks, "A Charger must have a whole number of parks");
-        errors.add("chargerConnectorRequired", addConnectorButton,
-                "A Charger must have at least one Connector!");
-        errors.add("chargerCoordFormatLat", lat, "Coordinate is not valid number");
-        errors.add("chargerCoordFormatLon", lon, "Coordinate is not valid number");
-
         this.stage = stage;
         makeConnectors();
         connectorTable.setItems(connectors);
@@ -356,6 +345,8 @@ public class ChargerController {
             coordinate.setLat(Double.parseDouble(lat.getText()));
             coordinate.setLon(Double.parseDouble(lon.getText()));
         } catch (NumberFormatException | NullPointerException e) {
+            errors.add("chargerCoordFormatLat", lat, "Coordinate is not valid number");
+            errors.add("chargerCoordFormatLon", lon, "Coordinate is not valid number");
             lat.setStyle(INVALID_STYLE);
             lon.setStyle(INVALID_STYLE);
             fail = true;
@@ -375,6 +366,8 @@ public class ChargerController {
         }
         coordinate.setAddress(address.getText());
         if (address.getText().length() == 0) {
+            errors.add("chargerAddressRequired", address,
+                "Needs an address, e.g. 132 Science Road, Christchurch");
             address.setStyle(INVALID_STYLE);
             fail = true;
         }
@@ -382,6 +375,7 @@ public class ChargerController {
         newCharger.setOperator(operator.getText());
         newCharger.setName(name.getText());
         if (name.getText().length() == 0) {
+            errors.add("chargerNameRequired", name, "Needs a name, e.g. Home");
             name.setStyle(INVALID_STYLE);
             fail = true;
         }
@@ -394,17 +388,18 @@ public class ChargerController {
             newCharger.setTimeLimit(Double.parseDouble(time.getText()));
         } catch (NullPointerException e) {
             time.setStyle(INVALID_STYLE);
-            errors.changeMessage("chargerTimeRequired", "Needs a Time Limit");
+            errors.add("chargerTimeRequired", time, "Needs a Time Limit");
             fail = true;
         } catch (NumberFormatException e) {
             time.setStyle(INVALID_STYLE);
-            errors.changeMessage("chargerTimeRequired", "Time Limit is not a valid number");
+            errors.add("chargerTimeInvalid", time, "Time Limit is not a valid number");
             fail = true;
         }
 
         try {
             newCharger.setAvailableParks(Integer.parseInt(parks.getText()));
         } catch (NumberFormatException e) {
+            errors.add("chargerParksFormat", parks, "A Charger must have a whole number of parks");
             parks.setStyle(INVALID_STYLE);
             fail = true;
         }
@@ -414,6 +409,8 @@ public class ChargerController {
         }
 
         if (connectors.isEmpty()) {
+            errors.add("chargerConnectorRequired", addConnectorButton,
+                "A Charger must have at least one Connector!");
             addConnectorButton.setStyle(INVALID_STYLE);
             fail = true;
         }

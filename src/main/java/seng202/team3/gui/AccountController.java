@@ -139,6 +139,11 @@ public class AccountController {
     private static final String EMAIL_ERROR = "accountEmailError";
 
     /**
+     * id for invalid email
+     */
+    private static final String EMAIL_REQ_ERROR = "accountEmailReqError";
+
+    /**
      * id for invalid password
      */
     private static final String PASSWORD_ERROR = "accountPassError";
@@ -318,9 +323,8 @@ public class AccountController {
 
         if (!UserManager.checkEmail(accountEmail.getText())) {
             errors.add(EMAIL_ERROR, accountEmail, "Invalid email.");
-            errors.changeMessage(EMAIL_ERROR, "Invalid email.");
             if (accountEmail.getText().isEmpty()) {
-                errors.changeMessage(EMAIL_ERROR, "Email cannot be empty.");
+                errors.add(EMAIL_REQ_ERROR, accountEmail, "Email cannot be empty.");
             }
             accountEmail.setStyle(INVALID_STYLE);
             fail = true;

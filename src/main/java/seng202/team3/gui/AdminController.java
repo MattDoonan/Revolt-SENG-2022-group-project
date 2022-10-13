@@ -102,9 +102,20 @@ public class AdminController {
     private static final String DELETE_ERROR = "deleteError";
 
     /**
+     * Delete select Error ID 
+     */
+    private static final String DELETE_ERROR_SELECT = "deleteErrorSelect";
+
+
+    /**
      * Permissions Button error id
      */
     private static final String PERMISSIONS_ERROR = "permissionsEditError";
+
+    /**
+     * Permissions Button select error id
+     */
+    private static final String PERMISSIONS_ERROR_SELECT = "permissionsEditErrorSelect";
 
     /**
      * To create the admin controller
@@ -119,7 +130,6 @@ public class AdminController {
      * @param border the BorderPane containing this class
      */
     public void init(BorderPane border) {
-        errors.add(DELETE_ERROR, delete, SELECT_USER);
         errors.add("permissionsMenuError", menu, "Select a permission level.");
         errors.add(PERMISSIONS_ERROR, updatePermissions, SELECT_USER);
         this.border = border;
@@ -189,10 +199,10 @@ public class AdminController {
 
         boolean errorOccured = false;
         if (manager.getSelectedUser() == null) {
-            errors.changeMessage(DELETE_ERROR, SELECT_USER);
+            errors.add(DELETE_ERROR_SELECT, delete, SELECT_USER);
             errorOccured = true;
         } else if (manager.getAdmin().getUserid() == manager.getSelectedUser().getUserid()) {
-            errors.changeMessage(DELETE_ERROR, "Cannot delete current user");
+            errors.add(DELETE_ERROR, delete, "Cannot delete current user");
             errorOccured = true;
         }
 
@@ -218,10 +228,10 @@ public class AdminController {
 
         boolean permissionsErr = false;
         if (manager.getSelectedUser() == null) {
-            errors.changeMessage(PERMISSIONS_ERROR, SELECT_USER);
+            errors.add(PERMISSIONS_ERROR_SELECT, updatePermissions, SELECT_USER);
             permissionsErr = true;
         } else if (manager.getAdmin().getUserid() == manager.getSelectedUser().getUserid()) {
-            errors.changeMessage(PERMISSIONS_ERROR, "Cannot edit your own permissions!");
+            errors.add(PERMISSIONS_ERROR, updatePermissions, "Cannot edit your own permissions!");
             permissionsErr = true;
         }
 
