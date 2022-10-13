@@ -9,39 +9,40 @@
     <link rel="stylesheet"
         href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
 
-		<meta name="viewport" content="initial-scale=1.0" />
-		<meta charset="utf-8" />
-		<style>
-			html,
-			body {
-				height: 100%;
-				margin: 0;
-				padding: 0;
-			}
+    <meta name="viewport" content="initial-scale=1.0" />
+    <meta charset="utf-8" />
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
 
-			#map {
-				height: 100%;
-			}
-		</style>
-	</head>
+        #map {
+            height: 100%;
+        }
+    </style>
+</head>
 
-	<body>
-		<div id="map"></div>
-		<script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
-		<script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
-		<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
-		<script>
-			let map;
-			let defaultZoom = 6;
-			let zoomedIn = 13;
-			let markers = [];
-			let coordinate;
-			var javaScriptBridge; // must be declared as var (will not be correctly assigned in java with let keyword)
-			let isRoute;
-			let routeToCharger;
-			let pointCoordinates = []; // contains a list of all the coordinates in a route in order.
-			let isJourney = false;
-			let circle;
+<body>
+    <div id="map"></div>
+    <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
+    <script
+        src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <script>
+        let map;
+        let defaultZoom = 6;
+        let zoomedIn = 13;
+        let markers = [];
+        let coordinate;
+        var javaScriptBridge; // must be declared as var (will not be correctly assigned in java with let keyword)
+        let isRoute;
+        let routeToCharger;
+        let pointCoordinates = []; // contains a list of all the coordinates in a route in order.
+        let isJourney = false;
+        let circle;
 
 
         /**
@@ -54,43 +55,43 @@
             popupAnchor: [0, -38],
         })
 
-			/**
-			 * This object can be returned to our java code, where we can call the functions we define inside of it
-			 */
-			let jsConnector = {
-				addMarker,
-                addCoordinate,
-				removeCoordinate,
-                movePosition,
-				addRoute,
-                removeRoute,
-                initMap,
-				changeZoom,
-                clearMarkers,
-				addLocationToRoute,
-				setJourney,
-				addCircle,
-				removeCircle,
-				addPoint,
-				removeJourneys,
-                relocate
-			};
+        /**
+         * This object can be returned to our java code, where we can call the functions we define inside of it
+         */
+        let jsConnector = {
+            addMarker,
+            addCoordinate,
+            removeCoordinate,
+            movePosition,
+            addRoute,
+            removeRoute,
+            initMap,
+            changeZoom,
+            clearMarkers,
+            addLocationToRoute,
+            setJourney,
+            addCircle,
+            removeCircle,
+            addPoint,
+            removeJourneys,
+            relocate
+        };
 
-			/**
-			 * Creates an object with the lat, lon, id and type attributes
-			 *
-			 * @param lat the latitude of the object
-			 * @param lon the longitude of the object
-			 * @param id the id of the object according to the database, or address of coordinate for now
-			 * @param type the type of object ("p" = coordinate, "c" = charger)
-			 * @constructor
-			 */
-			function Location(lat, lon, id, type) {
-				this.lat = lat;
-				this.lon = lon;
-				this.id = id;
-				this.type = type;
-			}
+        /**
+         * Creates an object with the lat, lon, id and type attributes
+         *
+         * @param lat the latitude of the object
+         * @param lon the longitude of the object
+         * @param id the id of the object according to the database, or address of coordinate for now
+         * @param type the type of object ("p" = coordinate, "c" = charger)
+         * @constructor
+         */
+        function Location(lat, lon, id, type) {
+            this.lat = lat;
+            this.lon = lon;
+            this.id = id;
+            this.type = type;
+        }
 
         /**
          * creates and initialises the Google map, also defines on click event that calls java code
@@ -125,12 +126,12 @@
         }
 
 
-		/**
-		 * Removes the journey
-		 */
-		function removeJourneys() {
-			isJourney = false
-		}
+        /**
+         * Removes the journey
+         */
+        function removeJourneys() {
+            isJourney = false
+        }
 
 
         /**
@@ -196,7 +197,7 @@
                     id + ")'>Edit Charger</button>"
             } else if (isJourney && isEditable) {
                 textOutput = "<br><center><button type='button' style='background: #4CAF50; color: white;"
-                +" border-radius: 5px;' onclick='javaScriptBridge.addChargerToJourney(" + id +
+                    + " border-radius: 5px;' onclick='javaScriptBridge.addChargerToJourney(" + id +
                     ")'>Add to Route</button></center>"
             }
             m.bindPopup("Address: " + title + textOutput);
@@ -208,31 +209,31 @@
             }
         }
 
-		/**
-		 * Adds a point on the map
-		 *
-		 * @param title the title of the coordinate
-		 * @param lat the lat of the coordinate
-		 * @param lng the long  of the coordinate
-		 */
-		function addPoint(title, lat, lng) {
-			let point = new L.Marker([lat, lng], { icon: redIcon });
-			point.bindPopup(title + ": [" + lat.toFixed(4) + ", " + lng.toFixed(4) + "]")
-			point.on("click", function (ev) { coordinate.openPopup() })
-			point.addTo(map)
-			markers.push(point);
+        /**
+         * Adds a point on the map
+         *
+         * @param title the title of the coordinate
+         * @param lat the lat of the coordinate
+         * @param lng the long  of the coordinate
+         */
+        function addPoint(title, lat, lng) {
+            let point = new L.Marker([lat, lng], { icon: redIcon });
+            point.bindPopup(title + ": [" + lat.toFixed(4) + ", " + lng.toFixed(4) + "]")
+            point.on("click", function (ev) { coordinate.openPopup() })
+            point.addTo(map)
+            markers.push(point);
 
-		}
+        }
 
-		/**
-		 * Clears the markers
-		 */
-		function clearMarkers() {
-			markers.forEach(function (item, index) {
-				item.remove();
-			});
-			markers = [];
-		}
+        /**
+         * Clears the markers
+         */
+        function clearMarkers() {
+            markers.forEach(function (item, index) {
+                item.remove();
+            });
+            markers = [];
+        }
 
         /**
          * Adds a coordinate to the map and stores it by itself
@@ -241,51 +242,51 @@
          * @param lng longitude to place coordinate marker at
          */
         function addCoordinate(title, lat, lng) {
-			let popup = title + ": [" + lat.toFixed(4) + ", " + lng.toFixed(4) + "]"
+            let popup = title + ": [" + lat.toFixed(4) + ", " + lng.toFixed(4) + "]"
 
-			if (isJourney) {
-				popup += "<br><center><button type='button' style='background: #c61c1c; color: white;"
-						+" border-radius: 5px;' onclick='javaScriptBridge.addStopInJourney("
-						+ ")'>Add a Stop</button></center>"
-			}
+            if (isJourney) {
+                popup += "<br><center><button type='button' style='background: #c61c1c; color: white;"
+                    + " border-radius: 5px;' onclick='javaScriptBridge.addStopInJourney("
+                    + ")'>Add a Stop</button></center>"
+            }
 
             removeCoordinate()
             coordinate = new L.Marker([lat, lng], { icon: redIcon })
             coordinate.bindPopup(popup)
-            coordinate.on("click", function (ev) { coordinate.openPopup() })
+            coordinate.on("mouseover", function (ev) { coordinate.openPopup() })
             coordinate.addTo(map)
         }
 
-		/**
-		 * Remove coordinate
-		 */
-		function removeCoordinate() {
-			if (coordinate) {
-				coordinate.remove();
-			}
-		}
+        /**
+         * Remove coordinate
+         */
+        function removeCoordinate() {
+            if (coordinate) {
+                coordinate.remove();
+            }
+        }
 
-		/**
-		 * Moves position of centre of map
-		 */
-		function movePosition(lat, lon) {
-			map.panTo(new L.LatLng(lat, lon));
-		}
+        /**
+         * Moves position of centre of map
+         */
+        function movePosition(lat, lon) {
+            map.panTo(new L.LatLng(lat, lon));
+        }
 
-		/**
-		 * Adds a location object to the route using an index to determine location.
-		 *
-		 * @param lat the latitude of the coordinate/charger
-		 * @param lon the longitude of the coordinate/charger
-		 * @param id the id of the coordinate/charger
-		 * @param type the type of object ("p" for coordinate, "c" for charger)
-		 * @param index the index of the object for the list.
-		 */
-		function addLocationToRoute(lat, lon, id, type, index) {
-			let location = new Location(lat, lon, id, type);
-			pointCoordinates.splice(index, 0, location);
-			refreshRoute();
-		}
+        /**
+         * Adds a location object to the route using an index to determine location.
+         *
+         * @param lat the latitude of the coordinate/charger
+         * @param lon the longitude of the coordinate/charger
+         * @param id the id of the coordinate/charger
+         * @param type the type of object ("p" for coordinate, "c" for charger)
+         * @param index the index of the object for the list.
+         */
+        function addLocationToRoute(lat, lon, id, type, index) {
+            let location = new Location(lat, lon, id, type);
+            pointCoordinates.splice(index, 0, location);
+            refreshRoute();
+        }
 
         /**
          * Refreshes the route to display all points
@@ -298,72 +299,73 @@
             for (i = 0; i < pointCoordinates.length; i++) {
                 coordinates.push(new L.latLng(pointCoordinates[i].lat, pointCoordinates[i].lon))
             }
-			if (!isJourney) {
-				routeToCharger = L.Routing.control({
-				waypoints: coordinates,
-				serviceUrl: 'https://tile.csse.canterbury.ac.nz/route/v1',
-				routeWhileDragging: true,
-				geocoder: new L.Control.Geocoder.Nominatim({
-					geocodingQueryParams: {
-						countrycodes: 'nz'
-					}
-				}),
-			}).addTo(map);
-			} else {
-				routeToCharger = L.Routing.control({
-					waypoints: coordinates,
-					serviceUrl: 'https://tile.csse.canterbury.ac.nz/route/v1',
-					routeWhileDragging: false,
-					addWaypoints: false,
-				}).addTo(map);
-			}
+            if (!isJourney) {
+                routeToCharger = L.Routing.control({
+                    waypoints: coordinates,
+                    serviceUrl: 'https://tile.csse.canterbury.ac.nz/route/v1',
+                    routeWhileDragging: true,
+                    geocoder: new L.Control.Geocoder.Nominatim({
+                        geocodingQueryParams: {
+                            countrycodes: 'nz'
+                        }
+                    }),
+                }).addTo(map);
+            } else {
+                routeToCharger = L.Routing.control({
+                    waypoints: coordinates,
+                    serviceUrl: 'https://tile.csse.canterbury.ac.nz/route/v1',
+                    routeWhileDragging: false,
+                    addWaypoints: false,
+                }).addTo(map);
+            }
         }
 
-			/**
-			 * Adds a selected route to charger onto the map with selected waypoints
-			 *
-			 */
-			function addRoute() {
-				isRoute = true;
-				refreshRoute();
-			}
+        /**
+         * Adds a selected route to charger onto the map with selected waypoints
+         *
+         */
+        function addRoute() {
+            isRoute = true;
+            refreshRoute();
+        }
 
-			/**
-			 * Removes all points on all routes and resets to default
-			 *
-			 */
-			function removeRoute() {
-				isRoute = false;
-				if (routeToCharger) {
-					routeToCharger.remove();
-					pointCoordinates = [];
-				}
-			}
+        /**
+         * Removes all points on all routes and resets to default
+         *
+         */
+        function removeRoute() {
+            isRoute = false;
+            if (routeToCharger) {
+                routeToCharger.remove();
+                pointCoordinates = [];
+            }
+        }
 
-			/**
-			 * Called when journey planner opened
-			 * to change javascript implementation
-			 */
-			function setJourney() {
-				isJourney = true;
-			}
+        /**
+         * Called when journey planner opened
+         * to change javascript implementation
+         */
+        function setJourney() {
+            isJourney = true;
+        }
 
-			/**
-			 * Adds a circle overlay on map
-			 */
-			function addCircle(lat, long, rad) {
-				removeCircle();
-				circle = L.circle([lat, long], { radius: rad }).addTo(map);
-			}
+        /**
+         * Adds a circle overlay on map
+         */
+        function addCircle(lat, long, rad) {
+            removeCircle();
+            circle = L.circle([lat, long], { radius: rad }).addTo(map);
+        }
 
-			/**
-			 * Removes circle
-			 */
-			function removeCircle() {
-				if (circle) {
-					circle.remove();
-				}
-			}
-		</script>
-	</body>
+        /**
+         * Removes circle
+         */
+        function removeCircle() {
+            if (circle) {
+                circle.remove();
+            }
+        }
+    </script>
+</body>
+
 </html>
