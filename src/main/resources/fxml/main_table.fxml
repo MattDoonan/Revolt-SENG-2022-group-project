@@ -14,9 +14,9 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="-Infinity" prefWidth="600.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.TableController">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="-Infinity" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.TableController">
    <center>
-      <TableView fx:id="mainTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" onMouseClicked="#setCharger" BorderPane.alignment="CENTER" />
+      <TableView fx:id="mainTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" onMouseClicked="#setCharger" stylesheets="@../css/tableView.css" BorderPane.alignment="CENTER" />
    </center>
    <padding>
       <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
@@ -199,11 +199,11 @@
                   </CustomMenuItem>
                </items>
             </MenuButton>
-            <MenuButton minHeight="30.0" mnemonicParsing="false" prefWidth="250.0" style="-fx-font-size: 20;" text="Modify Chargers" fx:id="modChargers">
+            <MenuButton fx:id="modChargers" minHeight="30.0" mnemonicParsing="false" prefWidth="250.0" style="-fx-font-size: 20;" text="Modify Chargers">
                <items>
-                  <MenuItem mnemonicParsing="false" onAction="#addCharger" text="Add Charger" fx:id="addCharger"/>
-                  <MenuItem mnemonicParsing="false" onAction="#editCharger" text="Edit Charger" fx:id="editCharger"/>
-                  <MenuItem mnemonicParsing="false" onAction="#deleteCharger" text="Delete Charger" fx:id="deleteCharger"/>
+                  <MenuItem fx:id="addCharger" mnemonicParsing="false" onAction="#addCharger" text="Add Charger" />
+                  <MenuItem fx:id="editCharger" mnemonicParsing="false" onAction="#editCharger" text="Edit Charger" />
+                  <MenuItem fx:id="deleteCharger" mnemonicParsing="false" onAction="#deleteCharger" text="Delete Charger" />
                </items>
             </MenuButton>
             <Button fx:id="update" minHeight="30.0" mnemonicParsing="false" onAction="#updateTable" prefWidth="240.0" style="-fx-font-size: 20;" text="Update table" />

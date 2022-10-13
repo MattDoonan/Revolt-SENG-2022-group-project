@@ -1,3 +1,5 @@
+/* Adapted from dx.dragan.ba */
+
 * {
 	-fx-primary-color: #007acc;
 	-fx-secondary-color: #4b6eaf;
@@ -36,7 +38,7 @@
 	background-color: -fx-light-grey-color;
 	-fx-background-color: -fx-light-grey-color;
 	border-color: -fx-grey-color;
-	-fx-border-color: -fx-grey-color;
+	-fx-table-cell-border-color: -fx-grey-color;
 }
 .table-view .column-header .label {
 	font-weight: bold;

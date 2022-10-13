@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="632.0" prefWidth="982.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.ChargerController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="632.0" prefWidth="982.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.ChargerController">
          <right>
             <BorderPane prefHeight="592.0" prefWidth="549.0" BorderPane.alignment="CENTER">
                <top>
@@ -18,7 +28,7 @@
                <center>
                    <AnchorPane prefHeight="472.0" prefWidth="549.0">
                        <children>
-                           <TableView fx:id="connectorTable" layoutY="14.0" prefHeight="199.0" prefWidth="549.0">
+                           <TableView fx:id="connectorTable" layoutY="14.0" prefHeight="199.0" prefWidth="549.0" stylesheets="@../css/tableView.css">
                                <columns>
                                    <TableColumn fx:id="current" editable="false" prefWidth="84.0" text="Current:" />
                                    <TableColumn fx:id="wattage" editable="false" prefWidth="135.0" text="Wattage:" />
@@ -78,6 +88,7 @@
                         <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints />
                     </rowConstraints>
                      <children>
                         <Label text="Name:" GridPane.rowIndex="1">
@@ -174,7 +185,7 @@
                   <Label text=" Longitude:" GridPane.rowIndex="12" />
                   <TextField fx:id="lat" GridPane.columnIndex="1" GridPane.rowIndex="11" />
                   <TextField fx:id="lon" prefWidth="228.0" GridPane.columnIndex="1" GridPane.rowIndex="12" />
-                  <Label fx:id="views" prefWidth="0.0" prefHeight="0.0" GridPane.columnIndex="1" GridPane.rowIndex="13" visible="false" />
+                  <Label fx:id="views" prefHeight="0.0" prefWidth="0.0" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="13" />
                      </children>
                <BorderPane.margin>
                   <Insets bottom="45.0" />
