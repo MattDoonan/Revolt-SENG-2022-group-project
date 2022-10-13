@@ -812,6 +812,8 @@ public class JourneyController {
             errorPopup.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            errors.clear();
         }
     }
 
