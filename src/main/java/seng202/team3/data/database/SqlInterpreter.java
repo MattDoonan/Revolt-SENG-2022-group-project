@@ -646,7 +646,8 @@ public class SqlInterpreter implements DataReader {
             rs.getInt(CHARGERID_FIELD);
 
             if (rs.wasNull()) { // if chargerid is null
-                stops.add(new Stop(rs.getDouble("lat"), rs.getDouble("lon")));
+                stops.add(new Stop(new Coordinate(
+                        rs.getDouble("lat"), rs.getDouble("lon"), rs.getString("address"))));
             } else {
                 try (Connection connection = createConnection();
                         Statement stmt = connection.createStatement();
@@ -685,10 +686,12 @@ public class SqlInterpreter implements DataReader {
             journey.setId(rs.getInt(JOURNEYID_FIELD));
             journey.setStartPosition(
                     new Coordinate(
-                            rs.getDouble("startLat"), rs.getDouble("startLon")));
+                            rs.getDouble("startLat"), rs.getDouble("startLon"),
+                            rs.getString("startAddress")));
             journey.setEndPosition(
                     new Coordinate(
-                            rs.getDouble("endLat"), rs.getDouble("endLon")));
+                            rs.getDouble("endLat"), rs.getDouble("endLon"),
+                            rs.getString("endAddress")));
             journey.setStartDate(rs.getString("startDate"));
             journey.setTitle(rs.getString("title"));
 
@@ -1083,10 +1086,11 @@ public class SqlInterpreter implements DataReader {
      */
     public void writeJourney(Journey j) throws IOException {
         String toAdd = "INSERT INTO journey (journeyid, vehicleid, startLat, "
-                + "startLon, "
-                + "endLat, endLon, startDate, title, userid) "
-                + "values(?,?,?,?,?,?,?,?,?) ON CONFLICT(journeyid) DO UPDATE SET "
-                + "vehicleid = ?, startLat = ?, startLon = ?, endLat = ?, endLon = ?, "
+                + "startLon, startAddress,"
+                + "endLat, endLon, endAddress, startDate, title, userid) "
+                + "values(?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(journeyid) DO UPDATE SET "
+                + "vehicleid = ?, startLat = ?, startLon = ?, startAddress = ?,"
+                + " endLat = ?, endLon = ?, endAddress = ?,"
                 + "startDate = ?, title = ?, userid = ?";
         if (j.getVehicle() == null) {
             throw new IOException("Error writing journey. No Vehicle Attached.");
@@ -1105,19 +1109,23 @@ public class SqlInterpreter implements DataReader {
             addJourney.setInt(2, j.getVehicle().getId());
             addJourney.setDouble(3, j.getStartPosition().getLat());
             addJourney.setDouble(4, j.getStartPosition().getLon());
-            addJourney.setDouble(5, j.getEndPosition().getLat());
-            addJourney.setDouble(6, j.getEndPosition().getLon());
-            addJourney.setString(7, j.getStartDate());
-            addJourney.setString(8, j.getTitle());
-            addJourney.setInt(9, j.getUser());
-            addJourney.setInt(10, j.getVehicle().getId());
-            addJourney.setDouble(11, j.getStartPosition().getLat());
-            addJourney.setDouble(12, j.getStartPosition().getLon());
-            addJourney.setDouble(13, j.getEndPosition().getLat());
-            addJourney.setDouble(14, j.getEndPosition().getLon());
-            addJourney.setString(15, j.getStartDate());
-            addJourney.setString(16, j.getTitle());
-            addJourney.setInt(17, j.getUser());
+            addJourney.setString(5, j.getStartPosition().getAddress());
+            addJourney.setDouble(6, j.getEndPosition().getLat());
+            addJourney.setDouble(7, j.getEndPosition().getLon());
+            addJourney.setString(8, j.getEndPosition().getAddress());
+            addJourney.setString(9, j.getStartDate());
+            addJourney.setString(10, j.getTitle());
+            addJourney.setInt(11, j.getUser());
+            addJourney.setInt(12, j.getVehicle().getId());
+            addJourney.setDouble(13, j.getStartPosition().getLat());
+            addJourney.setDouble(14, j.getStartPosition().getLon());
+            addJourney.setString(15, j.getStartPosition().getAddress());
+            addJourney.setDouble(16, j.getEndPosition().getLat());
+            addJourney.setDouble(17, j.getEndPosition().getLon());
+            addJourney.setString(18, j.getEndPosition().getAddress());
+            addJourney.setString(19, j.getStartDate());
+            addJourney.setString(20, j.getTitle());
+            addJourney.setInt(21, j.getUser());
             addJourney.executeUpdate();
             if (j.getId() == 0) {
                 j.setId(addJourney.getGeneratedKeys().getInt(1));
@@ -1146,9 +1154,10 @@ public class SqlInterpreter implements DataReader {
     private void writeStops(Connection connection, List<Stop> stops, int journeyId)
             throws SQLException {
         String stopQuery = "INSERT INTO stop (stopid, journeyid, chargerid, position,"
-                + " lat, lon) "
-                + "values (?,?,?,?,?,?) ON CONFLICT(stopid) DO UPDATE SET "
-                + "stopid = ?, journeyid = ?, chargerid = ?, position = ?, lat = ?, lon = ?";
+                + " lat, lon, address) "
+                + "values (?,?,?,?,?,?,?) ON CONFLICT(stopid) DO UPDATE SET "
+                + "stopid = ?, journeyid = ?, chargerid = ?, position = ?, lat = ?, lon = ?, "
+                + "address = ?";
         try (PreparedStatement statement = connection.prepareStatement(stopQuery)) {
 
             for (int i = 0; i < stops.size(); i++) {
@@ -1168,22 +1177,24 @@ public class SqlInterpreter implements DataReader {
                 statement.setInt(4, i);
                 statement.setDouble(5, stops.get(i).getLocation().getLat());
                 statement.setDouble(6, stops.get(i).getLocation().getLon());
+                statement.setString(7, stops.get(i).getLocation().getAddress());
                 if (stops.get(i).getId() == 0) {
-                    statement.setNull(7, 0);
+                    statement.setNull(8, 0);
                 } else {
-                    statement.setInt(7, stops.get(i).getId());
+                    statement.setInt(8, stops.get(i).getId());
                 }
-                statement.setInt(8, journeyId);
+                statement.setInt(9, journeyId);
 
                 if (stops.get(i).getCharger() != null) {
-                    statement.setInt(9, stops.get(i).getCharger().getId());
+                    statement.setInt(10, stops.get(i).getCharger().getId());
                 } else {
-                    statement.setNull(9, 0);
+                    statement.setNull(10, 0);
                 }
 
-                statement.setInt(10, i);
-                statement.setDouble(11, stops.get(i).getLocation().getLat());
-                statement.setDouble(12, stops.get(i).getLocation().getLon());
+                statement.setInt(11, i);
+                statement.setDouble(12, stops.get(i).getLocation().getLat());
+                statement.setDouble(13, stops.get(i).getLocation().getLon());
+                statement.setString(14, stops.get(i).getLocation().getAddress());
                 statement.executeUpdate();
             }
         }

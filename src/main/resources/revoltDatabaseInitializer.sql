@@ -76,8 +76,10 @@ CREATE TABLE if not exists journey
     vehicleid INTEGER NOT NULL references Vehicle(vehicleid),
     startLat REAL NOT NULL,
     startLon REAL NOT NULL,
+    startAddress VARCHAR(255),
     endLat REAL NOT NULL,
     endLon REAL NOT NULL,
+    endAddress VARCHAR(255),
     startDate TEXT,
     title TEXT
     );
@@ -91,6 +93,7 @@ CREATE TABLE if not exists stop
     position INTEGER NOT NULL,
     lat REAL NOT NULL,
     lon REAL NOT NULL,
+    address VARCHAR(255),
     chargerid INTEGER references Charger(chargerid),
     UNIQUE(journeyid, position) ON CONFLICT REPLACE
     );

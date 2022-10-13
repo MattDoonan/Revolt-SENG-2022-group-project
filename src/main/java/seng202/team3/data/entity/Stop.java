@@ -30,11 +30,10 @@ public class Stop extends Entity {
     /**
      * Create a stop at any point
      * 
-     * @param lat latitude coordinate of the stop
-     * @param lon longitude coordinate of the stop
+     * @param position position of the stop
      */
-    public Stop(Double lat, Double lon) {
-        this.location = new Coordinate(lat, lon);
+    public Stop(Coordinate position) {
+        this.location = position;
     }
 
     /**

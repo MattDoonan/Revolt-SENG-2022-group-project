@@ -190,7 +190,7 @@ public class JourneyManager extends ChargerHandler {
      * @param coordinate the coordinate of the stop
      */
     public void addNoChargerStop(Coordinate coordinate) {
-        Stop stop = new Stop(coordinate.getLat(), coordinate.getLon());
+        Stop stop = new Stop(coordinate);
         stop.setLocation(coordinate);
         selectedJourney.addStop(stop);
     }
