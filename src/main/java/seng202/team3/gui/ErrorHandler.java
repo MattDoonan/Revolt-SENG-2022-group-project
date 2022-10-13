@@ -3,7 +3,6 @@ package seng202.team3.gui;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.control.Control;
 import javafx.scene.control.Tooltip;
@@ -107,7 +106,14 @@ public class ErrorHandler {
      */
     public void hideAll() {
         for (Tooltip t : getAll()) {
-            t.hide();
+            Control control = (Control) t.getOwnerNode();
+            String id = t.getId();
+            if (control != null) {
+                t.hide();
+                control.setTooltip(null);
+            }
+            remove(id);
+            
         }
     }
 
