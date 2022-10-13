@@ -1,26 +1,24 @@
 package seng202.team3.unittest.logic;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import seng202.team3.data.database.ComparisonType;
+import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.*;
-import seng202.team3.logic.ChargerHandler;
-import seng202.team3.logic.ChargerManager;
-import seng202.team3.logic.GeoLocationHandler;
-import seng202.team3.logic.JourneyManager;
+import seng202.team3.logic.*;
 
 import javax.management.InstanceAlreadyExistsException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests for {@link JourneyManager journeyManager} logic class
@@ -76,10 +74,10 @@ public class JourneyManagerTest {
 
         testUserOne = new User("test@admin.com", "testUser",
                 PermissionLevel.USER);
-        SqlInterpreter.getInstance().writeUser(testUserOne);
+        SqlInterpreter.getInstance().writeUser(testUserOne, "1234");
 
         testVehicle = new Vehicle("TestMake", "TestModel",
-                555, new ArrayList<String>(Arrays.asList("Type 1 Tethered")));
+                200, new ArrayList<String>(Arrays.asList("Type 1 Tethered")));
         testVehicle.setOwner(testUserOne.getId());
         SqlInterpreter.getInstance().writeVehicle(testVehicle);
 
@@ -87,7 +85,6 @@ public class JourneyManagerTest {
                 testCoordinateEnd, "10/10/2002", "Name");
         testJourneyOne.addStop(new Stop(testCharger));
         testJourneyOne.setUser(testUserOne.getId());
-        SqlInterpreter.getInstance().writeJourney(testJourneyOne);
         journeyManager = new JourneyManager();
 
     }
@@ -156,5 +153,68 @@ public class JourneyManagerTest {
         journeyManager.addNoChargerStop(testCoordinateCharger);
         Stop check = new Stop(testCoordinateCharger);
         Assertions.assertEquals(check, journeyManager.getSelectedJourney().getStops().get(1));
+    }
+
+    @Test
+    public void removeLastStopTest() {
+        journeyManager.setSelectedJourney(testJourneyOne);
+        journeyManager.addNoChargerStop(testCoordinateCharger);
+        int size = journeyManager.getSelectedJourney().getStops().size();
+        journeyManager.removeLastStop();
+        Assertions.assertEquals(size-1,
+                journeyManager.getSelectedJourney().getStops().size());
+    }
+
+    @Test
+    public void noStopToRemove() {
+        journeyManager.setSelectedJourney(testJourneyOne);
+        journeyManager.removeLastStop();
+        journeyManager.removeLastStop();
+        Assertions.assertEquals(0,
+                journeyManager.getSelectedJourney().getStops().size());
+    }
+
+    @Test
+    public void saveJourney() throws IOException {
+        UserManager.setUser(testUserOne);
+        journeyManager.setStart(testCoordinateStart);
+        journeyManager.setEnd(testCoordinateEnd);
+        journeyManager.selectVehicle(testVehicle);
+        journeyManager.getSelectedJourney().setTitle("Test Journey");
+        journeyManager.addStop(new Stop(testCharger));
+        journeyManager.saveJourney();
+        List<Entity> journeys = SqlInterpreter.getInstance().readData(new QueryBuilderImpl().withSource(EntityType.JOURNEY)
+                .withFilter("userid", Integer.toString(testUserOne.getId()), ComparisonType.EQUAL).build());
+        if (journeys.size() == 1) {
+            Journey compare = (Journey) journeys.get(0);
+            Assertions.assertEquals(journeyManager.getSelectedJourney(), compare);
+        } else {
+            fail("More than one journey added");
+        }
+    }
+
+    @Test
+    public void saveInvalidJourneyTest() throws IOException {
+        UserManager.setUser(testUserOne);
+        journeyManager.saveJourney();
+        List<Entity> journeys = SqlInterpreter.getInstance().readData(new QueryBuilderImpl().withSource(EntityType.JOURNEY)
+                .withFilter("userid", Integer.toString(testUserOne.getId()), ComparisonType.EQUAL).build());
+        assertEquals(0, journeys.size());
+    }
+
+    @Test
+    public void testCheckValidDistanceBetweenChargers() {
+        journeyManager.setSelectedJourney(testJourneyOne);
+        Assertions.assertFalse(journeyManager.checkDistanceBetweenChargers());
+    }
+
+    @Test
+    public void testCheckInvalidDistanceBetweenChargers() {
+        Coordinate failStart = new Coordinate(3.4, 7.0);
+        Journey failJourney = new Journey(testVehicle, failStart,
+                testCoordinateEnd, "10/10/2002", "Name");
+        failJourney.addStop(new Stop(testCharger));
+        journeyManager.setSelectedJourney(failJourney);
+        assertTrue(journeyManager.checkDistanceBetweenChargers());
     }
 }

@@ -102,7 +102,7 @@ public class Stop extends Entity {
         int result = (getId() ^ (getId() >>> 32));
         result = 31 * result + location.hashCode();
         if (charger != null) {
-            result = 31*result + charger.hashCode();
+            result = 31 * result + charger.hashCode();
         }
         return result;
     }
