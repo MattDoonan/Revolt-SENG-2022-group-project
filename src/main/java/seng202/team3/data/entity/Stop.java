@@ -100,7 +100,10 @@ public class Stop extends Entity {
     @Override
     public int hashCode() {
         int result = (getId() ^ (getId() >>> 32));
-        result = 31 * result + charger.hashCode();
+        result = 31 * result + location.hashCode();
+        if (charger != null) {
+            result = 31*result + charger.hashCode();
+        }
         return result;
     }
 }

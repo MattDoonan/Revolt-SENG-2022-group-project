@@ -7,10 +7,14 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.*;
+import seng202.team3.logic.ChargerHandler;
+import seng202.team3.logic.ChargerManager;
+import seng202.team3.logic.GeoLocationHandler;
 import seng202.team3.logic.JourneyManager;
 
 import javax.management.InstanceAlreadyExistsException;
@@ -21,7 +25,7 @@ import java.util.Arrays;
 /**
  * Unit tests for {@link JourneyManager journeyManager} logic class
  *
- * @author James Billows
+ * @author Matthew Doonan
  * @version 1.0.0, Oct 22
  */
 public class JourneyManagerTest {
@@ -50,8 +54,8 @@ public class JourneyManagerTest {
         SqlInterpreter.getInstance().defaultDatabase();
 
         testCoordinateStart = new Coordinate(2.9342, 5.1247);
-        testCoordinateCharger = new Coordinate(3.92523, 2.23423);
-        testCoordinateEnd = new Coordinate(3.9342, 4.1247);
+        testCoordinateCharger = new Coordinate(2.9442, 5.1347);
+        testCoordinateEnd = new Coordinate(2.9882, 5.1447);
 
         testConnector1 = new Connector("ChardaMo", "AC", "Available", "123", 3);
         testCharger = new Charger(new ArrayList<Connector>(
@@ -84,6 +88,7 @@ public class JourneyManagerTest {
         testJourneyOne.addStop(new Stop(testCharger));
         testJourneyOne.setUser(testUserOne.getId());
         SqlInterpreter.getInstance().writeJourney(testJourneyOne);
+        journeyManager = new JourneyManager();
 
     }
 
@@ -100,13 +105,56 @@ public class JourneyManagerTest {
         testJourneyOne = null;
         testConnector1 = null;
         testUserOne = null;
+        journeyManager = null;
     }
 
-    /**
-     * null
-     */
     @Test
     public void testRangeChargers() {
+        journeyManager.makeAllChargers();
+        journeyManager.setCurrentCoordinate(testCoordinateStart);
+        journeyManager.setDesiredRange(100.0);
+        journeyManager.makeRangeChargers();
+        ArrayList<Charger> result = new ChargerManager().getNearbyChargers(
+                new ArrayList<Charger>(journeyManager.getData()), testCoordinateStart, 100.0);
+        Assertions.assertEquals(result, journeyManager.getRangeChargers());
+    }
 
+    @Test
+    public void testRangeNullCoordinate() {
+        journeyManager.makeAllChargers();
+        journeyManager.setDesiredRange(100.0);
+        journeyManager.makeRangeChargers();
+        Assertions.assertEquals(journeyManager.getData(), journeyManager.getRangeChargers());
+    }
+
+    @Test
+    public void testNullRange() {
+        journeyManager.makeAllChargers();
+        journeyManager.setCurrentCoordinate(testCoordinateStart);
+        journeyManager.makeRangeChargers();
+        Assertions.assertEquals(new ArrayList<Charger>(), journeyManager.getRangeChargers());
+    }
+
+    @Test
+    public void testMakeCoordinateName() {
+        GeoLocationHandler.setCoordinate(testCoordinateStart, "test");
+        journeyManager.makeCoordinateName();
+        Assertions.assertEquals(testCoordinateStart, journeyManager.getCurrentCoordinate());
+    }
+
+    @Test
+    public void testMakeCoordinateNamePosNull() {
+        GeoLocationHandler.clearCoordinate();
+        journeyManager.makeCoordinateName();
+        Assertions.assertEquals(GeoLocationHandler.DEFAULT_COORDINATE,
+                journeyManager.getCurrentCoordinate());
+    }
+
+    @Test
+    public void addNoChargerStop() {
+        journeyManager.setSelectedJourney(testJourneyOne);
+        journeyManager.addNoChargerStop(testCoordinateCharger);
+        Stop check = new Stop(testCoordinateCharger);
+        Assertions.assertEquals(check, journeyManager.getSelectedJourney().getStops().get(1));
     }
 }
