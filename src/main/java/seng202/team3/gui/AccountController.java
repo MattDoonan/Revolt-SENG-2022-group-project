@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
@@ -101,6 +102,12 @@ public class AccountController {
     private BorderPane chargerTable;
 
     /**
+     * invalid account details error
+     */
+    @FXML
+    private Label invalidUpdateAccount;
+
+    /**
      * Boolean on if it is in administration view
      */
     private boolean isAdminView = false;
@@ -112,9 +119,19 @@ public class AccountController {
     private TableController controller;
 
     /**
-     * Styling for invalid input
+     * Styling for invalid fields
      */
     private static final String INVALID_STYLE = "-fx-border-color: #ff0000;";
+
+    /**
+     * Styling for valid fields
+     */
+    private static final String VALID_STYLE = "-fx-border-color: default;";
+
+    /**
+     * Stores all of the tooltips used for error messages
+     */
+    private ErrorHandler errors = new ErrorHandler();
 
     /**
      * Unused constructor
@@ -136,6 +153,9 @@ public class AccountController {
         if (user.getLevel() == PermissionLevel.ADMIN) {
             editAdmin.setVisible(true);
         }
+        errors.add("accountEmailError", "Invalid email.");
+        errors.add("accountNameError", "Username cannot be empty.");
+        errors.add("accountPassError", "Password must be more than 4 characters.");
     }
 
     /**
@@ -230,12 +250,11 @@ public class AccountController {
      * Confirms the changes made from the user
      */
     public void confirmChanges() {
-        if (!UserManager.checkEmail(accountEmail.getText())) {
-            accountEmail.setStyle(INVALID_STYLE);
-            return;
-        }
-        if (accountName.getText().isEmpty()) {
-            accountName.setStyle(INVALID_STYLE);
+        Boolean fail = checkUserDetails();
+
+        if (Boolean.TRUE.equals(fail)) {
+            invalidUpdateAccount.setVisible(true);
+            logManager.warn("Incorrect user details");
             return;
         }
 
@@ -267,6 +286,43 @@ public class AccountController {
         }
         tableRefresh();
         logManager.info("User information updated");
+    }
+
+    /**
+     * Checks if the user's inputs have errors
+     * @return whethere there are any errors in the user's details
+     */
+    public Boolean checkUserDetails() {
+        errors.hideAll();
+
+        accountName.setStyle(VALID_STYLE);
+        accountEmail.setStyle(VALID_STYLE);
+        accountPassword.setStyle(VALID_STYLE);
+
+        Boolean fail = false;
+
+        if (!UserManager.checkEmail(accountEmail.getText())) {
+            errors.changeMessage("accountEmailError", "Invalid email.");
+            if (accountEmail.getText().isEmpty()) {
+                errors.changeMessage("accountEmailError", "Email cannot be empty.");
+            }
+            accountEmail.setStyle(INVALID_STYLE);
+            errors.displayError(accountEmail, "accountEmailError", 25, 0);
+            fail = true;
+        }
+        if (accountName.getText().isEmpty()) {
+            accountName.setStyle(INVALID_STYLE);
+            errors.displayError(accountName, "accountNameError", 25, 0);
+            fail = true;
+        }
+        System.out.println(accountPassword.getText().length());
+        if (accountPassword.getText().length() < 4 && accountPassword.getText().length() > 0) {
+            errors.displayError(accountPassword, "accountPassError", 25, 0);
+            accountPassword.setStyle(INVALID_STYLE);
+            fail = true;
+        }
+
+        return fail;
     }
 
     /**

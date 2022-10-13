@@ -2,6 +2,7 @@
 
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextField?>
@@ -10,14 +11,13 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
-<ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.AccountController">
+<ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.AccountController">
    <content>
       <SplitPane dividerPositions="0.5" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" orientation="VERTICAL">
          <items>
             <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="410.0">
                <children>
-                  <Text layoutX="23.0" layoutY="302.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Distance Travelled:" textAlignment="CENTER" wrappingWidth="154.796875">
+                  <Text layoutX="14.0" layoutY="301.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Distance Travelled:" textAlignment="CENTER" wrappingWidth="154.796875">
                      <font>
                         <Font size="16.0" />
                      </font>
@@ -71,6 +71,11 @@
                   </TextField>
                   <TextField fx:id="accountPassword" layoutX="14.0" layoutY="158.0" prefHeight="26.0" prefWidth="800.0" promptText="New Password" style="-fx-background-color: white; -fx-border-color: black;" visible="false" />
                   <Button fx:id="confirm" layoutX="544.0" layoutY="339.0" mnemonicParsing="false" onAction="#confirmChanges" prefHeight="45.0" prefWidth="125.0" text="Confirm" visible="false" />
+                  <Label fx:id="invalidUpdateAccount" layoutX="29.0" layoutY="184.0" text="Invalid information entered" textFill="RED" visible="false">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
                </children>
             </AnchorPane>
             <BorderPane fx:id="chargerTable" maxWidth="1.7976931348623157E308" prefWidth="600.0">
