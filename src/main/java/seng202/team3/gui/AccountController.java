@@ -298,6 +298,8 @@ public class AccountController {
         }
         tableRefresh();
         logManager.info("User information updated");
+        invalidUpdateAccount.setVisible(false);
+
     }
 
     /**

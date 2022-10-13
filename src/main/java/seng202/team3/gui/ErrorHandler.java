@@ -106,14 +106,9 @@ public class ErrorHandler {
      */
     public void hideAll() {
         for (Tooltip t : getAll()) {
-            Control control = (Control) t.getOwnerNode();
             String id = t.getId();
-            if (control != null) {
-                t.hide();
-                control.setTooltip(null);
-            }
-            remove(id);
-            
+            t.hide();
+            errorTooltips.remove(id);
         }
     }
 

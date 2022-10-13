@@ -240,7 +240,7 @@ public class LoginSignupController {
         signupEmailField.setStyle(VALID_STYLE);
         signupUsernameField.setStyle(VALID_STYLE);
         signupPasswordField.setStyle(VALID_STYLE);
-        signupPasswordField.setStyle(VALID_STYLE);
+        confPassField.setStyle(VALID_STYLE);
 
         Boolean fail = false;
 
@@ -261,8 +261,7 @@ public class LoginSignupController {
             errors.add(PASSWORD_ERROR, signupPasswordField, "Password required");
             signupPasswordField.setStyle(INVALID_STYLE);
             fail = true;
-        }
-        if (signupPasswordField.getText().length() < 4 && signupPasswordField.getText().length() > 0) {
+        } else if (signupPasswordField.getText().length() < 4 && signupPasswordField.getText().length() > 0) {
             errors.add(PASSWORD_ERROR, signupPasswordField, "Password must be more than 4 characters.");
             signupPasswordField.setStyle(INVALID_STYLE);
             fail = true;
@@ -271,8 +270,7 @@ public class LoginSignupController {
             errors.add(CONF_PASS_ERROR, confPassField, "Confirm password required");
             confPassField.setStyle(INVALID_STYLE);
             fail = true;
-        }
-        if (!signupPasswordField.getText().equals(confPassField.getText())) {
+        } else if (!signupPasswordField.getText().equals(confPassField.getText())) {
             errors.add(CONF_PASS_ERROR, confPassField, "Passwords must match.");
             signupPasswordField.setStyle(INVALID_STYLE);
             confPassField.setStyle(INVALID_STYLE);

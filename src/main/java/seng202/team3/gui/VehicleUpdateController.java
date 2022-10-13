@@ -182,6 +182,11 @@ public class VehicleUpdateController {
     private static final String RANGE_ERROR_NEG = "rangeErrorNeg";
 
     /**
+     * id for invalid (not-int) range
+     */
+    private static final String RANGE_ERROR_INT = "rangeErrorInt";
+
+    /**
      * id for invalid connector
      */
     private static final String CONNECTOR_ERROR = "connectorError";
@@ -234,11 +239,6 @@ public class VehicleUpdateController {
      */
     public void init() {
         errors = new ErrorHandler();
-        // errors.add(MAKE_ERROR, makeText, "Vehicle make required.");
-        // errors.add(MODEL_ERROR, modelText, "Vehicle model required.");
-        // errors.add(RANGE_ERROR, maxRangeText, "Max range required");
-        // errors.add(CONNECTOR_ERROR, connectorType,
-        //         "A vehicle must have at least one connector.");
         stage = (Stage) inputBox.getScene().getWindow();
         prevController = MainWindow.getController();
         MainWindow.setController(this);
@@ -342,8 +342,7 @@ public class VehicleUpdateController {
                 rangeFlag = true;
             }
         } catch (NumberFormatException e) {
-            errors.changeMessage(RANGE_ERROR, "Max. range must be a whole number.");
-
+            errors.add(RANGE_ERROR_INT, maxRangeText, "Max. range must be a whole number.");
             rangeFlag = true;
         }
 
