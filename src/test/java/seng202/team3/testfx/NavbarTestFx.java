@@ -150,7 +150,9 @@ public class NavbarTestFx extends TestFxBase {
     private static Stream<Arguments> loadScreens() {
         return Stream.of(
                 Arguments.of("#accountPage", "#editAccountButton"),
-                Arguments.of("#vehicleButton", "#openUpdate"));
+                Arguments.of("#vehicleButton", "#openUpdate"),
+                Arguments.of("#journeyButton", "#previousJourneyTable"),
+                Arguments.of("#menuButton", "#chargerListPane"));
     }
 
     @ParameterizedTest
@@ -165,18 +167,5 @@ public class NavbarTestFx extends TestFxBase {
         clickOn("#loginBtn");
         clickOn(accountPage);
         verifyThat(toCheck, Node::isVisible);
-    }
-
-    @Test
-    public void screenThenBackToMain() {
-        clickOn("#loginSignout");
-        clickOn("#loginSignout");
-        clickOn("#loginEmailField");
-        write(user.getAccountName());
-        clickOn("#loginPasswordField");
-        write(password);
-        clickOn("#loginBtn");
-        clickOn("#accountPage");
-        clickOn("#menuButton");
     }
 }
