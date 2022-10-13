@@ -33,6 +33,7 @@ public class SignupTestFX extends TestFxBase {
         SqlInterpreter.removeInstance();
         SqlInterpreter.initialiseInstanceWithUrl(
                 "jdbc:sqlite:./target/test-classes/test_database.db");
+        SqlInterpreter.getInstance().defaultDatabase();
     }
 
     @Override

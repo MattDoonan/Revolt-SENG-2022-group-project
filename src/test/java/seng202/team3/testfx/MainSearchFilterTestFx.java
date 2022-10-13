@@ -1,5 +1,6 @@
 package seng202.team3.testfx;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import seng202.team3.data.database.CsvInterpreter;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
@@ -20,6 +24,8 @@ import seng202.team3.gui.MainController;
 import seng202.team3.gui.MapHandler;
 import seng202.team3.logic.Calculations;
 import seng202.team3.logic.UserManager;
+
+import java.util.stream.Stream;
 
 /**
  * Code designed to test the searching and filtering of the Main Window
@@ -199,5 +205,24 @@ public class MainSearchFilterTestFx extends TestFxBase {
             isValid = false;
         }
         assertTrue(isValid);
+    }
+
+    private static Stream<Arguments> buttonsToCheck() {
+        return Stream.of(
+                Arguments.of("#chargingCost", "#noChargingCost", "#hasChargingCost"),
+                Arguments.of("#attraction", "#attractionButton", "#noNearbyAttraction"),
+                Arguments.of("#hoursOpen", "#openAllButton", "#notOpenAllButton"),
+                Arguments.of("#carparkCost", "#withoutCarparkCost", "#withCarparkCost"));
+    }
+
+    @ParameterizedTest
+    @MethodSource("buttonsToCheck")
+    public void checkSwapOnButtons(String menuButton, String firstButton, String secondButton) {
+        clickOn("#filters");
+        clickOn(menuButton);
+        clickOn(firstButton);
+        clickOn(secondButton);
+        CheckBox button = (CheckBox) find(firstButton);
+        assertFalse(button.isSelected());
     }
 }

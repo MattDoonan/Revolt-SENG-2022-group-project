@@ -54,6 +54,7 @@ public class NavbarTestFx extends TestFxBase {
         SqlInterpreter.removeInstance();
         SqlInterpreter.initialiseInstanceWithUrl(
                 "jdbc:sqlite:./target/test-classes/test_database.db");
+        SqlInterpreter.getInstance().defaultDatabase();
         new CsvInterpreter().importChargersToDatabase("/csvtest/filtering.csv");
         user = new User("test@gmail.com", "MrTest", PermissionLevel.CHARGEROWNER);
         user.setId(2);
