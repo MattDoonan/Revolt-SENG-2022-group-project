@@ -3,6 +3,7 @@ package seng202.team3.cucumber.vehiclesteps;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.testfx.api.FxAssert.verifyThat;
 
 import io.cucumber.java.AfterAll;
 import io.cucumber.java.Before;
@@ -19,6 +20,7 @@ import java.util.List;
 import javax.tools.Tool;
 
 import javafx.application.Platform;
+import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -173,13 +175,7 @@ public class VehicleManagementStepDefs extends CucumberFxBase {
     @Then("I am informed my input is invalid")
     public void iIsInvalid() {
         // At least one tooltip visible
-        for (Tooltip t : ((VehicleUpdateController) MainWindow.getController())
-                .getErrors().getAll()) {
-            assertTrue(t.isShowing());
-            return;
-        }
-
-        fail("No error tooltips shown");
+        verifyThat("#invalidVehicle", Node::isVisible);
     }
 
     @Given("I have a vehicle in the garage")

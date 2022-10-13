@@ -182,7 +182,7 @@ public class AccountPageStepDefs extends CucumberFxBase {
 
     @Then("I am informed that my email is invalid")
     public void invalidAccountEmail() {
-        assertTrue(controller.getErrors().isShowing("accountEmailError"));
+        verifyThat("#invalidUpdateAccount", Node::isVisible);
     }
 
     @Then("My account email has changed to {string}")
@@ -198,7 +198,7 @@ public class AccountPageStepDefs extends CucumberFxBase {
 
     @Then("I am informed that my password is invalid")
     public void invalidAccountPassword() {
-        assertTrue(controller.getErrors().isShowing("accountPassError"));
+        verifyThat("#invalidUpdateAccount", Node::isVisible);
     }
 
     @Then("I logout of the app")
@@ -320,8 +320,8 @@ public class AccountPageStepDefs extends CucumberFxBase {
     @Then("The charger is added to the table")
     public void checkTableForCharger() throws IOException {
         List<Object> newCharger = db.readData(new QueryBuilderImpl().withSource("charger")
-                        .withFilter("name", "Test Charger", ComparisonType.EQUAL)
-                        .build(),
+                .withFilter("name", "Test Charger", ComparisonType.EQUAL)
+                .build(),
                 Charger.class);
         assertFalse(chargerObject.contains(newCharger));
     }
@@ -338,13 +338,14 @@ public class AccountPageStepDefs extends CucumberFxBase {
     public void upgradePermission() {
         clickOn("#menu");
         clickOn("#chargerOwner");
-        scroll(10, VerticalDirection.DOWN);
+        // scroll(10, VerticalDirection.DOWN);
         clickOn("#updatePermissions");
     }
 
     @Then("The user now has access to different functionality of the app")
     public void checkPermission() throws IOException {
-        List<Object> user = db.readData(new QueryBuilderImpl().withSource("user").build(), User.class);
+        List<Object> user = db.readData(new QueryBuilderImpl().withSource("user")
+                .build(), User.class);
         assertEquals(PermissionLevel.CHARGEROWNER, ((User) user.get(1)).getLevel());
     }
 
@@ -358,12 +359,12 @@ public class AccountPageStepDefs extends CucumberFxBase {
     @Then("The account is deleted")
     public void checkDeletedAccount() throws IOException {
         List<Object> change = db.readData(new QueryBuilderImpl().withSource("user").build(), User.class);
-        assertEquals(users.size()-1, change.size());
+        assertEquals(users.size() - 1, change.size());
     }
 
     @Given("The user owns a charger")
     public void ownsCharger() throws IOException {
-        List<Object> chargers =  db.readData(new QueryBuilderImpl().withSource("charger")
+        List<Object> chargers = db.readData(new QueryBuilderImpl().withSource("charger")
                 .withFilter("owner", "3", ComparisonType.EQUAL).build(), Charger.class);
         assertTrue(chargers.size() > 0);
         clickOn("#mainTable");
@@ -384,7 +385,7 @@ public class AccountPageStepDefs extends CucumberFxBase {
 
     @Then("The charger details are saved")
     public void checkChargerDetails() throws IOException {
-        List<Object> chargers =  db.readData(new QueryBuilderImpl().withSource("charger")
+        List<Object> chargers = db.readData(new QueryBuilderImpl().withSource("charger")
                 .withFilter("name", "NewName", ComparisonType.EQUAL).build(), Charger.class);
         assertEquals(10, ((Charger) chargers.get(0)).getAvailableParks());
     }
@@ -398,14 +399,14 @@ public class AccountPageStepDefs extends CucumberFxBase {
 
     @Then("The charger details are deleted")
     public void noChargerExists() throws IOException {
-        List<Object> chargers =  db.readData(new QueryBuilderImpl().withSource("charger")
+        List<Object> chargers = db.readData(new QueryBuilderImpl().withSource("charger")
                 .withFilter("owner", "2", ComparisonType.EQUAL).build(), Charger.class);
         assertEquals(0, chargers.size());
     }
 
     @Given("The user owns no chargers")
     public void noOwnedChargers() throws IOException {
-        List<Object> chargers =  db.readData(new QueryBuilderImpl().withSource("charger")
+        List<Object> chargers = db.readData(new QueryBuilderImpl().withSource("charger")
                 .withFilter("owner", "3", ComparisonType.EQUAL).build(), Charger.class);
         for (Object o : chargers) {
             db.deleteData("charger", ((Charger) o).getChargerId());

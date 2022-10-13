@@ -181,10 +181,12 @@ public class LoginSignupController {
      */
     public void init(MenuController menuControl) {
         this.menuControl = menuControl;
-        errors.add("confPassError", "Passwords must match.");
-        errors.add("emailError", "Email required.");
-        errors.add("nameError", "Username required.");
-        errors.add("passError", "Password must be more than 4 characters.");
+        errors.add("confPassError", confPassField, "Passwords must match.");
+        errors.add("emailError", signupEmailField, "Email required.");
+        errors.add("nameError", loginEmailField, "Username required.");
+        errors.add("passError", signupPasswordField, "Password must be more than 4 characters.");
+        errors.add("loginPassError", loginPasswordField, "Password required.");
+        errors.add("userError", signupUsernameField, "Username required.");
 
         if (showPassLogin != null) {
             setIcon("show");
@@ -245,25 +247,21 @@ public class LoginSignupController {
                 errors.changeMessage("emailError", "Email Required.");
             }
             signupEmailField.setStyle(INVALID_STYLE);
-            errors.displayError(signupEmailField, "emailError", 25, 0);
             fail = true;
         }
         if (signupUsernameField.getText().isEmpty()) {
             signupUsernameField.setStyle(INVALID_STYLE);
-            errors.displayError(signupUsernameField, "nameError", 25, 0);
             fail = true;
         }
         if (signupPasswordField.getText().length() < 4) {
             errors.changeMessage("passError", "Password must be more than 4 characters.");
             signupPasswordField.setStyle(INVALID_STYLE);
             confPassField.setStyle(INVALID_STYLE);
-            errors.displayError(signupPasswordField, "passError", 25, 0);
             fail = true;
         }
         if (confPassField.getText().isEmpty()
                 || !signupPasswordField.getText().equals(confPassField.getText())) {
             confPassField.setStyle(INVALID_STYLE);
-            errors.displayError(confPassField, "confPassError", 25, 0);
             fail = true;
         }
 
@@ -311,12 +309,10 @@ public class LoginSignupController {
 
         if (loginEmailField.getText().isEmpty()) {
             loginEmailField.setStyle(INVALID_STYLE);
-            errors.displayError(loginEmailField, "nameError", 25, 0);
         }
         if (loginPasswordField.getText().isEmpty()) {
             errors.changeMessage("passError", "Password required.");
             loginPasswordField.setStyle(INVALID_STYLE);
-            errors.displayError(loginPasswordField, "passError", 25, 0);
         }
     }
 
@@ -365,7 +361,7 @@ public class LoginSignupController {
     /**
      * Set the button icon
      * 
-     * @param type  the type the icon should be
+     * @param type the type the icon should be
      */
     public void setIcon(String type) {
 

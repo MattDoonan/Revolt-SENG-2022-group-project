@@ -3,6 +3,7 @@ package seng202.team3.testfx;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.testfx.api.FxAssert.verifyThat;
 
 import java.util.List;
 
@@ -10,9 +11,11 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.testfx.api.FxRobotException;
+import org.testfx.matcher.control.LabeledMatchers;
 
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
@@ -93,14 +96,8 @@ public class AddChargerPageTestFx extends TestFxBase {
                 "Trial location");
         clickOn("#saveButton");
 
-        // At least one tooltip visible
-        for (Tooltip t : controller.getErrors().getAll()) {
-            assertTrue(t.isShowing());
-            return;
-        }
-        fail("No error tooltips shown");
+        verifyThat("#invalidChargerLabel", Node::isVisible);
     }
-
 
     /**
      * Checks if adding a charger works

@@ -95,7 +95,7 @@ public class SignupTestFX extends TestFxBase {
         clickOn("#signupEmailField");
         write("tester@gmail.com");
         clickOn("#signUpBtn");
-        assertTrue(controller.getErrors().isShowing("passError"));
+        verifyThat("#invalidSignup", Node::isVisible);
     }
 
     @Test
@@ -107,7 +107,7 @@ public class SignupTestFX extends TestFxBase {
         clickOn("#confPassField");
         write("1234");
         clickOn("#signUpBtn");
-        assertTrue(controller.getErrors().isShowing("emailError"));
+        verifyThat("#invalidSignup", Node::isVisible);
     }
 
     @Test
@@ -119,7 +119,7 @@ public class SignupTestFX extends TestFxBase {
         clickOn("#confPassField");
         write("1234");
         clickOn("#signUpBtn");
-        assertTrue(controller.getErrors().isShowing("nameError"));
+        verifyThat("#invalidSignup", Node::isVisible);
     }
 
     @Test
@@ -131,7 +131,7 @@ public class SignupTestFX extends TestFxBase {
         clickOn("#signupPasswordField");
         write("1234");
         clickOn("#signUpBtn");
-        assertTrue(controller.getErrors().isShowing("confPassError"));
+        verifyThat("#invalidSignup", Node::isVisible);
     }
 
     @Test
@@ -143,7 +143,7 @@ public class SignupTestFX extends TestFxBase {
         clickOn("#confPassField");
         write("1234");
         clickOn("#signUpBtn");
-        assertTrue(controller.getErrors().isShowing("passError"));
+        verifyThat("#invalidSignup", Node::isVisible);
     }
 
     @Test
@@ -171,7 +171,7 @@ public class SignupTestFX extends TestFxBase {
         clickOn("#confPassField");
         write("1234");
         clickOn("#signUpBtn");
-        assertTrue(controller.getErrors().isShowing("emailError"));
+        verifyThat("#invalidSignup", Node::isVisible);
     }
 
     @Test
@@ -186,6 +186,6 @@ public class SignupTestFX extends TestFxBase {
         write("5678");
         clickOn("#signUpBtn");
 
-        assertTrue(controller.getErrors().isShowing("confPassError"));
+        verifyThat("#invalidSignup", Node::isVisible);
     }
 }

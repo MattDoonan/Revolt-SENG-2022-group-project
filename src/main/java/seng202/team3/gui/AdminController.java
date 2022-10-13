@@ -119,9 +119,9 @@ public class AdminController {
      * @param border the BorderPane containing this class
      */
     public void init(BorderPane border) {
-        errors.add(DELETE_ERROR, SELECT_USER);
-        errors.add("permissionsMenuError", "Select a permission level.");
-        errors.add(PERMISSIONS_ERROR, SELECT_USER);
+        errors.add(DELETE_ERROR, delete, SELECT_USER);
+        errors.add("permissionsMenuError", menu, "Select a permission level.");
+        errors.add(PERMISSIONS_ERROR, updatePermissions, SELECT_USER);
         this.border = border;
         manager = new AdminManager();
         manager.setAdmin(UserManager.getUser());
@@ -196,13 +196,13 @@ public class AdminController {
             errorOccured = true;
         }
 
-        if (errorOccured) {
-            errors.displayError(delete, DELETE_ERROR, -delete.getWidth(), delete.getHeight());
-        } else {
+        if (!errorOccured) {
             loadPromptScreen("Are you sure you'd like to \n"
                     + "delete this user (and owned chargers)?\n\n");
         }
+
         updateTable();
+
     }
 
     /**
@@ -227,13 +227,9 @@ public class AdminController {
 
         if (menu.getText().equals("Select...")) {
             permissionsErr = true;
-            errors.displayError(menu, "permissionsMenuError", -menu.getWidth(), menu.getHeight());
         }
 
-        if (permissionsErr) {
-            errors.displayError(updatePermissions, PERMISSIONS_ERROR, 
-                -updatePermissions.getWidth(), updatePermissions.getHeight());
-        } else {
+        if (!permissionsErr) {
             manager.getSelectedUser().setLevel(manager.permissionLevel(menu.getText()));
             manager.updateUser();
         }

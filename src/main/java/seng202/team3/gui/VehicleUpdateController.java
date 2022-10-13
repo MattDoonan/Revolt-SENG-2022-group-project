@@ -222,16 +222,18 @@ public class VehicleUpdateController {
      */
     public VehicleUpdateController() {
         // Unused
-        errors.add(MAKE_ERROR, "Vehicle make required.");
-        errors.add(MODEL_ERROR, "Vehicle model required.");
-        errors.add(RANGE_ERROR, "Max range required");
-        errors.add(CONNECTOR_ERROR, "A vehicle must have at least one connector.");
     }
 
     /**
      * Initialises the controller
      */
     public void init() {
+        errors = new ErrorHandler();
+        errors.add(MAKE_ERROR, makeText, "Vehicle make required.");
+        errors.add(MODEL_ERROR, modelText, "Vehicle model required.");
+        errors.add(RANGE_ERROR, maxRangeText, "Max range required");
+        errors.add(CONNECTOR_ERROR, connectorType,
+                "A vehicle must have at least one connector.");
         stage = (Stage) inputBox.getScene().getWindow();
         prevController = MainWindow.getController();
         MainWindow.setController(this);
@@ -316,15 +318,11 @@ public class VehicleUpdateController {
         Boolean fail = false;
 
         if (makeText.getText().isEmpty()) {
-            makeText.setTooltip(errors.get(MAKE_ERROR));
             makeText.setStyle(INVALID_STYLE);
-            errors.displayError(makeText, MAKE_ERROR, 5, 0);
             fail = true;
         }
         if (modelText.getText().isEmpty()) {
             modelText.setStyle(INVALID_STYLE);
-            modelText.setTooltip(errors.get(MODEL_ERROR));
-            errors.displayError(modelText, MODEL_ERROR, 5, 0);
             fail = true;
         }
         Boolean rangeFlag = false;
@@ -340,19 +338,15 @@ public class VehicleUpdateController {
             errors.changeMessage(RANGE_ERROR, "Max. range must be a whole number.");
 
             rangeFlag = true;
-        } finally {
-            maxRangeText.setTooltip(errors.get(RANGE_ERROR));
         }
+
         if (Boolean.TRUE.equals(rangeFlag)) {
             maxRangeText.setStyle(INVALID_STYLE);
-            errors.displayError(maxRangeText, RANGE_ERROR, 5, 0);
             fail = true;
         }
 
         if (connections.isEmpty()) {
             connectorType.setStyle(INVALID_STYLE);
-            connectorType.setTooltip(errors.get(CONNECTOR_ERROR));
-            errors.displayError(connectorType, CONNECTOR_ERROR, 5, 0);
             fail = true;
         }
 

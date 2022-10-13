@@ -248,15 +248,16 @@ public class ChargerController {
      * @param stage the stage this controller is on
      */
     public void init(Stage stage) {
-        errors.add("chargerAddressRequired", 
-            "Needs an address, e.g. 132 Science Road, Christchurch");
-        errors.add("chargerNameRequired", "Needs a name, e.g. Home");
-        errors.add("chargerTimeRequired", "Needs a Time Limit");
-        errors.add("chargerTimeFormat", "Time Limit is not a valid number");
-        errors.add("chargerParksFormat", "A Charger must have a whole number of parks");
-        errors.add("chargerConnectorRequired", "A Charger must have at least one Connector!");
-        errors.add("chargerCoordFormat", "Coordinate is not valid number");
-
+        errors.add("chargerAddressRequired", address,
+                "Needs an address, e.g. 132 Science Road, Christchurch");
+        errors.add("chargerNameRequired", name, "Needs a name, e.g. Home");
+        errors.add("chargerTimeRequired", time, "Needs a Time Limit");
+        // "Time Limit is not a valid number"
+        errors.add("chargerParksFormat", parks, "A Charger must have a whole number of parks");
+        errors.add("chargerConnectorRequired", addConnectorButton,
+                "A Charger must have at least one Connector!");
+        errors.add("chargerCoordFormatLat", lat, "Coordinate is not valid number");
+        errors.add("chargerCoordFormatLon", lon, "Coordinate is not valid number");
 
         this.stage = stage;
         makeConnectors();
@@ -357,7 +358,6 @@ public class ChargerController {
         } catch (NumberFormatException | NullPointerException e) {
             lat.setStyle(INVALID_STYLE);
             lon.setStyle(INVALID_STYLE);
-            errors.displayError(lat, "chargerCoordFormat", 5, lat.getHeight() / 2);
             fail = true;
         }
 
@@ -376,7 +376,6 @@ public class ChargerController {
         coordinate.setAddress(address.getText());
         if (address.getText().length() == 0) {
             address.setStyle(INVALID_STYLE);
-            errors.displayError(address, "chargerAddressRequired", 5, 0);
             fail = true;
         }
         newCharger.setLocation(coordinate);
@@ -384,7 +383,6 @@ public class ChargerController {
         newCharger.setName(name.getText());
         if (name.getText().length() == 0) {
             name.setStyle(INVALID_STYLE);
-            errors.displayError(name, "chargerNameRequired", 5, 0);
             fail = true;
         }
         newCharger.setAvailable24Hrs(open24.isSelected());
@@ -397,12 +395,10 @@ public class ChargerController {
         } catch (NullPointerException e) {
             time.setStyle(INVALID_STYLE);
             errors.changeMessage("chargerTimeRequired", "Needs a Time Limit");
-            errors.displayError(time, "chargerTimeRequired", 5, 0);
             fail = true;
         } catch (NumberFormatException e) {
             time.setStyle(INVALID_STYLE);
-            errors.changeMessage("chargerTimeFormat", "Time Limit is not a valid number");
-            errors.displayError(time, "chargerTimeFormat", 5, 0);
+            errors.changeMessage("chargerTimeRequired", "Time Limit is not a valid number");
             fail = true;
         }
 
@@ -410,7 +406,6 @@ public class ChargerController {
             newCharger.setAvailableParks(Integer.parseInt(parks.getText()));
         } catch (NumberFormatException e) {
             parks.setStyle(INVALID_STYLE);
-            errors.displayError(parks, "chargerParksFormat", 5, 0);
             fail = true;
         }
 
@@ -420,7 +415,6 @@ public class ChargerController {
 
         if (connectors.isEmpty()) {
             addConnectorButton.setStyle(INVALID_STYLE);
-            errors.displayError(connectorPageLabel, "chargerConnectorRequired", 5, 0);
             fail = true;
         }
 
@@ -476,36 +470,6 @@ public class ChargerController {
     public ObservableList<Connector> getConnectors() {
         return connectors;
     }
-
-    // /**
-    //  * Launches an error popup when trying to do illegal things
-    //  */
-    // public void launchErrorPopUps() {
-    //     try {
-    //         stage.setAlwaysOnTop(false);
-    //         FXMLLoader error = new FXMLLoader(getClass().getResource(
-    //                 "/fxml/error_popup.fxml"));
-    //         AnchorPane base = error.load();
-    //         Scene modalScene = new Scene(base);
-    //         Stage modal = new Stage();
-    //         modal.setScene(modalScene);
-    //         modal.setResizable(false);
-    //         modal.setTitle("Error With Charger:");
-    //         modal.initModality(Modality.APPLICATION_MODAL);
-    //         ErrorController controller = error.getController();
-    //         controller.init();
-    //         controller.setErrors(errors);
-    //         controller.setPromptType("error");
-    //         controller.displayErrors();
-    //         modal.setAlwaysOnTop(true);
-    //         modal.showAndWait();
-    //         for (String e : errors) {
-    //             logManager.warn(e);
-    //         }
-    //     } catch (IOException e) {
-    //         logManager.error(e.getMessage());
-    //     }
-    // }
 
     /**
      * Displays all the connector information in the table
@@ -589,7 +553,7 @@ public class ChargerController {
     public void launchEditable(Connector connector) {
         try {
             FXMLLoader connectorEditRoot = new FXMLLoader(getClass().getResource(
-                "/fxml/connector_info.fxml"));
+                    "/fxml/connector_info.fxml"));
             BorderPane root = connectorEditRoot.load();
             ConnectorEditController controller = connectorEditRoot.getController();
             controller.setController(this);
@@ -642,7 +606,6 @@ public class ChargerController {
             }
         }
     }
-    
 
     /**
      * Gets error handling object for tooltip messages

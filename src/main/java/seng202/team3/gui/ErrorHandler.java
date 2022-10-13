@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import javafx.geometry.Point2D;
+import javafx.scene.Node;
 import javafx.scene.control.Control;
 import javafx.scene.control.Tooltip;
+import javafx.util.Duration;
 
 /**
  * Manages the display, formatting and control of error tooltips
@@ -18,7 +20,7 @@ public class ErrorHandler {
     /**
      * Hashmap to hold the tooltips referenced by the ids
      */
-    private HashMap<String, Tooltip> errorTooltips = new HashMap<String, Tooltip>();
+    private HashMap<String, Tooltip> errorTooltips = new HashMap<>();
 
     /**
      * Unused constructor
@@ -32,11 +34,14 @@ public class ErrorHandler {
      * Add a tooltip to the handler
      * 
      * @param id      id of the tooltip
+     * @param node    node to install the tooltip on
      * @param message message of the tooltip
      */
-    public void add(String id, String message) {
+    public void add(String id, Node node, String message) {
         Tooltip newTooltip = new Tooltip(message);
         newTooltip.setId(id);
+        Tooltip.install(node, newTooltip);
+        newTooltip.setShowDelay(Duration.millis(50.0));
 
         if (newTooltip.getId() == null) { // Id required
             throw new IllegalArgumentException("Tooltip id cannot be null");
@@ -95,26 +100,6 @@ public class ErrorHandler {
      */
     public void changeMessage(String id, String message) {
         errorTooltips.get(id).setText(message);
-    }
-
-
-    /**
-     * Displays the error tooltip on the given textfield
-     * 
-     * @param textField the textfield to show the error for
-     * @param id the id of the error
-     * @param addX what to add to the tooltip's x position
-     * @param addY what to add to the tooltip's y position
-     */
-    public void displayError(Control textField, String id, double addX, double addY) {
-        Point2D point = textField.localToScene(0.0, 0.0);
-
-        get(id).show(textField,
-            point.getX() + textField.getScene().getX()
-                + textField.getScene().getWindow().getX()
-                + textField.getWidth() + addX,
-            point.getY() + textField.getScene().getY()
-                + textField.getScene().getWindow().getY() + addY);
     }
 
     /**
