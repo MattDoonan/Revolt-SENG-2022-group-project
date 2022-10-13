@@ -92,8 +92,6 @@ public class AddChargerPageTestFx extends TestFxBase {
         GeoLocationHandler.setCoordinate(new Coordinate(1.1, 2.3, -43.60, 172.572),
                 "Trial location");
         clickOn("#saveButton");
-        // clickOn("#okay");
-        // TODO: assert error
 
         // At least one tooltip visible
         for (Tooltip t : controller.getErrors().getAll()) {
