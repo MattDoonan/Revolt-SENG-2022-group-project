@@ -641,6 +641,9 @@ public class JourneyController {
                     .getSelectionModel().getSelectedItem());
             populateTable();
             // TODO feedback after clicking button
+        } else {
+            errors.add("No journey selected");
+            displayErrorPopups();
         }
     }
 
@@ -685,6 +688,9 @@ public class JourneyController {
             maxRange.setText(Integer.toString(journeyManager
                     .getSelectedJourney().getVehicle().getMaxRange()));
             // TODO feedback after clicking button
+        } else {
+            errors.add("No journey selected");
+            displayErrorPopups();
         }
     }
 

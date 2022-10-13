@@ -61,7 +61,7 @@ public class JourneyTestFx extends TestFxBase {
      * Initialises the state of the current application
      *
      * @param journeyLoader the FXML loader after loading
-     * @param stage  the stage of the application
+     * @param stage         the stage of the application
      */
     public void initState(FXMLLoader journeyLoader, Stage stage) {
         journeyController = journeyLoader.getController();
@@ -83,6 +83,33 @@ public class JourneyTestFx extends TestFxBase {
     @Test
     public void endJourneyError() {
         clickOn("#makeEnd");
+        verifyThat("#prompt", Node::isVisible);
+    }
+
+    /**
+     * Tests that save shows an error prompt when click without a correct journey
+     */
+    @Test
+    public void saveJourneyError() {
+        clickOn("#saveJourney");
+        verifyThat("#prompt", Node::isVisible);
+    }
+
+    /**
+     * Tests that load journey shows an error prompt when click without a correct journey
+     */
+    @Test
+    public void loadJourneyError() {
+        clickOn("#loadJourney");
+        verifyThat("#prompt", Node::isVisible);
+    }
+
+    /**
+     * Tests that delete journey shows an error prompt when click without a correct journey
+     */
+    @Test
+    public void deleteJourneyError() {
+        clickOn("#deleteJourney");
         verifyThat("#prompt", Node::isVisible);
     }
 
