@@ -131,12 +131,12 @@ public class AccountController {
     /**
      * id for invalid make
      */
-    private static final String NAME_ERROR = "accountEmailError";
+    private static final String NAME_ERROR = "accountNameError";
 
     /**
      * id for invalid make
      */
-    private static final String EMAIL_ERROR = "accountNameError";
+    private static final String EMAIL_ERROR = "accountEmailError";
 
     /**
      * id for invalid make

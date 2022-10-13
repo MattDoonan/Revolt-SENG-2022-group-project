@@ -1,4 +1,4 @@
-Feature: User checking there account information
+Feature: User checking their account information
   Description: The purpose of this feature is to test the user experience for the account page
 
   Background: User has logged into the app and has gone to the account page
@@ -15,17 +15,23 @@ Feature: User checking there account information
 
   Scenario: (AT_43 2) A user wants to update personal information
     Given I want to edit my information
+    When I want to change my account email to "invalidEmailcom."
+    And I want to save my information
+    Then I am informed that my email is invalid
+
+  Scenario: (AT_43 3) A user wants to update personal information
+    Given I want to edit my information
     When I want to change my account email to "newEmail@gmail.com"
     And I want to save my information
     Then My account email has changed to "newEmail@gmail.com"
 
-  Scenario: (AT_43 3) A user wants to update personal information
+  Scenario: (AT_43 4) A user wants to update personal information
     Given I want to edit my information
     When I want to change my password to "123"
     And I want to save my information
     Then I am informed that my password is invalid
 
-  Scenario: (AT_43 4) A user wants to update personal information
+  Scenario: (AT_43 5 A user wants to update personal information
     Given I want to edit my information
     When I want to change my password to "1234"
     And I want to save my information

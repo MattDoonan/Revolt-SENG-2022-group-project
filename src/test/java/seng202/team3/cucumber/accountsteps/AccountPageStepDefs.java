@@ -180,6 +180,11 @@ public class AccountPageStepDefs extends CucumberFxBase {
         write(newEmail);
     }
 
+    @Then("I am informed that my email is invalid")
+    public void invalidAccountEmail() {
+        assertTrue(controller.getErrors().isShowing("accountEmailError"));
+    }
+
     @Then("My account email has changed to {string}")
     public void differentAccountEmail(String actual) {
         Assertions.assertEquals(actual, UserManager.getUser().getEmail());
