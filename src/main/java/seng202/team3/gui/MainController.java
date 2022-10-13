@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Parent;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
@@ -471,5 +472,63 @@ public class MainController {
     public void onEnter(ActionEvent e) {
         executeSearch();
     }
+
+
+    /**
+     * Swaps the carpark cost boxes if both are selected
+     * @param e the action event
+     */
+    public void cparkCostSwap(ActionEvent e) {
+        if (e.getSource().toString().contains("withoutCarparkCost")
+            && withCarparkCost.isSelected()) {
+            withCarparkCost.setSelected(false);
+        } else if (e.getSource().toString().contains("withCarparkCost")
+            && withoutCarparkCost.isSelected()) {
+            withoutCarparkCost.setSelected(false);
+        }
+    }
+
+    /**
+     * Swaps the open24Hours boxes if both are selected
+     * @param e the action event
+     */
+    public void open24HoursSwap(ActionEvent e) {
+        if (e.getSource().toString().contains("openAllButton")
+                && notOpenAllButton.isSelected()) {
+            notOpenAllButton.setSelected(false);
+        } else if (e.getSource().toString().contains("notOpenAllButton")
+                && openAllButton.isSelected()) {
+            openAllButton.setSelected(false);
+        }
+    }
+
+    /**
+     * Swaps the attraction boxes if both are selected
+     * @param e the action event
+     */
+    public void attractionSwap(ActionEvent e) {
+        if (e.getSource().toString().contains("attractionButton")
+                && noNearbyAttraction.isSelected()) {
+            noNearbyAttraction.setSelected(false);
+        } else if (e.getSource().toString().contains("noNearbyAttraction")
+                && attractionButton.isSelected()) {
+            attractionButton.setSelected(false);
+        }
+    }
+
+    /**
+     * Swaps the charging cost boxes if both are selected
+     * @param e the action event
+     */
+    public void chargingCostSwap(ActionEvent e) {
+        if (e.getSource().toString().contains("noChargingCost")
+                && hasChargingCost.isSelected()) {
+            hasChargingCost.setSelected(false);
+        } else if (e.getSource().toString().contains("hasChargingCost")
+                && noChargingCost.isSelected()) {
+            noChargingCost.setSelected(false);
+        }
+    }
+
 
 }

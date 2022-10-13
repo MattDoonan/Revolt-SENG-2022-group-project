@@ -69,12 +69,12 @@
                            <items>
                               <CustomMenuItem hideOnClick="false" mnemonicParsing="false">
                                 <content>
-                                  <CheckBox fx:id="withoutCarparkCost" style="-fx-text-fill: black;" text="Without Cost" />
+                                  <CheckBox fx:id="withoutCarparkCost" onAction="#cparkCostSwap" style="-fx-text-fill: black;" text="Without Cost" />
                                 </content>
                               </CustomMenuItem>
                               <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                                 <content>
-                                  <CheckBox fx:id="withCarparkCost" style="-fx-text-fill: black;" text="With Cost" />
+                                  <CheckBox fx:id="withCarparkCost" onAction="#cparkCostSwap" style="-fx-text-fill: black;" text="With Cost" />
                                 </content>
                               </CustomMenuItem>
                            </items>
@@ -99,12 +99,12 @@
                            <items>
                               <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                                 <content>
-                                  <CheckBox fx:id="openAllButton" style="-fx-text-fill: black;" text="Open 24 hours" />
+                                  <CheckBox fx:id="openAllButton" onAction="#open24HoursSwap" style="-fx-text-fill: black;" text="Open 24 hours" />
                                 </content>
                               </CustomMenuItem>
                               <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                                 <content>
-                                  <CheckBox fx:id="notOpenAllButton" style="-fx-text-fill: black;" text="Not Open 24 Hours" />
+                                  <CheckBox fx:id="notOpenAllButton" onAction="#open24HoursSwap" style="-fx-text-fill: black;" text="Not Open 24 Hours" />
                                 </content>
                               </CustomMenuItem>
                            </items>
@@ -114,12 +114,12 @@
                           <items>
                                     <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Has Attraction button">
                                         <content>
-                                            <CheckBox fx:id="attractionButton" style="-fx-text-fill: black;" text="Nearby Attraction" />
+                                            <CheckBox fx:id="attractionButton" onAction="#attractionSwap" style="-fx-text-fill: black;" text="Nearby Attraction" />
                                         </content>
                                     </CustomMenuItem>
                               <CustomMenuItem hideOnClick="false" mnemonicParsing="false">
                                 <content>
-                                  <CheckBox fx:id="noNearbyAttraction" style="-fx-text-fill: black;" text="No Nearby Attraction" />
+                                  <CheckBox fx:id="noNearbyAttraction" onAction="#attractionSwap" style="-fx-text-fill: black;" text="No Nearby Attraction" />
                                 </content>
                               </CustomMenuItem>
                           </items>
@@ -129,12 +129,12 @@
                           <items>
                                     <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="No Charging Cost">
                                         <content>
-                                            <CheckBox fx:id="noChargingCost" style="-fx-text-fill: black;" text="No Charging Cost" />
+                                            <CheckBox fx:id="noChargingCost" onAction="#chargingCostSwap" style="-fx-text-fill: black;" text="No Charging Cost" />
                                         </content>
                                     </CustomMenuItem>
                               <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                                 <content>
-                                  <CheckBox fx:id="hasChargingCost" style="-fx-text-fill: black;" text="Charging Cost" />
+                                  <CheckBox fx:id="hasChargingCost" onAction="#chargingCostSwap" style="-fx-text-fill: black;" text="Charging Cost" />
                                 </content>
                               </CustomMenuItem>
                           </items>
