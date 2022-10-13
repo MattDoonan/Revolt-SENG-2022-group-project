@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 import seng202.team3.data.database.QueryBuilder;
 import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
+import seng202.team3.data.entity.Entity;
 import seng202.team3.data.entity.EntityType;
 import seng202.team3.data.entity.Journey;
 
@@ -56,7 +57,7 @@ public class JourneyUpdateManager {
     private void loadJourneys() {
         try {
             List<Journey> journeyList = new ArrayList<>();
-            for (Object o : SqlInterpreter.getInstance()
+            for (Entity o : SqlInterpreter.getInstance()
                     .readData(journeyDataQuery.build())) {
                 if (UserManager.getUser().getId() == ((Journey) o).getUser()) {
                     journeyList.add((Journey) o);
