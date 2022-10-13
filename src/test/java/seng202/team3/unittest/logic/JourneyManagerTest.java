@@ -10,13 +10,13 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import seng202.team3.data.database.SqlInterpreter;
-import seng202.team3.data.entity.Charger;
-import seng202.team3.data.entity.Connector;
-import seng202.team3.data.entity.Coordinate;
-import seng202.team3.data.entity.Stop;
+import seng202.team3.data.entity.*;
 import seng202.team3.logic.JourneyManager;
 
+import javax.management.InstanceAlreadyExistsException;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Unit tests for {@link JourneyManager journeyManager} logic class
@@ -28,28 +28,63 @@ public class JourneyManagerTest {
 
     private static final Logger logManager = LogManager.getLogger();
 
-    private JourneyManager manager;
-    static SqlInterpreter db;
-    private Charger charger1;
-    private Charger charger2;
+    static Charger testCharger;
+    private Coordinate testCoordinateStart;
+    private Coordinate testCoordinateEnd;
+    private Coordinate testCoordinateCharger;
+    private Vehicle testVehicle;
+    private Journey testJourneyOne;
+    private Connector testConnector1;
+    static User testUserOne;
+    private JourneyManager journeyManager;
+
 
     /**
      * null
      */
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws InstanceAlreadyExistsException, IOException {
+        SqlInterpreter.removeInstance();
+        SqlInterpreter.initialiseInstanceWithUrl(
+                "jdbc:sqlite:./target/test-classes/test_database.db");
+        SqlInterpreter.getInstance().defaultDatabase();
 
-        manager = new JourneyManager();
+        testCoordinateStart = new Coordinate(2.9342, 5.1247);
+        testCoordinateCharger = new Coordinate(3.92523, 2.23423);
+        testCoordinateEnd = new Coordinate(3.9342, 4.1247);
 
-        Connector dummyConnector = new Connector("ChardaMo", "AC", "Available", "123", 3);
-        ArrayList<Connector> connectorList = new ArrayList<>(1);
-        connectorList.add(dummyConnector);
-        Coordinate coord = new Coordinate(-36.85918, 174.76602);
+        testConnector1 = new Connector("ChardaMo", "AC", "Available", "123", 3);
+        testCharger = new Charger(new ArrayList<Connector>(
+                Arrays.asList(testConnector1)),
+                "Test2",
+                testCoordinateCharger,
+                1,
+                0.3,
+                "Meridian",
+                "2020/05/01 00:00:00+00",
+                false,
+                false,
+                true,
+                false);
+        testCharger.setOwner("admin");
+        testCharger.setOwnerId(1);
+        SqlInterpreter.getInstance().writeCharger(testCharger);
 
-        charger1 = new Charger(connectorList, "Test1", coord, 1, 0.3,
-                "Meridian", "2020/1/1 00:00:00", true, true, true, true);
-        charger2 = new Charger(connectorList, "Test1", coord, 1, 0.3,
-                "Meridian", "2020/1/1 00:00:00", true, true, true, true);
+        testUserOne = new User("test@admin.com", "testUser",
+                PermissionLevel.USER);
+        SqlInterpreter.getInstance().writeUser(testUserOne);
+
+        testVehicle = new Vehicle("TestMake", "TestModel",
+                555, new ArrayList<String>(Arrays.asList("Type 1 Tethered")));
+        testVehicle.setOwner(testUserOne.getId());
+        SqlInterpreter.getInstance().writeVehicle(testVehicle);
+
+        testJourneyOne = new Journey(testVehicle, testCoordinateStart,
+                testCoordinateEnd, "10/10/2002", "Name");
+        testJourneyOne.addStop(new Stop(testCharger));
+        testJourneyOne.setUser(testUserOne.getId());
+        SqlInterpreter.getInstance().writeJourney(testJourneyOne);
+
     }
 
     /**
@@ -57,8 +92,14 @@ public class JourneyManagerTest {
      */
     @AfterEach
     public void tearDown() {
-        charger1 = null;
-        charger2 = null;
+        testCharger = null;
+        testCoordinateStart = null;
+        testCoordinateEnd = null;
+        testCoordinateCharger = null;
+        testVehicle = null;
+        testJourneyOne = null;
+        testConnector1 = null;
+        testUserOne = null;
     }
 
     /**
@@ -66,43 +107,6 @@ public class JourneyManagerTest {
      */
     @Test
     public void testRangeChargers() {
-        // ChargerHandler chargerHandler = new ChargerHandler();
-        // chargerHandler.makeAllChargers();
-
-        // chargerHandler.setPosition(5765876);
-        // manager.setDesiredRange(45476);
-
-        // list = new ChargerManager().getNearbyChargers(chargers,
-        // currentCoordinate, desiredRange);
-    }
-
-    /**
-     * null
-     */
-    @Test
-    public void testRemovingCharger() {
-
-        manager.addStop(new Stop(charger1));
-        manager.addStop(new Stop(charger2));
-        manager.removeLastStop(); // Removing with list size of 2
-        assertEquals(manager.getStops().size(), 1);
-        // assertFalse(manager.getStops().contains(charger2)); // TODO change to check
-        // if charger2 in list (was asserting true)
-
-        manager.removeLastStop(); // Removing with list size of 1
-        assertEquals(manager.getStops().size(), 0);
-
-        manager.removeLastStop(); // Removing with list size of 0
-        assertEquals(manager.getStops().size(), 0);
 
     }
-
-    /**
-     * null
-     */
-    @Test
-    public void testDistanceBetweenChargers() {
-
-    }
-
 }
