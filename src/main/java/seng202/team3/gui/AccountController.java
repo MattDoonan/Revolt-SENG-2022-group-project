@@ -8,7 +8,13 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -121,12 +127,14 @@ public class AccountController {
     /**
      * Styling for invalid fields
      */
-    private static final String INVALID_STYLE = "-fx-border-color: #ff0000;";
+    private static final Border INVALID_STYLE = new Border(
+        new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT));
 
     /**
      * Styling for valid fields
      */
-    private static final String VALID_STYLE = "-fx-border-color: default;";
+    private static final Border VALID_STYLE = new Border(
+        new BorderStroke(Color.TRANSPARENT, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT));
 
     /**
      * id for invalid username
@@ -291,7 +299,7 @@ public class AccountController {
                 UserManager.setUser(user);
 
             } else if (accountPassword.getText().length() < 4) {
-                accountPassword.setStyle(INVALID_STYLE);
+                accountPassword.setBorder(INVALID_STYLE);
             } else {
                 manage.saveUser(user, UserManager
                         .encryptThisString(accountPassword.getText()));
@@ -300,9 +308,9 @@ public class AccountController {
             editDetails();
         } catch (IOException | SQLException e) {
             logManager.error(e.getMessage());
-            accountPassword.setStyle(INVALID_STYLE);
-            accountName.setStyle(INVALID_STYLE);
-            accountEmail.setStyle(INVALID_STYLE);
+            accountPassword.setBorder(INVALID_STYLE);
+            accountName.setBorder(INVALID_STYLE);
+            accountEmail.setBorder(INVALID_STYLE);
         }
         tableRefresh();
         logManager.info("User information updated");
@@ -318,9 +326,9 @@ public class AccountController {
     public Boolean checkUserDetails() {
         errors.hideAll();
 
-        accountName.setStyle(VALID_STYLE);
-        accountEmail.setStyle(VALID_STYLE);
-        accountPassword.setStyle(VALID_STYLE);
+        accountName.setBorder(VALID_STYLE);
+        accountEmail.setBorder(VALID_STYLE);
+        accountPassword.setBorder(VALID_STYLE);
 
         Boolean fail = false;
 
@@ -329,17 +337,17 @@ public class AccountController {
             if (accountEmail.getText().isEmpty()) {
                 errors.changeMessage("accountEmail", "Email cannot be empty.");
             }
-            accountEmail.setStyle(INVALID_STYLE);
+            accountEmail.setBorder(INVALID_STYLE);
             errors.show("accountEmail");
             fail = true;
         }
         if (accountName.getText().isEmpty()) {
-            accountName.setStyle(INVALID_STYLE);
+            accountName.setBorder(INVALID_STYLE);
             errors.show("accountName");
             fail = true;
         }
         if (accountPassword.getText().length() < 4 && accountPassword.getText().length() > 0) {
-            accountPassword.setStyle(INVALID_STYLE);
+            accountPassword.setBorder(INVALID_STYLE);
             errors.show("accountPassword");
             fail = true;
         }

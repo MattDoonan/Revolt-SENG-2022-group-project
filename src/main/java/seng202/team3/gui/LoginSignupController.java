@@ -13,7 +13,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -128,12 +134,14 @@ public class LoginSignupController {
     /**
      * Styling for invalid fields
      */
-    private static final String INVALID_STYLE = "-fx-border-color: #ff0000;";
+    private static final Border INVALID_STYLE = new Border(
+        new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT));
 
     /**
      * Styling for valid fields
      */
-    private static final String VALID_STYLE = "-fx-border-color: default;";
+    private static final Border VALID_STYLE = new Border(
+        new BorderStroke(Color.TRANSPARENT, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT));
 
     /**
      * Manages all error tooltips
@@ -234,10 +242,10 @@ public class LoginSignupController {
 
         errors.hideAll();
 
-        signupEmailField.setStyle(VALID_STYLE);
-        signupUsernameField.setStyle(VALID_STYLE);
-        signupPasswordField.setStyle(VALID_STYLE);
-        confPassField.setStyle(VALID_STYLE);
+        signupEmailField.setBorder(VALID_STYLE);
+        signupUsernameField.setBorder(VALID_STYLE);
+        signupPasswordField.setBorder(VALID_STYLE);
+        confPassField.setBorder(VALID_STYLE);
 
         Boolean fail = false;
 
@@ -246,29 +254,29 @@ public class LoginSignupController {
             if (signupEmailField.getText().isEmpty()) {
                 errors.changeMessage("signupEmailField", "Email Required.");
             }
-            signupEmailField.setStyle(INVALID_STYLE);
+            signupEmailField.setBorder(INVALID_STYLE);
             errors.show("signupEmailField");
             fail = true;
         }
         if (signupUsernameField.getText().isEmpty()) {
-            signupUsernameField.setStyle(INVALID_STYLE);
+            signupUsernameField.setBorder(INVALID_STYLE);
             errors.show("signupUsernameField");
             fail = true;
         }
         if (signupPasswordField.getText().length() < 4) {
             errors.show("signupPasswordField");
-            signupPasswordField.setStyle(INVALID_STYLE);
+            signupPasswordField.setBorder(INVALID_STYLE);
             fail = true;
         }
         if (signupPasswordField.getText().length() < 4
                 && signupPasswordField.getText().length() > 0) {
             errors.show("signupPasswordField");
-            signupPasswordField.setStyle(INVALID_STYLE);
+            signupPasswordField.setBorder(INVALID_STYLE);
             fail = true;
         }
         if (confPassField.getText().isEmpty()
                 || !signupPasswordField.getText().equals(confPassField.getText())) {
-            confPassField.setStyle(INVALID_STYLE);
+            confPassField.setBorder(INVALID_STYLE);
             errors.show("confPassField");
             fail = true;
         }
@@ -295,8 +303,8 @@ public class LoginSignupController {
                 loginEmailField.clear();
                 invalidLogin.setVisible(true);
                 logManager.info("Username or password incorrect");
-                loginEmailField.setStyle(INVALID_STYLE);
-                loginPasswordField.setStyle(INVALID_STYLE);
+                loginEmailField.setBorder(INVALID_STYLE);
+                loginPasswordField.setBorder(INVALID_STYLE);
             }
         } catch (SQLException | IOException e) {
             loginPasswordField.clear();
@@ -312,16 +320,16 @@ public class LoginSignupController {
     public void loginErrorChecks() {
         errors.hideAll();
 
-        loginEmailField.setStyle(VALID_STYLE);
-        loginPasswordField.setStyle(VALID_STYLE);
+        loginEmailField.setBorder(VALID_STYLE);
+        loginPasswordField.setBorder(VALID_STYLE);
 
         if (loginEmailField.getText().isEmpty()) {
-            loginEmailField.setStyle(INVALID_STYLE);
+            loginEmailField.setBorder(INVALID_STYLE);
             errors.show("loginEmailField");
         }
         if (loginPasswordField.getText().isEmpty()) {
             errors.show("loginPasswordField");
-            loginPasswordField.setStyle(INVALID_STYLE);
+            loginPasswordField.setBorder(INVALID_STYLE);
         }
     }
 

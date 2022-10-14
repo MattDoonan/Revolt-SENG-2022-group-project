@@ -21,12 +21,18 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.TilePane;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
@@ -149,12 +155,14 @@ public class VehicleUpdateController {
     /**
      * Styling for invalid fields
      */
-    private static final String INVALID_STYLE = "-fx-border-color: #ff0000;";
+    private static final Border INVALID_STYLE = new Border(
+        new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT));
 
     /**
      * Styling for valid fields
      */
-    private static final String VALID_STYLE = "-fx-border-color: default;";
+    private static final Border VALID_STYLE = new Border(
+        new BorderStroke(Color.TRANSPARENT, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT));
 
     /**
      * Default path for images
@@ -312,20 +320,20 @@ public class VehicleUpdateController {
     public Boolean checkForErrors() {
         errors.hideAll();
 
-        makeText.setStyle(VALID_STYLE);
-        modelText.setStyle(VALID_STYLE);
-        maxRangeText.setStyle(VALID_STYLE);
-        connectorType.setStyle(VALID_STYLE);
+        makeText.setBorder(VALID_STYLE);
+        modelText.setBorder(VALID_STYLE);
+        maxRangeText.setBorder(VALID_STYLE);
+        connectorType.setBorder(VALID_STYLE);
 
         Boolean fail = false;
 
         if (makeText.getText().isEmpty()) {
-            makeText.setStyle(INVALID_STYLE);
+            makeText.setBorder(INVALID_STYLE);
             errors.show("makeText");
             fail = true;
         }
         if (modelText.getText().isEmpty()) {
-            modelText.setStyle(INVALID_STYLE);
+            modelText.setBorder(INVALID_STYLE);
             errors.show("modelText");
             fail = true;
         }
@@ -344,13 +352,13 @@ public class VehicleUpdateController {
         }
 
         if (Boolean.TRUE.equals(rangeFlag)) {
-            maxRangeText.setStyle(INVALID_STYLE);
+            maxRangeText.setBorder(INVALID_STYLE);
             errors.show("maxRangeText");
             fail = true;
         }
 
         if (connections.isEmpty()) {
-            connectorType.setStyle(INVALID_STYLE);
+            connectorType.setBorder(INVALID_STYLE);
             errors.show("connectorType");
             fail = true;
         }

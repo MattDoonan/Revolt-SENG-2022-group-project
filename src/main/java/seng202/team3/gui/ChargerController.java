@@ -17,8 +17,14 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
@@ -228,12 +234,14 @@ public class ChargerController {
     /**
      * Styling for invalid fields
      */
-    private static final String INVALID_STYLE = "-fx-border-color: #ff0000;";
+    private static final Border INVALID_STYLE = new Border(
+        new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT));
 
     /**
      * Styling for valid fields
      */
-    private static final String VALID_STYLE = "-fx-border-color: default;";
+    private static final Border VALID_STYLE = new Border(
+        new BorderStroke(Color.TRANSPARENT, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT));
 
     /**
      * Initialises the ChargerController, loading in the charger info
@@ -339,12 +347,12 @@ public class ChargerController {
         coordinate.setYpos(0.0);
 
         errors.hideAll();
-        lat.setStyle(VALID_STYLE);
-        lon.setStyle(VALID_STYLE);
-        name.setStyle(VALID_STYLE);
-        parks.setStyle(VALID_STYLE);
-        address.setStyle(VALID_STYLE);
-        time.setStyle(VALID_STYLE);
+        lat.setBorder(VALID_STYLE);
+        lon.setBorder(VALID_STYLE);
+        name.setBorder(VALID_STYLE);
+        parks.setBorder(VALID_STYLE);
+        address.setBorder(VALID_STYLE);
+        time.setBorder(VALID_STYLE);
 
         Boolean fail = false;
 
@@ -354,8 +362,8 @@ public class ChargerController {
         } catch (NumberFormatException | NullPointerException e) {
             errors.show("lat");
             errors.show("lon");
-            lat.setStyle(INVALID_STYLE);
-            lon.setStyle(INVALID_STYLE);
+            lat.setBorder(INVALID_STYLE);
+            lon.setBorder(INVALID_STYLE);
             fail = true;
         }
 
@@ -374,7 +382,7 @@ public class ChargerController {
         coordinate.setAddress(address.getText());
         if (address.getText().length() == 0) {
             errors.show("address");
-            address.setStyle(INVALID_STYLE);
+            address.setBorder(INVALID_STYLE);
             fail = true;
         }
         newCharger.setLocation(coordinate);
@@ -382,7 +390,7 @@ public class ChargerController {
         newCharger.setName(name.getText());
         if (name.getText().length() == 0) {
             errors.show("name");
-            name.setStyle(INVALID_STYLE);
+            name.setBorder(INVALID_STYLE);
             fail = true;
         }
         newCharger.setAvailable24Hrs(open24.isSelected());
@@ -393,12 +401,12 @@ public class ChargerController {
         try {
             newCharger.setTimeLimit(Double.parseDouble(time.getText()));
         } catch (NullPointerException e) {
-            time.setStyle(INVALID_STYLE);
+            time.setBorder(INVALID_STYLE);
             errors.changeMessage("time", "Needs a Time Limit");
             errors.show("time");
             fail = true;
         } catch (NumberFormatException e) {
-            time.setStyle(INVALID_STYLE);
+            time.setBorder(INVALID_STYLE);
             errors.changeMessage("time", "Time Limit is not a valid number");
             errors.show("time");
             fail = true;
@@ -408,7 +416,7 @@ public class ChargerController {
             newCharger.setAvailableParks(Integer.parseInt(parks.getText()));
         } catch (NumberFormatException e) {
             errors.show("parks");
-            parks.setStyle(INVALID_STYLE);
+            parks.setBorder(INVALID_STYLE);
             fail = true;
         }
 
@@ -418,7 +426,7 @@ public class ChargerController {
 
         if (connectors.isEmpty()) {
             errors.show("addConnectorButton");
-            addConnectorButton.setStyle(INVALID_STYLE);
+            addConnectorButton.setBorder(INVALID_STYLE);
             fail = true;
         }
 
