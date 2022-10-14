@@ -84,14 +84,14 @@
 }
 
 #menu-bar {
-	background-color: #d80032;
-	-fx-background-color: #d80032;
+	background-color: #af2c35;
+	-fx-background-color: #af2c35;
 }
 
 /* All butons on navbar */
 .menu-bar-btn {
-	background-color: #d80032;
-	-fx-background-color: #d80032;
+	background-color: #af2c35;
+	-fx-background-color: #af2c35;
 }
 
 .menu-bar-btn:hover {
