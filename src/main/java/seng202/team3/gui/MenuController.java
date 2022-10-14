@@ -7,6 +7,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
@@ -36,28 +38,10 @@ public class MenuController {
     private BorderPane menuWindow;
 
     /**
-     * Button for the menu
-     */
-    @FXML
-    private Label homeLabel;
-
-    /**
-     * Button for the vehicle
-     */
-    @FXML
-    private Label garageLabel;
-
-    /**
-     * Account button
-     */
-    @FXML
-    private Label accountLabel;
-
-    /**
      * Login signout button
      */
     @FXML
-    private Button loginSignout;
+    private MenuItem loginSignout;
 
     /**
      * Home button box
@@ -99,6 +83,17 @@ public class MenuController {
     private static final String LOGIN_TITLE = "Login";
 
     /**
+     * Normal style
+     */
+    private static final String NORMAL_COLOUR = "-fx-background-color: #c2313b;";
+
+    /**
+     * Active style
+     */
+    private static final String ACTIVE_COLOUR = "-fx-background-color: linear-gradient"
+            + "(from 50% 0% to 50% 100%, #c2313b, #9d3d43);";
+
+    /**
      * unused constructor
      */
     public MenuController() {
@@ -112,45 +107,6 @@ public class MenuController {
      */
     public void init(Stage stage) {
         this.stage = stage;
-        configureButtons();
-    }
-
-    /**
-     * Sets hover properties for menu 'buttons'
-     */
-    private void configureButtons() {
-        homeBox.hoverProperty().addListener((obs, oldVal, newValue) -> {
-            if (newValue) {
-                // homeBox.setStyle("-fx-background-color: "
-                // + "linear-gradient(from 50% 0% to 50% 100%, #af2c35, #9d3d43);");
-                // homeLabel.setVisible(true);
-            } else {
-                // homeBox.setStyle("-fx-background-color: #af2c35;");
-                // homeLabel.setVisible(false);
-            }
-        });
-
-        garageBox.hoverProperty().addListener((obs, oldVal, newValue) -> {
-            if (newValue) {
-                // garageBox.setStyle("-fx-background-color: "
-                // + "linear-gradient(from 50% 0% to 50% 100%, #af2c35, #9d3d43);");
-                // garageLabel.setVisible(true);
-            } else {
-                // garageBox.setStyle("-fx-background-color: #af2c35;");
-                // garageLabel.setVisible(false);
-            }
-        });
-
-        accountBox.hoverProperty().addListener((obs, oldVal, newValue) -> {
-            if (newValue) {
-                // accountBox.setStyle("-fx-background-color: "
-                // + "linear-gradient(from 50% 0% to 50% 100%, #af2c35, #9d3d43);");
-                // accountLabel.setVisible(true);
-            } else {
-                // accountBox.setStyle("-fx-background-color: #af2c35;");
-                // accountLabel.setVisible(false);
-            }
-        });
     }
 
     /**
@@ -199,10 +155,9 @@ public class MenuController {
         }
         initHome();
 
-        accountBox.setStyle("-fx-background-color: #af2c35;");
-        garageBox.setStyle("-fx-background-color: #af2c35;");
-        homeBox.setStyle(
-            "-fx-background-color: linear-gradient(from 50% 0% to 50% 100%, #af2c35, #9d3d43);");
+        accountBox.setStyle(NORMAL_COLOUR);
+        garageBox.setStyle(NORMAL_COLOUR);
+        homeBox.setStyle(ACTIVE_COLOUR);
     }
 
     /**
@@ -223,15 +178,13 @@ public class MenuController {
                 menuWindow.setCenter(garageViewParent);
                 MainWindow.setController(garageController);
                 logManager.info("Switched to Garage screen");
+                homeBox.setStyle(NORMAL_COLOUR);
+                accountBox.setStyle(NORMAL_COLOUR);
+                garageBox.setStyle(ACTIVE_COLOUR);
             }
         } catch (IOException e) {
             logManager.error(e.getMessage());
         }
-
-        homeBox.setStyle("-fx-background-color: #af2c35;");
-        accountBox.setStyle("-fx-background-color: #af2c35;");
-        garageBox.setStyle(
-            "-fx-background-color: linear-gradient(from 50% 0% to 50% 100%, #af2c35, #9d3d43);");
     }
 
     /**
@@ -315,15 +268,14 @@ public class MenuController {
                 menuWindow.setCenter(accountViewParent);
                 MainWindow.setController(accController);
                 logManager.info("Switched to Account screen");
+                homeBox.setStyle(NORMAL_COLOUR);
+                garageBox.setStyle(NORMAL_COLOUR);
+                accountBox.setStyle(ACTIVE_COLOUR);
+
             }
         } catch (IOException e) {
             logManager.error(e.getMessage());
         }
-
-        homeBox.setStyle("-fx-background-color: #af2c35;");
-        garageBox.setStyle("-fx-background-color: #af2c35;");
-        accountBox.setStyle(
-            "-fx-background-color: linear-gradient(from 50% 0% to 50% 100%, #af2c35, #9d3d43);");
     }
 
     /**

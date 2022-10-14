@@ -84,23 +84,28 @@
 }
 
 #menu-bar {
-	background-color: #af2c35;
-	-fx-background-color: #af2c35;
+	background-color: #c2313b;
+	-fx-background-color: #c2313b;
 }
 
 /* All butons on navbar */
 .menu-bar-btn {
-	background-color: #af2c35;
-	-fx-background-color: #af2c35;
-	font-size: 9px;
-	-fx-font-size: 9px;
+	background-color: #c2313b;
+	-fx-background-color: #c2313b;
+	font-size: 12px;
+	-fx-font-size: 12px;
+	-fx-color: #ffffff;
 }
 
 .menu-bar-btn:hover {
 	-fx-text-fill: white;
 	cursor: hand;
 	-fx-cursor: hand;
-	-fx-underline: true;
+	-fx-color: #FFFFFF;
+}
+
+#accountLabel {
+	-fx-background-color: transparent;
 }
 
 .reg-button {
