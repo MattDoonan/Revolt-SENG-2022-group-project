@@ -290,6 +290,9 @@ public class AdminController {
      */
     @FXML
     public void setChargerTable() {
+        if (table.getSelectionModel().getSelectedItem() == null) {
+            return;
+        }
         try {
             FXMLLoader mainScene = new FXMLLoader(getClass()
                     .getResource("/fxml/main_table.fxml"));
