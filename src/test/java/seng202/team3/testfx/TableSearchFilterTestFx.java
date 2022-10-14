@@ -1,9 +1,10 @@
 package seng202.team3.testfx;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
-
+import javafx.scene.control.CheckBox;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.testfx.api.FxRobotException;
 
 import javafx.collections.ObservableList;
@@ -18,6 +19,10 @@ import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.data.entity.User;
 import seng202.team3.gui.TableController;
 import seng202.team3.logic.UserManager;
+
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Tests for charger searching from table GUI view
@@ -180,5 +185,24 @@ public class TableSearchFilterTestFx extends TestFxBase {
             isValid = false;
         }
         assertTrue(isValid);
+    }
+
+    private static Stream<Arguments> buttonsToCheck() {
+        return Stream.of(
+                Arguments.of("#cCostsMenu", "#chargingCost", "#hasChargingCost"),
+                Arguments.of("#attractMenu", "#attractionButton", "#noNearbyAttraction"),
+                Arguments.of("#openMenu", "#openAllButton", "#notOpenAllButton"),
+                Arguments.of("#cpMenu", "#withoutCarparkCost", "#withCarparkCost"));
+    }
+
+    @ParameterizedTest
+    @MethodSource("buttonsToCheck")
+    public void checkSwapOnButtons(String menuButton, String firstButton, String secondButton) {
+        clickOn("#filters");
+        clickOn(menuButton);
+        clickOn(firstButton);
+        clickOn(secondButton);
+        CheckBox button = (CheckBox) find(firstButton);
+        assertFalse(button.isSelected());
     }
 }
