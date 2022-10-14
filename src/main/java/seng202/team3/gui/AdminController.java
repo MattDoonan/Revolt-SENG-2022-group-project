@@ -11,8 +11,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
@@ -92,29 +98,31 @@ public class AdminController {
     private ErrorHandler errors = new ErrorHandler();
 
     /**
+     * Styling for invalid fields
+     */
+    private static final Border INVALID_STYLE = new Border(
+        new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, 
+            CornerRadii.EMPTY, BorderWidths.DEFAULT));
+
+    /**
      * User select prompt
      */
     private static final String SELECT_USER = "Please select a user";
 
     /**
-     * Delete Error ID
+     * id for menu node
      */
-    private static final String DELETE_ERROR = "deleteError";
+    private static final String MENU_NODE = "menu";
 
     /**
-     * Delete select Error ID
+     * id for menu node
      */
-    private static final String DELETE_ERROR_SELECT = "deleteErrorSelect";
+    private static final String UPDATE_NODE = "updatePermissions";
 
     /**
-     * Permissions Button error id
+     * id for delete node
      */
-    private static final String PERMISSIONS_ERROR = "permissionsEditError";
-
-    /**
-     * Permissions Button select error id
-     */
-    private static final String PERMISSIONS_ERROR_SELECT = "permissionsEditErrorSelect";
+    private static final String DELETE_NODE = "delete";
 
     /**
      * To create the admin controller
@@ -129,8 +137,9 @@ public class AdminController {
      * @param border the BorderPane containing this class
      */
     public void init(BorderPane border) {
-        errors.add("menu", "Select a permission level.");
-        errors.add("updatePermissions", SELECT_USER);
+        errors.add(MENU_NODE, "Select a permission level.");
+        errors.add(UPDATE_NODE, SELECT_USER);
+        errors.add(DELETE_NODE, "Cannot delete current user");
         this.border = border;
         manager = new AdminManager();
         manager.setAdmin(UserManager.getUser());
@@ -194,14 +203,15 @@ public class AdminController {
     @FXML
     public void deleteUser() {
         errors.hideAll();
+        delete.setBorder(Border.EMPTY);
         setSelectedUser();
 
         boolean errorOccured = false;
         if (manager.getSelectedUser() == null) {
-            errors.changeMessage("delete", SELECT_USER);
+            errors.changeMessage(DELETE_NODE, SELECT_USER);
             errorOccured = true;
         } else if (manager.getAdmin().getUserid() == manager.getSelectedUser().getUserid()) {
-            errors.add("delete", "Cannot delete current user");
+            errors.changeMessage(DELETE_NODE, "Cannot delete current user");
             errorOccured = true;
         }
 
@@ -209,7 +219,8 @@ public class AdminController {
             loadPromptScreen("Are you sure you'd like to \n"
                     + "delete this user (and owned chargers)?\n\n");
         } else {
-            errors.show("delete");
+            errors.show(DELETE_NODE);
+            delete.setBorder(INVALID_STYLE);
         }
 
         updateTable();
@@ -224,15 +235,16 @@ public class AdminController {
     @FXML
     public void editPermissions() throws SQLException {
         errors.hideAll();
+        updatePermissions.setBorder(Border.EMPTY);
 
         setSelectedUser();
 
         boolean permissionsErr = false;
         if (manager.getSelectedUser() == null) {
-            errors.changeMessage("updatePermissions", SELECT_USER);
+            errors.changeMessage(UPDATE_NODE, SELECT_USER);
             permissionsErr = true;
         } else if (manager.getAdmin().getUserid() == manager.getSelectedUser().getUserid()) {
-            errors.changeMessage("updatePermissions", "Cannot edit your own permissions!");
+            errors.changeMessage(UPDATE_NODE, "Cannot edit your own permissions!");
             permissionsErr = true;
         }
 
@@ -244,7 +256,8 @@ public class AdminController {
             manager.getSelectedUser().setLevel(manager.permissionLevel(menu.getText()));
             manager.updateUser();
         } else {
-            errors.show("updatePermissions");
+            errors.show(UPDATE_NODE);
+            updatePermissions.setBorder(INVALID_STYLE);
         }
         updateTable();
     }
