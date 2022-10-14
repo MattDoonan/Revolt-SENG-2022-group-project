@@ -11,7 +11,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
@@ -637,10 +639,11 @@ public class JourneyController {
     public void deleteJourney() {
         if (previousJourneyTable.getSelectionModel()
                 .getSelectedItem() != null) {
-            journeyUpdateManager.deleteJourney(previousJourneyTable
-                    .getSelectionModel().getSelectedItem());
-            populateTable();
-            // TODO feedback after clicking button
+            if (deleteWarningPrompt()) {
+                journeyUpdateManager.deleteJourney(previousJourneyTable
+                        .getSelectionModel().getSelectedItem());
+                populateTable();
+            }
         } else {
             errors.add("No journey selected");
             displayErrorPopups();
@@ -651,7 +654,6 @@ public class JourneyController {
      * Loads the journey selected from the table into the map and sidebar
      */
     public void loadJourney() {
-        // TODO warning that current journey will be lost
         if (previousJourneyTable.getSelectionModel()
                 .getSelectedItem() != null) {
             mapController.removeRoute();
@@ -670,7 +672,6 @@ public class JourneyController {
                                         .getStops().size() - 1)
                                 .getLocation());
             }
-
             resetChargerDisplay();
             addWaypointsToDisplay();
             populateTable();
@@ -687,12 +688,28 @@ public class JourneyController {
                             .getVehicle().getModel());
             maxRange.setText(Integer.toString(journeyManager
                     .getSelectedJourney().getVehicle().getMaxRange()));
-            // TODO feedback after clicking button
         } else {
             errors.add("No journey selected");
             displayErrorPopups();
         }
     }
+
+    /**
+     * Prompts User to confirm if they want to delete their journey
+     *
+     * @return boolean depending on which button is clicked
+     */
+    public boolean deleteWarningPrompt() {
+        Alert deletePrompt = new Alert(Alert.AlertType.WARNING,
+                "This will delete your journey '" + previousJourneyTable
+                        .getSelectionModel().getSelectedItem().getTitle()
+                        + "'\nAre you sure you want to delete this journey?",
+                ButtonType.NO, ButtonType.YES);
+        deletePrompt.showAndWait();
+        return (deletePrompt.getResult() == ButtonType.YES);
+    }
+
+
 
     /**
      * Loads vehicles into the menuBox

@@ -1,6 +1,12 @@
 package seng202.team3.testfx;
 
-import javafx.scene.control.CheckBox;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.testfx.api.FxAssert.verifyThat;
+
+import java.util.function.Predicate;
+import java.util.stream.Stream;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -11,6 +17,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.CheckBox;
 import javafx.stage.Stage;
 import seng202.team3.data.database.CsvInterpreter;
 import seng202.team3.data.database.SqlInterpreter;
@@ -19,10 +26,6 @@ import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.data.entity.User;
 import seng202.team3.gui.TableController;
 import seng202.team3.logic.UserManager;
-
-import java.util.stream.Stream;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Tests for charger searching from table GUI view
@@ -202,7 +205,7 @@ public class TableSearchFilterTestFx extends TestFxBase {
         clickOn(menuButton);
         clickOn(firstButton);
         clickOn(secondButton);
-        CheckBox button = (CheckBox) find(firstButton);
-        assertFalse(button.isSelected());
+        verifyThat(firstButton, Predicate.not(CheckBox::isSelected));
+        clickOn("#update");
     }
 }
