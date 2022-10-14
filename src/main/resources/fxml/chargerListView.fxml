@@ -7,9 +7,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<SplitPane dividerPositions="0.5, 0.5" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.ChargerListController">
+<SplitPane dividerPositions="0.5, 0.5" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefWidth="420.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.ChargerListController">
    <items>
-      <ScrollPane maxHeight="180.0" minHeight="180.0" prefWidth="530.0">
+      <ScrollPane maxHeight="180.0" minHeight="180.0" prefWidth="420.0">
          <content>
             <HBox fx:id="displayInfo" maxHeight="50.0" onMouseClicked="#editCharger" prefWidth="530.0" spacing="20.0" style="-fx-background-color: #FFFFFF;">
                <padding>
@@ -19,9 +19,9 @@
          </content>
       </ScrollPane>
       <Button fx:id="Inherit" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#largeChargerView" text="↓" />
-      <ScrollPane prefHeight="200.0" style="-fx-background-color: white;">
+      <ScrollPane maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefHeight="200.0" prefWidth="420.0" style="-fx-background-color: white;">
          <content>
-            <VBox fx:id="chargerTable" prefWidth="530.0" style="-fx-background-color: #FFFFFF; -fx-fill-width: true;" />
+            <VBox fx:id="chargerTable" prefWidth="420.0" style="-fx-background-color: #FFFFFF; -fx-fill-width: true;" />
          </content>
       </ScrollPane>
    </items>

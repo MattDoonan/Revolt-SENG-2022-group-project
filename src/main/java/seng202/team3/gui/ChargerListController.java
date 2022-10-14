@@ -19,6 +19,7 @@ import org.apache.logging.log4j.Logger;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.logic.Calculations;
+import seng202.team3.logic.StringFormatter;
 import seng202.team3.logic.UserManager;
 
 /**
@@ -118,6 +119,7 @@ public class ChargerListController {
         chargerTable.getChildren().removeAll(chargerTable.getChildren()); // clears vbox
         for (int i = 0; i < chargersToAdd.size(); i++) {
             HBox add = new HBox(); // creates HBox that will contain the changer info
+            add.setStyle("-fx-border-color: transparent transparent gray transparent");
 
             // adds the cached image
             if (image != null) {
@@ -126,9 +128,13 @@ public class ChargerListController {
                 Label substitueText = new Label("Image");
                 add.getChildren().add(substitueText); // adds to the HBox
             }
+
+            Text chargerName = new Text(
+                StringFormatter.toTitleCase(chargersToAdd.get(i).getName()));
+            chargerName.setStyle("-fx-font-weight: bold");
             // Create Vbox to contain the charger info
-            VBox content = new VBox(new Text(chargersToAdd.get(i).getName()),
-                    new Text(chargersToAdd.get(i).getLocation().getAddress()),
+            VBox content = new VBox(chargerName,
+                    new Text(chargersToAdd.get(i).getLocation().getAddress().replace(", ", "\n")),
                     new Text(chargersToAdd.get(i).getOperator()),
                     new Text("\n" + rounding.format(Calculations.calculateDistance(
                             manage.getManager().getPosition(), chargersToAdd.get(i).getLocation()))
@@ -141,10 +147,12 @@ public class ChargerListController {
             add.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> selectToView(finalI));
             // Changes Hover style
             add.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET,
-                    event -> add.setStyle("-fx-background-color:#FFF8EB;"));
+                    event -> add.setStyle("-fx-background-color:#FFF8EB;"
+                    + "-fx-border-color: transparent transparent gray transparent;"));
             // Changes off hover style
             add.addEventHandler(MouseEvent.MOUSE_EXITED_TARGET,
-                    event -> add.setStyle("-fx-background-color:#FFFFFF;"));
+                    event -> add.setStyle("-fx-background-color:#FFFFFF;"
+                    + "-fx-border-color: transparent transparent gray transparent;"));
             // Adds the HBox to the main VBox
             chargerTable.getChildren().add(add);
         }
@@ -200,12 +208,12 @@ public class ChargerListController {
 
         Text chargerName = new Text(c.getName());
         chargerName.setStyle("-fx-font-size : 17");
-        chargerName.setWrappingWidth(325);
+        chargerName.setWrappingWidth(220);
         display.getChildren().add(chargerName);
 
         Text chargerAddress = new Text(c.getLocation().getAddress());
         chargerAddress.setStyle("-fx-font-size : 17");
-        chargerAddress.setWrappingWidth(325);
+        chargerAddress.setWrappingWidth(220);
         display.getChildren().add(chargerAddress);
 
         display.getChildren().add(new Text());
@@ -248,7 +256,7 @@ public class ChargerListController {
 
         Text chargerName = new Text(c.getName());
         chargerName.setStyle("-fx-font-size : 30");
-        chargerName.setWrappingWidth(480);
+        chargerName.setWrappingWidth(380);
         largeDisplayInfo.getChildren().add(chargerName);
 
         Text owner = new Text("Owner: " + c.getOwner() + "");
@@ -256,7 +264,7 @@ public class ChargerListController {
             owner.setText(String.format("Views: %d", c.getViews()));
         }
         owner.setStyle("-fx-font-size : 20");
-        owner.setWrappingWidth(480);
+        owner.setWrappingWidth(380);
         largeDisplayInfo.getChildren().add(owner);
 
         if (c.getOperator() != null) {
@@ -273,7 +281,7 @@ public class ChargerListController {
 
         Text chargerAddress = new Text(c.getLocation().getAddress());
         chargerAddress.setStyle("-fx-font-size : 20");
-        chargerAddress.setWrappingWidth(480);
+        chargerAddress.setWrappingWidth(380);
         largeDisplayInfo.getChildren().add(chargerAddress);
         DecimalFormat f = new DecimalFormat("0.000000"); // rounding to 6 decimal places
         Text chargerLat = new Text("Latitude: " + f.format(c.getLocation().getLat()) + "");
