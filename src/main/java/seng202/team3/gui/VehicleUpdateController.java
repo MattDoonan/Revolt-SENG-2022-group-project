@@ -160,13 +160,6 @@ public class VehicleUpdateController {
             CornerRadii.EMPTY, BorderWidths.DEFAULT));
 
     /**
-     * Styling for valid fields
-     */
-    private static final Border VALID_STYLE = new Border(
-        new BorderStroke(Color.TRANSPARENT, BorderStrokeStyle.SOLID, 
-            CornerRadii.EMPTY, BorderWidths.DEFAULT));
-
-    /**
      * Default path for images
      */
     private static final String IMGPATH = "/images/";
@@ -319,10 +312,10 @@ public class VehicleUpdateController {
     public Boolean checkForErrors() {
         errors.hideAll();
 
-        makeText.setBorder(VALID_STYLE);
-        modelText.setBorder(VALID_STYLE);
-        maxRangeText.setBorder(VALID_STYLE);
-        connectorType.setBorder(VALID_STYLE);
+        makeText.setBorder(Border.EMPTY);
+        modelText.setBorder(Border.EMPTY);
+        maxRangeText.setBorder(Border.EMPTY);
+        connectorType.setBorder(Border.EMPTY);
 
         Boolean fail = false;
 

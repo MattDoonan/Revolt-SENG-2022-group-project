@@ -132,13 +132,6 @@ public class AccountController {
             CornerRadii.EMPTY, BorderWidths.DEFAULT));
 
     /**
-     * Styling for valid fields
-     */
-    private static final Border VALID_STYLE = new Border(
-        new BorderStroke(Color.TRANSPARENT, BorderStrokeStyle.SOLID, 
-            CornerRadii.EMPTY, BorderWidths.DEFAULT));
-
-    /**
      * id for username node
      */
     private static final String NAME_NODE = "accountName";
@@ -323,9 +316,9 @@ public class AccountController {
     public Boolean checkUserDetails() {
         errors.hideAll();
 
-        accountName.setBorder(VALID_STYLE);
-        accountEmail.setBorder(VALID_STYLE);
-        accountPassword.setBorder(VALID_STYLE);
+        accountName.setBorder(Border.EMPTY);
+        accountEmail.setBorder(Border.EMPTY);
+        accountPassword.setBorder(Border.EMPTY);
 
         Boolean fail = false;
 

@@ -160,6 +160,9 @@ public class AdminPageTestFx extends TestFxBase {
         press(KeyCode.UP);
         release(KeyCode.UP);
         clickOn("#delete");
+
+        // assertFalse(((Button) find("#makeText")).getBorder().isEmpty());
+
         // TODO: check button styling is red or invalid text on page
     }
 

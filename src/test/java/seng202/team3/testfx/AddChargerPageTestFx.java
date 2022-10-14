@@ -2,6 +2,7 @@ package seng202.team3.testfx;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.testfx.api.FxAssert.verifyThat;
 
@@ -135,7 +136,10 @@ public class AddChargerPageTestFx extends TestFxBase {
         write("123.0");
         clickOn("#saveButton");
 
-        // TODO: switch to new errors
+        // no windows open, as no errors were thrown
+        List<Window> ws = Stage.getWindows();
+        assertEquals(0, ws.size());
+
         assertThrows(FxRobotException.class, () -> {
             clickOn("#prompt");
         });

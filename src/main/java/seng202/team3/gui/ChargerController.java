@@ -239,13 +239,6 @@ public class ChargerController {
             CornerRadii.EMPTY, BorderWidths.DEFAULT));
 
     /**
-     * Styling for valid fields
-     */
-    private static final Border VALID_STYLE = new Border(
-        new BorderStroke(Color.TRANSPARENT, BorderStrokeStyle.SOLID, 
-            CornerRadii.EMPTY, BorderWidths.DEFAULT));
-
-    /**
      * id for lat node
      */
     private static final String LAT_NODE = "lat";
@@ -384,12 +377,12 @@ public class ChargerController {
         coordinate.setYpos(0.0);
 
         errors.hideAll();
-        lat.setBorder(VALID_STYLE);
-        lon.setBorder(VALID_STYLE);
-        name.setBorder(VALID_STYLE);
-        parks.setBorder(VALID_STYLE);
-        address.setBorder(VALID_STYLE);
-        time.setBorder(VALID_STYLE);
+        lat.setBorder(Border.EMPTY);
+        lon.setBorder(Border.EMPTY);
+        name.setBorder(Border.EMPTY);
+        parks.setBorder(Border.EMPTY);
+        address.setBorder(Border.EMPTY);
+        time.setBorder(Border.EMPTY);
 
         Boolean fail = false;
 

@@ -16,11 +16,15 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.testfx.api.FxRobotException;
+import org.testfx.service.query.NodeQuery;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Control;
+import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 import seng202.team3.data.database.SqlInterpreter;
@@ -124,7 +128,9 @@ public class VehiclesPageFx extends TestFxBase {
         clickOn();
         clickOn("#addConnectionBtn");
         clickOn("#saveChanges");
-        // TODO: check for invalid styling/error
+        // Check that error styling occurs on empty field
+        assertFalse(((TextField) find("#makeText")).getBorder().isEmpty());
+
     }
 
     @Test

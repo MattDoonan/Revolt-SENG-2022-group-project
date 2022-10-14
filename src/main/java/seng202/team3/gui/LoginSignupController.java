@@ -23,6 +23,9 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.fasterxml.jackson.databind.introspect.TypeResolutionContext.Empty;
+
 import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.data.entity.User;
 import seng202.team3.logic.UserManager;
@@ -136,13 +139,6 @@ public class LoginSignupController {
      */
     private static final Border INVALID_STYLE = new Border(
         new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, 
-            CornerRadii.EMPTY, BorderWidths.DEFAULT));
-
-    /**
-     * Styling for valid fields
-     */
-    private static final Border VALID_STYLE = new Border(
-        new BorderStroke(Color.TRANSPARENT, BorderStrokeStyle.SOLID, 
             CornerRadii.EMPTY, BorderWidths.DEFAULT));
 
     /**
@@ -274,15 +270,15 @@ public class LoginSignupController {
 
         errors.hideAll();
 
-        signupEmailField.setBorder(VALID_STYLE);
-        signupUsernameField.setBorder(VALID_STYLE);
-        signupPasswordField.setBorder(VALID_STYLE);
-        confPassField.setBorder(VALID_STYLE);
+        signupEmailField.setBorder(Border.EMPTY);
+        signupUsernameField.setBorder(Border.EMPTY);
+        signupPasswordField.setBorder(Border.EMPTY);
+        confPassField.setBorder(Border.EMPTY);
 
         Boolean fail = false;
 
         if (!UserManager.checkEmail(signupEmailField.getText())) {
-            errors.changeMessage(SIGNUP_EMAIL_NODE, "Invalid email.");
+            errors.changeMessage(SIGNUP_EMAIL_NODE, "Invalid email.");       
             if (signupEmailField.getText().isEmpty()) {
                 errors.changeMessage(SIGNUP_EMAIL_NODE, "Email Required.");
             } 
@@ -357,8 +353,8 @@ public class LoginSignupController {
     public void loginErrorChecks() {
         errors.hideAll();
 
-        loginEmailField.setBorder(VALID_STYLE);
-        loginPasswordField.setBorder(VALID_STYLE);
+        loginEmailField.setBorder(Border.EMPTY);
+        loginPasswordField.setBorder(Border.EMPTY);
 
         if (loginEmailField.getText().isEmpty()) {
             loginEmailField.setBorder(INVALID_STYLE);

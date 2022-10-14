@@ -84,13 +84,6 @@ public class ConnectorEditController {
             CornerRadii.EMPTY, BorderWidths.DEFAULT));
 
     /**
-     * Styling for valid fields
-     */
-    private static final Border VALID_STYLE = new Border(
-        new BorderStroke(Color.TRANSPARENT, BorderStrokeStyle.SOLID, 
-            CornerRadii.EMPTY, BorderWidths.DEFAULT));
-
-    /**
      * id for type node
      */
     private static final String TYPE_NODE = "typeField";
@@ -176,11 +169,11 @@ public class ConnectorEditController {
         int points = 0;
         Boolean fail = false;
         errors.hideAll();
-        chargingPointsField.setBorder(VALID_STYLE);
-        currentField.setBorder(VALID_STYLE);
-        wattageField.setBorder(VALID_STYLE);
-        statusField.setBorder(VALID_STYLE);
-        typeField.setBorder(VALID_STYLE);
+        chargingPointsField.setBorder(Border.EMPTY);
+        currentField.setBorder(Border.EMPTY);
+        wattageField.setBorder(Border.EMPTY);
+        statusField.setBorder(Border.EMPTY);
+        typeField.setBorder(Border.EMPTY);
         try {
             points = Integer.parseInt(chargingPointsField.getText());
         } catch (NumberFormatException e) {
