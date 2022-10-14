@@ -1,5 +1,6 @@
 package seng202.team3.gui;
 
+import com.fasterxml.jackson.databind.introspect.TypeResolutionContext.Empty;
 import de.jensd.fx.glyphs.GlyphsDude;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import java.io.IOException;
@@ -23,9 +24,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import com.fasterxml.jackson.databind.introspect.TypeResolutionContext.Empty;
-
 import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.data.entity.User;
 import seng202.team3.logic.UserManager;
