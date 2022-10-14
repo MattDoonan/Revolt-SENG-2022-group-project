@@ -135,13 +135,15 @@ public class LoginSignupController {
      * Styling for invalid fields
      */
     private static final Border INVALID_STYLE = new Border(
-        new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT));
+        new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, 
+            CornerRadii.EMPTY, BorderWidths.DEFAULT));
 
     /**
      * Styling for valid fields
      */
     private static final Border VALID_STYLE = new Border(
-        new BorderStroke(Color.TRANSPARENT, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT));
+        new BorderStroke(Color.TRANSPARENT, BorderStrokeStyle.SOLID, 
+            CornerRadii.EMPTY, BorderWidths.DEFAULT));
 
     /**
      * id for login email node
