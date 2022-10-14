@@ -144,7 +144,7 @@ public class VehicleUpdateController {
      * The images that the user can choose from (names)
      */
     private String[] imgNames = { "car_one.png", "car_two.png", "car_three.png",
-        "truck_one.png", "truck_two.png" };
+            "truck_one.png", "truck_two.png" };
 
     /**
      * Styling for invalid fields
@@ -175,16 +175,6 @@ public class VehicleUpdateController {
      * id for invalid range
      */
     private static final String RANGE_ERROR = "rangeError";
-
-    /**
-     * id for invalid (negative) range
-     */
-    private static final String RANGE_ERROR_NEG = "rangeErrorNeg";
-
-    /**
-     * id for invalid (not-int) range
-     */
-    private static final String RANGE_ERROR_INT = "rangeErrorInt";
 
     /**
      * id for invalid connector
@@ -239,6 +229,11 @@ public class VehicleUpdateController {
      */
     public void init() {
         errors = new ErrorHandler();
+        errors.add(MAKE_ERROR, makeText, "Vehicle make required.");
+        errors.add(MODEL_ERROR, modelText, "Vehicle model required.");
+        errors.add(RANGE_ERROR, maxRangeText, "Max range required");
+        errors.add(CONNECTOR_ERROR, connectorType,
+                "A vehicle must have at least one connector.");
         stage = (Stage) inputBox.getScene().getWindow();
         prevController = MainWindow.getController();
         MainWindow.setController(this);
@@ -325,22 +320,20 @@ public class VehicleUpdateController {
         Boolean fail = false;
 
         if (makeText.getText().isEmpty()) {
-            errors.add(MAKE_ERROR, makeText, "Vehicle make required.");
             makeText.setStyle(INVALID_STYLE);
             fail = true;
         }
         if (modelText.getText().isEmpty()) {
-            errors.add(MODEL_ERROR, modelText, "Vehicle model required.");
             modelText.setStyle(INVALID_STYLE);
             fail = true;
         }
         Boolean rangeFlag = false;
         try {
             if (maxRangeText.getText().isEmpty()) {
-                errors.add(RANGE_ERROR, maxRangeText, "Max range required");
+                errors.changeMessage(RANGE_ERROR, "Max. range required.");
                 rangeFlag = true;
             } else if (Integer.parseInt(maxRangeText.getText()) < 0) {
-                errors.add(RANGE_ERROR_NEG, maxRangeText, "Max. range cannot be negative.");
+                errors.changeMessage(RANGE_ERROR, "Max. range cannot be negative.");
                 rangeFlag = true;
             }
         } catch (NumberFormatException e) {
@@ -355,8 +348,6 @@ public class VehicleUpdateController {
 
         if (connections.isEmpty()) {
             connectorType.setStyle(INVALID_STYLE);
-            errors.add(CONNECTOR_ERROR, connectorType,
-                        "A vehicle must have at least one connector.");
             fail = true;
         }
 

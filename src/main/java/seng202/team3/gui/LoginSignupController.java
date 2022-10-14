@@ -136,16 +136,6 @@ public class LoginSignupController {
     private static final String VALID_STYLE = "-fx-border-color: default;";
 
     /**
-     * id for invalid password
-     */
-    private static final String PASSWORD_ERROR = "passError";
-
-    /**
-     * id for invalid confirm password
-     */
-    private static final String CONF_PASS_ERROR = "confPassError";
-
-    /**
      * Manages all error tooltips
      */
     private ErrorHandler errors = new ErrorHandler();
@@ -191,6 +181,13 @@ public class LoginSignupController {
      */
     public void init(MenuController menuControl) {
         this.menuControl = menuControl;
+        errors.add("confPassError", confPassField, "Passwords must match.");
+        errors.add("emailError", signupEmailField, "Email required.");
+        errors.add("nameError", loginEmailField, "Username required.");
+        errors.add("passError", signupPasswordField, "Password must be more than 4 characters.");
+        errors.add("loginPassError", loginPasswordField, "Password required.");
+        errors.add("userError", signupUsernameField, "Username required.");
+
         if (showPassLogin != null) {
             setIcon("show");
         }
@@ -245,26 +242,24 @@ public class LoginSignupController {
         Boolean fail = false;
 
         if (!UserManager.checkEmail(signupEmailField.getText())) {
-            errors.add("emailErrorInvalid", signupEmailField, "Invalid email.");
+            errors.changeMessage("emailError", "Invalid email.");
             if (signupEmailField.getText().isEmpty()) {
-                errors.add("emailErrorRequired", signupEmailField, "Email required.");
+                errors.changeMessage("emailError", "Email Required.");
             }
             signupEmailField.setStyle(INVALID_STYLE);
             fail = true;
         }
         if (signupUsernameField.getText().isEmpty()) {
-            errors.add("nameError", signupUsernameField, "Username required");
             signupUsernameField.setStyle(INVALID_STYLE);
             fail = true;
         }
-        if (signupPasswordField.getText().isEmpty()) {
-            errors.add(PASSWORD_ERROR, signupPasswordField, "Password required");
+        if (signupPasswordField.getText().length() < 4) {
+            errors.changeMessage("passError", "Password must be more than 4 characters.");
             signupPasswordField.setStyle(INVALID_STYLE);
             fail = true;
-        } else if (signupPasswordField.getText().length() < 4 
-            && signupPasswordField.getText().length() > 0) {
-            errors.add(PASSWORD_ERROR, signupPasswordField, 
-                "Password must be more than 4 characters.");
+        }
+        if (signupPasswordField.getText().length() < 4 && signupPasswordField.getText().length() > 0) {
+            errors.add(PASSWORD_ERROR, signupPasswordField, "Password must be more than 4 characters.");
             signupPasswordField.setStyle(INVALID_STYLE);
             fail = true;
         }
@@ -272,13 +267,12 @@ public class LoginSignupController {
             errors.add(CONF_PASS_ERROR, confPassField, "Confirm password required");
             confPassField.setStyle(INVALID_STYLE);
             fail = true;
-        } else if (!signupPasswordField.getText().equals(confPassField.getText())) {
-            errors.add(CONF_PASS_ERROR, confPassField, "Passwords must match.");
-            signupPasswordField.setStyle(INVALID_STYLE);
+        }
+        if (confPassField.getText().isEmpty()
+                || !signupPasswordField.getText().equals(confPassField.getText())) {
             confPassField.setStyle(INVALID_STYLE);
             fail = true;
         }
-
 
         return fail;
     }
@@ -322,13 +316,13 @@ public class LoginSignupController {
         loginEmailField.setStyle(VALID_STYLE);
         loginPasswordField.setStyle(VALID_STYLE);
 
-        if (loginEmailField.getText().isEmpty() || loginPasswordField.getText().isEmpty()) {
-            errors.add("loginUserError", loginEmailField, "Username required");
-            errors.add("loginPassError", loginPasswordField, "Password required");
+        if (loginEmailField.getText().isEmpty()) {
             loginEmailField.setStyle(INVALID_STYLE);
+        }
+        if (loginPasswordField.getText().isEmpty()) {
+            errors.changeMessage("passError", "Password required.");
             loginPasswordField.setStyle(INVALID_STYLE);
         }
-
     }
 
     /**

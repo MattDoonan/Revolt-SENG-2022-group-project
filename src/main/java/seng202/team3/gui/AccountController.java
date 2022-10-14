@@ -158,6 +158,9 @@ public class AccountController {
      */
     public AccountController() {
         // Unused
+        errors.add(EMAIL_ERROR, accountEmail, "Invalid email.");
+        errors.add(NAME_ERROR, accountName, "Username cannot be empty.");
+        errors.add(PASSWORD_ERROR, accountPassword, "Password must be more than 4 characters.");
     }
 
     /**
@@ -322,7 +325,7 @@ public class AccountController {
         Boolean fail = false;
 
         if (!UserManager.checkEmail(accountEmail.getText())) {
-            errors.add(EMAIL_ERROR, accountEmail, "Invalid email.");
+            errors.changeMessage(EMAIL_ERROR, "Invalid email.");
             if (accountEmail.getText().isEmpty()) {
                 errors.add(EMAIL_REQ_ERROR, accountEmail, "Email cannot be empty.");
             }
@@ -330,12 +333,10 @@ public class AccountController {
             fail = true;
         }
         if (accountName.getText().isEmpty()) {
-            errors.add(NAME_ERROR, accountName, "Username cannot be empty.");
             accountName.setStyle(INVALID_STYLE);
             fail = true;
         }
         if (accountPassword.getText().length() < 4 && accountPassword.getText().length() > 0) {
-            errors.add(PASSWORD_ERROR, accountPassword, "Password must be more than 4 characters.");
             accountPassword.setStyle(INVALID_STYLE);
             fail = true;
         }

@@ -3,6 +3,7 @@ package seng202.team3.gui;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.control.Tooltip;
 import javafx.util.Duration;
@@ -114,9 +115,7 @@ public class ErrorHandler {
      */
     public void hideAll() {
         for (Tooltip t : getAll()) {
-            String id = t.getId();
             t.hide();
-            errorTooltips.remove(id);
         }
     }
 
