@@ -342,6 +342,11 @@ public class AccountController {
             accountName.setBorder(INVALID_STYLE);
             errors.show(NAME_NODE);
             fail = true;
+        } else if (accountName.getText().length() > 15) {
+            errors.changeMessage(NAME_NODE, "Username cannot be longer than 15 characters.");
+            accountName.setBorder(INVALID_STYLE);
+            errors.show(NAME_NODE);
+            fail = true;
         }
         if (accountPassword.getText().length() < 4 && accountPassword.getText().length() > 0) {
             accountPassword.setBorder(INVALID_STYLE);

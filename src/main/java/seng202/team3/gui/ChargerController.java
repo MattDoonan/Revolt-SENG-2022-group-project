@@ -429,6 +429,11 @@ public class ChargerController {
             errors.show(NAME_NODE);
             name.setBorder(INVALID_STYLE);
             fail = true;
+        } else if (name.getText().length() > 15) {
+            errors.changeMessage(NAME_NODE, "Charger name cannot be longer than 15 characters.");
+            name.setBorder(INVALID_STYLE);
+            errors.show(NAME_NODE);
+            fail = true;
         }
         newCharger.setAvailable24Hrs(open24.isSelected());
         newCharger.setChargeCost(cost.isSelected());
@@ -437,6 +442,12 @@ public class ChargerController {
 
         try {
             newCharger.setTimeLimit(Double.parseDouble(time.getText()));
+            if (Double.parseDouble(time.getText()) > 1440) {
+                errors.changeMessage(TIME_NODE, "Time limit cannot be longer than 24 hours.");
+                time.setBorder(INVALID_STYLE);
+                errors.show(TIME_NODE);
+                fail = true;
+            }
         } catch (NullPointerException e) {
             time.setBorder(INVALID_STYLE);
             errors.changeMessage(TIME_NODE, "Needs a Time Limit");
@@ -449,8 +460,15 @@ public class ChargerController {
             fail = true;
         }
 
+
         try {
             newCharger.setAvailableParks(Integer.parseInt(parks.getText()));
+            if (Integer.parseInt(parks.getText()) > 1000) {
+                errors.changeMessage(PARKS_NODE, "Number of parks cannot be more than 1000.");
+                parks.setBorder(INVALID_STYLE);
+                errors.show(PARKS_NODE);
+                fail = true;
+            }
         } catch (NumberFormatException e) {
             errors.show(PARKS_NODE);
             parks.setBorder(INVALID_STYLE);

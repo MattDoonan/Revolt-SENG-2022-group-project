@@ -330,9 +330,19 @@ public class VehicleUpdateController {
             makeText.setBorder(INVALID_STYLE);
             errors.show(MAKE_NODE);
             fail = true;
+        } else if (makeText.getText().length() > 20) {
+            makeText.setBorder(INVALID_STYLE);
+            errors.changeMessage(MAKE_NODE, "Vehicle make cannot be longer than 20 characters");
+            errors.show(MAKE_NODE);
+            fail = true;
         }
         if (modelText.getText().isEmpty()) {
             modelText.setBorder(INVALID_STYLE);
+            errors.show(MODEL_NODE);
+            fail = true;
+        } else if (modelText.getText().length() > 20) {
+            makeText.setBorder(INVALID_STYLE);
+            errors.changeMessage(MODEL_NODE, "Vehicle model cannot be longer than 20 characters");
             errors.show(MODEL_NODE);
             fail = true;
         }
@@ -343,6 +353,9 @@ public class VehicleUpdateController {
                 rangeFlag = true;
             } else if (Integer.parseInt(maxRangeText.getText()) < 0) {
                 errors.changeMessage(RANGE_NODE, "Max. range cannot be negative.");
+                rangeFlag = true;
+            } else if (Integer.parseInt(maxRangeText.getText()) > 1000) {
+                errors.changeMessage(RANGE_NODE, "Max. range cannot be larger than 1000 km.");
                 rangeFlag = true;
             }
         } catch (NumberFormatException e) {

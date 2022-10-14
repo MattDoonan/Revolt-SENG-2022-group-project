@@ -285,12 +285,17 @@ public class LoginSignupController {
             errors.changeMessage(SIGNUP_EMAIL_NODE, "Invalid email.");
             if (signupEmailField.getText().isEmpty()) {
                 errors.changeMessage(SIGNUP_EMAIL_NODE, "Email Required.");
-            }
+            } 
             signupEmailField.setBorder(INVALID_STYLE);
             errors.show(SIGNUP_EMAIL_NODE);
             fail = true;
         }
         if (signupUsernameField.getText().isEmpty()) {
+            signupUsernameField.setBorder(INVALID_STYLE);
+            errors.show(SIGNUP_NAME_NODE);
+            fail = true;
+        } else if (signupUsernameField.getText().length() > 15) {
+            errors.changeMessage(SIGNUP_NAME_NODE, "Username cannot be longer than 15 characters.");
             signupUsernameField.setBorder(INVALID_STYLE);
             errors.show(SIGNUP_NAME_NODE);
             fail = true;

@@ -5,7 +5,7 @@ CREATE TABLE if not exists user
 (
    userid INTEGER constraint dk_users PRIMARY KEY AUTOINCREMENT,
    email VARCHAR(250) NOT NULL,
-   username VARCHAR(50) NOT NULL UNIQUE,
+   username VARCHAR(15) NOT NULL UNIQUE,
    password VARCHAR(170) NOT NULL,
    permissions INTEGER NOT NULL,
    carbonSaved REAL
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS charger
     operator VARCHAR(50),
     owner INTEGER NOT NULL references User(userid),
     address VARCHAR(255) NOT NULL,
-    name VARCHAR(50) NOT NULL,
+    name VARCHAR(20) NOT NULL,
     is24hours BIT,
     carparkcount INTEGER,
     hascarparkcost BIT,
@@ -60,8 +60,8 @@ CREATE TABLE if not exists vehicle
 (
     vehicleid INTEGER constraint dk_Veh PRIMARY KEY AUTOINCREMENT,
     owner INTEGER NOT NULL references user(userid),
-    make VARCHAR(10),
-    model VARCHAR(10),
+    make VARCHAR(15),
+    model VARCHAR(15),
     rangekm INTEGER NOT NULL,
     connectorType VARCHAR(40),
     imgPath VARCHAR(100),
