@@ -137,24 +137,19 @@ public class AccountController {
         new BorderStroke(Color.TRANSPARENT, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT));
 
     /**
-     * id for invalid username
+     * id for username node
      */
-    private static final String NAME_ERROR = "accountNameError";
+    private static final String NAME_NODE = "accountName";
 
     /**
-     * id for invalid email
+     * id for email node
      */
-    private static final String EMAIL_ERROR = "accountEmailError";
+    private static final String EMAIL_NODE = "accountEmail";
 
     /**
-     * id for invalid email
+     * id for password node
      */
-    private static final String EMAIL_REQ_ERROR = "accountEmailReqError";
-
-    /**
-     * id for invalid password
-     */
-    private static final String PASSWORD_ERROR = "accountPassError";
+    private static final String PASSWORD_NODE = "accountPassword";
 
     /**
      * Stores all of the tooltips used for error messages
@@ -174,9 +169,9 @@ public class AccountController {
      * @param border the BorderPane
      */
     public void init(BorderPane border) {
-        errors.add("accountEmail", "Invalid email.");
-        errors.add("accountName", "Username cannot be empty.");
-        errors.add("accountPassword", "Password must be more than 4 characters.");
+        errors.add(NAME_NODE, "Invalid email.");
+        errors.add(EMAIL_NODE, "Username cannot be empty.");
+        errors.add(PASSWORD_NODE, "Password must be more than 4 characters.");
         User user = UserManager.getUser();
         populateText(user);
         setChargerTable();
@@ -333,22 +328,22 @@ public class AccountController {
         Boolean fail = false;
 
         if (!UserManager.checkEmail(accountEmail.getText())) {
-            errors.changeMessage("accountEmail", "Invalid email.");
+            errors.changeMessage(EMAIL_NODE, "Invalid email.");
             if (accountEmail.getText().isEmpty()) {
-                errors.changeMessage("accountEmail", "Email cannot be empty.");
+                errors.changeMessage(EMAIL_NODE, "Email cannot be empty.");
             }
             accountEmail.setBorder(INVALID_STYLE);
-            errors.show("accountEmail");
+            errors.show(EMAIL_NODE);
             fail = true;
         }
         if (accountName.getText().isEmpty()) {
             accountName.setBorder(INVALID_STYLE);
-            errors.show("accountName");
+            errors.show(NAME_NODE);
             fail = true;
         }
         if (accountPassword.getText().length() < 4 && accountPassword.getText().length() > 0) {
             accountPassword.setBorder(INVALID_STYLE);
-            errors.show("accountPassword");
+            errors.show(PASSWORD_NODE);
             fail = true;
         }
 

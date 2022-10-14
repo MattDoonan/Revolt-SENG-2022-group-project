@@ -244,6 +244,41 @@ public class ChargerController {
         new BorderStroke(Color.TRANSPARENT, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT));
 
     /**
+     * id for lat node
+     */
+    private static final String LAT_NODE = "lat";
+
+    /**
+     * id for lon node
+     */
+    private static final String LON_NODE = "lon";
+
+    /**
+     * id for address node
+     */
+    private static final String ADDRESS_NODE = "address";
+
+    /**
+     * id for name node
+     */
+    private static final String NAME_NODE = "name";
+
+    /**
+     * id for time node
+     */
+    private static final String TIME_NODE = "time";
+
+    /**
+     * id for parks node
+     */
+    private static final String PARKS_NODE = "parks";
+
+    /**
+     * id for connector node
+     */
+    private static final String CONN_NODE = "addConnectorButton";
+
+    /**
      * Initialises the ChargerController, loading in the charger info
      */
     public ChargerController() {
@@ -256,13 +291,13 @@ public class ChargerController {
      * @param stage the stage this controller is on
      */
     public void init(Stage stage) {
-        errors.add("lat", "Coordinate is not valid number");
-        errors.add("lon", "Coordinate is not valid number");
-        errors.add("address", "Needs an address, e.g. 132 Science Road, Christchurch");
-        errors.add("name", "Needs a name, e.g. Home");
-        errors.add("time", "Needs a Time Limit");
-        errors.add("parks", "A Charger must have a whole number of parks");
-        errors.add("addConnectorButton", "A Charger must have at least one Connector!");
+        errors.add(LAT_NODE, "Coordinate is not valid number");
+        errors.add(LON_NODE, "Coordinate is not valid number");
+        errors.add(ADDRESS_NODE, "Needs an address, e.g. 132 Science Road, Christchurch");
+        errors.add(NAME_NODE, "Needs a name, e.g. Home");
+        errors.add(TIME_NODE, "Needs a Time Limit");
+        errors.add(PARKS_NODE, "A Charger must have a whole number of parks");
+        errors.add(CONN_NODE, "A Charger must have at least one Connector!");
         this.stage = stage;
         makeConnectors();
         connectorTable.setItems(connectors);
@@ -360,8 +395,8 @@ public class ChargerController {
             coordinate.setLat(Double.parseDouble(lat.getText()));
             coordinate.setLon(Double.parseDouble(lon.getText()));
         } catch (NumberFormatException | NullPointerException e) {
-            errors.show("lat");
-            errors.show("lon");
+            errors.show(LAT_NODE);
+            errors.show(LON_NODE);
             lat.setBorder(INVALID_STYLE);
             lon.setBorder(INVALID_STYLE);
             fail = true;
@@ -381,7 +416,7 @@ public class ChargerController {
         }
         coordinate.setAddress(address.getText());
         if (address.getText().length() == 0) {
-            errors.show("address");
+            errors.show(ADDRESS_NODE);
             address.setBorder(INVALID_STYLE);
             fail = true;
         }
@@ -389,7 +424,7 @@ public class ChargerController {
         newCharger.setOperator(operator.getText());
         newCharger.setName(name.getText());
         if (name.getText().length() == 0) {
-            errors.show("name");
+            errors.show(NAME_NODE);
             name.setBorder(INVALID_STYLE);
             fail = true;
         }
@@ -402,20 +437,20 @@ public class ChargerController {
             newCharger.setTimeLimit(Double.parseDouble(time.getText()));
         } catch (NullPointerException e) {
             time.setBorder(INVALID_STYLE);
-            errors.changeMessage("time", "Needs a Time Limit");
-            errors.show("time");
+            errors.changeMessage(TIME_NODE, "Needs a Time Limit");
+            errors.show(TIME_NODE);
             fail = true;
         } catch (NumberFormatException e) {
             time.setBorder(INVALID_STYLE);
-            errors.changeMessage("time", "Time Limit is not a valid number");
-            errors.show("time");
+            errors.changeMessage(TIME_NODE, "Time Limit is not a valid number");
+            errors.show(TIME_NODE);
             fail = true;
         }
 
         try {
             newCharger.setAvailableParks(Integer.parseInt(parks.getText()));
         } catch (NumberFormatException e) {
-            errors.show("parks");
+            errors.show(PARKS_NODE);
             parks.setBorder(INVALID_STYLE);
             fail = true;
         }
@@ -425,7 +460,7 @@ public class ChargerController {
         }
 
         if (connectors.isEmpty()) {
-            errors.show("addConnectorButton");
+            errors.show(CONN_NODE);
             addConnectorButton.setBorder(INVALID_STYLE);
             fail = true;
         }

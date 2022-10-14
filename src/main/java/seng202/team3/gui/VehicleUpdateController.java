@@ -170,24 +170,24 @@ public class VehicleUpdateController {
     private static final String IMGPATH = "/images/";
 
     /**
-     * id for invalid make
+     * id for make node
      */
-    private static final String MAKE_ERROR = "makeError";
+    private static final String MAKE_NODE = "makeText";
 
     /**
-     * id for invalid model
+     * id for model node
      */
-    private static final String MODEL_ERROR = "modelError";
+    private static final String MODEL_NODE = "modelText";
 
     /**
-     * id for invalid range
+     * id for range node
      */
-    private static final String RANGE_ERROR = "rangeError";
+    private static final String RANGE_NODE = "maxRangeText";
 
     /**
-     * id for invalid connector
+     * id for connector node
      */
-    private static final String CONNECTOR_ERROR = "connectorError";
+    private static final String CONNECTOR_NODE = "connectorType";
 
     /**
      * Delete button text
@@ -237,10 +237,10 @@ public class VehicleUpdateController {
      */
     public void init() {
         errors = new ErrorHandler();
-        errors.add("makeText", "Vehicle make required.");
-        errors.add("modelText", "Vehicle model required.");
-        errors.add("maxRangeText", "Max range required");
-        errors.add("connectorType",
+        errors.add(MAKE_NODE, "Vehicle make required.");
+        errors.add(MODEL_NODE, "Vehicle model required.");
+        errors.add(RANGE_NODE, "Max range required");
+        errors.add(CONNECTOR_NODE,
                 "A vehicle must have at least one connector.");
         stage = (Stage) inputBox.getScene().getWindow();
         prevController = MainWindow.getController();
@@ -299,9 +299,6 @@ public class VehicleUpdateController {
             Stage popupStage = (Stage) saveChanges.getScene().getWindow();
             popupStage.close();
         }
-
-        System.out.println("Errors: " + errors.getAll() + "\n");
-
     }
 
     /**
@@ -329,37 +326,37 @@ public class VehicleUpdateController {
 
         if (makeText.getText().isEmpty()) {
             makeText.setBorder(INVALID_STYLE);
-            errors.show("makeText");
+            errors.show(MAKE_NODE);
             fail = true;
         }
         if (modelText.getText().isEmpty()) {
             modelText.setBorder(INVALID_STYLE);
-            errors.show("modelText");
+            errors.show(MODEL_NODE);
             fail = true;
         }
         Boolean rangeFlag = false;
         try {
             if (maxRangeText.getText().isEmpty()) {
-                errors.changeMessage("maxRangeText", "Max. range required.");
+                errors.changeMessage(RANGE_NODE, "Max. range required.");
                 rangeFlag = true;
             } else if (Integer.parseInt(maxRangeText.getText()) < 0) {
-                errors.changeMessage("maxRangeText", "Max. range cannot be negative.");
+                errors.changeMessage(RANGE_NODE, "Max. range cannot be negative.");
                 rangeFlag = true;
             }
         } catch (NumberFormatException e) {
-            errors.changeMessage("maxRangeText", "Max. range must be a whole number.");
+            errors.changeMessage(RANGE_NODE, "Max. range must be a whole number.");
             rangeFlag = true;
         }
 
         if (Boolean.TRUE.equals(rangeFlag)) {
             maxRangeText.setBorder(INVALID_STYLE);
-            errors.show("maxRangeText");
+            errors.show(RANGE_NODE);
             fail = true;
         }
 
         if (connections.isEmpty()) {
             connectorType.setBorder(INVALID_STYLE);
-            errors.show("connectorType");
+            errors.show(CONNECTOR_NODE);
             fail = true;
         }
 

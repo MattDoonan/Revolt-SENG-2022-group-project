@@ -144,6 +144,36 @@ public class LoginSignupController {
         new BorderStroke(Color.TRANSPARENT, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT));
 
     /**
+     * id for login email node
+     */
+    private static final String LOGIN_EMAIL_NODE = "loginEmailField";
+
+    /**
+     * id for login password node
+     */
+    private static final String LOGIN_PASS_NODE = "loginPasswordField";
+
+    /**
+     * id for signup confirm password node
+     */
+    private static final String CONF_PASS_NODE = "confPassField";
+
+    /**
+     * id for signup password node
+     */
+    private static final String SIGNUP_PASS_NODE = "signupPasswordField";
+
+    /**
+     * id for signup email node
+     */
+    private static final String SIGNUP_EMAIL_NODE = "signupEmailField";
+
+    /**
+     * id for signup username node
+     */
+    private static final String SIGNUP_NAME_NODE = "signupUsernameField";
+
+    /**
      * Manages all error tooltips
      */
     private ErrorHandler errors = new ErrorHandler();
@@ -153,12 +183,12 @@ public class LoginSignupController {
      */
     public LoginSignupController() {
         // Unused
-        errors.add("confPassField", "Passwords must match.");
-        errors.add("signupEmailField", "Email required.");
-        errors.add("loginEmailField", "Username required.");
-        errors.add("signupPasswordField", "Password must be more than 4 characters.");
-        errors.add("loginPasswordField", "Password required.");
-        errors.add("signupUsernameField", "Username required.");
+        errors.add(CONF_PASS_NODE, "Passwords must match.");
+        errors.add(SIGNUP_EMAIL_NODE, "Email required.");
+        errors.add(LOGIN_EMAIL_NODE, "Username required.");
+        errors.add(SIGNUP_PASS_NODE, "Password must be more than 4 characters.");
+        errors.add(LOGIN_PASS_NODE, "Password required.");
+        errors.add(SIGNUP_NAME_NODE, "Username required.");
     }
 
     /**
@@ -250,34 +280,34 @@ public class LoginSignupController {
         Boolean fail = false;
 
         if (!UserManager.checkEmail(signupEmailField.getText())) {
-            errors.changeMessage("signupEmailField", "Invalid email.");
+            errors.changeMessage(SIGNUP_EMAIL_NODE, "Invalid email.");
             if (signupEmailField.getText().isEmpty()) {
-                errors.changeMessage("signupEmailField", "Email Required.");
+                errors.changeMessage(SIGNUP_EMAIL_NODE, "Email Required.");
             }
             signupEmailField.setBorder(INVALID_STYLE);
-            errors.show("signupEmailField");
+            errors.show(SIGNUP_EMAIL_NODE);
             fail = true;
         }
         if (signupUsernameField.getText().isEmpty()) {
             signupUsernameField.setBorder(INVALID_STYLE);
-            errors.show("signupUsernameField");
+            errors.show(SIGNUP_NAME_NODE);
             fail = true;
         }
         if (signupPasswordField.getText().length() < 4) {
-            errors.show("signupPasswordField");
+            errors.show(SIGNUP_PASS_NODE);
             signupPasswordField.setBorder(INVALID_STYLE);
             fail = true;
         }
         if (signupPasswordField.getText().length() < 4
                 && signupPasswordField.getText().length() > 0) {
-            errors.show("signupPasswordField");
+            errors.show(SIGNUP_PASS_NODE);
             signupPasswordField.setBorder(INVALID_STYLE);
             fail = true;
         }
         if (confPassField.getText().isEmpty()
                 || !signupPasswordField.getText().equals(confPassField.getText())) {
             confPassField.setBorder(INVALID_STYLE);
-            errors.show("confPassField");
+            errors.show(CONF_PASS_NODE);
             fail = true;
         }
 
@@ -325,10 +355,10 @@ public class LoginSignupController {
 
         if (loginEmailField.getText().isEmpty()) {
             loginEmailField.setBorder(INVALID_STYLE);
-            errors.show("loginEmailField");
+            errors.show(LOGIN_EMAIL_NODE);
         }
         if (loginPasswordField.getText().isEmpty()) {
-            errors.show("loginPasswordField");
+            errors.show(LOGIN_PASS_NODE);
             loginPasswordField.setBorder(INVALID_STYLE);
         }
     }
