@@ -7,6 +7,7 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import javafx.geometry.VerticalDirection;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Assertions;
@@ -40,6 +41,8 @@ public class JourneyPageStepDefs extends CucumberFxBase{
     private static Vehicle testVehicle;
 
     private static Journey testJourneyOne;
+
+    private JourneyController controller;
 
     /**
      * {@inheritDoc}
@@ -158,4 +161,61 @@ public class JourneyPageStepDefs extends CucumberFxBase{
         TableView table = (TableView) find("#previousJourneyTable");
         assertTrue(table.getItems().size() == 0);
     }
+
+    @Given("The user has planned a trip")
+    public void plannedTrip() throws IOException {
+        setUpDatabase();
+        controller = (JourneyController) MainWindow.getController();
+        controller.getManager().setSelectedJourney(testJourneyOne);
+    }
+
+    @When("A user saves there planned Journey")
+    public void saveJourney() {
+        clickOn("#maxRange");
+        scroll(30, VerticalDirection.DOWN);
+        clickOn("#saveJourney");
+    }
+
+    @Then("The Journey is saved to the user's list of Journeys")
+    public void checkIfSaved() throws IOException {
+        TableView table = (TableView) find("#previousJourneyTable");
+        assertEquals(table.getItems().get(0), testJourneyOne);
+        List<Entity> journeys = SqlInterpreter.getInstance().readData(new QueryBuilderImpl().withSource(EntityType.JOURNEY)
+                .withFilter("userid", "1", ComparisonType.EQUAL).build());
+        assertEquals(1, journeys.size());
+
+    }
+
+    @Given("The user has taken a previous Journey")
+    public void takenJourney() throws IOException {
+        setUpDatabase();
+        controller = (JourneyController) MainWindow.getController();
+        controller.getManager().setSelectedJourney(testJourneyOne);
+        controller.getManager().saveJourney();
+        testJourneyOne.setId(0);
+        clickOn("#journeyButton");
+    }
+
+    @When("The user makes the previous journey")
+    public void makePreviousJourney() {
+        controller = (JourneyController) MainWindow.getController();
+        controller.getManager().setSelectedJourney(testJourneyOne);
+        clickOn("#maxRange");
+        scroll(30, VerticalDirection.DOWN);
+        clickOn("#saveJourney");
+        clickOn("#maxRange");
+
+    }
+
+    @Then("The previous journey is saved to the database")
+    public void prevInDatabase() throws IOException {
+        TableView table = (TableView) find("#previousJourneyTable");
+        assertEquals(table.getItems().get(1), testJourneyOne);
+        List<Entity> journeys = SqlInterpreter.getInstance().readData(new QueryBuilderImpl().withSource(EntityType.JOURNEY)
+                .withFilter("userid", "1", ComparisonType.EQUAL).build());
+        assertEquals(2, journeys.size());
+    }
+
+
+
 }

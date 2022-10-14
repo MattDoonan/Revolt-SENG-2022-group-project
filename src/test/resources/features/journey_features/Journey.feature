@@ -17,3 +17,13 @@ Feature: User planning a journey
     When The user is on the accountPage
     Then The user cant view any journeys
 
+  Scenario: (AT_26) A user wants to add a journey
+    Given The user has planned a trip
+    When A user saves there planned Journey
+    Then The Journey is saved to the user's list of Journeys
+
+  Scenario: (AT_27) A user wants to add previously taken Journey
+    Given The user has taken a previous Journey
+    When The user makes the previous journey
+    Then The previous journey is saved to the database
+
