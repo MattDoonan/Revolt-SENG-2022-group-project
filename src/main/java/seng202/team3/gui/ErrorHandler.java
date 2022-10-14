@@ -3,9 +3,10 @@ package seng202.team3.gui;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import javafx.geometry.Point2D;
-import javafx.scene.Node;
+import java.util.Map.Entry;
 import javafx.scene.control.Tooltip;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 import javafx.util.Duration;
 
 /**
@@ -32,54 +33,36 @@ public class ErrorHandler {
     /**
      * Add a tooltip to the handler
      * 
-     * @param id      id of the tooltip
-     * @param node    node to install the tooltip on
+     * @param nodeId  nodeId to install the tooltip on
      * @param message message of the tooltip
      */
-    public void add(String id, Node node, String message) {
+    public void add(String nodeId, String message) {
         Tooltip newTooltip = new Tooltip(message);
-        newTooltip.setId(id);
-        Tooltip.install(node, newTooltip);
-        newTooltip.setShowDelay(Duration.millis(50.0));
 
-        if (newTooltip.getId() == null) { // Id required
-            throw new IllegalArgumentException("Tooltip id cannot be null");
+        if (errorTooltips.keySet().contains(nodeId)) { // Enforce unique id
+            throw new IllegalArgumentException("Tooltip nodeId already exists");
         }
 
-        if (errorTooltips.keySet().contains(newTooltip.getId())) { // Enforce unique id
-            throw new IllegalArgumentException("Tooltip id already exists");
-        }
-
-        errorTooltips.put(newTooltip.getId(), newTooltip);
+        errorTooltips.put(nodeId, newTooltip);
     }
 
     /**
-     * Remove a tooltip from the handler by id
+     * Remove a tooltip from the handler by nodeId
      * 
-     * @param id id of tooltip to remove
+     * @param nodeId nodeId of tooltip to remove
      */
-    public void remove(String id) {
-        errorTooltips.remove(id);
+    public void remove(String nodeId) {
+        errorTooltips.remove(nodeId);
     }
 
     /**
-     * Get tooltip by id
+     * Get tooltip by nodeId
      * 
-     * @param id id of tooltip to get
-     * @return tooltip with id
+     * @param nodeId nodeId of tooltip to get
+     * @return tooltip with nodeId
      */
-    public Tooltip get(String id) {
-        return errorTooltips.get(id);
-    }
-
-    /**
-     * Get visibility status of tooltip
-     * 
-     * @param id tooltip id to check
-     * @return visible status of tooltip
-     */
-    public Boolean isShowing(String id) {
-        return get(id).isShowing();
+    public Tooltip get(String nodeId) {
+        return errorTooltips.get(nodeId);
     }
 
     /**
@@ -92,31 +75,36 @@ public class ErrorHandler {
     }
 
     /**
-     * Get all error tooltip-key hashes in the handler
-     * 
-     * @return HashMap of all errors
-     */
-    public HashMap<String, Tooltip> getHash() {
-        return errorTooltips;
-    }
-
-    /**
      * Changes the message of a tooltip
      * 
-     * @param id      id of tooltip to change
+     * @param nodeId  nodeId of tooltip to change
      * @param message new message
      */
-    public void changeMessage(String id, String message) {
-        errorTooltips.get(id).setText(message);
+    public void changeMessage(String nodeId, String message) {
+        errorTooltips.get(nodeId).setText(message);
     }
 
     /**
      * Hides all of the error tooltips
      */
     public void hideAll() {
-        for (Tooltip t : getAll()) {
-            t.hide();
+        for (Entry<String, Tooltip> entry : errorTooltips.entrySet()) {
+            Tooltip.uninstall(
+                    ((Stage) Window.getWindows().get(Window.getWindows().size() - 1))
+                            .getScene().lookup("#" + entry.getKey()),
+                    entry.getValue());
         }
+    }
+
+    /**
+     * Shows the tooltip for the given nodeId
+     * 
+     * @param nodeId the nodeId to show tooltip for
+     */
+    public void show(String nodeId) {
+        Tooltip.install(((Stage) Window.getWindows().get(Window.getWindows().size() - 1))
+                .getScene().lookup("#" + nodeId), get(nodeId));
+        get(nodeId).setShowDelay(Duration.millis(50.0));
     }
 
 }

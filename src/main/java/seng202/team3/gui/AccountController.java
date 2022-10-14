@@ -158,9 +158,6 @@ public class AccountController {
      */
     public AccountController() {
         // Unused
-        errors.add(EMAIL_ERROR, accountEmail, "Invalid email.");
-        errors.add(NAME_ERROR, accountName, "Username cannot be empty.");
-        errors.add(PASSWORD_ERROR, accountPassword, "Password must be more than 4 characters.");
     }
 
     /**
@@ -169,6 +166,9 @@ public class AccountController {
      * @param border the BorderPane
      */
     public void init(BorderPane border) {
+        errors.add("accountEmail", "Invalid email.");
+        errors.add("accountName", "Username cannot be empty.");
+        errors.add("accountPassword", "Password must be more than 4 characters.");
         User user = UserManager.getUser();
         populateText(user);
         setChargerTable();
@@ -325,19 +325,22 @@ public class AccountController {
         Boolean fail = false;
 
         if (!UserManager.checkEmail(accountEmail.getText())) {
-            errors.changeMessage(EMAIL_ERROR, "Invalid email.");
+            errors.changeMessage("accountEmail", "Invalid email.");
             if (accountEmail.getText().isEmpty()) {
-                errors.add(EMAIL_REQ_ERROR, accountEmail, "Email cannot be empty.");
+                errors.changeMessage("accountEmail", "Email cannot be empty.");
             }
             accountEmail.setStyle(INVALID_STYLE);
+            errors.show("accountEmail");
             fail = true;
         }
         if (accountName.getText().isEmpty()) {
             accountName.setStyle(INVALID_STYLE);
+            errors.show("accountName");
             fail = true;
         }
         if (accountPassword.getText().length() < 4 && accountPassword.getText().length() > 0) {
             accountPassword.setStyle(INVALID_STYLE);
+            errors.show("accountPassword");
             fail = true;
         }
 

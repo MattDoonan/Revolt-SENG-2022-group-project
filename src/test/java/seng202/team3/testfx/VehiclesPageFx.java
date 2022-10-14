@@ -124,8 +124,7 @@ public class VehiclesPageFx extends TestFxBase {
         clickOn();
         clickOn("#addConnectionBtn");
         clickOn("#saveChanges");
-        assertFalse(((VehicleUpdateController) MainWindow.getController())
-                .getErrors().getHash().containsKey("connectorError"));
+        // TODO: check for invalid styling/error
     }
 
     @Test

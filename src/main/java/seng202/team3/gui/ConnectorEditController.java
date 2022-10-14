@@ -92,12 +92,12 @@ public class ConnectorEditController {
      *
      */
     public void init() {
-        errors.add("connPointsFormat", chargingPointsField,
+        errors.add("chargingPointsField",
                 "Number of Charging Points needs to be an integer");
-        errors.add("connCurrentRequired", currentField, "Must have a current, e.g. AC or DC");
-        errors.add("connPowerRequired", wattageField, "Must have a wattage, e.g. 24 kW");
-        errors.add("connStatusRequired", statusField, "Must have a status, e.g. Operative");
-        errors.add("connTypeRequired", typeField, "Must have a charger type e.g. CHAdeMO");
+        errors.add("currentField", "Must have a current, e.g. AC or DC");
+        errors.add("wattageField", "Must have a wattage, e.g. 24 kW");
+        errors.add("statusField", "Must have a status, e.g. Operative");
+        errors.add("typeField", "Must have a charger type e.g. CHAdeMO");
     }
 
     /**
@@ -150,26 +150,31 @@ public class ConnectorEditController {
             points = Integer.parseInt(chargingPointsField.getText());
         } catch (NumberFormatException e) {
             chargingPointsField.setStyle(INVALID_STYLE);
+            errors.show("chargingPointsField");
             fail = true;
         }
         String currentString = currentField.getText();
         if (currentString.length() == 0) {
             currentField.setStyle(INVALID_STYLE);
+            errors.show("currentField");
             fail = true;
         }
         String powerString = wattageField.getText();
         if (powerString.length() == 0) {
             wattageField.setStyle(INVALID_STYLE);
+            errors.show("wattageField");
             fail = true;
         }
         String statusString = statusField.getText();
         if (statusString.length() == 0) {
             statusField.setStyle(INVALID_STYLE);
+            errors.show("statusField");
             fail = true;
         }
         String typeString = typeField.getText();
         if (typeString.length() == 0) {
             typeField.setStyle(INVALID_STYLE);
+            errors.show("typeField");
             fail = true;
         }
         if (Boolean.FALSE.equals(fail)) {
@@ -199,37 +204,5 @@ public class ConnectorEditController {
     public void cancel() {
         controller.resetPage();
     }
-
-    // /**
-    // * Launches an error popup when trying to do illegal things
-    // */
-    // public void launchErrorPopUps() {
-    // Stage stage = (Stage) statusField.getScene().getWindow();
-    // try {
-    // stage.setAlwaysOnTop(false);
-    // FXMLLoader error = new FXMLLoader(getClass().getResource(
-    // "/fxml/error_popup.fxml"));
-    // AnchorPane base = error.load();
-    // Scene modalScene = new Scene(base);
-    // Stage modal = new Stage();
-    // modal.setScene(modalScene);
-    // modal.setResizable(false);
-    // modal.setTitle("Error With Connectors:");
-    // modal.initModality(Modality.APPLICATION_MODAL);
-    // ErrorController errController = error.getController();
-    // errController.init();
-    // errController.setErrors(errors);
-    // errController.setPromptType("error");
-    // errController.displayErrors();
-    // modal.setAlwaysOnTop(true);
-    // modal.showAndWait();
-
-    // for (String e : errors) {
-    // logManager.warn(e);
-    // }
-    // } catch (IOException e) {
-    // logManager.error(e.getMessage());
-    // }
-    // }
 
 }

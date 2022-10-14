@@ -144,7 +144,7 @@ public class VehicleUpdateController {
      * The images that the user can choose from (names)
      */
     private String[] imgNames = { "car_one.png", "car_two.png", "car_three.png",
-            "truck_one.png", "truck_two.png" };
+        "truck_one.png", "truck_two.png" };
 
     /**
      * Styling for invalid fields
@@ -229,10 +229,10 @@ public class VehicleUpdateController {
      */
     public void init() {
         errors = new ErrorHandler();
-        errors.add(MAKE_ERROR, makeText, "Vehicle make required.");
-        errors.add(MODEL_ERROR, modelText, "Vehicle model required.");
-        errors.add(RANGE_ERROR, maxRangeText, "Max range required");
-        errors.add(CONNECTOR_ERROR, connectorType,
+        errors.add("makeText", "Vehicle make required.");
+        errors.add("modelText", "Vehicle model required.");
+        errors.add("maxRangeText", "Max range required");
+        errors.add("connectorType",
                 "A vehicle must have at least one connector.");
         stage = (Stage) inputBox.getScene().getWindow();
         prevController = MainWindow.getController();
@@ -321,33 +321,37 @@ public class VehicleUpdateController {
 
         if (makeText.getText().isEmpty()) {
             makeText.setStyle(INVALID_STYLE);
+            errors.show("makeText");
             fail = true;
         }
         if (modelText.getText().isEmpty()) {
             modelText.setStyle(INVALID_STYLE);
+            errors.show("modelText");
             fail = true;
         }
         Boolean rangeFlag = false;
         try {
             if (maxRangeText.getText().isEmpty()) {
-                errors.changeMessage(RANGE_ERROR, "Max. range required.");
+                errors.changeMessage("maxRangeText", "Max. range required.");
                 rangeFlag = true;
             } else if (Integer.parseInt(maxRangeText.getText()) < 0) {
-                errors.changeMessage(RANGE_ERROR, "Max. range cannot be negative.");
+                errors.changeMessage("maxRangeText", "Max. range cannot be negative.");
                 rangeFlag = true;
             }
         } catch (NumberFormatException e) {
-            errors.add(RANGE_ERROR_INT, maxRangeText, "Max. range must be a whole number.");
+            errors.changeMessage("maxRangeText", "Max. range must be a whole number.");
             rangeFlag = true;
         }
 
         if (Boolean.TRUE.equals(rangeFlag)) {
             maxRangeText.setStyle(INVALID_STYLE);
+            errors.show("maxRangeText");
             fail = true;
         }
 
         if (connections.isEmpty()) {
             connectorType.setStyle(INVALID_STYLE);
+            errors.show("connectorType");
             fail = true;
         }
 

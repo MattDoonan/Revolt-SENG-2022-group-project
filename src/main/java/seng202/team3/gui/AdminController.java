@@ -102,10 +102,9 @@ public class AdminController {
     private static final String DELETE_ERROR = "deleteError";
 
     /**
-     * Delete select Error ID 
+     * Delete select Error ID
      */
     private static final String DELETE_ERROR_SELECT = "deleteErrorSelect";
-
 
     /**
      * Permissions Button error id
@@ -130,8 +129,8 @@ public class AdminController {
      * @param border the BorderPane containing this class
      */
     public void init(BorderPane border) {
-        errors.add("permissionsMenuError", menu, "Select a permission level.");
-        errors.add(PERMISSIONS_ERROR, updatePermissions, SELECT_USER);
+        errors.add("menu", "Select a permission level.");
+        errors.add("updatePermissions", SELECT_USER);
         this.border = border;
         manager = new AdminManager();
         manager.setAdmin(UserManager.getUser());
@@ -199,16 +198,18 @@ public class AdminController {
 
         boolean errorOccured = false;
         if (manager.getSelectedUser() == null) {
-            errors.add(DELETE_ERROR_SELECT, delete, SELECT_USER);
+            errors.changeMessage("delete", SELECT_USER);
             errorOccured = true;
         } else if (manager.getAdmin().getUserid() == manager.getSelectedUser().getUserid()) {
-            errors.add(DELETE_ERROR, delete, "Cannot delete current user");
+            errors.add("delete", "Cannot delete current user");
             errorOccured = true;
         }
 
         if (!errorOccured) {
             loadPromptScreen("Are you sure you'd like to \n"
                     + "delete this user (and owned chargers)?\n\n");
+        } else {
+            errors.show("delete");
         }
 
         updateTable();
@@ -228,10 +229,10 @@ public class AdminController {
 
         boolean permissionsErr = false;
         if (manager.getSelectedUser() == null) {
-            errors.add(PERMISSIONS_ERROR_SELECT, updatePermissions, SELECT_USER);
+            errors.changeMessage("updatePermissions", SELECT_USER);
             permissionsErr = true;
         } else if (manager.getAdmin().getUserid() == manager.getSelectedUser().getUserid()) {
-            errors.add(PERMISSIONS_ERROR, updatePermissions, "Cannot edit your own permissions!");
+            errors.changeMessage("updatePermissions", "Cannot edit your own permissions!");
             permissionsErr = true;
         }
 
@@ -242,6 +243,8 @@ public class AdminController {
         if (!permissionsErr) {
             manager.getSelectedUser().setLevel(manager.permissionLevel(menu.getText()));
             manager.updateUser();
+        } else {
+            errors.show("updatePermissions");
         }
         updateTable();
     }

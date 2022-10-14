@@ -145,6 +145,12 @@ public class LoginSignupController {
      */
     public LoginSignupController() {
         // Unused
+        errors.add("confPassField", "Passwords must match.");
+        errors.add("signupEmailField", "Email required.");
+        errors.add("loginEmailField", "Username required.");
+        errors.add("signupPasswordField", "Password must be more than 4 characters.");
+        errors.add("loginPasswordField", "Password required.");
+        errors.add("signupUsernameField", "Username required.");
     }
 
     /**
@@ -181,16 +187,10 @@ public class LoginSignupController {
      */
     public void init(MenuController menuControl) {
         this.menuControl = menuControl;
-        errors.add("confPassError", confPassField, "Passwords must match.");
-        errors.add("emailError", signupEmailField, "Email required.");
-        errors.add("nameError", loginEmailField, "Username required.");
-        errors.add("passError", signupPasswordField, "Password must be more than 4 characters.");
-        errors.add("loginPassError", loginPasswordField, "Password required.");
-        errors.add("userError", signupUsernameField, "Username required.");
-
         if (showPassLogin != null) {
             setIcon("show");
         }
+
     }
 
     /**
@@ -242,35 +242,34 @@ public class LoginSignupController {
         Boolean fail = false;
 
         if (!UserManager.checkEmail(signupEmailField.getText())) {
-            errors.changeMessage("emailError", "Invalid email.");
+            errors.changeMessage("signupEmailField", "Invalid email.");
             if (signupEmailField.getText().isEmpty()) {
-                errors.changeMessage("emailError", "Email Required.");
+                errors.changeMessage("signupEmailField", "Email Required.");
             }
             signupEmailField.setStyle(INVALID_STYLE);
+            errors.show("signupEmailField");
             fail = true;
         }
         if (signupUsernameField.getText().isEmpty()) {
             signupUsernameField.setStyle(INVALID_STYLE);
+            errors.show("signupUsernameField");
             fail = true;
         }
         if (signupPasswordField.getText().length() < 4) {
-            errors.changeMessage("passError", "Password must be more than 4 characters.");
+            errors.show("signupPasswordField");
             signupPasswordField.setStyle(INVALID_STYLE);
             fail = true;
         }
-        if (signupPasswordField.getText().length() < 4 && signupPasswordField.getText().length() > 0) {
-            errors.add(PASSWORD_ERROR, signupPasswordField, "Password must be more than 4 characters.");
+        if (signupPasswordField.getText().length() < 4
+                && signupPasswordField.getText().length() > 0) {
+            errors.show("signupPasswordField");
             signupPasswordField.setStyle(INVALID_STYLE);
-            fail = true;
-        }
-        if (confPassField.getText().isEmpty()) {
-            errors.add(CONF_PASS_ERROR, confPassField, "Confirm password required");
-            confPassField.setStyle(INVALID_STYLE);
             fail = true;
         }
         if (confPassField.getText().isEmpty()
                 || !signupPasswordField.getText().equals(confPassField.getText())) {
             confPassField.setStyle(INVALID_STYLE);
+            errors.show("confPassField");
             fail = true;
         }
 
@@ -318,9 +317,10 @@ public class LoginSignupController {
 
         if (loginEmailField.getText().isEmpty()) {
             loginEmailField.setStyle(INVALID_STYLE);
+            errors.show("loginEmailField");
         }
         if (loginPasswordField.getText().isEmpty()) {
-            errors.changeMessage("passError", "Password required.");
+            errors.show("loginPasswordField");
             loginPasswordField.setStyle(INVALID_STYLE);
         }
     }
