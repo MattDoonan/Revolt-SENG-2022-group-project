@@ -70,7 +70,7 @@ public class SearchFilterMainStepDefs extends CucumberFxBase {
 
     @When("I navigate to the home view")
     public void iNavigateToTheHomeView() {
-        clickOn("#menuButton");
+        clickOn("HOME");
     }
 
     @Then("chargers are available")

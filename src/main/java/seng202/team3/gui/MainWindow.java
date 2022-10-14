@@ -58,7 +58,7 @@ public class MainWindow extends Application {
 
         if (MapHandler.getLocationAccepted() == null) {
             MenuController.getController().getMapController().getLocation();
-            baseController.initHome();
+            baseController.loadHome();
         }
 
     }

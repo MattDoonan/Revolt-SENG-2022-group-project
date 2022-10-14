@@ -1,23 +1,30 @@
 .text-area {
 	-fx-background-color: transparent;
 	background-color: transparent;
+	-fx-cursor: default;
+	cursor: default;
 }
 
 .text-area .scroll-pane {
 	-fx-background-color: transparent;
 	background-color: transparent;
+	-fx-cursor: default;
+	cursor: default;
 }
 
 .text-area .scroll-pane .viewport {
 	-fx-background-color: transparent;
 	background-color: transparent;
+	-fx-cursor: default;
+	cursor: default;
 }
 
 .text-area .scroll-pane .content {
 	-fx-background-color: transparent;
 	background-color: transparent;
+	-fx-cursor: default;
+	cursor: default;
 }
-
 
 .white-btn {
 	background-color: #ffffff;

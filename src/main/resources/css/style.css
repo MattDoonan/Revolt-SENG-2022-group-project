@@ -1,7 +1,7 @@
 * {
 	font-family: "SansSerif";
 	-fx-font-family: "SansSerif";
-	-fx-font-size: 14px;
+	/* -fx-font-size: 14px; */
 	/* -fx-color: #ffffff; */
 	/* -fx-background-color: #eee9ea; */
 	-fx-font-color: #2b2d42;
@@ -92,12 +92,12 @@
 .menu-bar-btn {
 	background-color: #af2c35;
 	-fx-background-color: #af2c35;
+	font-size: 9px;
+	-fx-font-size: 9px;
 }
 
 .menu-bar-btn:hover {
-	font-size: 13px;
-	-fx-font-size: 13px;
-	-fx-text-fill: #ffd4dd;
+	-fx-text-fill: white;
 	cursor: hand;
 	-fx-cursor: hand;
 	-fx-underline: true;

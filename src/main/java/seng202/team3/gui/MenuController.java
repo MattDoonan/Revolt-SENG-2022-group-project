@@ -6,6 +6,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -37,13 +39,19 @@ public class MenuController {
      * Button for the menu
      */
     @FXML
-    private Button menuButton;
+    private Label homeLabel;
 
     /**
      * Button for the vehicle
      */
     @FXML
-    private Button vehicleButton;
+    private Label garageLabel;
+
+    /**
+     * Account button
+     */
+    @FXML
+    private Label accountLabel;
 
     /**
      * Login signout button
@@ -52,10 +60,22 @@ public class MenuController {
     private Button loginSignout;
 
     /**
-     * Account button
+     * Home button box
      */
     @FXML
-    private Button accountPage;
+    private AnchorPane homeBox;
+
+    /**
+     * Garage button box
+     */
+    @FXML
+    private AnchorPane garageBox;
+
+    /**
+     * Account button box
+     */
+    @FXML
+    private AnchorPane accountBox;
 
     /**
      * The stage the application runs on
@@ -92,6 +112,45 @@ public class MenuController {
      */
     public void init(Stage stage) {
         this.stage = stage;
+        configureButtons();
+    }
+
+    /**
+     * Sets hover properties for menu 'buttons'
+     */
+    private void configureButtons() {
+        homeBox.hoverProperty().addListener((obs, oldVal, newValue) -> {
+            if (newValue) {
+                // homeBox.setStyle("-fx-background-color: "
+                // + "linear-gradient(from 50% 0% to 50% 100%, #af2c35, #9d3d43);");
+                // homeLabel.setVisible(true);
+            } else {
+                // homeBox.setStyle("-fx-background-color: #af2c35;");
+                // homeLabel.setVisible(false);
+            }
+        });
+
+        garageBox.hoverProperty().addListener((obs, oldVal, newValue) -> {
+            if (newValue) {
+                // garageBox.setStyle("-fx-background-color: "
+                // + "linear-gradient(from 50% 0% to 50% 100%, #af2c35, #9d3d43);");
+                // garageLabel.setVisible(true);
+            } else {
+                // garageBox.setStyle("-fx-background-color: #af2c35;");
+                // garageLabel.setVisible(false);
+            }
+        });
+
+        accountBox.hoverProperty().addListener((obs, oldVal, newValue) -> {
+            if (newValue) {
+                // accountBox.setStyle("-fx-background-color: "
+                // + "linear-gradient(from 50% 0% to 50% 100%, #af2c35, #9d3d43);");
+                // accountLabel.setVisible(true);
+            } else {
+                // accountBox.setStyle("-fx-background-color: #af2c35;");
+                // accountLabel.setVisible(false);
+            }
+        });
     }
 
     /**
@@ -140,6 +199,10 @@ public class MenuController {
         }
         initHome();
 
+        accountBox.setStyle("-fx-background-color: #af2c35;");
+        garageBox.setStyle("-fx-background-color: #af2c35;");
+        homeBox.setStyle(
+            "-fx-background-color: linear-gradient(from 50% 0% to 50% 100%, #af2c35, #9d3d43);");
     }
 
     /**
@@ -164,6 +227,11 @@ public class MenuController {
         } catch (IOException e) {
             logManager.error(e.getMessage());
         }
+
+        homeBox.setStyle("-fx-background-color: #af2c35;");
+        accountBox.setStyle("-fx-background-color: #af2c35;");
+        garageBox.setStyle(
+            "-fx-background-color: linear-gradient(from 50% 0% to 50% 100%, #af2c35, #9d3d43);");
     }
 
     /**
@@ -251,6 +319,11 @@ public class MenuController {
         } catch (IOException e) {
             logManager.error(e.getMessage());
         }
+
+        homeBox.setStyle("-fx-background-color: #af2c35;");
+        garageBox.setStyle("-fx-background-color: #af2c35;");
+        accountBox.setStyle(
+            "-fx-background-color: linear-gradient(from 50% 0% to 50% 100%, #af2c35, #9d3d43);");
     }
 
     /**

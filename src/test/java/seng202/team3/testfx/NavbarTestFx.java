@@ -148,8 +148,8 @@ public class NavbarTestFx extends TestFxBase {
 
     private static Stream<Arguments> loadScreens() {
         return Stream.of(
-                Arguments.of("#accountPage", "#editAccountButton"),
-                Arguments.of("#vehicleButton", "#openUpdate"));
+            Arguments.of("ACCOUNT", "#editAccountButton"),
+                Arguments.of("GARAGE", "#openUpdate"));
     }
 
     @ParameterizedTest
@@ -175,7 +175,7 @@ public class NavbarTestFx extends TestFxBase {
         clickOn("#loginPasswordField");
         write(password);
         clickOn("#loginBtn");
-        clickOn("#accountPage");
-        clickOn("#menuButton");
+        clickOn("ACCOUNT");
+        clickOn("HOME");
     }
 }

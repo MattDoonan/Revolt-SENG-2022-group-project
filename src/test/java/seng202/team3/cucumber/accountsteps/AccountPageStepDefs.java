@@ -144,7 +144,7 @@ public class AccountPageStepDefs extends CucumberFxBase {
 
     @When("I navigate to the account screen")
     public void iNavigateToTheAccountScreen() {
-        clickOn("#accountPage");
+        clickOn("ACCOUNT");
         controller = (AccountController) MainWindow.getController();
     }
 
@@ -410,8 +410,8 @@ public class AccountPageStepDefs extends CucumberFxBase {
         for (Entity o : chargers) {
             db.deleteData(EntityType.CHARGER, ((Charger) o).getId());
         }
-        clickOn("#menuButton");
-        clickOn("#accountPage");
+        clickOn("HOME");
+        clickOn("ACCOUNT");
     }
 
     @Then("The table is empty")

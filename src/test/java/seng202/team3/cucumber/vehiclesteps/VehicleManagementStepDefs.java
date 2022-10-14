@@ -128,7 +128,7 @@ public class VehicleManagementStepDefs extends CucumberFxBase {
 
     @When("I navigate to the vehicle screen")
     public void iNavigateToTheVehicleScreen() {
-        clickOn("#vehicleButton");
+        clickOn("GARAGE");
     }
 
     @Then("I am shown an empty garage")

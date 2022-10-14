@@ -70,7 +70,7 @@ public class ChargerListMainStepDefs extends CucumberFxBase {
 
     @Given("No charger has been selected")
     public void refreshPage() {
-        clickOn("#menuButton");
+        clickOn("HOME");
         controller = (MainController) MainWindow.getController();
     }
 
@@ -102,7 +102,7 @@ public class ChargerListMainStepDefs extends CucumberFxBase {
         }
         db.writeCharger(new ArrayList<>(chargerObject));
 
-        clickOn("#menuButton");
+        clickOn("HOME");
         controller = (MainController) MainWindow.getController();
         GeoLocationHandler.setCoordinate(new Coordinate(
                 -43.52246856689453, 172.5812225341797),
