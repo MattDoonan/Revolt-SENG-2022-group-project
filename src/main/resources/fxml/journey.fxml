@@ -18,7 +18,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<SplitPane dividerPositions="0.9003378378378378" maxHeight="Infinity" prefHeight="709.0" prefWidth="594.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.JourneyController">
+<SplitPane dividerPositions="0.9003378378378378" maxHeight="Infinity" prefHeight="709.0" prefWidth="594.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.JourneyController">
    <items>
       <SplitPane dividerPositions="0.57625" maxWidth="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="707.0" prefWidth="586.0">
          <items>
@@ -29,41 +29,45 @@
                         <Button fx:id="makeEnd" layoutX="19.0" layoutY="248.0" mnemonicParsing="false" onAction="#setDestination" prefHeight="24.0" prefWidth="190.0" text="Set Selected Point to End" />
                         <Button fx:id="makeStart" layoutX="19.0" layoutY="214.0" mnemonicParsing="false" onAction="#setStart" text="Set Selected Point to Start" />
                         <Button fx:id="resetJourney" layoutX="135.0" layoutY="348.0" mnemonicParsing="false" onAction="#resetJourney" prefHeight="30.0" prefWidth="80.0" styleClass="btn-danger" stylesheets="@style.css" text="Reset" />
-                        <VBox fx:id="journeyTable" layoutX="238.0" layoutY="41.0" prefWidth="307.0" AnchorPane.topAnchor="41.0">
-                           <children>
-                              <HBox id="start-box" maxWidth="313.0" prefHeight="83.0" prefWidth="300.0" stylesheets="@style.css">
+                        <ScrollPane hbarPolicy="NEVER" layoutX="238.0" layoutY="41.0" prefHeight="340.0" prefWidth="309.0" AnchorPane.topAnchor="40.0" AnchorPane.bottomAnchor="40.0">
+                           <content>
+                              <VBox fx:id="journeyTable" prefWidth="307.0">
                                  <children>
-                                    <AnchorPane>
+                                    <HBox id="start-box" maxWidth="313.0" prefHeight="83.0" prefWidth="300.0" stylesheets="@style.css">
                                        <children>
-                                          <Label fx:id="startLabel" layoutX="60.0" layoutY="35.0" maxWidth="200.0" text="Start not set" wrapText="true" />
-                                          <Label layoutX="14.0" layoutY="6.0" text="START" />
-                                          <ImageView fitHeight="45.0" fitWidth="35.0" layoutX="14.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@../html/icons/red_icon.png" />
-                                             </image>
-                                          </ImageView>
+                                          <AnchorPane>
+                                             <children>
+                                                <Label fx:id="startLabel" layoutX="60.0" layoutY="35.0" maxWidth="200.0" text="Start not set" wrapText="true" />
+                                                <Label layoutX="14.0" layoutY="6.0" text="START" />
+                                                <ImageView fitHeight="45.0" fitWidth="35.0" layoutX="14.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../html/icons/red_icon.png" />
+                                                   </image>
+                                                </ImageView>
+                                             </children>
+                                          </AnchorPane>
                                        </children>
-                                    </AnchorPane>
-                                 </children>
-                              </HBox>
-                              <VBox fx:id="journeyChargerTable" layoutX="238.0" layoutY="41.0" prefWidth="265.0" AnchorPane.topAnchor="41.0" />
-                              <HBox id="dest-box" maxWidth="307.0" prefHeight="75.0" prefWidth="307.0" stylesheets="@style.css">
-                                 <children>
-                                    <AnchorPane>
+                                    </HBox>
+                                    <VBox fx:id="journeyChargerTable" layoutX="238.0" layoutY="41.0" prefWidth="265.0" AnchorPane.topAnchor="41.0" />
+                                    <HBox id="dest-box" maxWidth="307.0" prefHeight="75.0" prefWidth="307.0" stylesheets="@style.css">
                                        <children>
-                                          <Label fx:id="endLabel" layoutX="60.0" layoutY="42.0" maxWidth="200.0" text="End not set" wrapText="true" />
-                                          <Label layoutX="14.0" layoutY="14.0" text="DESTINATION" />
-                                          <ImageView fitHeight="45.0" fitWidth="35.0" layoutX="14.0" layoutY="33.0" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@../html/icons/red_icon.png" />
-                                             </image>
-                                          </ImageView>
+                                          <AnchorPane>
+                                             <children>
+                                                <Label fx:id="endLabel" layoutX="60.0" layoutY="42.0" maxWidth="200.0" text="End not set" wrapText="true" />
+                                                <Label layoutX="14.0" layoutY="14.0" text="DESTINATION" />
+                                                <ImageView fitHeight="45.0" fitWidth="35.0" layoutX="14.0" layoutY="33.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../html/icons/red_icon.png" />
+                                                   </image>
+                                                </ImageView>
+                                             </children>
+                                          </AnchorPane>
                                        </children>
-                                    </AnchorPane>
+                                    </HBox>
                                  </children>
-                              </HBox>
-                           </children>
-                        </VBox>
+                              </VBox>
+                           </content>
+                        </ScrollPane>
                         <Button fx:id="saveJourney" layoutX="33.0" layoutY="348.0" mnemonicParsing="false" onAction="#saveJourney" prefHeight="30.0" prefWidth="80.0" styleClass="btn-success" stylesheets="@style.css" text="Save" />
                         <MenuButton fx:id="vehicles" layoutX="25.0" layoutY="101.0" mnemonicParsing="false" text="Select Vehicle" />
                         <Text fx:id="errorText" fill="RED" layoutX="88.0" layoutY="309.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Error" visible="false" wrappingWidth="82.0">
