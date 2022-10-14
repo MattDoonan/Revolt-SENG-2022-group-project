@@ -409,7 +409,7 @@ public class AccountPageStepDefs extends CucumberFxBase {
         assertTrue(table.getItems().isEmpty());
     }
 
-    @When("The user confirms to delete there account")
+    @When("The user confirms to delete their account")
     public void deleteOwnAccount() {
         clickOn("#editAccountButton");
         clickOn("#delete");
