@@ -1,5 +1,6 @@
 package seng202.team3.testfx;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -144,9 +146,7 @@ public class AdminPageTestFx extends TestFxBase {
             release(KeyCode.DOWN);
         }
         clickOn("#updatePermissions");
-
-        // TODO: check button styling is red or invalid text on page
-
+        assertFalse(((Button) find("#updatePermissions")).getBorder().isEmpty());
     }
 
     /**
@@ -161,9 +161,7 @@ public class AdminPageTestFx extends TestFxBase {
         release(KeyCode.UP);
         clickOn("#delete");
 
-        // assertFalse(((Button) find("#makeText")).getBorder().isEmpty());
-
-        // TODO: check button styling is red or invalid text on page
+        assertFalse(((Button) find("#delete")).getBorder().isEmpty());
     }
 
     /**

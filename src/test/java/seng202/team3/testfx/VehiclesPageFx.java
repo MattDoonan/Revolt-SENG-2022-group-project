@@ -128,8 +128,10 @@ public class VehiclesPageFx extends TestFxBase {
         clickOn();
         clickOn("#addConnectionBtn");
         clickOn("#saveChanges");
-        // Check that error styling occurs on empty field
-        assertFalse(((TextField) find("#makeText")).getBorder().isEmpty());
+        assertTrue(((Control) find("#connectorType")).getBorder().isEmpty());
+        assertFalse(((Control) find("#makeText")).getBorder().isEmpty());
+        assertFalse(((Control) find("#modelText")).getBorder().isEmpty());
+        assertFalse(((Control) find("#maxRangeText")).getBorder().isEmpty());
 
     }
 
