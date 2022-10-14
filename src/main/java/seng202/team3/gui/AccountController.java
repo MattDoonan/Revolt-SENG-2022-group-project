@@ -128,8 +128,8 @@ public class AccountController {
      * Styling for invalid fields
      */
     private static final Border INVALID_STYLE = new Border(
-        new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, 
-            CornerRadii.EMPTY, BorderWidths.DEFAULT));
+            new BorderStroke(Color.RED, BorderStrokeStyle.SOLID,
+                    CornerRadii.EMPTY, BorderWidths.DEFAULT));
 
     /**
      * id for username node
@@ -164,8 +164,8 @@ public class AccountController {
      * @param border the BorderPane
      */
     public void init(BorderPane border) {
-        errors.add(NAME_NODE, "Invalid email.");
-        errors.add(EMAIL_NODE, "Username cannot be empty.");
+        errors.add(NAME_NODE, "Invalid name.");
+        errors.add(EMAIL_NODE, "Email cannot be empty.");
         errors.add(PASSWORD_NODE, "Password must be more than 4 characters.");
         User user = UserManager.getUser();
         populateText(user);
