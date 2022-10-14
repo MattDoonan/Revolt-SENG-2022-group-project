@@ -412,6 +412,7 @@ public class MenuController {
             menuWindow.setCenter(journeyViewParent);
             setJourneyController(journeyLoader.getController());
             journeyController.init(stage);
+            MainWindow.setController(journeyLoader.getController());
             journeyController.setBorderPane(menuWindow);
             menuWindow.setCenter(journeyViewParent);
             logManager.info("Switched to Journeys Screen");
