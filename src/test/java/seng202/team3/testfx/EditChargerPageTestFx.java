@@ -1,5 +1,7 @@
 package seng202.team3.testfx;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +14,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
+import javafx.scene.control.Button;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
@@ -84,11 +87,10 @@ public class EditChargerPageTestFx extends TestFxBase {
      */
     @Test
     public void editChargerFail() {
-        clickOn("#connectorTable");
-        press(KeyCode.DOWN);
+        clickOn("ChardaMo");
         clickOn("#deleteConnectorButton");
         clickOn("#saveButton");
-        // TODO: check styling
+        assertFalse(((Button) find("#addConnectorButton")).getBorder().isEmpty());
     }
 
     /**

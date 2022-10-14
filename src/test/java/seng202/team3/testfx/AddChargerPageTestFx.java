@@ -136,13 +136,9 @@ public class AddChargerPageTestFx extends TestFxBase {
         write("123.0");
         clickOn("#saveButton");
 
-        // no windows open, as no errors were thrown
+        // Charger edit window has closed
         List<Window> ws = Stage.getWindows();
         assertEquals(0, ws.size());
-
-        assertThrows(FxRobotException.class, () -> {
-            clickOn("#prompt");
-        });
     }
 
 }
