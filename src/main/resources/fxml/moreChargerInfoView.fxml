@@ -18,7 +18,7 @@
             </VBox>
          </content>
       </ScrollPane>
-      <Button id="Inherit" fx:id="Inherit" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#listChargerView" text="↑" />
+      <Button id="Inherit" fx:id="Inherit" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#listChargerView" text="↑" style="-fx-text-fill: white;"/>
    </items>
    <stylesheets>
       <URL value="@../css/style.css" />
