@@ -1,0 +1,56 @@
+#Inherit {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #a9a9a9;
+}
+
+#Inherit:hover {
+    -fx-cursor: OPEN_HAND;
+}
+
+#mainSidepane {
+    -fx-border-color: transparent, transparent, transparent #a9a9a9;
+}
+
+#chargerListPane {
+    -fx-border-color: #a9a9a9;
+}
+
+#filters {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #a9a9a9;
+}
+
+#filters:hover {
+    -fx-cursor: OPEN_HAND;
+}
+
+.slider:hover {
+    -fx-cursor: OPEN_HAND;
+}
+
+#executeSearch {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #a9a9a9;
+}
+
+#executeSearch:hover {
+    -fx-cursor: OPEN_HAND;
+}
+
+#searchCharger {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #a9a9a9;
+}
+
+#searchCharger:hover{
+    -fx-cursor: Text;
+}
+
+#batteryPercent {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #a9a9a9;
+}
+
+#batteryPercent:hover{
+    -fx-cursor: Text;
+}
