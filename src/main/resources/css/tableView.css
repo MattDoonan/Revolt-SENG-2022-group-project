@@ -56,12 +56,12 @@
 	-fx-cursor: OPEN_HAND;
 }
 
-#updateTable {
+#update {
 	-fx-background-color: #FFFFFF;
 	-fx-border-color: #a9a9a9;
 }
 
-#updateTable:hover {
+#update:hover {
 	-fx-cursor: OPEN_HAND;
 }
 

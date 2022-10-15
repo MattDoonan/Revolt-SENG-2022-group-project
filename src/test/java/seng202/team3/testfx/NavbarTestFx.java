@@ -123,6 +123,7 @@ public class NavbarTestFx extends TestFxBase {
     public void realSignUp() throws IOException {
         clickOn("#accountMenu");
         clickOn("#loginSignout");
+        moveTo("HOME");
         clickOn("#signUpBtn");
         clickOn("#signupUsernameField");
         write("Test User");
