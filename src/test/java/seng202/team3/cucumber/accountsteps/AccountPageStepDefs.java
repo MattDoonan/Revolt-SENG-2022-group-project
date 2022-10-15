@@ -27,6 +27,7 @@ import io.cucumber.java.en.When;
 import javafx.geometry.VerticalDirection;
 import javafx.scene.Node;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
@@ -173,8 +174,7 @@ public class AccountPageStepDefs extends CucumberFxBase {
 
     @When("I want to change my account email to {string}")
     public void changeAccountEmail(String newEmail) {
-        doubleClickOn("#accountEmail");
-        press(KeyCode.BACK_SPACE).release(KeyCode.BACK_SPACE);
+        ((TextField) this.find("#accountEmail")).clear();
         clickOn("#accountEmail");
         write(newEmail);
     }
@@ -186,6 +186,7 @@ public class AccountPageStepDefs extends CucumberFxBase {
 
     @Then("My account email has changed to {string}")
     public void differentAccountEmail(String actual) {
+        sleep(500);
         Assertions.assertEquals(actual, UserManager.getUser().getEmail());
     }
 
