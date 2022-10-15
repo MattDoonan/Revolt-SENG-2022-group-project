@@ -219,6 +219,8 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>3.0.0-M7</version>
         <configuration>
+        <argLine>-Xmx1024m</argLine>
+        
           <includes>
             <include>**/*Test.java</include>
             <include>**/*TestFx.java</include>
@@ -235,6 +237,8 @@
           </systemPropertyVariables>
 
           <properties>
+          
+
             <!-- Work around. Surefire does not include enough information to
             disambiguate between different examples and scenarios. -->
             <configurationParameters>
