@@ -167,7 +167,7 @@ public class MainController {
     private ChargerListController listController;
 
     /**
-     * The map manager
+     * The Main manager
      */
     private MainManager manage;
 
@@ -198,6 +198,7 @@ public class MainController {
         manage.makeAllChargers();
         manage.setPosition();
         initialRange();
+
         if (GeoLocationHandler
                 .getCoordinate() == GeoLocationHandler.DEFAULT_COORDINATE) {
             manage.setDistance(0);
@@ -467,6 +468,66 @@ public class MainController {
     @FXML
     public void onEnter(ActionEvent e) {
         executeSearch();
+    }
+
+    /**
+     * Swaps the carpark cost boxes if both are selected
+     * 
+     * @param e the action event
+     */
+    public void cparkCostSwap(ActionEvent e) {
+        if (e.getSource().toString().contains("withoutCarparkCost")
+                && withCarparkCost.isSelected()) {
+            withCarparkCost.setSelected(false);
+        } else if (e.getSource().toString().contains("withCarparkCost")
+                && withoutCarparkCost.isSelected()) {
+            withoutCarparkCost.setSelected(false);
+        }
+    }
+
+    /**
+     * Swaps the open24Hours boxes if both are selected
+     * 
+     * @param e the action event
+     */
+    public void open24HoursSwap(ActionEvent e) {
+        if (e.getSource().toString().contains("openAllButton")
+                && notOpenAllButton.isSelected()) {
+            notOpenAllButton.setSelected(false);
+        } else if (e.getSource().toString().contains("notOpenAllButton")
+                && openAllButton.isSelected()) {
+            openAllButton.setSelected(false);
+        }
+    }
+
+    /**
+     * Swaps the attraction boxes if both are selected
+     * 
+     * @param e the action event
+     */
+    public void attractionSwap(ActionEvent e) {
+        if (e.getSource().toString().contains("attractionButton")
+                && noNearbyAttraction.isSelected()) {
+            noNearbyAttraction.setSelected(false);
+        } else if (e.getSource().toString().contains("noNearbyAttraction")
+                && attractionButton.isSelected()) {
+            attractionButton.setSelected(false);
+        }
+    }
+
+    /**
+     * Swaps the charging cost boxes if both are selected
+     * 
+     * @param e the action event
+     */
+    public void chargingCostSwap(ActionEvent e) {
+        if (e.getSource().toString().contains("noChargingCost")
+                && hasChargingCost.isSelected()) {
+            hasChargingCost.setSelected(false);
+        } else if (e.getSource().toString().contains("hasChargingCost")
+                && noChargingCost.isSelected()) {
+            noChargingCost.setSelected(false);
+        }
     }
 
 }

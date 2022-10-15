@@ -587,7 +587,7 @@ public class SqlInterpreterTest {
     @Test
     public void changeChargerJourneyTest() throws SQLException, IOException {
         writeSingleEntity(testJourney);
-        Stop newStop = new Stop(-40.00, 170.00);
+        Stop newStop = new Stop(new Coordinate(-40.00, 17.00));
         newStop.setId(2);
         testJourney.getStops().clear();
         testJourney.getStops().add(newStop);
@@ -658,7 +658,7 @@ public class SqlInterpreterTest {
                 ((User) objectToTest).setAccountName(null);
                 break;
             case "Stop":
-                ((Stop) objectToTest).setLat(null);
+                ((Stop) objectToTest).getLocation().setLat(null);
                 break;
             default:
                 fail();

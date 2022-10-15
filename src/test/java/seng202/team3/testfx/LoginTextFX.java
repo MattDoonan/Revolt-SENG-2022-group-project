@@ -7,6 +7,7 @@ import java.io.IOException;
 import javax.management.InstanceAlreadyExistsException;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javafx.fxml.FXMLLoader;
@@ -33,6 +34,12 @@ public class LoginTextFX extends TestFxBase {
         SqlInterpreter.removeInstance();
         SqlInterpreter.initialiseInstanceWithUrl(
                 "jdbc:sqlite:./target/test-classes/test_database.db");
+        SqlInterpreter.getInstance().defaultDatabase();
+    }
+
+    @BeforeEach
+    public void init() throws IOException {
+        SqlInterpreter.getInstance().defaultDatabase();
     }
 
     @Override

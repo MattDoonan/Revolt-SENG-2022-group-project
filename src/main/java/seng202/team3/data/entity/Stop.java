@@ -13,14 +13,9 @@ public class Stop extends Entity {
     private Charger charger = null;
 
     /**
-     * Latitude of the stop
+     * Coordinate of the stop
      */
-    private Double lat;
-
-    /**
-     * Longitude of the stop
-     */
-    private Double lon;
+    private Coordinate location;
 
     /**
      * Create a stop at a charger
@@ -29,19 +24,16 @@ public class Stop extends Entity {
      */
     public Stop(Charger charger) {
         this.charger = charger;
-        this.lat = charger.getLocation().getLat();
-        this.lon = charger.getLocation().getLon();
+        this.location = charger.getLocation();
     }
 
     /**
      * Create a stop at any point
      * 
-     * @param lat latitude coordinate of the stop
-     * @param lon longitude coordinate of the stop
+     * @param position position of the stop
      */
-    public Stop(Double lat, Double lon) {
-        this.lat = lat;
-        this.lon = lon;
+    public Stop(Coordinate position) {
+        this.location = position;
     }
 
     /**
@@ -63,39 +55,21 @@ public class Stop extends Entity {
     }
 
     /**
-     * Gets the latitude of the stop
+     * Gets the coordinate of the stop
      * 
-     * @return latitude of the stop
+     * @return coordinate of the stop
      */
-    public Double getLat() {
-        return this.lat;
+    public Coordinate getLocation() {
+        return this.location;
     }
 
     /**
-     * Sets the latitude of the stop
+     * Sets the coordinate of the stop
      * 
-     * @param lat latitude of the stop
+     * @param pos coordinate of the stop
      */
-    public void setLat(Double lat) {
-        this.lat = lat;
-    }
-
-    /**
-     * Gets the longitude of the stop
-     * 
-     * @return longitude of the stop
-     */
-    public Double getLon() {
-        return this.lon;
-    }
-
-    /**
-     * Sets the longitude of the stop
-     * 
-     * @param lon longitude of the stop
-     */
-    public void setLon(Double lon) {
-        this.lon = lon;
+    public void setLocation(Coordinate pos) {
+        this.location = pos;
     }
 
     /**
@@ -111,13 +85,11 @@ public class Stop extends Entity {
         }
         if (s.getCharger() != null
                 && this.getCharger() != null) {
-            return s.getLat().equals(this.getLat())
-                    && s.getLon().equals(this.getLon())
+            return s.getLocation().equals(this.getLocation())
                     && s.getCharger().equals(this.getCharger());
         } else if (s.getCharger() == null
                 && this.getCharger() == null) {
-            return s.getLat().equals(this.getLat())
-                    && s.getLon().equals(this.getLon());
+            return s.getLocation().equals(this.getLocation());
         } else {
             return false;
         }
@@ -128,7 +100,10 @@ public class Stop extends Entity {
     @Override
     public int hashCode() {
         int result = (getId() ^ (getId() >>> 32));
-        result = 31 * result + charger.hashCode();
+        result = 31 * result + location.hashCode();
+        if (charger != null) {
+            result = 31 * result + charger.hashCode();
+        }
         return result;
     }
 }

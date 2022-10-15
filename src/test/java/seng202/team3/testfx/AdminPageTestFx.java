@@ -1,6 +1,8 @@
 package seng202.team3.testfx;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 
@@ -13,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -48,7 +51,6 @@ public class AdminPageTestFx extends TestFxBase {
         SqlInterpreter.removeInstance();
         database = SqlInterpreter.initialiseInstanceWithUrl(
                 "jdbc:sqlite:./target/test-classes/test_database.db");
-        database.defaultDatabase();
         admin = new User("admin@admin.com", "admin",
                 PermissionLevel.ADMIN);
         admin.setId(1);
@@ -81,6 +83,7 @@ public class AdminPageTestFx extends TestFxBase {
      */
     @BeforeEach
     public void addData() throws IOException {
+        database.defaultDatabase();
         manager = controller.getManager();
         manager.setAdmin(admin);
         User chargerOwnerOne = new User("charger@test.com", "chargeOne", PermissionLevel.CHARGEROWNER);
@@ -140,7 +143,7 @@ public class AdminPageTestFx extends TestFxBase {
             release(KeyCode.DOWN);
         }
         clickOn("#updatePermissions");
-        clickOn("#okay");
+        assertFalse(((Button) find("#updatePermissions")).getBorder().isEmpty());
     }
 
     /**
@@ -150,7 +153,8 @@ public class AdminPageTestFx extends TestFxBase {
     public void deleteCurrentAdmin() {
         ((TableView<?>) this.find("#table")).getSelectionModel().select(0);
         clickOn("#delete");
-        clickOn("#okay");
+
+        assertFalse(((Button) find("#delete")).getBorder().isEmpty());
     }
 
     /**

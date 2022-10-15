@@ -8,15 +8,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.testfx.api.FxAssert.verifyThat;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import org.junit.jupiter.api.Assertions;
-import org.testfx.api.FxRobotException;
-
 import io.cucumber.java.AfterAll;
 import io.cucumber.java.Before;
 import io.cucumber.java.BeforeAll;
@@ -24,12 +15,19 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import javafx.geometry.VerticalDirection;
 import javafx.scene.Node;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
+import org.junit.jupiter.api.Assertions;
+import org.testfx.api.FxRobotException;
 import seng202.team3.cucumber.CucumberFxBase;
 import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.database.CsvInterpreter;
@@ -38,9 +36,9 @@ import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
+import seng202.team3.data.entity.Entity;
 import seng202.team3.data.entity.EntityType;
 import seng202.team3.data.entity.PermissionLevel;
-import seng202.team3.data.entity.Entity;
 import seng202.team3.data.entity.User;
 import seng202.team3.gui.AccountController;
 import seng202.team3.gui.MainWindow;
@@ -186,14 +184,19 @@ public class AccountPageStepDefs extends CucumberFxBase {
 
     @When("I want to change my account email to {string}")
     public void changeAccountEmail(String newEmail) {
-        doubleClickOn("#accountEmail");
-        press(KeyCode.BACK_SPACE).release(KeyCode.BACK_SPACE);
+        ((TextField) this.find("#accountEmail")).clear();
         clickOn("#accountEmail");
         write(newEmail);
     }
 
+    @Then("I am informed that my email is invalid")
+    public void invalidAccountEmail() {
+        verifyThat("#invalidUpdateAccount", Node::isVisible);
+    }
+
     @Then("My account email has changed to {string}")
     public void differentAccountEmail(String actual) {
+        sleep(500);
         Assertions.assertEquals(actual, UserManager.getUser().getEmail());
     }
 
@@ -201,6 +204,11 @@ public class AccountPageStepDefs extends CucumberFxBase {
     public void changeAccountPassword(String password) {
         clickOn("#accountPassword");
         write(password);
+    }
+
+    @Then("I am informed that my password is invalid")
+    public void invalidAccountPassword() {
+        verifyThat("#invalidUpdateAccount", Node::isVisible);
     }
 
     @Then("I logout of the app")
@@ -341,7 +349,7 @@ public class AccountPageStepDefs extends CucumberFxBase {
     public void upgradePermission() {
         clickOn("#menu");
         clickOn("#chargerOwner");
-        scroll(10, VerticalDirection.DOWN);
+        // scroll(10, VerticalDirection.DOWN);
         clickOn("#updatePermissions");
     }
 
@@ -425,7 +433,7 @@ public class AccountPageStepDefs extends CucumberFxBase {
         assertTrue(table.getItems().isEmpty());
     }
 
-    @When("The user confirms to delete there account")
+    @When("The user confirms to delete their account")
     public void deleteOwnAccount() {
         clickOn("#editAccountButton");
         clickOn("#delete");

@@ -1,14 +1,12 @@
 package seng202.team3.gui;
 
 import java.io.BufferedInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -23,12 +21,18 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.TilePane;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
@@ -107,6 +111,12 @@ public class VehicleUpdateController {
     private Label inputBox;
 
     /**
+     * Invalid vehicle lable
+     */
+    @FXML
+    private Label invalidVehicle;
+
+    /**
      * Save the selected image
      */
     private Button saveImg = new Button("Select");
@@ -143,19 +153,36 @@ public class VehicleUpdateController {
         "truck_one.png", "truck_two.png" };
 
     /**
+     * Styling for invalid fields
+     */
+    private static final Border INVALID_STYLE = new Border(
+            new BorderStroke(Color.RED, BorderStrokeStyle.SOLID,
+                    CornerRadii.EMPTY, BorderWidths.DEFAULT));
+
+    /**
      * Default path for images
      */
     private static final String IMGPATH = "/images/";
 
     /**
-     * Error message for invalid make
+     * id for make node
      */
-    private static final String MAKE_ERROR = "Vehicle make required.";
+    private static final String MAKE_NODE = "makeText";
 
     /**
-     * Error message for invalid model
+     * id for model node
      */
-    private static final String MODEL_ERROR = "Vehicle model required.";
+    private static final String MODEL_NODE = "modelText";
+
+    /**
+     * id for range node
+     */
+    private static final String RANGE_NODE = "maxRangeText";
+
+    /**
+     * id for connector node
+     */
+    private static final String CONNECTOR_NODE = "connectorType";
 
     /**
      * Delete button text
@@ -166,11 +193,6 @@ public class VehicleUpdateController {
      * Connection prompt text
      */
     private static final String CONN_PROMPT_TEXT = "Connection: ";
-
-    /**
-     * List of user input errors for adding/editing vehicles
-     */
-    private ArrayList<String> errors = new ArrayList<>();
 
     /**
      * The popup for selecting an image
@@ -194,6 +216,11 @@ public class VehicleUpdateController {
     private Object prevController = null;
 
     /**
+     * Stores all of the tooltips used for error messages
+     */
+    private ErrorHandler errors = new ErrorHandler();
+
+    /**
      * Initialises the Vehicle editing
      */
     public VehicleUpdateController() {
@@ -204,6 +231,12 @@ public class VehicleUpdateController {
      * Initialises the controller
      */
     public void init() {
+        errors = new ErrorHandler();
+        errors.add(MAKE_NODE, "Vehicle make required.");
+        errors.add(MODEL_NODE, "Vehicle model required.");
+        errors.add(RANGE_NODE, "Max range required");
+        errors.add(CONNECTOR_NODE,
+                "A vehicle must have at least one connector.");
         stage = (Stage) inputBox.getScene().getWindow();
         prevController = MainWindow.getController();
         MainWindow.setController(this);
@@ -227,69 +260,28 @@ public class VehicleUpdateController {
         Vehicle vehicle;
 
         if (selectedVehicle != null) {
-            if (selectedImg != null) {
-                selectedVehicle.setImgPath(IMGPATH + selectedImg);
-            } else {
-                selectedVehicle.setImgPath(IMGPATH + imgNames[0]);
-            }
             vehicle = selectedVehicle;
         } else {
             vehicle = new Vehicle();
-            vehicle.setOwner(UserManager.getUser().getId());
-        }
-        checkForErrors(vehicle);
-    }
-
-    /**
-     * Checks if there are any errors when a user adds/updates a vehicle.
-     * 
-     * @param vehicle the vehicle to be made
-     */
-    public void checkForErrors(Vehicle vehicle) {
-        try {
-            vehicle.setMake(makeText.getText());
-        } catch (NullPointerException e) {
-            errors.add(MAKE_ERROR);
-        }
-
-        if (makeText.getText().equals("") && !errors.contains(MAKE_ERROR)) {
-            errors.add(MAKE_ERROR);
-        }
-
-        try {
-            vehicle.setModel(modelText.getText());
-        } catch (NullPointerException e) {
-            errors.add(MODEL_ERROR);
-        }
-
-        if (modelText.getText().equals("") && !errors.contains(MODEL_ERROR)) {
-            errors.add(MODEL_ERROR);
-        }
-
-        try {
-            if (Integer.parseInt(maxRangeText.getText()) < 0) {
-                errors.add("A vehicle's maximum range cannot be negative.");
-            } else {
-                vehicle.setMaxRange(Integer.parseInt(maxRangeText.getText()));
-            }
-        } catch (NumberFormatException e) {
-            errors.add("A vehicle's maximum range must be a whole number.");
-        }
-
-        if (connections.isEmpty()) {
-            errors.add("A vehicle must have at least one connector.");
-        } else {
-            vehicle.setConnectors(connections);
         }
 
         if (selectedImg != null) {
             vehicle.setImgPath(IMGPATH + selectedImg);
         } else {
-            vehicle.setImgPath(IMGPATH + imgNames[0]);
+            vehicle.setImgPath(IMGPATH + "car_one.png");
         }
 
-        Boolean errorOccurred = false;
-        if (errors.isEmpty()) {
+        Boolean fail = checkForErrors();
+
+        if (Boolean.TRUE.equals(fail)) {
+            invalidVehicle.setVisible(true);
+            logManager.warn("Incorrect vehicle details");
+        } else {
+            vehicle.setOwner(UserManager.getUser().getId());
+            vehicle.setMake(makeText.getText());
+            vehicle.setModel(modelText.getText());
+            vehicle.setMaxRange(Integer.parseInt(maxRangeText.getText()));
+            vehicle.setConnectors(connections);
             manage.saveVehicle(vehicle);
             makeText.setText(null);
             modelText.setText(null);
@@ -298,13 +290,6 @@ public class VehicleUpdateController {
             imgName.setText(null);
             connections = new ArrayList<>();
             connectorType.setPromptText("Connector Type");
-        } else {
-            errorOccurred = true;
-            launchErrorPopUps();
-            errors.clear();
-        }
-
-        if (Boolean.FALSE.equals(errorOccurred)) {
             selectedVehicle = null;
             Stage popupStage = (Stage) saveChanges.getScene().getWindow();
             popupStage.close();
@@ -317,6 +302,73 @@ public class VehicleUpdateController {
     @FXML
     public void enableConnectorBtn() {
         addConnectionBtn.setDisable(false);
+    }
+
+    /**
+     * Checks if there are any errors when a user adds/updates a vehicle.
+     * 
+     * @return whether there were any errors
+     */
+    public Boolean checkForErrors() {
+        errors.hideAll();
+
+        makeText.setBorder(Border.EMPTY);
+        modelText.setBorder(Border.EMPTY);
+        maxRangeText.setBorder(Border.EMPTY);
+        connectorType.setBorder(Border.EMPTY);
+
+        Boolean fail = false;
+
+        if (makeText.getText().isEmpty()) {
+            makeText.setBorder(INVALID_STYLE);
+            errors.show(MAKE_NODE);
+            fail = true;
+        } else if (makeText.getText().length() > 20) {
+            makeText.setBorder(INVALID_STYLE);
+            errors.changeMessage(MAKE_NODE, "Vehicle make cannot be longer than 20 characters");
+            errors.show(MAKE_NODE);
+            fail = true;
+        }
+        if (modelText.getText().isEmpty()) {
+            modelText.setBorder(INVALID_STYLE);
+            errors.show(MODEL_NODE);
+            fail = true;
+        } else if (modelText.getText().length() > 20) {
+            makeText.setBorder(INVALID_STYLE);
+            errors.changeMessage(MODEL_NODE, "Vehicle model cannot be longer than 20 characters");
+            errors.show(MODEL_NODE);
+            fail = true;
+        }
+        Boolean rangeFlag = false;
+        try {
+            if (maxRangeText.getText().isEmpty()) {
+                errors.changeMessage(RANGE_NODE, "Max. range required.");
+                rangeFlag = true;
+            } else if (Integer.parseInt(maxRangeText.getText()) < 0) {
+                errors.changeMessage(RANGE_NODE, "Max. range cannot be negative.");
+                rangeFlag = true;
+            } else if (Integer.parseInt(maxRangeText.getText()) > 1000) {
+                errors.changeMessage(RANGE_NODE, "Max. range cannot be larger than 1000 km.");
+                rangeFlag = true;
+            }
+        } catch (NumberFormatException e) {
+            errors.changeMessage(RANGE_NODE, "Max. range must be a whole number.");
+            rangeFlag = true;
+        }
+
+        if (Boolean.TRUE.equals(rangeFlag)) {
+            maxRangeText.setBorder(INVALID_STYLE);
+            errors.show(RANGE_NODE);
+            fail = true;
+        }
+
+        if (connections.isEmpty()) {
+            connectorType.setBorder(INVALID_STYLE);
+            errors.show(CONNECTOR_NODE);
+            fail = true;
+        }
+
+        return fail;
     }
 
     /**
@@ -539,32 +591,6 @@ public class VehicleUpdateController {
     }
 
     /**
-     * Launches an error popup when trying to do illegal things
-     */
-    public void launchErrorPopUps() {
-        try {
-            FXMLLoader error = new FXMLLoader(getClass().getResource(
-                    "/fxml/error_popup.fxml"));
-            AnchorPane base = error.load();
-            Scene modalScene = new Scene(base);
-            Stage errorPopup = new Stage();
-            errorPopup.setScene(modalScene);
-            errorPopup.setResizable(false);
-            errorPopup.setTitle("Error With Vehicle:");
-            errorPopup.initModality(Modality.APPLICATION_MODAL);
-            ErrorController controller = error.getController();
-            controller.init();
-            controller.setErrors(errors);
-            controller.setPromptType("error");
-            controller.displayErrors();
-            errorPopup.setAlwaysOnTop(true);
-            errorPopup.showAndWait();
-        } catch (IOException e) {
-            logManager.error(e.getMessage());
-        }
-    }
-
-    /**
      * Deletes the selected vehicle
      */
     @FXML
@@ -586,4 +612,21 @@ public class VehicleUpdateController {
         stage.close();
     }
 
+    /**
+     * Gets the manager of this vehicle add
+     *
+     * @return the {@link VehicleUpdateManager} of this controller
+     */
+    public VehicleUpdateManager getManage() {
+        return manage;
+    }
+
+    /**
+     * Gets error handling object for tooltip messages
+     * 
+     * @return errorhandler with entry field tooltip alerts
+     */
+    public ErrorHandler getErrors() {
+        return errors;
+    }
 }

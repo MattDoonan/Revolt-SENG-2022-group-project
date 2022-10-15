@@ -5,7 +5,7 @@ CREATE TABLE if not exists user
 (
    userid INTEGER NOT NULL constraint dk_users PRIMARY KEY AUTOINCREMENT,
    email VARCHAR(250) NOT NULL,
-   username VARCHAR(50) NOT NULL UNIQUE,
+   username VARCHAR(15) NOT NULL UNIQUE,
    password VARCHAR(170) NOT NULL,
    permissions INTEGER NOT NULL,
    carbonSaved REAL
@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS charger
     operator VARCHAR(50),
     owner INTEGER NOT NULL references User(userid),
     address VARCHAR(255) NOT NULL,
-    name VARCHAR(50) NOT NULL,
+    name VARCHAR(20) NOT NULL,
     is24hours BIT,
     carparkcount INTEGER,
     hascarparkcost BIT,
@@ -59,8 +59,8 @@ CREATE TABLE if not exists vehicle
 (
     vehicleid INTEGER NOT NULL constraint dk_Veh PRIMARY KEY AUTOINCREMENT,
     owner INTEGER NOT NULL references user(userid),
-    make VARCHAR(10),
-    model VARCHAR(10),
+    make VARCHAR(15),
+    model VARCHAR(15),
     rangekm INTEGER NOT NULL,
     connectorType VARCHAR(40),
     imgPath VARCHAR(100),
@@ -76,8 +76,10 @@ CREATE TABLE if not exists journey
     vehicleid INTEGER NOT NULL references Vehicle(vehicleid),
     startLat REAL NOT NULL,
     startLon REAL NOT NULL,
+    startAddress VARCHAR(255),
     endLat REAL NOT NULL,
     endLon REAL NOT NULL,
+    endAddress VARCHAR(255),
     startDate TEXT,
     title TEXT
     );
@@ -91,6 +93,7 @@ CREATE TABLE if not exists stop
     position INTEGER NOT NULL,
     lat REAL NOT NULL,
     lon REAL NOT NULL,
+    address VARCHAR(255),
     chargerid INTEGER references Charger(chargerid),
     UNIQUE(journeyid, position) ON CONFLICT REPLACE
     );

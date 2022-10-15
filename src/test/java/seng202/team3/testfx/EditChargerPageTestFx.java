@@ -1,10 +1,13 @@
 package seng202.team3.testfx;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javafx.fxml.FXMLLoader;
@@ -12,6 +15,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
+import javafx.scene.control.Button;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
@@ -40,6 +44,11 @@ public class EditChargerPageTestFx extends TestFxBase {
         SqlInterpreter.removeInstance();
         database = SqlInterpreter.initialiseInstanceWithUrl(
                 "jdbc:sqlite:./target/test-classes/test_database.db");
+        database.defaultDatabase();
+    }
+
+    @BeforeEach
+    public void init() {
         database.defaultDatabase();
     }
 
@@ -84,11 +93,10 @@ public class EditChargerPageTestFx extends TestFxBase {
      */
     @Test
     public void editChargerFail() {
-        clickOn("#connectorTable");
-        press(KeyCode.DOWN);
+        clickOn("ChardaMo");
         clickOn("#deleteConnectorButton");
         clickOn("#saveButton");
-        clickOn("#okay");
+        assertFalse(((Button) find("#addConnectorButton")).getBorder().isEmpty());
     }
 
     /**
@@ -98,7 +106,6 @@ public class EditChargerPageTestFx extends TestFxBase {
     public void editChargerSuccess() {
         clickOn("#open24");
         clickOn("#saveButton");
-        clickOn("#okay");
     }
 
 }

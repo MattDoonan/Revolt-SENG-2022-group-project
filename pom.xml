@@ -23,6 +23,7 @@
     <prism.text>native</prism.text>
     <java.awt.headless>false</java.awt.headless>
     <headless.geometry>1600x1200-32</headless.geometry>
+    <maxmem>1024m</maxmem>
   </properties>
 
   <dependencies>
@@ -219,7 +220,10 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>3.0.0-M7</version>
         <configuration>
-        <argLine>-Xmx1024m</argLine>
+        <!--Temporary fix to fix heap size issues on gitlab-runner
+        WARNING: this reduces memory of all tests run through
+        maven-->
+        <argLine>@{argLine} -Xmx1024m</argLine>
         
           <includes>
             <include>**/*Test.java</include>

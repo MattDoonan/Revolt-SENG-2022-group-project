@@ -1,8 +1,16 @@
 package seng202.team3.testfx;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.testfx.api.FxAssert.verifyThat;
+
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -42,6 +50,7 @@ public class MainSearchFilterTestFx extends TestFxBase {
      */
     @Override
     public void start(Stage stage) throws Exception {
+        System.gc();
         testUser = new User("admin@admin.com", "admin",
                 PermissionLevel.ADMIN);
         testUser.setId(1);
@@ -50,16 +59,15 @@ public class MainSearchFilterTestFx extends TestFxBase {
         SqlInterpreter.removeInstance();
         db = SqlInterpreter.initialiseInstanceWithUrl(
                 "jdbc:sqlite:./target/test-classes/test_database.db");
-        db.defaultDatabase();
 
         new CsvInterpreter().importChargersToDatabase("/csvtest/filtering.csv");
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
-        Parent page = loader.load();
         MapHandler.resetPermission();
         MapHandler.setLocationAccepted(true);
-        initState(loader, stage);
+        Parent page = loader.load();
         Scene scene = new Scene(page);
+        initState(loader, stage);
         stage.setScene(scene);
         stage.show();
         controller.getManager().resetQuery();
@@ -76,6 +84,25 @@ public class MainSearchFilterTestFx extends TestFxBase {
         controller = loader.getController();
         BorderPane b = new BorderPane();
         controller.init(stage, b);
+    }
+
+    private static Stream<Arguments> buttonsToCheck() {
+        return Stream.of(
+                Arguments.of("#chargingCost", "#noChargingCost", "#hasChargingCost"),
+                Arguments.of("#attraction", "#attractionButton", "#noNearbyAttraction"),
+                Arguments.of("#hoursOpen", "#openAllButton", "#notOpenAllButton"),
+                Arguments.of("#carparkCost", "#withoutCarparkCost", "#withCarparkCost"));
+    }
+
+    @ParameterizedTest
+    @MethodSource("buttonsToCheck")
+    public void checkSwapOnButtons(String menuButton, String firstButton, String secondButton) {
+        clickOn("#filters");
+        clickOn(menuButton);
+        clickOn(firstButton);
+        clickOn(secondButton);
+        verifyThat(firstButton, Predicate.not(CheckBox::isSelected));
+        clickOn("#executeSearch");
     }
 
     @Test
@@ -200,4 +227,6 @@ public class MainSearchFilterTestFx extends TestFxBase {
         }
         assertTrue(isValid);
     }
+
+ 
 }

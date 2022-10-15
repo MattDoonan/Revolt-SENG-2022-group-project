@@ -2,14 +2,25 @@ package seng202.team3.testfx;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.testfx.api.FxAssert.verifyThat;
 
+import java.util.function.Predicate;
+import java.util.stream.Stream;
+
+import java.io.IOException;
+
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.testfx.api.FxRobotException;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.CheckBox;
 import javafx.stage.Stage;
 import seng202.team3.data.database.CsvInterpreter;
 import seng202.team3.data.database.SqlInterpreter;
@@ -32,16 +43,19 @@ public class TableSearchFilterTestFx extends TestFxBase {
     static SqlInterpreter db;
     static User testUser;
 
+    @BeforeAll
+    public static void initialize() throws Exception {
+        SqlInterpreter.removeInstance();
+        db = SqlInterpreter.initialiseInstanceWithUrl(
+                "jdbc:sqlite:./target/test-classes/test_database.db");
+    }
+
     @Override
     public void start(Stage stage) throws Exception {
         testUser = new User("admin@admin.com", "admin",
                 PermissionLevel.ADMIN);
         testUser.setId(1);
         UserManager.setUser(testUser);
-        SqlInterpreter.removeInstance();
-        db = SqlInterpreter.initialiseInstanceWithUrl(
-                "jdbc:sqlite:./target/test-classes/test_database.db");
-        db.defaultDatabase();
 
         new CsvInterpreter().importChargersToDatabase("/csvtest/filtering.csv");
 
@@ -180,5 +194,24 @@ public class TableSearchFilterTestFx extends TestFxBase {
             isValid = false;
         }
         assertTrue(isValid);
+    }
+
+    private static Stream<Arguments> buttonsToCheck() {
+        return Stream.of(
+                Arguments.of("#cCostsMenu", "#chargingCost", "#hasChargingCost"),
+                Arguments.of("#attractMenu", "#attractionButton", "#noNearbyAttraction"),
+                Arguments.of("#openMenu", "#openAllButton", "#notOpenAllButton"),
+                Arguments.of("#cpMenu", "#withoutCarparkCost", "#withCarparkCost"));
+    }
+
+    @ParameterizedTest
+    @MethodSource("buttonsToCheck")
+    public void checkSwapOnButtons(String menuButton, String firstButton, String secondButton) {
+        clickOn("#filters");
+        clickOn(menuButton);
+        clickOn(firstButton);
+        clickOn(secondButton);
+        verifyThat(firstButton, Predicate.not(CheckBox::isSelected));
+        clickOn("#update");
     }
 }

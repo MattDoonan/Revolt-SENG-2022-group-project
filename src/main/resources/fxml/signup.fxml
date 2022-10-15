@@ -44,9 +44,8 @@
       <ImageView fx:id="logo" fitHeight="62.0" fitWidth="166.0" layoutX="217.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
       <GridPane layoutX="123.0" layoutY="126.0" prefHeight="134.0" prefWidth="405.0">
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="187.20001220703125" minWidth="10.0" prefWidth="184.79998779296875" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="257.6" minWidth="10.0" prefWidth="184.80001220703127" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="123.20001220703125" minWidth="10.0" prefWidth="23.19999999999999" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="202.4000244140625" minWidth="10.0" prefWidth="202.4000244140625" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="257.6" minWidth="10.0" prefWidth="203.19997558593752" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />

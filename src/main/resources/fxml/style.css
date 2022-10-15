@@ -1,0 +1,38 @@
+/* File style.css */
+
+.text-field {
+	-fx-background-color: transparent;
+	-fx-border-color: transparent transparent gray transparent;
+}
+
+.text-field:focused {
+	-fx-border-color: transparent transparent darkgray transparent;
+}
+
+.btn-danger {
+	-fx-background-color: #e74c3c;
+	-fx-text-fill: #ffffff;
+}
+
+.btn-danger:hover {
+	-fx-background-color: #c0392b;
+	-fx-text-fill: #ffffff;
+}
+
+.btn-success {
+	-fx-background-color: #2ecc71;
+	-fx-text-fill: #ffffff;
+}
+
+.btn-success:hover {
+	-fx-background-color: #27ae60;
+	-fx-text-fill: #ffffff;
+}
+
+#start-box {
+	-fx-border-color: transparent transparent gray transparent;
+}
+
+#dest-box {
+	-fx-border-color: gray transparent transparent transparent;
+}

@@ -73,6 +73,13 @@ public class MenuController {
     private static MainController controller;
 
     /**
+     * The JourneyController of the application; static as there is only
+     * one instance at a time
+     */
+    private static JourneyController journeyController;
+
+
+    /**
      * Login Source path
      */
     private static final String LOGIN_PATH = "/fxml/login.fxml";
@@ -137,12 +144,30 @@ public class MenuController {
     }
 
     /**
+     * Gets the static Journey Controller
+     *
+     * @return {@link JourneyController} the journeycontroller of this run
+     */
+    public static JourneyController getJourneyController() {
+        return journeyController;
+    }
+
+    /**
      * Sets the static Main Controller
      *
      * @param c controller to set static
      */
     private static void setController(MainController c) {
         controller = c;
+    }
+
+    /**
+     * Sets the static Journey Controller
+     *
+     * @param controller journeyController to set static
+     */
+    private static void setJourneyController(JourneyController controller) {
+        journeyController = controller;
     }
 
     /**
@@ -280,7 +305,7 @@ public class MenuController {
 
     /**
      * Sets the current logged in user
-     * 
+     *
      * @param u the logged in user
      */
     public void setUser(User u) {
@@ -307,6 +332,29 @@ public class MenuController {
         UserManager.deleteCurrentUser();
         loginSignout.setText(LOGIN_TITLE);
         logManager.info("The user has been successfully deleted");
+    }
+
+    /**
+     * Loads the Journey Screen
+     */
+    public void loadJourneyScreen() {
+        try {
+            if (UserManager.getUser() == UserManager.getGuest()) {
+                createLoginWindow(LOGIN_PATH, LOGIN_TITLE, null, null);
+                logManager.warn("Must be logged in to access this feature");
+            }
+            FXMLLoader journeyLoader = new FXMLLoader(getClass().getResource("/fxml/journey.fxml"));
+            Parent journeyViewParent = journeyLoader.load();
+            menuWindow.setCenter(journeyViewParent);
+            setJourneyController(journeyLoader.getController());
+            journeyController.init(stage);
+            MainWindow.setController(journeyLoader.getController());
+            journeyController.setBorderPane(menuWindow);
+            menuWindow.setCenter(journeyViewParent);
+            logManager.info("Switched to Journeys Screen");
+        } catch (IOException e) {
+            logManager.error(e.getMessage());
+        }
     }
 
 }

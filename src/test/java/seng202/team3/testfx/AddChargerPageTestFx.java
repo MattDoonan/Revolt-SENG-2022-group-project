@@ -1,6 +1,10 @@
 package seng202.team3.testfx;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.testfx.api.FxAssert.verifyThat;
 
 import java.util.List;
 
@@ -8,12 +12,15 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.testfx.api.FxRobotException;
+import org.testfx.matcher.control.LabeledMatchers;
 
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import seng202.team3.data.database.SqlInterpreter;
@@ -42,12 +49,11 @@ public class AddChargerPageTestFx extends TestFxBase {
     @BeforeAll
     public static void initialise() throws Exception {
         SqlInterpreter.removeInstance();
+        database = SqlInterpreter.initialiseInstanceWithUrl(
+                "jdbc:sqlite:./target/test-classes/test_database.db");
         User user = new User("admin@something.co", "trial", PermissionLevel.ADMIN);
         user.setId(1);
         UserManager.setUser(user);
-        database = SqlInterpreter.initialiseInstanceWithUrl(
-                "jdbc:sqlite:./target/test-classes/test_database.db");
-        database.defaultDatabase();
     }
 
     /**
@@ -70,6 +76,7 @@ public class AddChargerPageTestFx extends TestFxBase {
 
     @BeforeEach
     public void reset() {
+        database.defaultDatabase();
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
@@ -86,10 +93,11 @@ public class AddChargerPageTestFx extends TestFxBase {
      */
     @Test
     public void addChargerFail() {
-        GeoLocationHandler.setCoordinate(new Coordinate(-43.60, 172.572),
-                "Trial location");
+        GeoLocationHandler.setCoordinate(new Coordinate(-43.60, 172.572,
+                "Trial location"));
         clickOn("#saveButton");
-        clickOn("#okay");
+
+        verifyThat("#invalidChargerLabel", Node::isVisible);
     }
 
     /**
@@ -97,12 +105,15 @@ public class AddChargerPageTestFx extends TestFxBase {
      */
     @Test
     public void addChargerSuccess() {
-        GeoLocationHandler.setCoordinate(new Coordinate(-43.60, 172.572),
-                "Trial location");
+        GeoLocationHandler.setCoordinate(new Coordinate(-43.60, 172.572,
+                "Trial location"));
         clickOn("#name");
         write("Trial");
         clickOn("#operator");
         write("Me");
+        ((TextField) this.find("#address")).clear();
+        clickOn("#address");
+        write("123 Main Street, Suburb, City");
         clickOn("#parks");
         write("2");
         clickOn("#time");
@@ -128,10 +139,9 @@ public class AddChargerPageTestFx extends TestFxBase {
         write("123.0");
         clickOn("#saveButton");
 
-        // Check for no error popup
-        assertThrows(FxRobotException.class, () -> {
-            clickOn("#prompt");
-        });
+        // Charger edit window has closed
+        List<Window> ws = Stage.getWindows();
+        assertEquals(0, ws.size());
     }
 
 }

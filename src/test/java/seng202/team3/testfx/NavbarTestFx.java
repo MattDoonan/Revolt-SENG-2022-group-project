@@ -60,6 +60,7 @@ public class NavbarTestFx extends TestFxBase {
         SqlInterpreter.removeInstance();
         SqlInterpreter.initialiseInstanceWithUrl(
                 "jdbc:sqlite:./target/test-classes/test_database.db");
+        SqlInterpreter.getInstance().defaultDatabase();
         new CsvInterpreter().importChargersToDatabase("/csvtest/filtering.csv");
         user = new User("test@gmail.com", "MrTest", PermissionLevel.CHARGEROWNER);
         user.setId(2);
@@ -78,7 +79,7 @@ public class NavbarTestFx extends TestFxBase {
 
     @AfterAll
     static void deleteUser() throws IOException {
-        SqlInterpreter.getInstance().deleteData(EntityType.USER, user.getId());
+        SqlInterpreter.getInstance().defaultDatabase();
     }
 
     @Override
@@ -91,6 +92,7 @@ public class NavbarTestFx extends TestFxBase {
         initState(loader, stage);
         Scene scene = new Scene(page);
         stage.setScene(scene);
+        stage.setMinWidth(1500);
         stage.show();
     }
 
@@ -102,7 +104,9 @@ public class NavbarTestFx extends TestFxBase {
     private static Stream<Arguments> loadScreens() {
         return Stream.of(
                 Arguments.of("#accountPage", "#editAccountButton"),
-                Arguments.of("GARAGE", "#openUpdate"));
+                Arguments.of("GARAGE", "#openUpdate"),
+                Arguments.of("#journeyButton", "#previousJourneyTable"),
+                Arguments.of("#menuButton", "#chargerListPane"));
     }
 
     @ParameterizedTest

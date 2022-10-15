@@ -87,7 +87,7 @@ public class MainManagerTest {
     @Test
     public void positionTest1() {
         Coordinate coordinate = new Coordinate(-43.53418, 172.627572);
-        GeoLocationHandler.setCoordinate(coordinate, "empty");
+        GeoLocationHandler.setCoordinate(coordinate);
         manage.setPosition();
         assertEquals(coordinate, manage.getPosition());
 
@@ -96,7 +96,7 @@ public class MainManagerTest {
     @Test
     public void positionTest2() {
         Coordinate coordinate = new Coordinate(23.2334, 32.3242);
-        GeoLocationHandler.setCoordinate(coordinate, "empty");
+        GeoLocationHandler.setCoordinate(coordinate);
         manage.setPosition();
         assertEquals(coordinate, manage.getPosition());
     }
@@ -161,7 +161,7 @@ public class MainManagerTest {
         ArrayList<Charger> cc;
 
         cc = charge.getNearbyChargers(chargerList, coordinate, 50.0);
-        GeoLocationHandler.setCoordinate(coordinate, "empty");
+        GeoLocationHandler.setCoordinate(coordinate);
         manage.setPosition();
         manage.setDistance(50.0);
         manage.resetQuery();
@@ -193,7 +193,7 @@ public class MainManagerTest {
 
         Coordinate coordinate = new Coordinate(-43.53418, 172.627572);
         cc = charge.getNearbyChargers(chargerList, coordinate, 90.0);
-        GeoLocationHandler.setCoordinate(coordinate, "empty");
+        GeoLocationHandler.setCoordinate(coordinate);
         manage.setPosition();
         manage.setDistance(90.0);
         manage.resetQuery();

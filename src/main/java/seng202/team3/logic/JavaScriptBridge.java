@@ -25,6 +25,7 @@ import seng202.team3.data.entity.Coordinate;
 import seng202.team3.data.entity.Entity;
 import seng202.team3.data.entity.EntityType;
 import seng202.team3.gui.ChargerController;
+import seng202.team3.gui.JourneyController;
 import seng202.team3.gui.MainController;
 import seng202.team3.gui.MenuController;
 
@@ -53,7 +54,7 @@ public class JavaScriptBridge {
      * @param latlng the string created with latitude and longitude
      */
     public void addCoordinateFromClick(String latlng) {
-        GeoLocationHandler.setCoordinate(parseCoordinate(latlng), "Coordinate");
+        GeoLocationHandler.setCoordinate(parseCoordinate(latlng));
         refreshCoordinates();
     }
 
@@ -63,6 +64,9 @@ public class JavaScriptBridge {
     private void refreshCoordinates() {
         if (MenuController.getController() != null) {
             MenuController.getController().getManager().setPosition();
+        }
+        if (MenuController.getJourneyController() != null) {
+            MenuController.getJourneyController().getManager().setPosition();
         }
     }
 
@@ -82,6 +86,7 @@ public class JavaScriptBridge {
             float lng = ((Double) latlngJson.get("lng")).floatValue();
             coord.setLat((double) lat);
             coord.setLon((double) lng);
+            coord.setAddress("Coordinate");
         } catch (ParseException e) {
             logManager.error(e.getMessage());
             return null;
@@ -97,15 +102,7 @@ public class JavaScriptBridge {
      * @param address String of the address
      */
     public void addLocationName(String address) {
-        String[] splitAddress = address.split(",", 10);
-        if (splitAddress.length > 6) {
-            address = "";
-            address += splitAddress[0] + splitAddress[1] + ", "
-                    + splitAddress[2] + ", " + splitAddress[3] + ", "
-                    + splitAddress[splitAddress.length - 2] + ", "
-                    + splitAddress[splitAddress.length - 1];
-        }
-        GeoLocationHandler.setCoordinate(GeoLocationHandler.getCoordinate(), address);
+        GeoLocationHandler.getCoordinate().setAddress(address);
         refreshCoordinates();
     }
 
@@ -182,32 +179,59 @@ public class JavaScriptBridge {
     }
 
     /**
-     * Zooms to a point
-     *
-     * @param latlng string representation of a physical coordinate
-     */
-    public void zoomToPoint(String latlng) {
-        MainController controller = MenuController.getController();
-        controller.getMapController().changePosition(parseCoordinate(latlng));
-    }
-
-    /**
-     * Adds a stop into the route
-     *
-     * @param latlng the String from the route.
-     */
-    public void addStopInRoute(String latlng) {
-        MainController controller = MenuController.getController();
-        controller.getMapController().addStopInRoute(parseCoordinate(latlng));
-    }
-
-    /**
      * Loads the charger information on a separate pop-up
      *
      * @param id id of the charger to get more information about
      */
     public void loadMoreInfo(int id) {
         chargerHandler(id);
+        MainManager main = MenuController.getController().getManager();
+        loadChargerEdit(main.getSelectedCharger());
+    }
+
+    /**
+     * Adds a {@link Charger Charger} to Journey
+     *
+     * @param id unique identifier
+     */
+    public void addChargerToJourney(int id) {
+
+        JourneyController journeyController = MenuController.getJourneyController();
+
+        List<Charger> chargers = journeyController.getManager().getRangeChargers();
+
+        List<Charger> chargerList = chargers.stream()
+                .filter(charger -> charger.getId() == id).toList();
+
+        if (!chargerList.isEmpty()) {
+            Charger selectedCharger = chargerList.get(0);
+            journeyController.addCharger(selectedCharger);
+        } else {
+            logManager.error("Charger is not in range, should not have been selected: %s", id);
+        }
+    }
+
+    /**
+     * Adds a stop into the journey of the geolocation point
+     *
+     */
+    public void addStopInJourney() {
+
+        makeLocationName();
+        MenuController.getJourneyController().addStop(GeoLocationHandler.getCoordinate());
+
+    }
+
+    /**
+     * Sets the singleton ChargerManager Coordinate to the latlng
+     *
+     * @param latlng the string created with latitude and longitude
+     * @param name   the address of the coordinate to set
+     */
+    public void setCoordinate(String latlng, String name) {
+        Coordinate point = parseCoordinate(latlng);
+        point.setAddress(name);
+        GeoLocationHandler.setCoordinate(point);
         MainManager main = MenuController.getController().getManager();
         loadChargerEdit(main.getSelectedCharger());
     }

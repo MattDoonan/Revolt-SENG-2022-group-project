@@ -58,7 +58,6 @@ public class Journey extends Entity {
      * Unused constructor
      */
     public Journey() {
-        // Unused
     }
 
     /**

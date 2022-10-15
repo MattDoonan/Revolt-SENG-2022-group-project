@@ -241,7 +241,7 @@ public abstract class MapHandler {
 
     /**
      * Gets the location permission setting
-     * 
+     *
      * @return true if permission granted, else false
      */
     public static Boolean getLocationAccepted() {
@@ -263,7 +263,7 @@ public abstract class MapHandler {
 
     /**
      * Sets map request state
-     * 
+     *
      * @param mapRequested true to load map
      */
     public static void setMapRequested(boolean mapRequested) {
@@ -272,7 +272,7 @@ public abstract class MapHandler {
 
     /**
      * Gets bool represented if map features should be loaded
-     * 
+     *
      * @return if map features should be loaded
      */
     public static Boolean isMapRequested() {

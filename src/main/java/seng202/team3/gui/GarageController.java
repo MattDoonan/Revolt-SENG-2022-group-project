@@ -330,7 +330,6 @@ public class GarageController {
             editPopup = new Stage();
             refresh();
         }
-
     }
 
     /**
@@ -348,8 +347,9 @@ public class GarageController {
             editPopup.setResizable(false);
             editPopup.setTitle("Vehicle Information");
             editPopup.initModality(Modality.APPLICATION_MODAL);
+            VehicleUpdateController controller = vehicleEdit.getController();
+            controller.init();
             if (vehicle != null) {
-                VehicleUpdateController controller = vehicleEdit.getController();
                 controller.displayInfo(vehicle);
             }
         } catch (IOException e) {

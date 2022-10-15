@@ -1,5 +1,6 @@
 package seng202.team3.testfx;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.testfx.api.FxAssert.verifyThat;
@@ -16,15 +17,23 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.testfx.api.FxRobotException;
+import org.testfx.service.query.NodeQuery;
 
+import io.cucumber.java.BeforeAll;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Control;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.data.entity.EntityType;
 import seng202.team3.gui.GarageController;
+import seng202.team3.gui.MainWindow;
+import seng202.team3.gui.VehicleUpdateController;
 
 /**
  * Runs the vehicle testFX
@@ -32,9 +41,16 @@ import seng202.team3.gui.GarageController;
  * @author Matthew Doonan
  * @version 1.0.0, Sep 22
  */
-public class VehiclesPageFx extends TestFxBase {
+public class VehiclesPageTestFx extends TestFxBase {
 
     private GarageController controller;
+
+    @BeforeAll
+    public static void setup() throws InstanceAlreadyExistsException, IOException {
+        SqlInterpreter.removeInstance();
+        SqlInterpreter.initialiseInstanceWithUrl(
+                "jdbc:sqlite:./target/test-classes/test_database.db");
+    }
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -48,9 +64,6 @@ public class VehiclesPageFx extends TestFxBase {
 
     @BeforeEach
     public void reset() throws IOException, InstanceAlreadyExistsException {
-        SqlInterpreter.removeInstance();
-        SqlInterpreter.initialiseInstanceWithUrl(
-                "jdbc:sqlite:./target/test-classes/test_database.db");
         SqlInterpreter.getInstance().defaultDatabase();
         SqlInterpreter.getInstance().deleteData(EntityType.USER, 0);
         controller.refresh();
@@ -102,7 +115,16 @@ public class VehiclesPageFx extends TestFxBase {
         clickOn(node);
         write(text);
         clickOn("#saveChanges");
-        verifyThat("#prompt", Node::isVisible);
+
+        for (Tooltip t : ((VehicleUpdateController) MainWindow.getController())
+                .getErrors().getAll()) {
+            if (!t.isShowing()) {
+                assertTrue(true);
+                return;
+            }
+        }
+
+        fail("Valid field was displayed as error");
     }
 
     @Test
@@ -114,7 +136,11 @@ public class VehiclesPageFx extends TestFxBase {
         clickOn();
         clickOn("#addConnectionBtn");
         clickOn("#saveChanges");
-        verifyThat("#prompt", Node::isVisible);
+        assertTrue(((Control) find("#connectorType")).getBorder().isEmpty());
+        assertFalse(((Control) find("#makeText")).getBorder().isEmpty());
+        assertFalse(((Control) find("#modelText")).getBorder().isEmpty());
+        assertFalse(((Control) find("#maxRangeText")).getBorder().isEmpty());
+
     }
 
     @Test
