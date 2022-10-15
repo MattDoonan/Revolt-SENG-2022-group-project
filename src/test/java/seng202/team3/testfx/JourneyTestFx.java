@@ -1,6 +1,7 @@
 package seng202.team3.testfx;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.testfx.api.FxAssert.verifyThat;
 
 import java.io.IOException;
@@ -15,6 +16,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -38,9 +40,6 @@ import seng202.team3.logic.UserManager;
  * @author Angus Kirtlan
  * @version 1.0.0, Oct 22
  */
-@Disabled // Temporary fix - tests causing runner to run out of java heap memory. Don't
-          // have time to
-          // troubleshoot
 public class JourneyTestFx extends TestFxBase {
 
     private JourneyController journeyController;
@@ -133,7 +132,7 @@ public class JourneyTestFx extends TestFxBase {
     public void startJourneyError() {
         journeyController.getManager().getSelectedJourney().setVehicle(null);
         clickOn("#makeStart");
-        verifyThat("#prompt", Node::isVisible);
+        assertFalse(((Button) find("#makeStart")).getBorder().isEmpty());
     }
 
     /**
@@ -142,7 +141,7 @@ public class JourneyTestFx extends TestFxBase {
     @Test
     public void endJourneyError() {
         clickOn("#makeEnd");
-        verifyThat("#prompt", Node::isVisible);
+        assertFalse(((Button) find("#makeStart")).getBorder().isEmpty());
     }
 
     /**
@@ -151,7 +150,7 @@ public class JourneyTestFx extends TestFxBase {
     @Test
     public void saveJourneyError() {
         clickOn("#saveJourney");
-        verifyThat("#prompt", Node::isVisible);
+        assertFalse(((Button) find("#makeStart")).getBorder().isEmpty());
     }
 
     /**
@@ -161,7 +160,7 @@ public class JourneyTestFx extends TestFxBase {
     @Test
     public void loadJourneyError() {
         clickOn("#loadJourney");
-        verifyThat("#prompt", Node::isVisible);
+        assertFalse(((Button) find("#loadJourney")).getBorder().isEmpty());
     }
 
     /**
@@ -171,7 +170,7 @@ public class JourneyTestFx extends TestFxBase {
     @Test
     public void deleteJourneyError() {
         clickOn("#deleteJourney");
-        verifyThat("#prompt", Node::isVisible);
+        assertFalse(((Button) find("#deleteJourney")).getBorder().isEmpty());
     }
 
     /**

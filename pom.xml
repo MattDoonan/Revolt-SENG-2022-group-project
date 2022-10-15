@@ -220,6 +220,11 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>3.0.0-M7</version>
         <configuration>
+        <!--Temporary fix to fix heap size issues on gitlab-runner
+        WARNING: this reduces memory of all tests run through
+        maven-->
+        <argLine>-Xmx1024m</argLine>
+        
           <includes>
             <include>**/*Test.java</include>
             <include>**/*TestFx.java</include>
@@ -236,7 +241,6 @@
           </systemPropertyVariables>
 
           <properties>
-     <maxmem>1024m</maxmem>
             <!-- Work around. Surefire does not include enough information to
             disambiguate between different examples and scenarios. -->
             <configurationParameters>
