@@ -11,19 +11,21 @@
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="-Infinity" prefWidth="1920.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.TableController">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="-Infinity" prefWidth="600.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.TableController">
+   <center>
+      <TableView fx:id="mainTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" onMouseClicked="#setCharger" BorderPane.alignment="CENTER" />
+   </center>
    <padding>
       <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
    </padding>
-   <left>
-      <AnchorPane prefWidth="1920.0" BorderPane.alignment="CENTER">
+   <top>
+      <HBox alignment="CENTER_LEFT" BorderPane.alignment="CENTER_LEFT">
          <children>
-            <TableView fx:id="mainTable" layoutY="118.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" onMouseClicked="#setCharger" prefHeight="282.0" prefWidth="1800.0" stylesheets="@../css/tableView.css" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-            <TextField fx:id="searchCharger" layoutX="1.0" prefHeight="40" promptText="Search Charger" style="-fx-font-size: 20;" />
-            <MenuButton fx:id="filters" layoutX="1.0" layoutY="45.0" minHeight="30.0" mnemonicParsing="false" prefWidth="250.0" style="-fx-font-size: 20;" text="Filter">
+            <TextField fx:id="searchCharger" prefHeight="40" promptText="Search Charger" style="-fx-font-size: 20;" />
+            <MenuButton fx:id="filters" minHeight="30.0" mnemonicParsing="false" prefWidth="250.0" style="-fx-font-size: 20;" text="Filter">
                <items>
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
@@ -123,7 +125,7 @@
                   </Menu>
                </items>
             </MenuButton>
-            <MenuButton fx:id="columnEdit" layoutX="337.0" minHeight="30.0" mnemonicParsing="false" prefWidth="250.0" style="-fx-font-size: 20; -fx" text="Select Columns">
+            <MenuButton fx:id="columnEdit" minHeight="30.0" mnemonicParsing="false" prefWidth="250.0" style="-fx-font-size: 20;" text="Select Columns">
                <items>
                   <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                     <content>
@@ -197,15 +199,18 @@
                   </CustomMenuItem>
                </items>
             </MenuButton>
-            <MenuButton fx:id="modChargers" layoutX="337.0" layoutY="45.0" minHeight="30.0" mnemonicParsing="false" prefWidth="250.0" style="-fx-font-size: 20;" text="Modify Chargers">
+            <MenuButton minHeight="30.0" mnemonicParsing="false" prefWidth="250.0" style="-fx-font-size: 20;" text="Modify Chargers" fx:id="modChargers">
                <items>
-                  <MenuItem fx:id="addCharger" mnemonicParsing="false" onAction="#addCharger" text="Add Charger" />
-                  <MenuItem fx:id="editCharger" mnemonicParsing="false" onAction="#editCharger" text="Edit Charger" />
-                  <MenuItem fx:id="deleteCharger" mnemonicParsing="false" onAction="#deleteCharger" text="Delete Charger" />
+                  <MenuItem mnemonicParsing="false" onAction="#addCharger" text="Add Charger" fx:id="addCharger"/>
+                  <MenuItem mnemonicParsing="false" onAction="#editCharger" text="Edit Charger" fx:id="editCharger"/>
+                  <MenuItem mnemonicParsing="false" onAction="#deleteCharger" text="Delete Charger" fx:id="deleteCharger"/>
                </items>
             </MenuButton>
-            <Button fx:id="update" layoutX="840.0" layoutY="67.0" minHeight="30.0" mnemonicParsing="false" onAction="#updateTable" prefWidth="240.0" style="-fx-font-size: 20;" text="Update table" AnchorPane.leftAnchor="840.0" AnchorPane.rightAnchor="840.0" />
+            <Button fx:id="update" minHeight="30.0" mnemonicParsing="false" onAction="#updateTable" prefWidth="240.0" style="-fx-font-size: 20;" text="Update table" />
          </children>
-      </AnchorPane>
-   </left>
+         <padding>
+            <Insets bottom="10.0" right="10.0" top="10.0" />
+         </padding>
+      </HBox>
+   </top>
 </BorderPane>
