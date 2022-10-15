@@ -223,7 +223,7 @@
         <!--Temporary fix to fix heap size issues on gitlab-runner
         WARNING: this reduces memory of all tests run through
         maven-->
-        <argLine>-Xmx1024m</argLine>
+        <argLine>@{argLine} -Xmx1024m</argLine>
         
           <includes>
             <include>**/*Test.java</include>
