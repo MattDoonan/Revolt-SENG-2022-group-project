@@ -6,7 +6,7 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.layout.VBox?>
 
-<SplitPane dividerPositions="0.5" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" orientation="VERTICAL" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.ChargerListController">
+<SplitPane dividerPositions="0.5" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" orientation="VERTICAL" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.ChargerListController">
    <items>
       <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="420.0" style="-fx-background-color: white;">
          <content>
@@ -17,6 +17,6 @@
             </VBox>
          </content>
       </ScrollPane>
-      <Button fx:id="Inherit" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#listChargerView" text="↑" />
+      <Button id="Inherit" fx:id="Inherit" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#listChargerView" text="↑" />
    </items>
 </SplitPane>

@@ -1,9 +1,6 @@
 * {
 	font-family: "SansSerif";
 	-fx-font-family: "SansSerif";
-	/* -fx-font-size: 14px; */
-	/* -fx-color: #ffffff; */
-	/* -fx-background-color: #eee9ea; */
 	-fx-font-color: #2b2d42;
 }
 
@@ -37,30 +34,6 @@
 .scroll-bar:horizontal *.decrement-button {
 	color: white;
 	-fx-color: white;
-}
-
-#filters,
-#modChargers,
-#columnEdit,
-#update {
-	background-color: #ffffff;
-	-fx-background-color: #ffffff;
-	border-color: #2b2d42;
-	-fx-border-color: #2b2d42;
-	border-width: 0.5px;
-	-fx-border-width: 0.5px;
-}
-
-#filters:hover,
-#modChargers:hover,
-#columnEdit:hover,
-#update:hover {
-	background-color: #ffeff2;
-	-fx-background-color: #ffeff2;
-	border-color: #2b2d42;
-	-fx-border-color: #2b2d42;
-	border-width: 0.5px;
-	-fx-border-width: 0.5px;
 }
 
 #menu-bar {
@@ -106,11 +79,6 @@
 	-fx-border-width: 0.5px;
 }
 
-.content:hover {
-	background-color: #ffeff2;
-	-fx-background-color: #ffeff2;
-}
-
 #displayInfo {
 	background-color: #d80032;
 	-fx-background-color: #d80032;
@@ -138,9 +106,27 @@
 	-fx-cursor: default;
 }
 
+
+#filters {
+	-fx-background-color: #FFFFFF;
+	-fx-border-color: #a9a9a9;
+}
+
+#filters:hover {
+	-fx-cursor: OPEN_HAND;
+}
+
+.slider:hover {
+	-fx-cursor: OPEN_HAND;
+}
+
 #executeSearch {
 	-fx-background-color: #FFFFFF;
 	-fx-border-color: #a9a9a9;
+}
+
+#executeSearch:hover {
+	-fx-cursor: OPEN_HAND;
 }
 
 #searchCharger {
@@ -148,6 +134,44 @@
 	-fx-border-color: #a9a9a9;
 }
 
+#searchCharger:hover{
+	-fx-cursor: Text;
+}
+
+#batteryPercent {
+	-fx-background-color: #FFFFFF;
+	-fx-border-color: #a9a9a9;
+}
+
+#batteryPercent:hover{
+	-fx-cursor: Text;
+}
+
+.split-pane {
+	-fx-background-color: #FFFFFF;
+}
+
 .split-pane *.split-pane-divider {
 	-fx-padding: 0 0 0 0;
+}
+
+#menuWindow {
+	-fx-background-color: #FFFFFF;
+}
+
+#chargerListPane {
+	-fx-border-color: #a9a9a9;
+}
+
+#Inherit {
+	-fx-background-color: #FFFFFF;
+	-fx-border-color: #a9a9a9;
+}
+
+#Inherit:hover {
+	-fx-cursor: OPEN_HAND;
+}
+
+#mainSidepane {
+	-fx-border-color: #a9a9a9;
 }

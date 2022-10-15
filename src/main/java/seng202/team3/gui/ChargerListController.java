@@ -66,6 +66,16 @@ public class ChargerListController {
     /** Sets rounding for distance */
     private DecimalFormat rounding = new DecimalFormat("0.00"); // rounding to 6 decimal places
 
+    /** text wrapping for chargerList */
+    private final int listWrapper = 275;
+
+    /** smaller view wrapper */
+    private final int smallerViewWrapper = 220;
+
+    /** large view wrapper */
+    private final int largerViewWrapper = 380;
+
+
     /**
      * unused
      */
@@ -131,14 +141,22 @@ public class ChargerListController {
 
             Text chargerName = new Text(
                 StringFormatter.toTitleCase(chargersToAdd.get(i).getName()));
+            chargerName.setWrappingWidth(listWrapper);
             chargerName.setStyle("-fx-font-weight: bold");
+
+            Text addy = new Text(chargersToAdd.get(i).getLocation().getAddress());
+            addy.setWrappingWidth(listWrapper);
+
+            Text opp = new Text(chargersToAdd.get(i).getOperator());
+            opp.setWrappingWidth(listWrapper);
+
+            Text range = new Text("\n" + rounding.format(Calculations.calculateDistance(
+                    manage.getManager().getPosition(), chargersToAdd.get(i).getLocation()))
+                    + "km");
+            range.setWrappingWidth(listWrapper);
+
             // Create Vbox to contain the charger info
-            VBox content = new VBox(chargerName,
-                    new Text(chargersToAdd.get(i).getLocation().getAddress().replace(", ", "\n")),
-                    new Text(chargersToAdd.get(i).getOperator()),
-                    new Text("\n" + rounding.format(Calculations.calculateDistance(
-                            manage.getManager().getPosition(), chargersToAdd.get(i).getLocation()))
-                            + "km"));
+            VBox content = new VBox(chargerName, addy, opp, range);
             add.getChildren().add(content); // Adds charger content to HBox
             add.setPadding(new Insets(10));
             add.setSpacing(10);
@@ -208,30 +226,38 @@ public class ChargerListController {
 
         Text chargerName = new Text(c.getName());
         chargerName.setStyle("-fx-font-size : 17");
-        chargerName.setWrappingWidth(220);
+        chargerName.setWrappingWidth(smallerViewWrapper);
         display.getChildren().add(chargerName);
 
         Text chargerAddress = new Text(c.getLocation().getAddress());
         chargerAddress.setStyle("-fx-font-size : 17");
-        chargerAddress.setWrappingWidth(220);
+        chargerAddress.setWrappingWidth(smallerViewWrapper);
         display.getChildren().add(chargerAddress);
 
         display.getChildren().add(new Text());
+
         Text owner = new Text("Owner is: " + c.getOwner() + "");
 
         if (c.getOwnerId() == UserManager.getUser().getId()) {
             owner.setText(String.format("Views: %d", c.getViews()));
         }
-
+        owner.setWrappingWidth(smallerViewWrapper);
         display.getChildren().add(owner);
 
         String word = manage.getManager().getConnectors(c);
-        display.getChildren().add(new Text("Current types " + word + ""));
-        display.getChildren().add(
-                new Text("Has " + c.getAvailableParks() + " parking spaces"));
-        display.getChildren().add(new Text("\n" + rounding.format(Calculations.calculateDistance(
+        Text connectors = new Text("Current types " + word + "");
+        connectors.setWrappingWidth(smallerViewWrapper);
+        display.getChildren().add(connectors);
+
+        Text parks = new Text("Has " + c.getAvailableParks() + " parking spaces");
+        parks.setWrappingWidth(smallerViewWrapper);
+        display.getChildren().add(parks);
+
+        Text range = new Text("\n" + rounding.format(Calculations.calculateDistance(
                 manage.getManager().getPosition(), c.getLocation()))
-                + "km"));
+                + "km");
+        range.setWrappingWidth(smallerViewWrapper);
+        display.getChildren().add(range);
         // Adds the charger info to the HBox
         displayInfo.getChildren().add(display);
         manage.getManager().setSelectedCharger(c);
@@ -256,7 +282,7 @@ public class ChargerListController {
 
         Text chargerName = new Text(c.getName());
         chargerName.setStyle("-fx-font-size : 30");
-        chargerName.setWrappingWidth(380);
+        chargerName.setWrappingWidth(largerViewWrapper);
         largeDisplayInfo.getChildren().add(chargerName);
 
         Text owner = new Text("Owner: " + c.getOwner() + "");
@@ -264,16 +290,18 @@ public class ChargerListController {
             owner.setText(String.format("Views: %d", c.getViews()));
         }
         owner.setStyle("-fx-font-size : 20");
-        owner.setWrappingWidth(380);
+        owner.setWrappingWidth(largerViewWrapper);
         largeDisplayInfo.getChildren().add(owner);
 
         if (c.getOperator() != null) {
-            largeDisplayInfo.getChildren().add(
-                    new Text("Operator is: " + c.getOperator() + ""));
+            Text opp = new Text("Operator is: " + c.getOperator() + "");
+            opp.setWrappingWidth(largerViewWrapper);
+            largeDisplayInfo.getChildren().add(opp);
         }
 
         Text distance = new Text("" + rounding.format(Calculations.calculateDistance(
                 manage.getManager().getPosition(), c.getLocation())) + "km");
+        distance.setWrappingWidth(largerViewWrapper);
         largeDisplayInfo.getChildren().add(distance);
 
         Text large2 = new Text();
@@ -281,7 +309,7 @@ public class ChargerListController {
 
         Text chargerAddress = new Text(c.getLocation().getAddress());
         chargerAddress.setStyle("-fx-font-size : 20");
-        chargerAddress.setWrappingWidth(380);
+        chargerAddress.setWrappingWidth(largerViewWrapper);
         largeDisplayInfo.getChildren().add(chargerAddress);
         DecimalFormat f = new DecimalFormat("0.000000"); // rounding to 6 decimal places
         Text chargerLat = new Text("Latitude: " + f.format(c.getLocation().getLat()) + "");
@@ -293,10 +321,15 @@ public class ChargerListController {
 
         Text info = new Text("General Information");
         info.setStyle("-fx-font-size : 17");
+        info.setWrappingWidth(largerViewWrapper);
         largeDisplayInfo.getChildren().add(info);
-        largeDisplayInfo.getChildren().add(
-                new Text("Has " + c.getAvailableParks() + " parking spaces"));
+
+        Text parking = new Text("Has " + c.getAvailableParks() + " parking spaces");
+        parking.setWrappingWidth(listWrapper);
+        largeDisplayInfo.getChildren().add(parking);
+
         for (Text t : getMainText(c)) {
+            t.setWrappingWidth(largerViewWrapper);
             largeDisplayInfo.getChildren().add(t);
         }
         Text large4 = new Text();
@@ -317,10 +350,15 @@ public class ChargerListController {
     private void addConnectorsToView(Charger c) {
         for (Connector con : c.getConnectors()) {
             Text type = new Text("" + con.getType() + "");
+            type.setWrappingWidth(largerViewWrapper);
             Text count = new Text("Number of connectors: " + con.getCount() + "");
+            count.setWrappingWidth(largerViewWrapper);
             Text current = new Text("Current: " + con.getCurrent() + "");
+            current.setWrappingWidth(largerViewWrapper);
             Text power = new Text("Power Type: " + con.getPower() + "");
+            power.setWrappingWidth(largerViewWrapper);
             Text status = new Text("Status: " + con.getStatus() + "");
+            status.setWrappingWidth(largerViewWrapper);
             Text spacing = new Text();
             largeDisplayInfo.getChildren().addAll(type, count, current, power, status, spacing);
         }

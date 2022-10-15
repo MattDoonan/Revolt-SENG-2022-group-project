@@ -13,17 +13,17 @@
 
 <SplitPane dividerPositions="0.3" minWidth="200.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.MainController">
     <items>
-        <SplitPane dividerPositions="0.10287081339712918, 0.21291866028708134" maxWidth="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefWidth="420.0">
+        <SplitPane id="mainSidepane" dividerPositions="0.10287081339712918, 0.21291866028708134" maxWidth="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefWidth="420.0">
             <items>
   <SplitPane dividerPositions="0.7294685990338164" maxHeight="40.0">
     <items>
         <TextField fx:id="searchCharger" onAction="#onEnter" prefHeight="40.0" prefWidth="400.0" promptText="Search Charger" />
-        <Button id="executeSearch" fx:id="executeSearch" minWidth="82.0" mnemonicParsing="false" onAction="#executeSearch" prefHeight="39.0" prefWidth="82.0" text="Search" />
+        <Button id="executeSearch" fx:id="executeSearch" minHeight="40.0" minWidth="82.0" mnemonicParsing="false" onAction="#executeSearch" prefHeight="40.0" prefWidth="82.0" text="Search" />
     </items>
   </SplitPane>
   <SplitPane dividerPositions="0.5" maxHeight="40.0">
     <items>
-                      <MenuButton id="filters" fx:id="filters" mnemonicParsing="false" onAction="#onEnter" prefHeight="40.0" prefWidth="510.0" text="Filters">
+                      <MenuButton id="filters" fx:id="filters" mnemonicParsing="false" onAction="#onEnter" prefHeight="40.0" prefWidth="400.0" text="Filters">
                           <items>
                               <SeparatorMenuItem mnemonicParsing="false" />
                               <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
@@ -33,7 +33,7 @@
                               </CustomMenuItem>
                               <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                                   <content>
-                                      <Slider fx:id="changeDistance" blockIncrement="50.0" majorTickUnit="100.0" max="1000.0" min="10.0" minorTickCount="50" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="100.0" />
+                                      <Slider fx:id="changeDistance" blockIncrement="100.0" majorTickUnit="200.0" max="1000.0" min="10.0" minorTickCount="100" prefWidth="270.0" showTickMarks="true" snapToTicks="true" value="100.0" />
                                   </content>
                               </CustomMenuItem>
                         <SeparatorMenuItem mnemonicParsing="false" />
@@ -44,7 +44,7 @@
                         </CustomMenuItem>
                         <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                            <content>
-                              <Slider fx:id="timeLimit" blockIncrement="30.0" majorTickUnit="30.0" max="520.0" min="30.0" minorTickCount="10" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="60.0" />
+                              <Slider fx:id="timeLimit" blockIncrement="30.0" majorTickUnit="30.0" max="520.0" min="30.0" minorTickCount="10" prefWidth="270.0" showTickMarks="true" snapToTicks="true" value="60.0" />
                            </content>
                         </CustomMenuItem>
                         <SeparatorMenuItem mnemonicParsing="false" />
@@ -55,7 +55,7 @@
                         </CustomMenuItem>
                         <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                            <content>
-                              <Slider fx:id="parkingLot" blockIncrement="5.0" majorTickUnit="5.0" max="20.0" min="1.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="5.0" />
+                              <Slider fx:id="parkingLot" blockIncrement="5.0" majorTickUnit="5.0" max="20.0" min="1.0" minorTickCount="1" prefWidth="270.0" showTickMarks="true" snapToTicks="true" value="5.0" />
                            </content>
                         </CustomMenuItem>
                         <Menu fx:id="carparkCost" mnemonicParsing="false" text="Carpark Cost">
@@ -134,10 +134,10 @@
                         </Menu>
                           </items>
                       </MenuButton>
-                  <TextField fx:id="batteryPercent" maxHeight="-Infinity" maxWidth="-Infinity" onAction="#onEnter" onKeyTyped="#checkForNumber" prefHeight="40.0" prefWidth="100.0" promptText="Charge" />
+                  <TextField id="batteryPercent" fx:id="batteryPercent" maxHeight="-Infinity" maxWidth="-Infinity" onAction="#onEnter" onKeyTyped="#checkForNumber" prefHeight="40.0" prefWidth="82.0" promptText="Charge %" />
     </items>
   </SplitPane>
-            <BorderPane fx:id="chargerListPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="-Infinity" />
+            <BorderPane id="chargerListPane" fx:id="chargerListPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="-Infinity" />
             </items>
         </SplitPane>
   <BorderPane fx:id="mainWindow" maxHeight="Infinity" maxWidth="Infinity" minHeight="400.0" minWidth="600.0">
