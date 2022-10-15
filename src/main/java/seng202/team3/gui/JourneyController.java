@@ -709,8 +709,6 @@ public class JourneyController {
         return (deletePrompt.getResult() == ButtonType.YES);
     }
 
-
-
     /**
      * Loads vehicles into the menuBox
      */
