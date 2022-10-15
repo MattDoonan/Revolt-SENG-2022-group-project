@@ -388,7 +388,7 @@ public class JourneyController {
     @FXML
     public void setDestination() {
         journeyManager.setCurrentCoordinate(GeoLocationHandler.getCoordinate());
-        
+
         Coordinate prevPoint = null;
 
         if (!journeyManager.getStops().isEmpty()) {
@@ -716,8 +716,8 @@ public class JourneyController {
                 errors.show(END_NODE);
             }
             if (distanceError) {
-                errors.changeMessage(SAVE_NODE, 
-                    "Some of your locations are out of range of each other");
+                errors.changeMessage(SAVE_NODE,
+                        "Some of your locations are out of range of each other");
                 saveJourney.setBorder(INVALID_STYLE);
                 errors.show(SAVE_NODE);
             }
@@ -923,6 +923,8 @@ public class JourneyController {
             Scene modalScene = new Scene(root);
             Stage editPopup = new Stage();
             editPopup.setScene(modalScene);
+            VehicleUpdateController controller = vehicleEdit.getController();
+            controller.init();
             editPopup.setResizable(false);
             editPopup.setTitle("Vehicle Information");
             editPopup.initModality(Modality.APPLICATION_MODAL);
