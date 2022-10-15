@@ -75,6 +75,7 @@ public class LoggingInStepDefs extends CucumberFxBase {
     @And("I am logged out")
     public void iAmLoggedOut() {
         if (UserManager.getUser() != UserManager.getGuest()) {
+            clickOn("#accountMenu");
             clickOn("#loginSignout");
         }
         assertEquals(UserManager.getGuest(), UserManager.getUser());
@@ -82,6 +83,7 @@ public class LoggingInStepDefs extends CucumberFxBase {
 
     @When("I navigate to the login screen")
     public void iNavigateToLoginScreen() {
+        clickOn("#accountMenu");
         clickOn("#loginSignout");
     }
 
@@ -102,6 +104,7 @@ public class LoggingInStepDefs extends CucumberFxBase {
 
     @When("I enter my username: {string} and password: {string}")
     public void iEnterMyUsernameAndPassword(String username, String password) {
+        clickOn("#accountMenu");
         clickOn("#loginEmailField");
         write(username);
         clickOn("#loginPasswordField");

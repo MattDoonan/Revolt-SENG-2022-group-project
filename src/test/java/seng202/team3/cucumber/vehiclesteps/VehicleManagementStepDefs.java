@@ -92,6 +92,7 @@ public class VehicleManagementStepDefs extends CucumberFxBase {
     @And("I am logged out")
     public void iAmLoggedOut() {
         if (UserManager.getUser() != UserManager.getGuest()) {
+            clickOn("#accountMenu");
             clickOn("#loginSignout");
         }
         assertEquals(UserManager.getGuest(), UserManager.getUser());
@@ -99,6 +100,7 @@ public class VehicleManagementStepDefs extends CucumberFxBase {
 
     @And("I log in with username: {string} password: {string}")
     public void iAmLoggedInWithUsernamePassword(String username, String password) {
+        clickOn("#accountMenu");
         clickOn("#loginSignout");
         clickOn("#loginEmailField");
         write(username);

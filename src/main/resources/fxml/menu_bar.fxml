@@ -13,7 +13,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<SplitPane dividerPositions="0.10552763819095477" minHeight="100" minWidth="300" orientation="VERTICAL" prefHeight="461.0" prefWidth="701.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.MenuController">
+<SplitPane dividerPositions="0.10552763819095477" minHeight="100" minWidth="300" orientation="VERTICAL" prefHeight="461.0" prefWidth="701.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.MenuController">
     <items>
       <HBox id="menu-bar" fx:id="menuBar" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="70.0">
          <children>
@@ -41,9 +41,9 @@
                               <Image url="@../images/account.png" />
                            </image>
                         </ImageView>
-                        <MenuButton id="accountLabel" fx:id="accountLabel" contentDisplay="CENTER" layoutX="6.0" layoutY="42.0" minWidth="100.0" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" prefWidth="100.0" styleClass="menu-bar-btn" text="  ACCOUNT" textFill="WHITE">
+                        <MenuButton id="accountMenu" fx:id="accountMenu" contentDisplay="CENTER" layoutX="6.0" layoutY="42.0" minWidth="100.0" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" prefWidth="100.0" styleClass="menu-bar-btn" text="  ACCOUNT" textFill="WHITE">
                           <items>
-                            <MenuItem mnemonicParsing="false" onAction="#loadAccountScreen" text="Account Page" />
+                            <MenuItem fx:id="accountPage" mnemonicParsing="false" onAction="#loadAccountScreen" text="Account Page" />
                             <MenuItem fx:id="loginSignout" mnemonicParsing="false" onAction="#loginOut" text="Login" />
                           </items>
                            <font>
@@ -79,6 +79,6 @@
             </HBox>
          </children>
       </HBox>
-        <BorderPane fx:id="menuWindow" maxHeight="Infinity" maxWidth="Infinity" minHeight="0.0" />
+        <BorderPane id="menuWindow" fx:id="menuWindow" maxHeight="Infinity" maxWidth="Infinity" minHeight="0.0" />
     </items>
 </SplitPane>

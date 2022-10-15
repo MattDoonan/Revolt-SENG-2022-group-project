@@ -91,26 +91,37 @@ public class NavbarTestFx extends TestFxBase {
         controller.init(stage);
     }
 
-    @Test
-    public void realLogin() {
+    public void login() {
+        clickOn("#accountMenu");
         clickOn("#loginSignout");
-        clickOn("#loginSignout");
+        moveTo("#accountMenu");
         clickOn("#loginEmailField");
         write(user.getAccountName());
         clickOn("#loginPasswordField");
         write(password);
         clickOn("#loginBtn");
+    }
+
+    public void logout() {
+        clickOn("#accountMenu");
+        clickOn("#loginSignout");
+    }
+
+    @Test
+    public void realLogin() {
+        login();
         try {
             clickOn("#invalidLogin");
             Assertions.fail("Should be a valid login");
         } catch (FxRobotException e) {
             Assertions.assertTrue(true);
         }
+        logout();
     }
 
     @Test
     public void realSignUp() throws IOException {
-        clickOn("#loginSignout");
+        clickOn("#accountMenu");
         clickOn("#loginSignout");
         clickOn("#signUpBtn");
         clickOn("#signupUsernameField");
@@ -128,54 +139,43 @@ public class NavbarTestFx extends TestFxBase {
         } catch (FxRobotException e) {
             Assertions.assertTrue(true);
         }
+        logout();
         SqlInterpreter.getInstance()
                 .deleteData(EntityType.USER, UserManager.getUser().getId());
     }
 
     @Test
     public void loginLogout() {
+        login();
+        logout();
+        clickOn("#accountMenu");
         clickOn("#loginSignout");
-        clickOn("#loginSignout");
-        clickOn("#loginEmailField");
-        write(user.getAccountName());
-        clickOn("#loginPasswordField");
-        write(password);
-        clickOn("#loginBtn");
-        clickOn("#loginSignout");
-        clickOn("#loginSignout");
-        verifyThat("#loginBtn", Node::isVisible);
+        verifyThat("#loginEmailField", Node::isVisible);
     }
 
     private static Stream<Arguments> loadScreens() {
         return Stream.of(
-            Arguments.of("ACCOUNT", "#editAccountButton"),
+                Arguments.of("#accountPage", "#editAccountButton"),
                 Arguments.of("GARAGE", "#openUpdate"));
     }
 
     @ParameterizedTest
     @MethodSource("loadScreens")
-    public void loadScreensTests(String accountPage, String toCheck) {
-        clickOn("#loginSignout");
-        clickOn("#loginSignout");
-        clickOn("#loginEmailField");
-        write(user.getAccountName());
-        clickOn("#loginPasswordField");
-        write(password);
-        clickOn("#loginBtn");
-        clickOn(accountPage);
+    public void loadScreensTests(String page, String toCheck) {
+        login();
+        clickOn("#accountMenu");
+        clickOn(page);
         verifyThat(toCheck, Node::isVisible);
+        logout();
     }
 
     @Test
     public void screenThenBackToMain() {
-        clickOn("#loginSignout");
-        clickOn("#loginSignout");
-        clickOn("#loginEmailField");
-        write(user.getAccountName());
-        clickOn("#loginPasswordField");
-        write(password);
-        clickOn("#loginBtn");
-        clickOn("ACCOUNT");
+        login();
+        clickOn("#accountMenu");
+        clickOn("#accountPage");
         clickOn("HOME");
+        verifyThat("#displayInfo", Node::isVisible);
+        logout();
     }
 }

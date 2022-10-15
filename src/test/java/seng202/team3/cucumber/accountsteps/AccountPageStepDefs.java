@@ -127,6 +127,7 @@ public class AccountPageStepDefs extends CucumberFxBase {
     @And("I am logged out")
     public void iAmLoggedOut() {
         if (UserManager.getUser() != UserManager.getGuest()) {
+            clickOn("#accountMenu");
             clickOn("#loginSignout");
         }
         assertEquals(UserManager.getGuest(), UserManager.getUser());
@@ -134,6 +135,7 @@ public class AccountPageStepDefs extends CucumberFxBase {
 
     @And("I log in with username: {string} password: {string}")
     public void iAmLoggedInWithUsernamePassword(String username, String password) {
+        clickOn("#accountMenu");
         clickOn("#loginSignout");
         clickOn("#loginEmailField");
         write(username);
@@ -144,7 +146,8 @@ public class AccountPageStepDefs extends CucumberFxBase {
 
     @When("I navigate to the account screen")
     public void iNavigateToTheAccountScreen() {
-        clickOn("ACCOUNT");
+        clickOn("#accountMenu");
+        clickOn("#accountPage");
         controller = (AccountController) MainWindow.getController();
     }
 
@@ -202,6 +205,7 @@ public class AccountPageStepDefs extends CucumberFxBase {
 
     @Then("I logout of the app")
     public void logout() {
+        clickOn("#accountMenu");
         clickOn("#loginSignout");
     }
 
@@ -411,7 +415,8 @@ public class AccountPageStepDefs extends CucumberFxBase {
             db.deleteData(EntityType.CHARGER, ((Charger) o).getId());
         }
         clickOn("HOME");
-        clickOn("ACCOUNT");
+        clickOn("#accountMenu");
+        clickOn("#accountPage");
     }
 
     @Then("The table is empty")
