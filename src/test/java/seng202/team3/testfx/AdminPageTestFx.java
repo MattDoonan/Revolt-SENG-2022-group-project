@@ -47,7 +47,6 @@ public class AdminPageTestFx extends TestFxBase {
         SqlInterpreter.removeInstance();
         database = SqlInterpreter.initialiseInstanceWithUrl(
                 "jdbc:sqlite:./target/test-classes/test_database.db");
-        database.defaultDatabase();
         admin = new User("admin@admin.com", "admin",
                 PermissionLevel.ADMIN);
         admin.setId(1);
@@ -80,6 +79,7 @@ public class AdminPageTestFx extends TestFxBase {
      */
     @BeforeEach
     public void addData() throws IOException {
+        database.defaultDatabase();
         manager = controller.getManager();
         manager.setAdmin(admin);
         User chargerOwnerOne = new User("charger@test.com", "chargeOne", PermissionLevel.CHARGEROWNER);

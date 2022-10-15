@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javafx.fxml.FXMLLoader;
@@ -40,6 +41,11 @@ public class EditChargerPageTestFx extends TestFxBase {
         SqlInterpreter.removeInstance();
         database = SqlInterpreter.initialiseInstanceWithUrl(
                 "jdbc:sqlite:./target/test-classes/test_database.db");
+        database.defaultDatabase();
+    }
+
+    @BeforeEach
+    public void init() {
         database.defaultDatabase();
     }
 

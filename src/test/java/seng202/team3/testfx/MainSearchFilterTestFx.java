@@ -59,16 +59,15 @@ public class MainSearchFilterTestFx extends TestFxBase {
         SqlInterpreter.removeInstance();
         db = SqlInterpreter.initialiseInstanceWithUrl(
                 "jdbc:sqlite:./target/test-classes/test_database.db");
-        db.defaultDatabase();
 
         new CsvInterpreter().importChargersToDatabase("/csvtest/filtering.csv");
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
-        Parent page = loader.load();
         MapHandler.resetPermission();
         MapHandler.setLocationAccepted(true);
-        initState(loader, stage);
+        Parent page = loader.load();
         Scene scene = new Scene(page);
+        initState(loader, stage);
         stage.setScene(scene);
         stage.show();
         controller.getManager().resetQuery();

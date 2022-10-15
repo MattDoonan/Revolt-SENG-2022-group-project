@@ -42,12 +42,11 @@ public class AddChargerPageTestFx extends TestFxBase {
     @BeforeAll
     public static void initialise() throws Exception {
         SqlInterpreter.removeInstance();
+        database = SqlInterpreter.initialiseInstanceWithUrl(
+                "jdbc:sqlite:./target/test-classes/test_database.db");
         User user = new User("admin@something.co", "trial", PermissionLevel.ADMIN);
         user.setId(1);
         UserManager.setUser(user);
-        database = SqlInterpreter.initialiseInstanceWithUrl(
-                "jdbc:sqlite:./target/test-classes/test_database.db");
-        database.defaultDatabase();
     }
 
     /**
@@ -70,6 +69,7 @@ public class AddChargerPageTestFx extends TestFxBase {
 
     @BeforeEach
     public void reset() {
+        database.defaultDatabase();
         Platform.runLater(new Runnable() {
             @Override
             public void run() {

@@ -72,7 +72,7 @@ public class NavbarTestFx extends TestFxBase {
 
     @AfterAll
     static void deleteUser() throws IOException {
-        SqlInterpreter.getInstance().deleteData(EntityType.USER, user.getId());
+        SqlInterpreter.getInstance().defaultDatabase();
     }
 
     @Override

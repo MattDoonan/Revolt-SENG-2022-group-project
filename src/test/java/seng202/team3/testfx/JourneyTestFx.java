@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import javafx.fxml.FXMLLoader;
@@ -50,6 +51,13 @@ public class JourneyTestFx extends TestFxBase {
 
     private static Journey testJourneyOne;
 
+    @BeforeAll
+    public static void setUp() throws Exception {
+        SqlInterpreter.removeInstance();
+        db = SqlInterpreter.initialiseInstanceWithUrl(
+                "jdbc:sqlite:./target/test-classes/test_database.db");
+    }
+
     /**
      * Starts the JourneyController for testing
      *
@@ -58,12 +66,7 @@ public class JourneyTestFx extends TestFxBase {
      */
     @Override
     public void start(Stage stage) throws Exception {
-
-        SqlInterpreter.removeInstance();
-        db = SqlInterpreter.initialiseInstanceWithUrl(
-                "jdbc:sqlite:./target/test-classes/test_database.db");
         db.defaultDatabase();
-
         testUser = new User("admin@admin.com", "adminNew",
                 PermissionLevel.USER);
         testUser.setId(1);
@@ -85,6 +88,7 @@ public class JourneyTestFx extends TestFxBase {
     }
 
     public void setUpJourney() throws IOException {
+
         testConnector1 = new Connector("ChardaMo", "AC", "Available", "123", 3);
         testCharger = new Charger(new ArrayList<Connector>(
                 Arrays.asList(testConnector1)),
@@ -118,7 +122,8 @@ public class JourneyTestFx extends TestFxBase {
     }
 
     /**
-     * Tests the start shows an error prompt when clicked without a vehicle created / selected
+     * Tests the start shows an error prompt when clicked without a vehicle created
+     * / selected
      */
     @Test
     public void startJourneyError() {
@@ -146,7 +151,8 @@ public class JourneyTestFx extends TestFxBase {
     }
 
     /**
-     * Tests that load journey shows an error prompt when click without a correct journey
+     * Tests that load journey shows an error prompt when click without a correct
+     * journey
      */
     @Test
     public void loadJourneyError() {
@@ -155,7 +161,8 @@ public class JourneyTestFx extends TestFxBase {
     }
 
     /**
-     * Tests that delete journey shows an error prompt when click without a correct journey
+     * Tests that delete journey shows an error prompt when click without a correct
+     * journey
      */
     @Test
     public void deleteJourneyError() {
@@ -167,7 +174,7 @@ public class JourneyTestFx extends TestFxBase {
      * Vehicle dropdown tests
      */
     @Test
-    public void vehicleAddTest() throws IOException{
+    public void vehicleAddTest() throws IOException {
         setUpJourney();
         clickOn("#vehicles");
         press(KeyCode.DOWN);
@@ -183,7 +190,7 @@ public class JourneyTestFx extends TestFxBase {
      * Vehicle dropdown tests
      */
     @Test
-    public void vehicleSelectTest() throws IOException{
+    public void vehicleSelectTest() throws IOException {
         setUpJourney();
         clickOn("#vehicles");
         press(KeyCode.DOWN);
@@ -204,7 +211,7 @@ public class JourneyTestFx extends TestFxBase {
         journeyController.getManager().setSelectedJourney(testJourneyOne);
         clickOn("#saveJourney");
         TableView table = (TableView) find("#previousJourneyTable");
-        assertEquals("Test trip", ((Journey) table.getItems().get(0)).getTitle() );
+        assertEquals("Test trip", ((Journey) table.getItems().get(0)).getTitle());
     }
 
     /**
@@ -228,12 +235,11 @@ public class JourneyTestFx extends TestFxBase {
         write("Test journey");
         journeyController.getManager().setSelectedJourney(testJourneyOne);
         clickOn("#saveJourney");
-        ((TextField)this.find("#tripName")).clear();
+        ((TextField) this.find("#tripName")).clear();
         clickOn("Test journey");
         clickOn("#resetJourney");
         clickOn("#loadJourney");
         assertEquals(1, journeyController.getManager().getSelectedJourney().getStops().size());
     }
-    
 
 }

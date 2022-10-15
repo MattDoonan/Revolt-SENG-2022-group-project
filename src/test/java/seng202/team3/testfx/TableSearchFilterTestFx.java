@@ -7,6 +7,9 @@ import static org.testfx.api.FxAssert.verifyThat;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import java.io.IOException;
+
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -40,16 +43,19 @@ public class TableSearchFilterTestFx extends TestFxBase {
     static SqlInterpreter db;
     static User testUser;
 
+    @BeforeAll
+    public static void initialize() throws Exception {
+        SqlInterpreter.removeInstance();
+        db = SqlInterpreter.initialiseInstanceWithUrl(
+                "jdbc:sqlite:./target/test-classes/test_database.db");
+    }
+
     @Override
     public void start(Stage stage) throws Exception {
         testUser = new User("admin@admin.com", "admin",
                 PermissionLevel.ADMIN);
         testUser.setId(1);
         UserManager.setUser(testUser);
-        SqlInterpreter.removeInstance();
-        db = SqlInterpreter.initialiseInstanceWithUrl(
-                "jdbc:sqlite:./target/test-classes/test_database.db");
-        db.defaultDatabase();
 
         new CsvInterpreter().importChargersToDatabase("/csvtest/filtering.csv");
 

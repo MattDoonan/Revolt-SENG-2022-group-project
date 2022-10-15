@@ -17,6 +17,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.testfx.api.FxRobotException;
 
+import io.cucumber.java.BeforeAll;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -36,6 +37,13 @@ public class VehiclesPageTestFx extends TestFxBase {
 
     private GarageController controller;
 
+    @BeforeAll
+    public static void setup() throws InstanceAlreadyExistsException, IOException {
+        SqlInterpreter.removeInstance();
+        SqlInterpreter.initialiseInstanceWithUrl(
+                "jdbc:sqlite:./target/test-classes/test_database.db");
+    }
+
     @Override
     public void start(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/garage.fxml"));
@@ -48,9 +56,6 @@ public class VehiclesPageTestFx extends TestFxBase {
 
     @BeforeEach
     public void reset() throws IOException, InstanceAlreadyExistsException {
-        SqlInterpreter.removeInstance();
-        SqlInterpreter.initialiseInstanceWithUrl(
-                "jdbc:sqlite:./target/test-classes/test_database.db");
         SqlInterpreter.getInstance().defaultDatabase();
         SqlInterpreter.getInstance().deleteData(EntityType.USER, 0);
         controller.refresh();
