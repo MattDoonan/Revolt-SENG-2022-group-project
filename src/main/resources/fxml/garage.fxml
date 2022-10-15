@@ -28,18 +28,18 @@
                   <Font size="14.0" />
                </font></Button>
             <ImageView fx:id="vehicleImageTwo" fitHeight="130.0" fitWidth="239.0" layoutX="11.0" layoutY="57.0" pickOnBounds="true" preserveRatio="true" />
-            <TextArea fx:id="makeModelTwo" editable="false" layoutX="1.0" layoutY="6.0" prefHeight="51.0" prefWidth="258.0" stylesheets="@textarea.css" wrapText="true">
+            <TextArea fx:id="makeModelTwo" editable="false" layoutX="1.0" layoutY="6.0" prefHeight="51.0" prefWidth="258.0" stylesheets="@../css/garage.css" wrapText="true">
                <font>
                   <Font size="14.0" />
                </font>
                <padding>
                   <Insets left="5.0" right="5.0" />
                </padding></TextArea>
-            <TextArea fx:id="carDetailsTwo" editable="false" layoutX="1.0" layoutY="188.0" prefHeight="116.0" prefWidth="258.0" stylesheets="@textarea.css" wrapText="true">
+            <TextArea fx:id="carDetailsTwo" editable="false" layoutX="1.0" layoutY="188.0" prefHeight="116.0" prefWidth="258.0" stylesheets="@../css/garage.css" wrapText="true">
                <font>
                   <Font size="14.0" />
                </font></TextArea>
-            <TextArea fx:id="currSelectedTwo" editable="false" layoutX="1.0" layoutY="304.0" prefHeight="58.0" prefWidth="258.0" stylesheets="@textarea.css" wrapText="true">
+            <TextArea fx:id="currSelectedTwo" editable="false" layoutX="1.0" layoutY="304.0" prefHeight="58.0" prefWidth="258.0" stylesheets="@../css/garage.css" wrapText="true">
                <font>
                   <Font size="14.0" />
                </font></TextArea>
@@ -60,18 +60,18 @@
                   <Font size="14.0" />
                </font></Button>
             <ImageView fx:id="vehicleImageOne" fitHeight="130.0" fitWidth="239.0" layoutX="11.0" layoutY="57.0" pickOnBounds="true" preserveRatio="true" />
-            <TextArea fx:id="makeModelOne" editable="false" layoutX="1.0" layoutY="6.0" prefHeight="51.0" prefWidth="258.0" stylesheets="@textarea.css" wrapText="true">
+            <TextArea fx:id="makeModelOne" editable="false" layoutX="1.0" layoutY="6.0" prefHeight="51.0" prefWidth="258.0" stylesheets="@../css/garage.css" wrapText="true">
                <font>
                   <Font size="14.0" />
                </font>
                <padding>
                   <Insets left="5.0" right="5.0" />
                </padding></TextArea>
-            <TextArea fx:id="carDetailsOne" editable="false" layoutX="1.0" layoutY="188.0" prefHeight="116.0" prefWidth="258.0" stylesheets="@textarea.css" wrapText="true">
+            <TextArea fx:id="carDetailsOne" editable="false" layoutX="1.0" layoutY="188.0" prefHeight="116.0" prefWidth="258.0" stylesheets="@../css/garage.css" wrapText="true">
                <font>
                   <Font size="14.0" />
                </font></TextArea>
-            <TextArea fx:id="currSelectedOne" editable="false" layoutX="1.0" layoutY="304.0" prefHeight="58.0" prefWidth="258.0" stylesheets="@textarea.css" wrapText="true">
+            <TextArea fx:id="currSelectedOne" editable="false" layoutX="1.0" layoutY="304.0" prefHeight="58.0" prefWidth="258.0" stylesheets="@../css/garage.css" wrapText="true">
                <font>
                   <Font size="14.0" />
                </font></TextArea>
@@ -92,18 +92,18 @@
                   <Font size="14.0" />
                </font></Button>
             <ImageView fx:id="vehicleImageThree" fitHeight="130.0" fitWidth="239.0" layoutX="11.0" layoutY="57.0" pickOnBounds="true" preserveRatio="true" />
-            <TextArea fx:id="makeModelThree" editable="false" layoutX="1.0" layoutY="6.0" prefHeight="51.0" prefWidth="258.0" stylesheets="@textarea.css" wrapText="true">
+            <TextArea fx:id="makeModelThree" editable="false" layoutX="1.0" layoutY="6.0" prefHeight="51.0" prefWidth="258.0" stylesheets="@../css/garage.css" wrapText="true">
                <font>
                   <Font size="14.0" />
                </font>
                <padding>
                   <Insets left="5.0" right="5.0" />
                </padding></TextArea>
-            <TextArea fx:id="carDetailsThree" editable="false" layoutX="1.0" layoutY="188.0" prefHeight="116.0" prefWidth="258.0" stylesheets="@textarea.css" wrapText="true">
+            <TextArea fx:id="carDetailsThree" editable="false" layoutX="1.0" layoutY="188.0" prefHeight="116.0" prefWidth="258.0" stylesheets="@../css/garage.css" wrapText="true">
                <font>
                   <Font size="14.0" />
                </font></TextArea>
-            <TextArea fx:id="currSelectedThree" editable="false" layoutX="2.0" layoutY="304.0" prefHeight="58.0" prefWidth="258.0" stylesheets="@textarea.css" wrapText="true">
+            <TextArea fx:id="currSelectedThree" editable="false" layoutX="2.0" layoutY="304.0" prefHeight="58.0" prefWidth="258.0" stylesheets="@../css/garage.css" wrapText="true">
                <font>
                   <Font size="14.0" />
                </font></TextArea>

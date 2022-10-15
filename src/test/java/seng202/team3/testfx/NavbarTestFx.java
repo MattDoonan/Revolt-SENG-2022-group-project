@@ -5,18 +5,24 @@ import static org.testfx.api.FxAssert.verifyThat;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 import javax.management.InstanceAlreadyExistsException;
 
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.testfx.api.FxRobotException;
+import org.testfx.api.FxRobotInterface;
+import org.testfx.robot.SleepRobot;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -59,6 +65,7 @@ public class NavbarTestFx extends TestFxBase {
         user.setId(2);
         password = "1234";
         SqlInterpreter.getInstance().writeUser(user, UserManager.encryptThisString(password));
+
         List<Entity> chargers = SqlInterpreter.getInstance()
                 .readData(new QueryBuilderImpl()
                         .withSource(EntityType.CHARGER)
@@ -76,8 +83,9 @@ public class NavbarTestFx extends TestFxBase {
 
     @Override
     public void start(Stage stage) throws Exception {
-        MapHandler.resetPermission();
-        MapHandler.setLocationAccepted(true);
+        MapHandler.setLocationAccepted(false);
+        MapHandler.setMapRequested(false);
+        UserManager.setUser(user);
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/menu_bar.fxml"));
         Parent page = loader.load();
         initState(loader, stage);
@@ -91,69 +99,6 @@ public class NavbarTestFx extends TestFxBase {
         controller.init(stage);
     }
 
-    public void login() {
-        clickOn("#accountMenu");
-        clickOn("#loginSignout");
-        moveTo("#accountMenu");
-        clickOn("#loginEmailField");
-        write(user.getAccountName());
-        clickOn("#loginPasswordField");
-        write(password);
-        clickOn("#loginBtn");
-    }
-
-    public void logout() {
-        clickOn("#accountMenu");
-        clickOn("#loginSignout");
-    }
-
-    @Test
-    public void realLogin() {
-        login();
-        try {
-            clickOn("#invalidLogin");
-            Assertions.fail("Should be a valid login");
-        } catch (FxRobotException e) {
-            Assertions.assertTrue(true);
-        }
-        logout();
-    }
-
-    @Test
-    public void realSignUp() throws IOException {
-        clickOn("#accountMenu");
-        clickOn("#loginSignout");
-        moveTo("HOME");
-        clickOn("#signUpBtn");
-        clickOn("#signupUsernameField");
-        write("Test User");
-        clickOn("#signupEmailField");
-        write("tester@gmail.com");
-        clickOn("#signupPasswordField");
-        write("1234");
-        clickOn("#confPassField");
-        write("1234");
-        clickOn("#signUpBtn");
-        try {
-            clickOn("#invalidSignup");
-            Assertions.fail("Should be a valid login");
-        } catch (FxRobotException e) {
-            Assertions.assertTrue(true);
-        }
-        logout();
-        SqlInterpreter.getInstance()
-                .deleteData(EntityType.USER, UserManager.getUser().getId());
-    }
-
-    @Test
-    public void loginLogout() {
-        login();
-        logout();
-        clickOn("#accountMenu");
-        clickOn("#loginSignout");
-        verifyThat("#loginEmailField", Node::isVisible);
-    }
-
     private static Stream<Arguments> loadScreens() {
         return Stream.of(
                 Arguments.of("#accountPage", "#editAccountButton"),
@@ -163,20 +108,17 @@ public class NavbarTestFx extends TestFxBase {
     @ParameterizedTest
     @MethodSource("loadScreens")
     public void loadScreensTests(String page, String toCheck) {
-        login();
         clickOn("#accountMenu");
         clickOn(page);
         verifyThat(toCheck, Node::isVisible);
-        logout();
     }
 
     @Test
     public void screenThenBackToMain() {
-        login();
         clickOn("#accountMenu");
         clickOn("#accountPage");
         clickOn("HOME");
         verifyThat("#displayInfo", Node::isVisible);
-        logout();
     }
+
 }
