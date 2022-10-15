@@ -5,11 +5,12 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
+
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="632.0" prefWidth="982.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.ChargerController">
          <right>
             <BorderPane prefHeight="592.0" prefWidth="549.0" BorderPane.alignment="CENTER">
                <top>
-                  <Label alignment="TOP_LEFT" text="Connectors:" BorderPane.alignment="TOP_LEFT">
+                  <Label fx:id="connectorPageLabel" alignment="TOP_LEFT" text="Connectors:" BorderPane.alignment="TOP_LEFT">
                      <font>
                         <Font size="17.0" />
                      </font>
@@ -145,11 +146,6 @@
                               <Insets bottom="2.0" />
                            </padding>
                         </Label>
-                        <Label text="*" textFill="RED" GridPane.rowIndex="3">
-                           <padding>
-                              <Insets bottom="2.0" />
-                           </padding>
-                        </Label>
                         <Label text="*" textFill="RED" GridPane.rowIndex="4">
                            <padding>
                               <Insets bottom="2.0" />
@@ -195,6 +191,11 @@
                <children>
                       <Button fx:id="saveButton" alignment="CENTER" onAction="#saveChanges" prefHeight="30.0" prefWidth="167.0" text="Save Changes" />
                   <Button fx:id="deleteButton" mnemonicParsing="false" onMouseClicked="#launchConfirmation" prefHeight="28.0" prefWidth="136.0" text="DELETE Charger" />
+                  <Label fx:id="invalidChargerLabel" text="Invalid information entered" textFill="RED" visible="false">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
                </children>
                <opaqueInsets>
                   <Insets />
@@ -207,5 +208,5 @@
                </BorderPane.margin>
             </VBox>
          </bottom>
-      </BorderPane>
+   </BorderPane>
    </center></BorderPane>

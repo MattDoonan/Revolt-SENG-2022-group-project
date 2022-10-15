@@ -27,6 +27,7 @@ import io.cucumber.java.en.When;
 import javafx.geometry.VerticalDirection;
 import javafx.scene.Node;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import seng202.team3.cucumber.CucumberFxBase;
@@ -178,6 +179,11 @@ public class AccountPageStepDefs extends CucumberFxBase {
         write(newEmail);
     }
 
+    @Then("I am informed that my email is invalid")
+    public void invalidAccountEmail() {
+        verifyThat("#invalidUpdateAccount", Node::isVisible);
+    }
+
     @Then("My account email has changed to {string}")
     public void differentAccountEmail(String actual) {
         Assertions.assertEquals(actual, UserManager.getUser().getEmail());
@@ -187,6 +193,11 @@ public class AccountPageStepDefs extends CucumberFxBase {
     public void changeAccountPassword(String password) {
         clickOn("#accountPassword");
         write(password);
+    }
+
+    @Then("I am informed that my password is invalid")
+    public void invalidAccountPassword() {
+        verifyThat("#invalidUpdateAccount", Node::isVisible);
     }
 
     @Then("I logout of the app")
@@ -326,7 +337,7 @@ public class AccountPageStepDefs extends CucumberFxBase {
     public void upgradePermission() {
         clickOn("#menu");
         clickOn("#chargerOwner");
-        scroll(10, VerticalDirection.DOWN);
+        // scroll(10, VerticalDirection.DOWN);
         clickOn("#updatePermissions");
     }
 

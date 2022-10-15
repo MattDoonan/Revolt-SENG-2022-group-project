@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.LoginSignupController">
 <center>
@@ -15,12 +23,12 @@
                   <Font size="14.0" />
                </font>
             </Label>
-      <Label layoutX="137.0" layoutY="65.0" text="Create an Account">
+      <Label layoutX="154.0" layoutY="62.0" text="Create an Account">
          <font>
             <Font size="36.0" />
          </font>
       </Label>
-      <Button fx:id="signUpBtn" layoutX="270.0" layoutY="296.0" mnemonicParsing="false" onAction="#signUp" text="Sign Up" />
+      <Button fx:id="signUpBtn" layoutX="270.0" layoutY="285.0" mnemonicParsing="false" onAction="#signUp" text="Sign Up" />
       <Separator layoutX="122.0" layoutY="339.0" prefHeight="10.0" prefWidth="356.0" />
       <Label layoutX="163.0" layoutY="349.0" text="Already have an Account?">
          <font>
@@ -34,11 +42,10 @@
       </Label>
       <Button fx:id="logInRedirect" layoutX="275.0" layoutY="436.0" mnemonicParsing="false" onAction="#loginRedirect" text="Log In" />
       <ImageView fx:id="logo" fitHeight="62.0" fitWidth="166.0" layoutX="217.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
-      <GridPane layoutX="109.0" layoutY="146.0" prefHeight="134.0" prefWidth="405.0">
+      <GridPane layoutX="97.0" layoutY="136.0" prefHeight="134.0" prefWidth="405.0">
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="187.20001220703125" minWidth="10.0" prefWidth="184.79998779296875" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="257.6" minWidth="10.0" prefWidth="184.80001220703127" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="123.20001220703125" minWidth="10.0" prefWidth="23.19999999999999" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="202.4000244140625" minWidth="10.0" prefWidth="202.4000244140625" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="257.6" minWidth="10.0" prefWidth="203.19997558593752" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -50,9 +57,7 @@
             <TextField fx:id="signupUsernameField" promptText="Username" GridPane.columnIndex="1" />
             <TextField fx:id="signupEmailField" prefHeight="26.0" prefWidth="191.0" promptText="Email" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <PasswordField fx:id="signupPasswordField" prefHeight="26.0" prefWidth="166.0" promptText="Password" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <TextField fx:id="showPassFieldSignup" editable="false" prefHeight="26.0" prefWidth="166.0" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <PasswordField fx:id="confPassField" promptText="Confirm Password" GridPane.columnIndex="1" GridPane.rowIndex="3" onAction="#signing"/>
-            <TextField fx:id="showConfPassFieldSignup" editable="false" prefHeight="26.0" prefWidth="166.0" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <PasswordField fx:id="confPassField" onAction="#signing" promptText="Confirm Password" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <Label text="Username:">
                <font>
                   <Font size="14.0" />
@@ -105,16 +110,6 @@
                   <Font size="14.0" />
                </font>
             </Label>
-                  <Button fx:id="showPassSignup" mnemonicParsing="false" onAction="#showPassword" GridPane.columnIndex="2" GridPane.rowIndex="2">
-                     <GridPane.margin>
-                        <Insets left="4.0" />
-                     </GridPane.margin>
-                  </Button>
-                  <Button fx:id="showConfPassSignup" mnemonicParsing="false" onAction="#showPassword" GridPane.columnIndex="2" GridPane.rowIndex="3">
-                     <GridPane.margin>
-                        <Insets left="4.0" />
-                     </GridPane.margin>
-                  </Button>
          </children>
       </GridPane>
             <Label layoutX="109.0" layoutY="320.0" text="*" textFill="RED">

@@ -10,6 +10,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
+<?import javafx.scene.control.Label?>
 
 <ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.AccountController">
    <content>
@@ -71,6 +72,12 @@
                   </TextField>
                   <TextField fx:id="accountPassword" layoutX="14.0" layoutY="158.0" prefHeight="26.0" prefWidth="800.0" promptText="New Password" style="-fx-background-color: white; -fx-border-color: black;" visible="false" />
                   <Button fx:id="confirmAccount" layoutX="300.0" layoutY="389.0" mnemonicParsing="false" onAction="#confirmChanges" prefHeight="45.0" prefWidth="125.0" text="Confirm" visible="false" />
+                 <Label fx:id="invalidUpdateAccount" layoutX="29.0" layoutY="184.0" text="Invalid information entered" textFill="RED" visible="false">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+               </Label>
+
                   <Button fx:id="delete" contentDisplay="CENTER" layoutX="438.0" layoutY="389.0" mnemonicParsing="false" onAction="#deleteAccount" prefHeight="45.0" prefWidth="125.0" text="Delete Account" textAlignment="CENTER" visible="false" wrapText="true" />
                </children>
                <padding>

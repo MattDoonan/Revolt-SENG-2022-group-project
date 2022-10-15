@@ -6,9 +6,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -110,6 +117,12 @@ public class AccountController {
     private BorderPane chargerTable;
 
     /**
+     * invalid account details error
+     */
+    @FXML
+    private Label invalidUpdateAccount;
+
+    /**
      * Boolean on if it is in administration view
      */
     private boolean isAdminView = false;
@@ -121,14 +134,36 @@ public class AccountController {
     private TableController controller;
 
     /**
-     * Styling for invalid input
+     * Styling for invalid fields
      */
-    private static final String INVALID_STYLE = "-fx-border-color: #ff0000;";
+    private static final Border INVALID_STYLE = new Border(
+            new BorderStroke(Color.RED, BorderStrokeStyle.SOLID,
+                    CornerRadii.EMPTY, BorderWidths.DEFAULT));
 
     /**
      * The controller
      */
     private MenuController mainController;
+
+    /**
+     * id for username node
+     */
+    private static final String NAME_NODE = "accountName";
+
+    /**
+     * id for email node
+     */
+    private static final String EMAIL_NODE = "accountEmail";
+
+    /**
+     * id for password node
+     */
+    private static final String PASSWORD_NODE = "accountPassword";
+
+    /**
+     * Stores all of the tooltips used for error messages
+     */
+    private ErrorHandler errors = new ErrorHandler();
 
     /**
      * Unused constructor
@@ -144,6 +179,9 @@ public class AccountController {
      */
     public void init(MenuController c) {
         this.mainController = c;
+        errors.add(NAME_NODE, "Invalid name.");
+        errors.add(EMAIL_NODE, "Email cannot be empty.");
+        errors.add(PASSWORD_NODE, "Password must be more than 4 characters.");
         User user = UserManager.getUser();
         populateText(user);
         setChargerTable();
@@ -251,12 +289,11 @@ public class AccountController {
      */
     @FXML
     public void confirmChanges() {
-        if (!UserManager.checkEmail(accountEmail.getText())) {
-            accountEmail.setStyle(INVALID_STYLE);
-            return;
-        }
-        if (accountName.getText().isEmpty()) {
-            accountName.setStyle(INVALID_STYLE);
+        Boolean fail = checkUserDetails();
+
+        if (Boolean.TRUE.equals(fail)) {
+            invalidUpdateAccount.setVisible(true);
+            logManager.warn("Incorrect user details");
             return;
         }
 
@@ -273,7 +310,7 @@ public class AccountController {
                 UserManager.setUser(user);
 
             } else if (accountPassword.getText().length() < 4) {
-                accountPassword.setStyle(INVALID_STYLE);
+                accountPassword.setBorder(INVALID_STYLE);
             } else {
                 manage.saveUser(user, UserManager
                         .encryptThisString(accountPassword.getText()));
@@ -282,12 +319,54 @@ public class AccountController {
             editDetails();
         } catch (IOException e) {
             logManager.error(e.getMessage());
-            accountPassword.setStyle(INVALID_STYLE);
-            accountName.setStyle(INVALID_STYLE);
-            accountEmail.setStyle(INVALID_STYLE);
+            accountPassword.setBorder(INVALID_STYLE);
+            accountName.setBorder(INVALID_STYLE);
+            accountEmail.setBorder(INVALID_STYLE);
         }
         tableRefresh();
         logManager.info("User information updated");
+    }
+
+    /**
+     * Checks if the user's inputs have errors
+     * 
+     * @return whethere there are any errors in the user's details
+     */
+    public Boolean checkUserDetails() {
+        errors.hideAll();
+
+        accountName.setBorder(Border.EMPTY);
+        accountEmail.setBorder(Border.EMPTY);
+        accountPassword.setBorder(Border.EMPTY);
+
+        Boolean fail = false;
+
+        if (!UserManager.checkEmail(accountEmail.getText())) {
+            errors.changeMessage(EMAIL_NODE, "Invalid email.");
+            if (accountEmail.getText().isEmpty()) {
+                errors.changeMessage(EMAIL_NODE, "Email cannot be empty.");
+            }
+            accountEmail.setBorder(INVALID_STYLE);
+            errors.show(EMAIL_NODE);
+            fail = true;
+        }
+        if (accountName.getText().isEmpty()) {
+            accountName.setBorder(INVALID_STYLE);
+            errors.show(NAME_NODE);
+            fail = true;
+        } else if (accountName.getText().length() > 15) {
+            errors.changeMessage(NAME_NODE, "Username cannot be longer than 15 characters.");
+            accountName.setBorder(INVALID_STYLE);
+            errors.show(NAME_NODE);
+            fail = true;
+        }
+        if (accountPassword.getText().length() < 4 && accountPassword.getText().length() > 0) {
+            accountPassword.setBorder(INVALID_STYLE);
+            errors.show(PASSWORD_NODE);
+            fail = true;
+        }
+
+        return fail;
     }
 
     /**
@@ -334,5 +413,14 @@ public class AccountController {
                 || UserManager.getUser().getLevel() == PermissionLevel.CHARGEROWNER) {
             controller.refreshTable();
         }
+    }
+
+    /**
+     * Gets error handling object for tooltip messages
+     * 
+     * @return errorhandler with entry field tooltip alerts
+     */
+    public ErrorHandler getErrors() {
+        return errors;
     }
 }

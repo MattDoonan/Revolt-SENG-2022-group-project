@@ -19,11 +19,11 @@ Feature: Managing a users vehicles
     When I provide vehicle make: "" model: "" maxrange: "" connector type: "Type 1 Socketed"
     Then I am informed my input is invalid
 
-  Scenario: (AT_39) A user wants to delete a vehicle
-    Given I have a vehicle in the garage
-    When I click delete vehicle
-    And I confirm the action
-    Then I can no longer see the vehicle
+  # Scenario: (AT_39) A user wants to delete a vehicle
+  #   Given I have a vehicle in the garage
+  #   When I click delete vehicle
+  #   And I confirm the action
+  #   Then I can no longer see the vehicle
 
   Scenario: (AT_38) A user wants to edit an existing vehicle
     Given I have a vehicle in the garage

@@ -2,18 +2,23 @@ package seng202.team3.gui;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
@@ -42,6 +47,12 @@ public class AdminController {
     private MenuButton menu;
 
     /**
+     * FXML for update permissions button
+     */
+    @FXML
+    private Button updatePermissions;
+
+    /**
      * The table in the admin controller
      */
     @FXML
@@ -66,6 +77,12 @@ public class AdminController {
     private TableColumn<User, String> permissions;
 
     /**
+     * FXML for delete user button
+     */
+    @FXML
+    private Button delete;
+
+    /**
      * The BorderPane to hold the object
      */
     private BorderPane border;
@@ -76,9 +93,36 @@ public class AdminController {
     private AdminManager manager;
 
     /**
-     * String list of errors to display
+     * Handler for error message tooltips
      */
-    private ArrayList<String> errors = new ArrayList<>();
+    private ErrorHandler errors = new ErrorHandler();
+
+    /**
+     * Styling for invalid fields
+     */
+    private static final Border INVALID_STYLE = new Border(
+            new BorderStroke(Color.RED, BorderStrokeStyle.SOLID,
+                    CornerRadii.EMPTY, BorderWidths.DEFAULT));
+
+    /**
+     * User select prompt
+     */
+    private static final String SELECT_USER = "Please select a user";
+
+    /**
+     * id for menu node
+     */
+    private static final String MENU_NODE = "menu";
+
+    /**
+     * id for menu node
+     */
+    private static final String UPDATE_NODE = "updatePermissions";
+
+    /**
+     * id for delete node
+     */
+    private static final String DELETE_NODE = "delete";
 
     /**
      * To create the admin controller
@@ -93,6 +137,9 @@ public class AdminController {
      * @param border the BorderPane containing this class
      */
     public void init(BorderPane border) {
+        errors.add(MENU_NODE, "Select a permission level.");
+        errors.add(UPDATE_NODE, SELECT_USER);
+        errors.add(DELETE_NODE, "Cannot delete current user");
         this.border = border;
         manager = new AdminManager();
         manager.setAdmin(UserManager.getUser());
@@ -151,55 +198,33 @@ public class AdminController {
     }
 
     /**
-     * Launches an error popup when trying to do illegal things
-     */
-    public void launchErrorPopUps() {
-        try {
-            FXMLLoader error = new FXMLLoader(getClass().getResource(
-                    "/fxml/error_popup.fxml"));
-            AnchorPane base = error.load();
-            Scene modalScene = new Scene(base);
-            Stage modal = new Stage();
-            modal.setScene(modalScene);
-            modal.setResizable(false);
-            modal.setTitle("Error With Users:");
-            modal.initModality(Modality.APPLICATION_MODAL);
-            ErrorController errController = error.getController();
-            errController.init();
-            errController.setErrors(errors);
-            errController.setPromptType("error");
-            errController.displayErrors();
-            modal.setAlwaysOnTop(true);
-            modal.showAndWait();
-            for (String e : errors) {
-                logManager.warn(e);
-            }
-        } catch (IOException e) {
-            logManager.error(e.getMessage());
-        }
-    }
-
-    /**
      * Deletes a user
      */
     @FXML
     public void deleteUser() {
+        errors.hideAll();
+        delete.setBorder(Border.EMPTY);
         setSelectedUser();
-        if (manager.getSelectedUser() != null) {
-            if (manager.getAdmin().getId() == manager.getSelectedUser().getId()) {
-                errors.add("Cannot delete current user");
-            }
-        } else {
-            errors.add("Please select a user");
+
+        boolean errorOccured = false;
+        if (manager.getSelectedUser() == null) {
+            errors.changeMessage(DELETE_NODE, SELECT_USER);
+            errorOccured = true;
+        } else if (manager.getAdmin().getId() == manager.getSelectedUser().getId()) {
+            errors.changeMessage(DELETE_NODE, "Cannot delete current user");
+            errorOccured = true;
         }
-        if (!errors.isEmpty()) {
-            launchErrorPopUps();
-            errors.clear();
-        } else {
+
+        if (!errorOccured) {
             loadPromptScreen("Are you sure you'd like to \n"
                     + "delete this user (and owned chargers)?\n\n");
+        } else {
+            errors.show(DELETE_NODE);
+            delete.setBorder(INVALID_STYLE);
         }
+
         updateTable();
+
     }
 
     /**
@@ -209,22 +234,30 @@ public class AdminController {
      */
     @FXML
     public void editPermissions() throws SQLException {
+        errors.hideAll();
+        updatePermissions.setBorder(Border.EMPTY);
+
         setSelectedUser();
-        if (manager.getSelectedUser() != null) {
-            if (manager.getAdmin().getId() == manager.getSelectedUser().getId()) {
-                errors.add("Cannot edit your own permissions!");
-            } else if (menu.getText().equals("Select...")) {
-                errors.add("Select a permission level.");
-            }
-        } else {
-            errors.add("Please select a user.");
+
+        boolean permissionsErr = false;
+        if (manager.getSelectedUser() == null) {
+            errors.changeMessage(UPDATE_NODE, SELECT_USER);
+            permissionsErr = true;
+        } else if (manager.getAdmin().getId() == manager.getSelectedUser().getId()) {
+            errors.changeMessage(UPDATE_NODE, "Cannot edit your own permissions!");
+            permissionsErr = true;
         }
-        if (!errors.isEmpty()) {
-            launchErrorPopUps();
-            errors.clear();
-        } else {
+
+        if (menu.getText().equals("Select...")) {
+            permissionsErr = true;
+        }
+
+        if (!permissionsErr) {
             manager.getSelectedUser().setLevel(manager.permissionLevel(menu.getText()));
             manager.updateUser();
+        } else {
+            errors.show(UPDATE_NODE);
+            updatePermissions.setBorder(INVALID_STYLE);
         }
         updateTable();
     }
@@ -311,5 +344,14 @@ public class AdminController {
      */
     public AdminManager getManager() {
         return manager;
+    }
+
+    /**
+     * Gets error handler for the controller
+     * 
+     * @return the error handler for the controller
+     */
+    public ErrorHandler getErrors() {
+        return errors;
     }
 }
