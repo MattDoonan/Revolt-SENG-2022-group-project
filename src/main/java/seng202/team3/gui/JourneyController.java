@@ -22,8 +22,14 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -169,9 +175,70 @@ public class JourneyController {
     private TableColumn<Journey, String> journeyDateCol;
 
     /**
-     * List of user input errors for adding/editing vehicles
+     * Save journey button
      */
-    private ArrayList<String> errors = new ArrayList<>();
+    @FXML
+    private Button saveJourney;
+
+    /**
+     * Delete journey button
+     */
+    @FXML
+    private Button deleteJourney;
+
+    /**
+     * Load journey button
+     */
+    @FXML
+    private Button loadJourney;
+
+    /**
+     * Label if point is out of vehicle's range
+     */
+    @FXML
+    private Label errorLabel;
+
+    /**
+     * Handler for error message tooltips
+     */
+    private ErrorHandler errors = new ErrorHandler();
+
+    /**
+     * Styling for invalid fields
+     */
+    private static final Border INVALID_STYLE = new Border(
+            new BorderStroke(Color.RED, BorderStrokeStyle.SOLID,
+                    CornerRadii.EMPTY, BorderWidths.DEFAULT));
+
+    /**
+     * id for journey start node
+     */
+    private static final String START_NODE = "makeStart";
+
+    /**
+     * id for journey end node
+     */
+    private static final String END_NODE = "makeEnd";
+
+    /**
+     * id for vehicles node
+     */
+    private static final String VEHICLES_NODE = "vehicles";
+
+    /**
+     * id for load journey node
+     */
+    private static final String LOAD_NODE = "loadJourney";
+
+    /**
+     * id for delete journey node
+     */
+    private static final String DELETE_NODE = "deleteJourney";
+
+    /**
+     * id for save journey node
+     */
+    private static final String SAVE_NODE = "saveJourney";
 
     /**
      * List of vehicles available for the journey
@@ -243,6 +310,11 @@ public class JourneyController {
      * @param stage Top level container for this window
      */
     public void init(Stage stage) {
+        errors.add(START_NODE, "No starting point selected");
+        errors.add(END_NODE, "No end point selected");
+        errors.add(VEHICLES_NODE, "Please select a vehicle.");
+        errors.add(LOAD_NODE, "No journey selected");
+        errors.add(DELETE_NODE, "Selected end point is out of range");
         journeyManager = new JourneyManager();
         journeyUpdateManager = new JourneyUpdateManager();
         populateTable();
@@ -287,6 +359,7 @@ public class JourneyController {
      */
     @FXML
     public void setStart() {
+        makeStart.setBorder(Border.EMPTY);
         journeyManager.setCurrentCoordinate(GeoLocationHandler.getCoordinate());
         Coordinate position = journeyManager.getPosition();
         if (position != null && journeyManager.getSelectedJourney().getVehicle() != null) {
@@ -302,8 +375,9 @@ public class JourneyController {
             mapController.addChargersOnMap();
             calculateRoute();
         } else if (journeyManager.getSelectedJourney().getVehicle() == null) {
-            errors.add("Please select a vehicle.");
-            // TODO: handle errors
+            errors.changeMessage(START_NODE, "Please select a vehicle.");
+            makeStart.setBorder(INVALID_STYLE);
+            errors.show(START_NODE);
         }
     }
 
@@ -314,7 +388,7 @@ public class JourneyController {
     @FXML
     public void setDestination() {
         journeyManager.setCurrentCoordinate(GeoLocationHandler.getCoordinate());
-        Coordinate position = journeyManager.getPosition();
+        
         Coordinate prevPoint = null;
 
         if (!journeyManager.getStops().isEmpty()) {
@@ -323,21 +397,43 @@ public class JourneyController {
         } else if (journeyManager.getStart() != null) {
             prevPoint = journeyManager.getStart();
         }
+        Boolean fail = false;
+        makeStart.setBorder(Border.EMPTY);
+        makeEnd.setBorder(Border.EMPTY);
+        vehicles.setBorder(Border.EMPTY);
+        loadJourney.setBorder(Border.EMPTY);
+        deleteJourney.setBorder(Border.EMPTY);
+        Coordinate position = journeyManager.getPosition();
 
         if (prevPoint == null) {
-            errors.add("No starting point selected");
+            errors.changeMessage(START_NODE, "No starting point selected");
+            makeStart.setBorder(INVALID_STYLE);
+            errors.show(START_NODE);
+            fail = true;
         } else if (position == null) {
-            errors.add("No end point selected");
+            errors.changeMessage(END_NODE, "No end point selected");
+            makeEnd.setBorder(INVALID_STYLE);
+            errors.show(END_NODE);
+            fail = true;
         } else if (journeyManager.getSelectedJourney().getVehicle() == null) {
-            errors.add("Please select a vehicle.");
+            errors.changeMessage(VEHICLES_NODE, "Please select a vehicle.");
+            vehicles.setBorder(INVALID_STYLE);
+            errors.show(VEHICLES_NODE);
+            fail = true;
         } else if (Calculations
                 .calculateDistance(position, prevPoint) > journeyManager.getDesiredRange()) {
-            errors.add("Selected end point is out of range");
+            errors.changeMessage(END_NODE, "Selected end point is out of range");
+            makeEnd.setBorder(INVALID_STYLE);
+            errors.show(END_NODE);
+            fail = true;
         } else if (prevPoint.equals(position)) {
-            errors.add("Cannot set previous position to end");
+            errors.changeMessage(END_NODE, "Cannot set previous position to end");
+            deleteJourney.setBorder(INVALID_STYLE);
+            errors.show(END_NODE);
+            fail = true;
         }
 
-        if (errors.isEmpty()) {
+        if (Boolean.FALSE.equals(fail)) {
             position.setAddress(new JavaScriptBridge().makeLocationName());
             journeyManager.setEnd(position);
             mapController.positionMarker("Destination");
@@ -348,9 +444,6 @@ public class JourneyController {
                 tripName.setText("Trip to " + position.getAddress().split(",")[0]);
             }
             calculateRoute();
-        } else {
-            // TODO: handle errors
-            errors.clear();
         }
 
     }
@@ -375,6 +468,13 @@ public class JourneyController {
      * Resets the journey entity and GUI
      */
     public void resetJourney() {
+        loadJourney.setBorder(Border.EMPTY);
+        saveJourney.setBorder(Border.EMPTY);
+        deleteJourney.setBorder(Border.EMPTY);
+        makeStart.setBorder(Border.EMPTY);
+        makeEnd.setBorder(Border.EMPTY);
+        vehicles.setBorder(Border.EMPTY);
+
         mapController.removeRoute();
         journeyManager.clearChargers();
         journeyManager.clearJourney();
@@ -402,6 +502,9 @@ public class JourneyController {
      */
     public void addCharger(Charger charger) {
         Stop stop = new Stop(charger);
+        Boolean fail = false;
+        errorLabel.setVisible(false);
+        deleteJourney.setBorder(Border.EMPTY);
         if (!journeyManager.getSelectedJourney().getStops().isEmpty()) {
             if (journeyManager.getSelectedJourney().getStops()
                     .get(journeyManager.getSelectedJourney().getStops().size() - 1)
@@ -409,11 +512,16 @@ public class JourneyController {
                 if (journeyManager.getSelectedJourney().getStops()
                         .get(journeyManager.getSelectedJourney().getStops().size() - 1)
                         .getCharger().getId() == charger.getId()) {
-                    errors.add("Cannot add the same charger consecutively.");
+                    errors.changeMessage(DELETE_NODE, "Cannot add the same charger consecutively.");
+                    deleteJourney.setBorder(INVALID_STYLE);
+                    errors.show(DELETE_NODE);
+                    errorLabel.setText("Cannot add the same charger consecutively.");
+                    errorLabel.setVisible(true);
+                    fail = true;
                 }
             }
         }
-        if (errors.isEmpty()) {
+        if (Boolean.FALSE.equals(fail)) {
             journeyManager.addStop(stop);
             journeyManager.setCurrentCoordinate(charger.getLocation());
             resetChargerDisplay();
@@ -421,9 +529,6 @@ public class JourneyController {
             journeyManager.makeRangeChargers();
             mapController.addChargersOnMap();
             calculateRoute();
-        } else {
-            // TODO: handle errors
-            errors.clear();
         }
     }
 
@@ -434,10 +539,19 @@ public class JourneyController {
      * @param coordinate the stop to be added
      */
     public void addStop(Coordinate coordinate) {
+        errorLabel.setVisible(false);
+        makeStart.setBorder(Border.EMPTY);
+
         if (journeyManager.getStart() == null) {
-            errors.add("Please select a start point");
+            errors.changeMessage(START_NODE, "Please select a start point");
+            makeStart.setBorder(INVALID_STYLE);
+            errors.show(START_NODE);
         } else if (coordinate.equals(journeyManager.getCurrentCoordinate())) {
-            errors.add("Cannot add the same stop consecutively.");
+            errors.changeMessage(START_NODE, "Cannot add the same stop consecutively.");
+            makeStart.setBorder(INVALID_STYLE);
+            errors.show(START_NODE);
+            errorLabel.setText("Cannot add the same stop consecutively.");
+            errorLabel.setVisible(true);
         } else if (Calculations.calculateDistance(coordinate,
                 journeyManager.getCurrentCoordinate()) <= journeyManager
                         .getDesiredRange()) {
@@ -451,14 +565,14 @@ public class JourneyController {
             mapController.addChargersOnMap();
             calculateRoute();
         } else {
-            errors.add("Selected stop is out of range");
+            errors.changeMessage(START_NODE, "Selected stop is out of range");
+            makeStart.setBorder(INVALID_STYLE);
+            errors.show(START_NODE);
+            errorLabel.setText("Selected stop is out of range for vehicle.");
+            errorLabel.setVisible(true);
             logManager.info("Selected Stop is out of range for vehicle. ");
         }
 
-        if (!errors.isEmpty()) {
-            // TODO: handle errors
-            errors.clear();
-        }
     }
 
     /**
@@ -580,6 +694,10 @@ public class JourneyController {
      */
     @FXML
     public void saveJourney() {
+        makeStart.setBorder(Border.EMPTY);
+        makeEnd.setBorder(Border.EMPTY);
+        saveJourney.setBorder(Border.EMPTY);
+
         journeyManager.checkDistanceBetweenChargers();
         if (!(distanceError) && (journeyManager.getStart() != null)
                 && (journeyManager.getEnd() != null)) {
@@ -588,16 +706,22 @@ public class JourneyController {
             populateTable();
         } else {
             if (journeyManager.getStart() == null) {
-                errors.add("No start location added");
+                errors.changeMessage(START_NODE, "No start location added");
+                makeStart.setBorder(INVALID_STYLE);
+                errors.show(START_NODE);
             }
             if (journeyManager.getEnd() == null) {
-                errors.add("No end location added");
+                errors.changeMessage(END_NODE, "No end location added");
+                makeEnd.setBorder(INVALID_STYLE);
+                errors.show(END_NODE);
             }
             if (distanceError) {
-                errors.add("Some of your locations are out of range of each other");
+                errors.changeMessage(SAVE_NODE, 
+                    "Some of your locations are out of range of each other");
+                saveJourney.setBorder(INVALID_STYLE);
+                errors.show(SAVE_NODE);
             }
-            // TODO: handle errors
-            errors.clear();
+
         }
     }
 
@@ -637,6 +761,7 @@ public class JourneyController {
      * Deletes the journey selected from the table
      */
     public void deleteJourney() {
+        deleteJourney.setBorder(Border.EMPTY);
         if (previousJourneyTable.getSelectionModel()
                 .getSelectedItem() != null) {
             if (deleteWarningPrompt()) {
@@ -645,8 +770,10 @@ public class JourneyController {
                 populateTable();
             }
         } else {
-            errors.add("No journey selected");
-            // TODO: handle errors
+            errors.changeMessage(DELETE_NODE, "No journey selected");
+            deleteJourney.setBorder(INVALID_STYLE);
+            errors.show(DELETE_NODE);
+
         }
     }
 
@@ -654,6 +781,7 @@ public class JourneyController {
      * Loads the journey selected from the table into the map and sidebar
      */
     public void loadJourney() {
+        loadJourney.setBorder(Border.EMPTY);
         if (previousJourneyTable.getSelectionModel()
                 .getSelectedItem() != null) {
             mapController.removeRoute();
@@ -689,8 +817,9 @@ public class JourneyController {
             maxRange.setText(Integer.toString(journeyManager
                     .getSelectedJourney().getVehicle().getMaxRange()));
         } else {
-            errors.add("No journey selected");
-            // TODO: handle errors
+            errors.changeMessage(LOAD_NODE, "No journey selected");
+            loadJourney.setBorder(INVALID_STYLE);
+            errors.show(LOAD_NODE);
         }
     }
 
