@@ -11,6 +11,7 @@ import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.database.QueryBuilder;
 import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
+import seng202.team3.data.entity.Entity;
 import seng202.team3.data.entity.EntityType;
 import seng202.team3.data.entity.User;
 import seng202.team3.data.entity.Vehicle;
@@ -80,7 +81,7 @@ public class GarageManager {
     public void getAllVehicles() {
         try {
             List<Vehicle> vehicleList = new ArrayList<>();
-            for (Object o : SqlInterpreter.getInstance()
+            for (Entity o : SqlInterpreter.getInstance()
                     .readData(vehicleDataQuery.build())) {
                 vehicleList.add((Vehicle) o);
             }
@@ -101,7 +102,7 @@ public class GarageManager {
         try {
             SqlInterpreter.getInstance().writeVehicle(vehicle);
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
         }
     }
 

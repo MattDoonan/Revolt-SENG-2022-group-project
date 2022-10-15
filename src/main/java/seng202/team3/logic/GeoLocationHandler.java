@@ -33,7 +33,6 @@ public class GeoLocationHandler {
      */
     private static Coordinate coordinate;
 
-    // TODO remove set positions
     /**
      * Default coordinate all nz
      */

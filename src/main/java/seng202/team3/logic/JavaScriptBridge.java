@@ -5,7 +5,6 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.ArrayList;
 import java.util.List;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -68,7 +67,6 @@ public class JavaScriptBridge {
         }
         if (MenuController.getJourneyController() != null) {
             MenuController.getJourneyController().getManager().setPosition();
-            // TODO check back later
         }
     }
 
@@ -209,7 +207,7 @@ public class JavaScriptBridge {
             Charger selectedCharger = chargerList.get(0);
             journeyController.addCharger(selectedCharger);
         } else {
-            logManager.error("Charger is not in range, should not have been selected: " + id);
+            logManager.error("Charger is not in range, should not have been selected: %s", id);
         }
     }
 

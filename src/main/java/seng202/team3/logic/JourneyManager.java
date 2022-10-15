@@ -260,7 +260,6 @@ public class JourneyManager extends ChargerHandler {
             selectedJourney.setUser(UserManager.getUser().getId());
             SqlInterpreter.getInstance().writeJourney(selectedJourney);
             logManager.info("Saved journey successfully");
-            // TODO now successfully saves and to throw confirmation prompt up
         } catch (IOException e) {
             logManager.warn(e.getMessage());
         }
@@ -272,7 +271,7 @@ public class JourneyManager extends ChargerHandler {
      *
      * @return boolean true if there is an error
      */
-    public boolean checkDistanceBetweenChargers() { // TODO possibly needs fixing
+    public boolean checkDistanceBetweenChargers() {
         boolean error = false;
 
         ArrayList<Coordinate> coordinates = new ArrayList<>();

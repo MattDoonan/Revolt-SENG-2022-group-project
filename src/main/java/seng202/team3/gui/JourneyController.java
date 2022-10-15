@@ -337,7 +337,7 @@ public class JourneyController {
             mapController.init(stage, this);
             mainWindow.setCenter(mapViewParent);
         } catch (IOException e) {
-            e.printStackTrace();
+            logManager.error(e.getMessage());
         }
     }
 
@@ -373,11 +373,13 @@ public class JourneyController {
             vehicles.setDisable(true);
             journeyManager.makeRangeChargers();
             mapController.addChargersOnMap();
+            logManager.info("Start position set");
             calculateRoute();
         } else if (journeyManager.getSelectedJourney().getVehicle() == null) {
             errors.changeMessage(START_NODE, "Please select a vehicle.");
             makeStart.setBorder(INVALID_STYLE);
             errors.show(START_NODE);
+            logManager.warn("Vehicle not selected.");
         }
     }
 
@@ -443,7 +445,10 @@ public class JourneyController {
             if (tripName.getText().isEmpty()) {
                 tripName.setText("Trip to " + position.getAddress().split(",")[0]);
             }
+            logManager.info("Destination set");
             calculateRoute();
+        } else {
+            logManager.warn("Destination could not be set");
         }
 
     }
@@ -493,6 +498,7 @@ public class JourneyController {
         populateVehicles();
         rangeSlider.setValue(100.0);
         resetChargerDisplay();
+        logManager.info("Journey reset successfully");
     }
 
     /**
@@ -557,7 +563,7 @@ public class JourneyController {
                         .getDesiredRange()) {
             journeyManager.addNoChargerStop(coordinate);
             journeyManager.setCurrentCoordinate(coordinate);
-            logManager.info("Coordinate: " + coordinate.getAddress());
+            logManager.info("Stop added at Coordinate: " + coordinate.getAddress());
             mapController.positionMarker("Stop");
             resetChargerDisplay();
             addWaypointsToDisplay();

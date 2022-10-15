@@ -213,8 +213,10 @@ public class ConnectorEditController {
                     controller.getConnectors().set(i, changedConnector);
                 }
             }
-
+            logManager.info("Connection added to charger");
             controller.resetPage();
+        } else {
+            logManager.warn("Connection could not be added");
         }
     }
 
