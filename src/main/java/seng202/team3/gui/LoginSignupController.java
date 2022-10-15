@@ -13,7 +13,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -94,18 +100,6 @@ public class LoginSignupController {
     private Button showLoginPassword;
 
     /**
-     * Button to show signup password
-     */
-    @FXML
-    private Button showPassSignup;
-
-    /**
-     * Button to show signup password
-     */
-    @FXML
-    private Button showConfPassSignup;
-
-    /**
      * The current stage
      */
     private Stage stage;
@@ -125,39 +119,71 @@ public class LoginSignupController {
      */
     private MenuController menuControl;
 
-    /** Invalid login error */
+    /**
+     * Invalid login error
+     */
     @FXML
     private Label invalidLogin;
 
-    /** invalid signup error */
+    /**
+     * invalid signup error
+     */
     @FXML
     private Label invalidSignup;
 
     /**
      * Styling for invalid fields
      */
-    private static final String INVALID_STYLE = "-fx-border-color: #ff0000;";
+    private static final Border INVALID_STYLE = new Border(
+            new BorderStroke(Color.RED, BorderStrokeStyle.SOLID,
+                    CornerRadii.EMPTY, BorderWidths.DEFAULT));
 
     /**
-     * Login label text
+     * id for login email node
      */
-    private static final String LOGIN_LABEL = "login";
+    private static final String LOGIN_EMAIL_NODE = "loginEmailField";
 
     /**
-     * Sign up label text
+     * id for login password node
      */
-    private static final String SIGNUP_LABEL = "signup";
+    private static final String LOGIN_PASS_NODE = "loginPasswordField";
 
     /**
-     * Confirm label text
+     * id for signup confirm password node
      */
-    private static final String SIGNUP_CONFIRM_LABEL = "signupconf";
+    private static final String CONF_PASS_NODE = "confPassField";
+
+    /**
+     * id for signup password node
+     */
+    private static final String SIGNUP_PASS_NODE = "signupPasswordField";
+
+    /**
+     * id for signup email node
+     */
+    private static final String SIGNUP_EMAIL_NODE = "signupEmailField";
+
+    /**
+     * id for signup username node
+     */
+    private static final String SIGNUP_NAME_NODE = "signupUsernameField";
+
+    /**
+     * Manages all error tooltips
+     */
+    private ErrorHandler errors = new ErrorHandler();
 
     /**
      * Initialises the sign up
      */
     public LoginSignupController() {
         // Unused
+        errors.add(CONF_PASS_NODE, "Passwords must match.");
+        errors.add(SIGNUP_EMAIL_NODE, "Email required.");
+        errors.add(LOGIN_EMAIL_NODE, "Username required.");
+        errors.add(SIGNUP_PASS_NODE, "Password must be more than 4 characters.");
+        errors.add(LOGIN_PASS_NODE, "Password required.");
+        errors.add(SIGNUP_NAME_NODE, "Username required.");
     }
 
     /**
@@ -195,11 +221,9 @@ public class LoginSignupController {
     public void init(MenuController menuControl) {
         this.menuControl = menuControl;
         if (showPassLogin != null) {
-            setIcon(LOGIN_LABEL, "show");
-        } else if (showPassSignup != null) {
-            setIcon(SIGNUP_LABEL, "show");
-            setIcon(SIGNUP_CONFIRM_LABEL, "show");
+            setIcon("show");
         }
+
     }
 
     /**
@@ -208,24 +232,8 @@ public class LoginSignupController {
      */
     @FXML
     public void signUp() {
-        Boolean fail = false;
-        if (!UserManager.checkEmail(signupEmailField.getText())) {
-            signupEmailField.setStyle(INVALID_STYLE);
-            fail = true;
-        }
-        if (signupUsernameField.getText().isEmpty()) {
-            signupUsernameField.setStyle(INVALID_STYLE);
-            fail = true;
-        }
-        if (signupPasswordField.getText().length() < 4) {
-            signupPasswordField.setStyle(INVALID_STYLE);
-            confPassField.setStyle(INVALID_STYLE);
-            fail = true;
-        }
-        if (!signupPasswordField.getText().equals(confPassField.getText())) {
-            confPassField.setStyle(INVALID_STYLE);
-            fail = true;
-        }
+        Boolean fail = signUpErrorChecks();
+
         if (Boolean.TRUE.equals(fail)) {
             invalidSignup.setVisible(true);
             logManager.warn("Incorrect user details");
@@ -250,13 +258,72 @@ public class LoginSignupController {
     }
 
     /**
+     * Checks the signup fields for errors, and displays messages to the user
+     * if there are errors
+     * 
+     * @return whether there were any errors
+     */
+    public Boolean signUpErrorChecks() {
+
+        errors.hideAll();
+
+        signupEmailField.setBorder(Border.EMPTY);
+        signupUsernameField.setBorder(Border.EMPTY);
+        signupPasswordField.setBorder(Border.EMPTY);
+        confPassField.setBorder(Border.EMPTY);
+
+        Boolean fail = false;
+
+        if (!UserManager.checkEmail(signupEmailField.getText())) {
+            errors.changeMessage(SIGNUP_EMAIL_NODE, "Invalid email.");
+            if (signupEmailField.getText().isEmpty()) {
+                errors.changeMessage(SIGNUP_EMAIL_NODE, "Email Required.");
+            }
+            signupEmailField.setBorder(INVALID_STYLE);
+            errors.show(SIGNUP_EMAIL_NODE);
+            fail = true;
+        }
+        if (signupUsernameField.getText().isEmpty()) {
+            signupUsernameField.setBorder(INVALID_STYLE);
+            errors.show(SIGNUP_NAME_NODE);
+            fail = true;
+        } else if (signupUsernameField.getText().length() > 15) {
+            errors.changeMessage(SIGNUP_NAME_NODE, "Username cannot be longer than 15 characters.");
+            signupUsernameField.setBorder(INVALID_STYLE);
+            errors.show(SIGNUP_NAME_NODE);
+            fail = true;
+        }
+        if (signupPasswordField.getText().length() < 4) {
+            errors.show(SIGNUP_PASS_NODE);
+            signupPasswordField.setBorder(INVALID_STYLE);
+            fail = true;
+        }
+        if (signupPasswordField.getText().length() < 4
+                && signupPasswordField.getText().length() > 0) {
+            errors.show(SIGNUP_PASS_NODE);
+            signupPasswordField.setBorder(INVALID_STYLE);
+            fail = true;
+        }
+        if (confPassField.getText().isEmpty()
+                || !signupPasswordField.getText().equals(confPassField.getText())) {
+            confPassField.setBorder(INVALID_STYLE);
+            errors.show(CONF_PASS_NODE);
+            fail = true;
+        }
+
+        return fail;
+    }
+
+    /**
      * Logs the user in
      */
     @FXML
     public void login() {
         try {
+            loginErrorChecks();
             String hashedPassword = encryptThisString(loginPasswordField.getText());
             User user = manage.login(loginEmailField.getText(), hashedPassword);
+
             if (user != null) {
                 menuControl.setUser(user);
                 stage.close();
@@ -266,11 +333,33 @@ public class LoginSignupController {
                 loginEmailField.clear();
                 invalidLogin.setVisible(true);
                 logManager.info("Username or password incorrect");
+                loginEmailField.setBorder(INVALID_STYLE);
+                loginPasswordField.setBorder(INVALID_STYLE);
             }
         } catch (SQLException | IOException e) {
             loginPasswordField.clear();
             invalidLogin.setVisible(true);
             logManager.error(e.getMessage());
+        }
+    }
+
+    /**
+     * Checks the login fields for errors, and displays messages to the user
+     * if there are errors
+     */
+    public void loginErrorChecks() {
+        errors.hideAll();
+
+        loginEmailField.setBorder(Border.EMPTY);
+        loginPasswordField.setBorder(Border.EMPTY);
+
+        if (loginEmailField.getText().isEmpty()) {
+            loginEmailField.setBorder(INVALID_STYLE);
+            errors.show(LOGIN_EMAIL_NODE);
+        }
+        if (loginPasswordField.getText().isEmpty()) {
+            errors.show(LOGIN_PASS_NODE);
+            loginPasswordField.setBorder(INVALID_STYLE);
         }
     }
 
@@ -305,60 +394,28 @@ public class LoginSignupController {
      */
     @FXML
     public void showPassword(ActionEvent event) {
-        String source = ((Button) event.getSource()).getId();
-        TextField passTextField = new TextField();
-        PasswordField passField = new PasswordField();
-        String popup = "";
-        switch (source) {
-            case "showLoginPassword":
-                passTextField = showPassLogin;
-                passField = loginPasswordField;
-                popup = LOGIN_LABEL;
-                break;
-            case "showPassSignup":
-                passTextField = showPassFieldSignup;
-                passField = signupPasswordField;
-                popup = SIGNUP_LABEL;
-                break;
-            case "showConfPassSignup":
-                passTextField = showConfPassFieldSignup;
-                passField = confPassField;
-                popup = SIGNUP_CONFIRM_LABEL;
-                break;
-            default:
-                break;
-        }
-
-        if (passTextField.isVisible()) {
-            passTextField.setVisible(false);
-            passTextField.setText(null);
-            setIcon(popup, "show");
-        } else if (!passField.getText().equals("")) {
-            passTextField.setVisible(true);
-            passTextField.setText(passField.getText());
-            setIcon(popup, "hide");
+        if (showPassLogin.isVisible()) {
+            showPassLogin.setVisible(false);
+            showPassLogin.setText(null);
+            setIcon("show");
+        } else if (!loginPasswordField.getText().equals("")) {
+            showPassLogin.setVisible(true);
+            showPassLogin.setText(loginPasswordField.getText());
+            setIcon("hide");
         }
     }
 
     /**
      * Set the button icon
      * 
-     * @param popup the password field to add the icon to
-     * @param type  the type the icon should be
+     * @param type the type the icon should be
      */
-    public void setIcon(String popup, String type) {
-        Button button = new Button();
-        if (popup.equals(LOGIN_LABEL)) {
-            button = showLoginPassword;
-        } else if (popup.equals(SIGNUP_LABEL)) {
-            button = showPassSignup;
-        } else if (popup.equals(SIGNUP_CONFIRM_LABEL)) {
-            button = showConfPassSignup;
-        }
+    public void setIcon(String type) {
+
         if (type.equals("show")) {
-            GlyphsDude.setIcon(button, FontAwesomeIcon.EYE);
+            GlyphsDude.setIcon(showLoginPassword, FontAwesomeIcon.EYE);
         } else {
-            GlyphsDude.setIcon(button, FontAwesomeIcon.EYE_SLASH);
+            GlyphsDude.setIcon(showLoginPassword, FontAwesomeIcon.EYE_SLASH);
         }
     }
 
@@ -418,6 +475,15 @@ public class LoginSignupController {
             logManager.error(e.getMessage());
             return null;
         }
+    }
+
+    /**
+     * Returns the error handler manager instance
+     * 
+     * @return error handler object
+     */
+    public ErrorHandler getErrors() {
+        return errors;
     }
 
 }

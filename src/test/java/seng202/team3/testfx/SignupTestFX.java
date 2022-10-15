@@ -1,14 +1,12 @@
 package seng202.team3.testfx;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.testfx.api.FxAssert.verifyThat;
 
 import java.io.IOException;
-
 import javax.management.InstanceAlreadyExistsException;
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -188,6 +186,7 @@ public class SignupTestFX extends TestFxBase {
         clickOn("#confPassField");
         write("5678");
         clickOn("#signUpBtn");
+
         verifyThat("#invalidSignup", Node::isVisible);
     }
 }

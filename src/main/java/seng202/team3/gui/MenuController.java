@@ -253,7 +253,11 @@ public class MenuController {
      */
     @FXML
     public void loadHome() {
+        if (Boolean.TRUE.equals(MapHandler.getLocationAccepted())) {
+            MenuController.getController().getMapController().getLocation();
+        }
         initHome();
+
     }
 
     /**

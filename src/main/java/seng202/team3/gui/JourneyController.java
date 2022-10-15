@@ -303,7 +303,7 @@ public class JourneyController {
             calculateRoute();
         } else if (journeyManager.getSelectedJourney().getVehicle() == null) {
             errors.add("Please select a vehicle.");
-            displayErrorPopups();
+            // TODO: handle errors
         }
     }
 
@@ -349,7 +349,7 @@ public class JourneyController {
             }
             calculateRoute();
         } else {
-            displayErrorPopups();
+            // TODO: handle errors
             errors.clear();
         }
 
@@ -422,7 +422,7 @@ public class JourneyController {
             mapController.addChargersOnMap();
             calculateRoute();
         } else {
-            displayErrorPopups();
+            // TODO: handle errors
             errors.clear();
         }
     }
@@ -456,7 +456,7 @@ public class JourneyController {
         }
 
         if (!errors.isEmpty()) {
-            displayErrorPopups();
+            // TODO: handle errors
             errors.clear();
         }
     }
@@ -596,7 +596,7 @@ public class JourneyController {
             if (distanceError) {
                 errors.add("Some of your locations are out of range of each other");
             }
-            displayErrorPopups();
+            // TODO: handle errors
             errors.clear();
         }
     }
@@ -646,7 +646,7 @@ public class JourneyController {
             }
         } else {
             errors.add("No journey selected");
-            displayErrorPopups();
+            // TODO: handle errors
         }
     }
 
@@ -690,7 +690,7 @@ public class JourneyController {
                     .getSelectedJourney().getVehicle().getMaxRange()));
         } else {
             errors.add("No journey selected");
-            displayErrorPopups();
+            // TODO: handle errors
         }
     }
 
@@ -802,34 +802,6 @@ public class JourneyController {
             logManager.error(e.getMessage());
         } finally {
             populateVehicles();
-        }
-    }
-
-    /**
-     * Displays popup error message
-     */
-    public void displayErrorPopups() {
-        try {
-            FXMLLoader error = new FXMLLoader(getClass().getResource(
-                    "/fxml/error_popup.fxml"));
-            AnchorPane base = error.load();
-            Scene modalScene = new Scene(base);
-            Stage errorPopup = new Stage();
-            errorPopup.setScene(modalScene);
-            errorPopup.setResizable(false);
-            errorPopup.setTitle("Error With Journey:");
-            errorPopup.initModality(Modality.APPLICATION_MODAL);
-            ErrorController controller = error.getController();
-            controller.init();
-            controller.setErrors(errors);
-            controller.setPromptType("error");
-            controller.displayErrors();
-            errorPopup.setAlwaysOnTop(true);
-            errorPopup.showAndWait();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            errors.clear();
         }
     }
 

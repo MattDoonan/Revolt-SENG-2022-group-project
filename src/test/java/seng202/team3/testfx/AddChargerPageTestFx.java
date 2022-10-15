@@ -1,6 +1,10 @@
 package seng202.team3.testfx;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.testfx.api.FxAssert.verifyThat;
 
 import java.util.List;
 
@@ -8,12 +12,15 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.testfx.api.FxRobotException;
+import org.testfx.matcher.control.LabeledMatchers;
 
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import seng202.team3.data.database.SqlInterpreter;
@@ -89,7 +96,8 @@ public class AddChargerPageTestFx extends TestFxBase {
         GeoLocationHandler.setCoordinate(new Coordinate(-43.60, 172.572,
                 "Trial location"));
         clickOn("#saveButton");
-        clickOn("#okay");
+
+        verifyThat("#invalidChargerLabel", Node::isVisible);
     }
 
     /**
@@ -131,10 +139,9 @@ public class AddChargerPageTestFx extends TestFxBase {
         write("123.0");
         clickOn("#saveButton");
 
-        // Check for no error popup
-        assertThrows(FxRobotException.class, () -> {
-            clickOn("#prompt");
-        });
+        // Charger edit window has closed
+        List<Window> ws = Stage.getWindows();
+        assertEquals(0, ws.size());
     }
 
 }

@@ -165,8 +165,8 @@ public abstract class MapHandler {
                 javaScriptConnector.call("initMap",
                         GeoLocationHandler.getCoordinate().getLat(),
                         GeoLocationHandler.getCoordinate().getLon(),
-                        GeoLocationHandler
-                                .getCoordinate() != GeoLocationHandler.DEFAULT_COORDINATE);
+                        MapHandler.getLocationAccepted() != null
+                                && MapHandler.getLocationAccepted());
                 // throw new JSException("NO INTERNET"); // For 'no internet connection'
             } catch (JSException e) {
                 if (javaScriptConnector != null) {

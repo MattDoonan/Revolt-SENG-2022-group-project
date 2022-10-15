@@ -1,6 +1,8 @@
 package seng202.team3.testfx;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 
@@ -13,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -143,7 +146,7 @@ public class AdminPageTestFx extends TestFxBase {
             release(KeyCode.DOWN);
         }
         clickOn("#updatePermissions");
-        clickOn("#okay");
+        assertFalse(((Button) find("#updatePermissions")).getBorder().isEmpty());
     }
 
     /**
@@ -157,7 +160,8 @@ public class AdminPageTestFx extends TestFxBase {
         press(KeyCode.UP);
         release(KeyCode.UP);
         clickOn("#delete");
-        clickOn("#okay");
+
+        assertFalse(((Button) find("#delete")).getBorder().isEmpty());
     }
 
     /**

@@ -199,9 +199,6 @@ public class MainController {
         manage.makeAllChargers();
         manage.setPosition();
         initialRange();
-        if (MapHandler.getLocationAccepted() == null && MapHandler.isMapRequested()) {
-            getMapController().getLocation();
-        }
 
         if (GeoLocationHandler
                 .getCoordinate() == GeoLocationHandler.DEFAULT_COORDINATE) {
@@ -211,8 +208,9 @@ public class MainController {
             manage.setDistance(changeDistance.getValue() * buffer);
             distanceDisplay.setSelected(true);
         }
-        updateChargerDisplay();
-        change();
+
+        MenuController.getController().updateChargerDisplay();
+        MenuController.getController().change();
 
     }
 
@@ -473,23 +471,24 @@ public class MainController {
         executeSearch();
     }
 
-
     /**
      * Swaps the carpark cost boxes if both are selected
+     * 
      * @param e the action event
      */
     public void cparkCostSwap(ActionEvent e) {
         if (e.getSource().toString().contains("withoutCarparkCost")
-            && withCarparkCost.isSelected()) {
+                && withCarparkCost.isSelected()) {
             withCarparkCost.setSelected(false);
         } else if (e.getSource().toString().contains("withCarparkCost")
-            && withoutCarparkCost.isSelected()) {
+                && withoutCarparkCost.isSelected()) {
             withoutCarparkCost.setSelected(false);
         }
     }
 
     /**
      * Swaps the open24Hours boxes if both are selected
+     * 
      * @param e the action event
      */
     public void open24HoursSwap(ActionEvent e) {
@@ -504,6 +503,7 @@ public class MainController {
 
     /**
      * Swaps the attraction boxes if both are selected
+     * 
      * @param e the action event
      */
     public void attractionSwap(ActionEvent e) {
@@ -518,6 +518,7 @@ public class MainController {
 
     /**
      * Swaps the charging cost boxes if both are selected
+     * 
      * @param e the action event
      */
     public void chargingCostSwap(ActionEvent e) {
@@ -529,6 +530,5 @@ public class MainController {
             noChargingCost.setSelected(false);
         }
     }
-
 
 }

@@ -53,11 +53,15 @@ public class MainListChangingTestFX extends TestFxBase {
         Parent page = loader.load();
         MapHandler.resetPermission();
         MapHandler.setLocationAccepted(true);
+        MapHandler.setMapRequested(false);
         initState(loader, stage);
         Scene scene = new Scene(page);
         stage.setScene(scene);
         stage.show();
         controller.getManager().resetQuery();
+
+        controller.getManager().makeAllChargers();
+        controller.updateChargerDisplay();
     }
 
     /**

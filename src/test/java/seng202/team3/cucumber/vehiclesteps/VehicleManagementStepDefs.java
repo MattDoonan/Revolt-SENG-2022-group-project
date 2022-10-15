@@ -2,6 +2,8 @@ package seng202.team3.cucumber.vehiclesteps;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.testfx.api.FxAssert.verifyThat;
 
 import io.cucumber.java.AfterAll;
 import io.cucumber.java.Before;
@@ -14,7 +16,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.tools.Tool;
+
 import javafx.application.Platform;
+import javafx.scene.Node;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import seng202.team3.cucumber.CucumberFxBase;
@@ -22,10 +32,9 @@ import seng202.team3.data.database.ComparisonType;
 import seng202.team3.data.database.Query;
 import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
-import seng202.team3.data.entity.EntityType;
 import seng202.team3.data.entity.Entity;
+import seng202.team3.data.entity.EntityType;
 import seng202.team3.data.entity.Vehicle;
-import seng202.team3.gui.ErrorController;
 import seng202.team3.gui.GarageController;
 import seng202.team3.gui.MainWindow;
 import seng202.team3.gui.MapHandler;
@@ -160,14 +169,13 @@ public class VehicleManagementStepDefs extends CucumberFxBase {
 
     @Then("I can see the vehicle in the garage")
     public void iCanSeeTheVehicleInTheGarage() {
-        assertTrue(controller.getManage().getData().size() == 1);
+        assertEquals(1, controller.getManage().getData().size());
     }
 
     @Then("I am informed my input is invalid")
     public void iIsInvalid() {
-        // clickOn("#close");
-        ErrorController err = (ErrorController) MainWindow.getController();
-        assertTrue(err.getErrors().size() > 0);
+        // At least one tooltip visible
+        verifyThat("#invalidVehicle", Node::isVisible);
     }
 
     @Given("I have a vehicle in the garage")
@@ -179,7 +187,7 @@ public class VehicleManagementStepDefs extends CucumberFxBase {
         db.writeVehicle(v);
 
         controller.getManage().getAllVehicles();
-        assertTrue(controller.getManage().getData().size() == 1);
+        assertEquals(1, controller.getManage().getData().size());
         iNavigateToTheVehicleScreen();
     }
 

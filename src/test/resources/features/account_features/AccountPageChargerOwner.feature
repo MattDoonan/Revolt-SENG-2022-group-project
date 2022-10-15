@@ -23,6 +23,6 @@ Feature: User checking there account information
 
   Scenario: (AT_50) A user wants to delete there account
     Given I navigate to the account screen
-    When The user confirms to delete there account
+    When The user confirms to delete their account
     Then The users account has been deleted as well as chargers and vehicles
 
