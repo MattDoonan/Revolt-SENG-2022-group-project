@@ -186,7 +186,8 @@ public class MapViewController extends MapHandler {
      * @param coordinate the coordinate which is clicked
      */
     public void makeCoordinate(Coordinate coordinate) {
-        if (Boolean.TRUE.equals(MapHandler.isMapRequested())) {
+        if (Boolean.TRUE.equals(MapHandler.isMapRequested())
+                && Boolean.TRUE.equals(MapHandler.getLocationAccepted())) {
             javaScriptConnector.call("relocate", coordinate.getLat(), coordinate.getLon(),
                     Boolean.TRUE.equals(MapHandler.getLocationAccepted()));
 
