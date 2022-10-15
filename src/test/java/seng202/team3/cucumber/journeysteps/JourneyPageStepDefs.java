@@ -30,7 +30,7 @@ import java.util.List;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class JourneyPageStepDefs extends CucumberFxBase{
+public class JourneyPageStepDefs extends CucumberFxBase {
 
     static SqlInterpreter db;
 
@@ -112,6 +112,7 @@ public class JourneyPageStepDefs extends CucumberFxBase{
     @And("I am logged out")
     public void iAmLoggedOut() {
         if (UserManager.getUser() != UserManager.getGuest()) {
+            clickOn("#accountMenu");
             clickOn("#loginSignout");
         }
         assertEquals(UserManager.getGuest(), UserManager.getUser());
@@ -119,6 +120,7 @@ public class JourneyPageStepDefs extends CucumberFxBase{
 
     @And("I log in with username: {string} password: {string}")
     public void iAmLoggedInWithUsernamePassword(String username, String password) {
+        clickOn("#accountMenu");
         clickOn("#loginSignout");
         clickOn("#loginEmailField");
         write(username);
@@ -129,7 +131,7 @@ public class JourneyPageStepDefs extends CucumberFxBase{
 
     @When("I navigate to the account screen")
     public void iNavigateToTheAccountScreen() {
-        clickOn("#journeyButton");
+        clickOn("JOURNEY");
     }
 
     @Given("The user has journeys to view")
@@ -140,7 +142,7 @@ public class JourneyPageStepDefs extends CucumberFxBase{
 
     @When("The user is on the accountPage")
     public void onAccountPage() {
-        clickOn("#journeyButton");
+        clickOn("JOURNEY");
     }
 
     @Then("The user can view a list of previous journeys")
@@ -151,8 +153,9 @@ public class JourneyPageStepDefs extends CucumberFxBase{
 
     @Given("The user has no previous journeys")
     public void noPreviousJourneys() throws IOException {
-        List<Entity> journeys = SqlInterpreter.getInstance().readData(new QueryBuilderImpl().withSource(EntityType.JOURNEY)
-                .withFilter("userid", "1", ComparisonType.EQUAL).build());
+        List<Entity> journeys = SqlInterpreter.getInstance()
+                .readData(new QueryBuilderImpl().withSource(EntityType.JOURNEY)
+                        .withFilter("userid", "1", ComparisonType.EQUAL).build());
         assertTrue(journeys.size() == 0);
     }
 
@@ -180,8 +183,9 @@ public class JourneyPageStepDefs extends CucumberFxBase{
     public void checkIfSaved() throws IOException {
         TableView table = (TableView) find("#previousJourneyTable");
         assertEquals(table.getItems().get(0), testJourneyOne);
-        List<Entity> journeys = SqlInterpreter.getInstance().readData(new QueryBuilderImpl().withSource(EntityType.JOURNEY)
-                .withFilter("userid", "1", ComparisonType.EQUAL).build());
+        List<Entity> journeys = SqlInterpreter.getInstance()
+                .readData(new QueryBuilderImpl().withSource(EntityType.JOURNEY)
+                        .withFilter("userid", "1", ComparisonType.EQUAL).build());
         assertEquals(1, journeys.size());
 
     }
@@ -193,7 +197,7 @@ public class JourneyPageStepDefs extends CucumberFxBase{
         controller.getManager().setSelectedJourney(testJourneyOne);
         controller.getManager().saveJourney();
         testJourneyOne.setId(0);
-        clickOn("#journeyButton");
+        clickOn("JOURNEY");
     }
 
     @When("The user makes the previous journey")
@@ -211,11 +215,10 @@ public class JourneyPageStepDefs extends CucumberFxBase{
     public void prevInDatabase() throws IOException {
         TableView table = (TableView) find("#previousJourneyTable");
         assertEquals(table.getItems().get(1), testJourneyOne);
-        List<Entity> journeys = SqlInterpreter.getInstance().readData(new QueryBuilderImpl().withSource(EntityType.JOURNEY)
-                .withFilter("userid", "1", ComparisonType.EQUAL).build());
+        List<Entity> journeys = SqlInterpreter.getInstance()
+                .readData(new QueryBuilderImpl().withSource(EntityType.JOURNEY)
+                        .withFilter("userid", "1", ComparisonType.EQUAL).build());
         assertEquals(2, journeys.size());
     }
-
-
 
 }

@@ -105,8 +105,8 @@ public class NavbarTestFx extends TestFxBase {
         return Stream.of(
                 Arguments.of("#accountPage", "#editAccountButton"),
                 Arguments.of("GARAGE", "#openUpdate"),
-                Arguments.of("#journeyButton", "#previousJourneyTable"),
-                Arguments.of("#menuButton", "#chargerListPane"));
+                Arguments.of("JOURNEY", "#previousJourneyTable"),
+                Arguments.of("HOME", "#chargerListPane"));
     }
 
     @ParameterizedTest
