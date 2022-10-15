@@ -13,7 +13,7 @@ cucumber:
 testfx:
   stage: test
   script:
-    - mvn -B clean test -P headlessTests -Dtest="**/testfx/**/JourneyTestFx.java" -Dcheckstyle.skip=true
+    - mvn -B clean test -P headlessTests -Dtest="**/testfx/**" -Dcheckstyle.skip=true
 generate_artifacts:
   stage: deploy
   script:
