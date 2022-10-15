@@ -219,10 +219,9 @@ public class JourneyTestFx extends TestFxBase {
      */
     @Test
     public void resetJourneyTest() throws IOException {
-        setUpJourney();
-        journeyController.getManager().setSelectedJourney(testJourneyOne);
+        loadJourneyTest();
         clickOn("#resetJourney");
-        assertEquals(0, journeyController.getManager().getSelectedJourney().getStops().size());
+        assertEquals("", ((TextField) find("#tripName")).getText());
     }
 
     /**

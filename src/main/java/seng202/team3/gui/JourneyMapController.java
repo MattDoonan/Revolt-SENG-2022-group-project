@@ -103,6 +103,9 @@ public class JourneyMapController extends MapHandler {
      * with radius of vehicle range
      */
     public void addCircle() {
+        if (Boolean.FALSE.equals(MapHandler.isMapRequested())) {
+            return;
+        }
         Coordinate coord = journeyController.getManager().getCurrentCoordinate();
         javaScriptConnector.call("addCircle", coord.getLat(), coord.getLon(),
                 journeyController.getManager().getDesiredRange() * 1000);
