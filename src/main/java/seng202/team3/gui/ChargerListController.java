@@ -166,11 +166,11 @@ public class ChargerListController {
             // Changes Hover style
             add.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET,
                     event -> add.setStyle("-fx-background-color:#FFF8EB;"
-                    + "-fx-border-color: transparent transparent gray transparent;"));
+                    + "-fx-border-color: transparent transparent #253237 transparent;"));
             // Changes off hover style
             add.addEventHandler(MouseEvent.MOUSE_EXITED_TARGET,
-                    event -> add.setStyle("-fx-background-color:#FFFFFF;"
-                    + "-fx-border-color: transparent transparent gray transparent;"));
+                    event -> add.setStyle("-fx-background-color:#FCFCFC;"
+                    + "-fx-border-color: transparent transparent #253237 transparent;"));
             // Adds the HBox to the main VBox
             chargerTable.getChildren().add(add);
         }

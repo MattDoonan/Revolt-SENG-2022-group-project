@@ -7,11 +7,11 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<SplitPane dividerPositions="0.5, 0.5" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefWidth="420.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.ChargerListController">
+<SplitPane dividerPositions="0.5, 0.5" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefWidth="420.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.ChargerListController">
    <items>
       <ScrollPane hbarPolicy="NEVER" maxHeight="180.0" minHeight="180.0" prefWidth="420.0">
          <content>
-            <HBox fx:id="displayInfo" maxHeight="50.0" onMouseClicked="#editCharger" prefWidth="420.0" spacing="20.0" style="-fx-background-color: #FFFFFF;">
+            <HBox fx:id="displayInfo" maxHeight="50.0" onMouseClicked="#editCharger" prefWidth="420.0" spacing="20.0" style="-fx-background-color: #FCFCFC;">
                <padding>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </padding>
@@ -21,7 +21,7 @@
       <Button id="Inherit" fx:id="Inherit" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#largeChargerView" text="↓" />
       <ScrollPane hbarPolicy="NEVER" maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefHeight="200.0" prefWidth="420.0" style="-fx-background-color: white;">
          <content>
-            <VBox fx:id="chargerTable" prefWidth="420.0" style="-fx-background-color: #FFFFFF; -fx-fill-width: true;" />
+            <VBox fx:id="chargerTable" prefWidth="420.0" style="-fx-background-color: #FCFCFC; -fx-fill-width: true;" />
          </content>
       </ScrollPane>
    </items>

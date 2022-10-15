@@ -61,24 +61,6 @@
 	-fx-background-color: transparent;
 }
 
-.reg-button {
-	background-color: #ffffff;
-	-fx-background-color: #ffffff;
-	border-color: #2b2d42;
-	-fx-border-color: #2b2d42;
-	border-width: 0.5px;
-	-fx-border-width: 0.5px;
-}
-
-.reg-button:hover {
-	background-color: #ffeff2;
-	-fx-background-color: #ffeff2;
-	border-color: #2b2d42;
-	-fx-border-color: #2b2d42;
-	border-width: 0.5px;
-	-fx-border-width: 0.5px;
-}
-
 #displayInfo {
 	background-color: #d80032;
 	-fx-background-color: #d80032;
@@ -173,5 +155,5 @@
 }
 
 #mainSidepane {
-	-fx-border-color: #a9a9a9;
+	-fx-border-color: transparent, transparent, transparent #a9a9a9;
 }
