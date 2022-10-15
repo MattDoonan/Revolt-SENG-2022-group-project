@@ -26,14 +26,14 @@
 
 .root .scroll-bar:vertical *.increment-button,
 .scroll-bar:vertical *.decrement-button {
-	color: white;
-	-fx-color: white;
+	color: #FCFCFC;
+	-fx-color: #FCFCFC;
 }
 
 .root .scroll-bar:horizontal *.increment-button,
 .scroll-bar:horizontal *.decrement-button {
-	color: white;
-	-fx-color: white;
+	color: #FCFCFC;
+	-fx-color: #FCFCFC;
 }
 
 #menu-bar {
@@ -47,14 +47,14 @@
 	-fx-background-color: #c2313b;
 	font-size: 12px;
 	-fx-font-size: 12px;
-	-fx-color: #ffffff;
+	-fx-color: #FCFCFC;
 }
 
 .menu-bar-btn:hover {
 	-fx-text-fill: white;
 	cursor: hand;
 	-fx-cursor: hand;
-	-fx-color: #FFFFFF;
+	-fx-color: #FCFCFC;
 }
 
 #accountMenu {
@@ -85,7 +85,7 @@
 }
 
 .split-pane {
-	-fx-background-color: #FFFFFF;
+	-fx-background-color: #FCFCFC;
 }
 
 .split-pane *.split-pane-divider {
@@ -93,5 +93,5 @@
 }
 
 #menuWindow {
-	-fx-background-color: #FFFFFF;
+	-fx-background-color: #FCFCFC;
 }

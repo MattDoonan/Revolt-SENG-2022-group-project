@@ -1,95 +1,67 @@
 /* Adapted from dx.dragan.ba */
 
-* {
-	-fx-primary-color: #007acc;
-	-fx-secondary-color: #4b6eaf;
-	accent-color: #b6ff00;
-	-fx-accent-color: #b6ff00;
-	-fx-grey-color: #b9b9b9;
-	-fx-light-grey-color: #d1d1d1;
-	-fx-lightest-grey-color: #f9f9fb;
-
-	-fx-focus-color: -fx-secondary-color;
+.table-view {
+	-fx-background-color: #FFF8EB;
+	-fx-border-color: transparent;
 }
 
-.table-button {
-	background-color: -fx-primary-color;
-	-fx-background-color: -fx-primary-color;
-	cursor: hand;
-	-fx-cursor: hand;
-}
-.table-button:hover {
-	background-color: transparent;
-	-fx-background-color: transparent;
-}
 .table-view {
 	border-color: transparent;
 	-fx-border-color: transparent;
 	background-color: transparent;
 	-fx-background-color: transparent;
 }
-.table-view .column-header-background,
-.table-view .column-header-background .filler,
-.table-view .corner {
-	background-color: transparent;
-	-fx-background-color: transparent;
-}
-.table-view .column-header {
-	background-color: -fx-light-grey-color;
-	-fx-background-color: -fx-light-grey-color;
-	border-color: -fx-grey-color;
-	-fx-table-cell-border-color: -fx-grey-color;
-}
-.table-view .column-header .label {
-	font-weight: bold;
-	-fx-font-weight: bold;
-	-fx-alignment: center-left;
+
+.table-view:hover {
+	-fx-cursor: OPEN_HAND;
 }
 
-.table-row-cell:filled {
-	background-color: transparent;
-	-fx-background-color: transparent;
-	border-color: transparent -fx-lightest-grey-color -fx-lightest-grey-color -fx-lightest-grey-color,
-		transparent;
-	-fx-border-color: transparent -fx-lightest-grey-color -fx-lightest-grey-color -fx-lightest-grey-color,
-		transparent;
-	-fx-border-insets: 0, 1;
-}
-.table-row-cell:empty {
-	background-color: transparent;
-	-fx-background-color: transparent;
-}
-.table-row-cell:filled:hover {
-	background-color: -fx-light-grey-color;
-	-fx-background-color: -fx-light-grey-color;
-}
-.table-row-cell:filled:selected:hover {
-	background-color: -fx-light-grey-color;
-	-fx-background-color: -fx-light-grey-color;
-}
-.table-row-cell:filled:selected {
-	background-color: #eaeaea;
-	-fx-background-color: #eaeaea;
-	-fx-background-insets: 0;
-	-fx-background-radius: 0;
-}
-.table-row-cell:filled:selected .table-cell {
-	-fx-text-fill: black;
-}
-.table-view .cell:filled {
-	-fx-cell-size: 30;
-	-fx-alignment: center-left;
-}
-.check-box-table-cell > .check-box:selected .box .mark {
-	background-color: white;
-	-fx-background-color: white;
-}
-.check-box-table-cell > .check-box:selected .box {
-	background-color: -fx-accent-color;
-	-fx-background-color: -fx-accent-color;
-}
 .table-view .placeholder .label {
 	-fx-text-fill: red;
-	padding: 20px;
-	-fx-padding: 20px;
+	padding:30px;
+	-fx-padding: 30px;
 }
+
+.menu {
+	-fx-font-size: 13px;
+}
+
+.check-box {
+	-fx-font-size: 13px;
+}
+
+.slider {
+	-fx-font-size: 13px;
+}
+
+.menu-item {
+	-fx-font-size: 13px;
+}
+
+#searchCharger {
+	-fx-background-color: #FFFFFF;
+	-fx-border-color: #a9a9a9;
+}
+
+#searchCharger:hover {
+	-fx-cursor: TEXT;
+}
+
+.tableMenu {
+	-fx-background-color: #FFFFFF;
+	-fx-border-color: #a9a9a9;
+}
+
+.tableMenu:hover {
+	-fx-cursor: OPEN_HAND;
+}
+
+#updateTable {
+	-fx-background-color: #FFFFFF;
+	-fx-border-color: #a9a9a9;
+}
+
+#updateTable:hover {
+	-fx-cursor: OPEN_HAND;
+}
+

@@ -1,6 +1,6 @@
 #Inherit {
-    -fx-background-color: #FFFFFF;
-    -fx-border-color: #a9a9a9;
+    -fx-background-color: #c2313b;
+    -fx-border-color: #000000;
 }
 
 #Inherit:hover {
@@ -37,20 +37,11 @@
     -fx-cursor: OPEN_HAND;
 }
 
-#searchCharger {
+.text-field {
     -fx-background-color: #FFFFFF;
     -fx-border-color: #a9a9a9;
 }
 
-#searchCharger:hover{
-    -fx-cursor: Text;
-}
-
-#batteryPercent {
-    -fx-background-color: #FFFFFF;
-    -fx-border-color: #a9a9a9;
-}
-
-#batteryPercent:hover{
+.text-field:hover{
     -fx-cursor: Text;
 }

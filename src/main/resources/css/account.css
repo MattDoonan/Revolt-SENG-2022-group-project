@@ -1,0 +1,24 @@
+.split-pane {
+    -fx-background-color: #FCFCFC;
+}
+
+.button {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #a9a9a9;
+}
+
+.button:hover {
+    -fx-cursor: OPEN_HAND;
+}
+
+#accountName {
+    -fx-font-size: 40px;
+}
+
+#accountEmail {
+    -fx-font-size: 28px;
+}
+
+#accountPassword {
+    -fx-font-size: 13px;
+}

@@ -162,10 +162,6 @@ public class AccountController {
         String notImplementedYet = "Not implemented yet";
         accountName.setText(user.getAccountName());
         accountEmail.setText(user.getEmail());
-        distanceTravelled.setText(notImplementedYet);
-        numberStops.setText(notImplementedYet);
-        carbonSaved.setText(notImplementedYet);
-        mostViewed.setText(notImplementedYet);
     }
 
     /**

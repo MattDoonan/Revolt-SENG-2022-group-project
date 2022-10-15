@@ -43,8 +43,8 @@
                         </ImageView>
                         <MenuButton id="accountMenu" fx:id="accountMenu" contentDisplay="CENTER" layoutX="6.0" layoutY="42.0" minWidth="100.0" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" prefWidth="100.0" styleClass="menu-bar-btn" text="  ACCOUNT" textFill="WHITE">
                           <items>
-                            <MenuItem fx:id="accountPage" mnemonicParsing="false" onAction="#loadAccountScreen" text="Account Page" />
-                            <MenuItem fx:id="loginSignout" mnemonicParsing="false" onAction="#loginOut" text="Login" />
+                            <MenuItem fx:id="accountPage" mnemonicParsing="false" onAction="#loadAccountScreen" text="ACCOUNT PAGE" />
+                            <MenuItem fx:id="loginSignout" mnemonicParsing="false" onAction="#loginOut" text="LOGIN" />
                           </items>
                            <font>
                               <Font size="12.0" />
