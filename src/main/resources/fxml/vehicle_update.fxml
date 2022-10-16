@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="497.0" prefWidth="337.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.VehicleUpdateController">
+<AnchorPane id="background" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="497.0" prefWidth="337.0" style="-fx-background-color: #ffffff;" stylesheets="@../css/popupStuff.css" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.VehicleUpdateController">
     <children>
       <Label fx:id="invalidVehicle" layoutX="75.0" layoutY="8.0" text="Invalid information entered" textFill="RED" visible="false">
          <font>
@@ -24,8 +24,8 @@
       </Label>
       <GridPane layoutX="13.0" layoutY="39.0" prefHeight="288.0" prefWidth="310.0">
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="190.0" minWidth="10.0" prefWidth="139.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="153.0" minWidth="10.0" prefWidth="138.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="190.0" minWidth="10.0" prefWidth="134.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="203.0" minWidth="10.0" prefWidth="176.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -75,7 +75,7 @@
                   <Insets left="7.0" />
                </padding>
             </Label>
-            <ComboBox fx:id="connectorType" onAction="#enableConnectorBtn" prefHeight="26.0" prefWidth="150.0" promptText="Connector Type" GridPane.columnIndex="1" GridPane.rowIndex="5">
+            <ComboBox fx:id="connectorType" onAction="#enableConnectorBtn" prefHeight="26.0" prefWidth="206.0" promptText="Connector Type" GridPane.columnIndex="1" GridPane.rowIndex="5">
                <items>
                   <FXCollections fx:factory="observableArrayList">
                      <String fx:id="Type_1_Teth" fx:value="Type 1 Tethered" />

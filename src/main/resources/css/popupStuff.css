@@ -1,0 +1,37 @@
+.button {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #a9a9a9;
+}
+
+.button:hover {
+    -fx-cursor: OPEN_HAND;
+}
+
+.combo-box {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #a9a9a9;
+    -fx-font-size: 13px;
+}
+
+.combo-box:hover {
+    -fx-cursor: OPEN_HAND;
+}
+
+.text-field {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #a9a9a9;
+}
+
+.text-field:hover {
+    -fx-cursor: TEXT;
+}
+
+#background {
+    -fx-background-color: #FCFCFC;
+    -fx-border-color: #a9a9a9;
+}
+
+.Vbox {
+    -fx-background-color: #FCFCFC;
+    -fx-border-color: #a9a9a9;
+}
