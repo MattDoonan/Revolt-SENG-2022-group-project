@@ -62,6 +62,12 @@ public class MenuController {
     private AnchorPane accountBox;
 
     /**
+     * Journey button box
+     */
+    @FXML
+    private AnchorPane journeyBox;
+
+    /**
      * The stage the application runs on
      */
     private Stage stage;
@@ -128,6 +134,10 @@ public class MenuController {
             controller.init(stage, menuWindow);
             MainWindow.setController(controller);
             logManager.info("Switched to Home Screen");
+            accountBox.setStyle(NORMAL_COLOUR);
+            journeyBox.setStyle(NORMAL_COLOUR);
+            garageBox.setStyle(NORMAL_COLOUR);
+            homeBox.setStyle(ACTIVE_COLOUR);
         } catch (IOException e) {
             logManager.error(e.getMessage());
         }
@@ -181,6 +191,7 @@ public class MenuController {
         initHome();
 
         accountBox.setStyle(NORMAL_COLOUR);
+        journeyBox.setStyle(NORMAL_COLOUR);
         garageBox.setStyle(NORMAL_COLOUR);
         homeBox.setStyle(ACTIVE_COLOUR);
     }
@@ -204,6 +215,7 @@ public class MenuController {
                 MainWindow.setController(garageController);
                 logManager.info("Switched to Garage screen");
                 homeBox.setStyle(NORMAL_COLOUR);
+                journeyBox.setStyle(NORMAL_COLOUR);
                 accountBox.setStyle(NORMAL_COLOUR);
                 garageBox.setStyle(ACTIVE_COLOUR);
             }
@@ -294,6 +306,7 @@ public class MenuController {
                 MainWindow.setController(accController);
                 logManager.info("Switched to Account screen");
                 homeBox.setStyle(NORMAL_COLOUR);
+                journeyBox.setStyle(NORMAL_COLOUR);
                 garageBox.setStyle(NORMAL_COLOUR);
                 accountBox.setStyle(ACTIVE_COLOUR);
 
@@ -352,6 +365,10 @@ public class MenuController {
             journeyController.setBorderPane(menuWindow);
             menuWindow.setCenter(journeyViewParent);
             logManager.info("Switched to Journeys Screen");
+            homeBox.setStyle(NORMAL_COLOUR);
+            journeyBox.setStyle(ACTIVE_COLOUR);
+            garageBox.setStyle(NORMAL_COLOUR);
+            accountBox.setStyle(NORMAL_COLOUR);
         } catch (IOException e) {
             logManager.error(e.getMessage());
         }
