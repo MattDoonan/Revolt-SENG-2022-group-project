@@ -128,12 +128,17 @@ public class JavaScriptBridge {
                     HttpResponse.BodyHandlers.ofString());
             JSONObject result = (JSONObject) parser.parse(response.body());
             String unparsedString = (String) result.get("display_name");
-            List<String> addressArray = Arrays.asList(unparsedString.split(","));
-            if (addressArray.size() > 6) {
-                address += addressArray.get(0) + addressArray.get(1) + ", " + addressArray.get(2)
-                        + ", " + addressArray.get(3) + ", " + addressArray.get(6);
+            if (unparsedString != null) {
+                List<String> addressArray = Arrays.asList(unparsedString.split(","));
+                if (addressArray.size() > 6) {
+                    address += addressArray.get(0) + addressArray.get(1) + ", "
+                            + addressArray.get(2) + ", " + addressArray.get(3) + ", "
+                            + addressArray.get(6);
+                } else {
+                    address += unparsedString;
+                }
             } else {
-                address += unparsedString;
+                address += "Address";
             }
             addLocationName(address);
         } catch (IOException e) {

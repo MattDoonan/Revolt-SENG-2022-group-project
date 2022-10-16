@@ -56,7 +56,7 @@ public class JourneyManagerTest {
                 "jdbc:sqlite:./target/test-classes/test_database.db");
         SqlInterpreter.getInstance().defaultDatabase();
 
-        testCoordinateStart = new Coordinate(2.9342, 5.1247);
+        testCoordinateStart = new Coordinate(2.9342, 5.1247, "Hello");
         testCoordinateCharger = new Coordinate(2.9442, 5.1347);
         testCoordinateEnd = new Coordinate(2.9882, 5.1447);
 
