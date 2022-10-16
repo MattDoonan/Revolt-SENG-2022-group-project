@@ -350,9 +350,10 @@ public class JourneyController {
     @FXML
     public void setStart() {
         makeStart.setBorder(Border.EMPTY);
-        journeyManager.setCurrentCoordinate(GeoLocationHandler.getCoordinate());
+        journeyManager.setPosition();
         Coordinate position = journeyManager.getPosition();
         if (position != null && journeyManager.getSelectedJourney().getVehicle() != null) {
+            journeyManager.setCurrentCoordinate(GeoLocationHandler.getCoordinate());
             journeyManager.setDesiredRange(rangeSlider.getValue()
                     * journeyManager.getSelectedJourney().getVehicle().getMaxRange() / 100.0);
             position.setAddress(new JavaScriptBridge().makeLocationName());
@@ -379,6 +380,7 @@ public class JourneyController {
      */
     @FXML
     public void setDestination() {
+        journeyManager.setPosition();
         journeyManager.setCurrentCoordinate(GeoLocationHandler.getCoordinate());
 
         Coordinate prevPoint = null;
