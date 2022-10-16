@@ -9,9 +9,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit5.ApplicationTest;
+
 import seng202.team3.data.database.SqlInterpreter;
 import seng202.team3.gui.MainWindow;
-import seng202.team3.gui.MapHandler;
+import seng202.team3.gui.controller.map.MapHandler;
 
 /**
  * Allows TestFx to run through cucumber using static reference

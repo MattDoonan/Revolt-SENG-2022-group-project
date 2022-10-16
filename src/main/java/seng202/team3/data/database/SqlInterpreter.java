@@ -24,17 +24,22 @@ import javax.management.InstanceAlreadyExistsException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.javatuples.Triplet;
+import seng202.team3.data.database.csv.CsvInterpreter;
+import seng202.team3.data.database.util.ComparisonType;
+import seng202.team3.data.database.util.DataReader;
+import seng202.team3.data.database.util.Query;
+import seng202.team3.data.database.util.QueryBuilderImpl;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Connector;
 import seng202.team3.data.entity.Coordinate;
 import seng202.team3.data.entity.Entity;
-import seng202.team3.data.entity.EntityType;
 import seng202.team3.data.entity.Journey;
-import seng202.team3.data.entity.PermissionLevel;
 import seng202.team3.data.entity.Stop;
 import seng202.team3.data.entity.User;
 import seng202.team3.data.entity.Vehicle;
-import seng202.team3.logic.UserManager;
+import seng202.team3.data.entity.util.EntityType;
+import seng202.team3.data.entity.util.PermissionLevel;
+import seng202.team3.logic.manager.UserManager;
 
 /**
  * Class that interacts with the SQLite database

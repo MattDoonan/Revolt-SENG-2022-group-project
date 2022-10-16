@@ -14,7 +14,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
 import seng202.team3.gui.MainWindow;
-import seng202.team3.gui.MapHandler;
+import seng202.team3.gui.controller.map.MapHandler;
 
 /**
  * This is Morgan's Code designed to set up TestFX testing

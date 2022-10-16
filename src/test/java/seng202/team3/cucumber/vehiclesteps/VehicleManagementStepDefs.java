@@ -28,18 +28,18 @@ import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import seng202.team3.cucumber.CucumberFxBase;
-import seng202.team3.data.database.ComparisonType;
-import seng202.team3.data.database.Query;
-import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
+import seng202.team3.data.database.util.ComparisonType;
+import seng202.team3.data.database.util.Query;
+import seng202.team3.data.database.util.QueryBuilderImpl;
 import seng202.team3.data.entity.Entity;
-import seng202.team3.data.entity.EntityType;
 import seng202.team3.data.entity.Vehicle;
-import seng202.team3.gui.GarageController;
+import seng202.team3.data.entity.util.EntityType;
 import seng202.team3.gui.MainWindow;
-import seng202.team3.gui.MapHandler;
-import seng202.team3.gui.VehicleUpdateController;
-import seng202.team3.logic.UserManager;
+import seng202.team3.gui.controller.GarageController;
+import seng202.team3.gui.controller.VehicleUpdateController;
+import seng202.team3.gui.controller.map.MapHandler;
+import seng202.team3.logic.manager.UserManager;
 
 /**
  * Cucumber Tests designed to check acceptance tests of vehicle management

@@ -6,7 +6,9 @@ import com.opencsv.bean.CsvCustomBindByName;
 import com.opencsv.bean.CsvRecurse;
 import java.util.ArrayList;
 import java.util.List;
-import seng202.team3.logic.UserManager;
+import seng202.team3.data.entity.util.ConnectorConverter;
+import seng202.team3.data.entity.util.TimeLimitConverter;
+import seng202.team3.logic.manager.UserManager;
 
 /**
  * Representation of chargers that users can find and connect vehicles to

@@ -2,7 +2,7 @@ package seng202.team3.data.entity;
 
 import java.util.ArrayList;
 import java.util.List;
-import seng202.team3.logic.UserManager;
+import seng202.team3.logic.manager.UserManager;
 
 /**
  * Representation of a past or current Journey

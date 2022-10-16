@@ -9,6 +9,8 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import seng202.team3.gui.controller.MenuController;
+import seng202.team3.gui.controller.map.MapHandler;
 
 /**
  * Class starts the javaFX application window

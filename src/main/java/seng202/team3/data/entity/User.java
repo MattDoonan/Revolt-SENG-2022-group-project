@@ -1,5 +1,7 @@
 package seng202.team3.data.entity;
 
+import seng202.team3.data.entity.util.PermissionLevel;
+
 /**
  * Stores information about Users
  *

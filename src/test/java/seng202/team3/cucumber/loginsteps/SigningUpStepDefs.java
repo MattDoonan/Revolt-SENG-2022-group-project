@@ -19,17 +19,17 @@ import io.cucumber.java.en.When;
 import javafx.application.Platform;
 import javafx.scene.Node;
 import seng202.team3.cucumber.CucumberFxBase;
-import seng202.team3.data.database.ComparisonType;
-import seng202.team3.data.database.QueryBuilderImpl;
 import seng202.team3.data.database.SqlInterpreter;
-import seng202.team3.data.entity.EntityType;
-import seng202.team3.data.entity.PermissionLevel;
+import seng202.team3.data.database.util.ComparisonType;
+import seng202.team3.data.database.util.QueryBuilderImpl;
 import seng202.team3.data.entity.Entity;
 import seng202.team3.data.entity.User;
-import seng202.team3.gui.LoginSignupController;
+import seng202.team3.data.entity.util.EntityType;
+import seng202.team3.data.entity.util.PermissionLevel;
 import seng202.team3.gui.MainWindow;
-import seng202.team3.gui.MapHandler;
-import seng202.team3.logic.UserManager;
+import seng202.team3.gui.controller.LoginSignupController;
+import seng202.team3.gui.controller.map.MapHandler;
+import seng202.team3.logic.manager.UserManager;
 
 //TODO: find a way to include steps through common file
 /**
