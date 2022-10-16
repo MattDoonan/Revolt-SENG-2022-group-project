@@ -83,6 +83,11 @@ public class ChargerController {
     private ObservableList<Connector> connectors;
 
     /**
+     * A list of the connector ids to be deleted
+     */
+    private ArrayList<Integer> deletedConnectors = new ArrayList<>();
+
+    /**
      * Handler for error message tooltips
      */
     private ErrorHandler errors = new ErrorHandler();
@@ -166,7 +171,7 @@ public class ChargerController {
     private TextField lon;
 
     /**
-     * The lable for the connector section of the window
+     * The label for the connector section of the window
      */
     @FXML
     private Label connectorPageLabel;
@@ -482,6 +487,16 @@ public class ChargerController {
             newCharger.addConnector(connector);
         }
 
+        if (charger != null) {
+            for (Integer total : deletedConnectors) {
+                try {
+                    SqlInterpreter.getInstance().deleteData(EntityType.CONNECTOR, total);
+                } catch (IOException e) {
+                    logManager.error(e.getMessage());
+                }
+            }
+        }
+
         if (connectors.isEmpty()) {
             errors.show(CONN_NODE);
             addConnectorButton.setBorder(INVALID_STYLE);
@@ -583,6 +598,9 @@ public class ChargerController {
                 }
             }
             if (deletedValue != -1) {
+                if (connectors.get(deletedValue).getId() != 0) {
+                    deletedConnectors.add(connectors.get(deletedValue).getId());
+                }
                 connectors.remove(deletedValue);
             }
             connectorTable.refresh();
