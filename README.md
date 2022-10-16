@@ -45,7 +45,8 @@ you’ll need to re-enable it). To import your project:
 **Note:** *If you run into dependency issues when running the app or the Maven pop up doesn't appear then open the Maven sidebar and click the Refresh icon labeled 'Reimport All Maven Projects'.*
 
 ## Build Project
-1. Open a command line interface inside the project directory and run `mvn clean package` to build a .jar file. The file is located at target/revolt-1.0-SNAPSHOT.jar
+- Open a command line interface inside the project directory and run `mvn clean package` to build a .jar file. The file is located at target/revolt-1.0-SNAPSHOT.jar
+- Alternatively you can run mvn `mvn clean package -P headlessTests`. This will build the .jar file with TestFX running in the background instead of requiring you to not move your mouse while it runs
 
 ## Run App
 - If you haven't already, Build the project.
@@ -60,6 +61,22 @@ you’ll need to re-enable it). To import your project:
 
 ## Javadoc
 1. Open a command line interface inside the project directory and run `mvn javadoc:jar` to generate a folder of javadoc. The folder is located at target/apidocs
+
+##Known Bugs
+- When editing a vehicle any journeys attached to the vehicle won't update
+- Cursor indexing bug for car charge percentage on main screen upon overflow
+
+##Logins
+Admin:
+- Username: admin
+- Password: admin
+
+Charger Owner:
+- Username can be any charger owner eg: ChargeNet NZ
+- Password: demo
+
+Normal Users:
+- Create own account using signup functionality
 
 ## User Guide
 When oppening the application you should be presented with the home screen. The home screen is made up of an interactive map on the right, a simplified table viewer on the left, and a menu controller along the top which is persistant along all screens. The map can be viewed using the drag to move around and scroll to zoom in and out. Chargers on the map can be edited by hovering over and and clicking 'Edit Charger' where details can be changed in a popout menu. Your current location can be changed by clicking on the map. This may be useful in combination with filters for nearby chargers. There is a small menu along the top which can also be used to show a very simple route between two points, add chargers, edit chargers, and delete chargers. 
