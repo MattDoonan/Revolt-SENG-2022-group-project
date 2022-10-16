@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<BorderPane id="background" prefHeight="236.0" prefWidth="549.0" stylesheets="@../css/popupStuff.css" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.controller.charger.ConnectorEditController">
+<BorderPane id="connectorBackground" prefHeight="236.0" prefWidth="549.0" stylesheets="@../css/popupStuff.css" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.controller.charger.ConnectorEditController">
          <center>
                <GridPane prefHeight="187.0" prefWidth="392.0" BorderPane.alignment="CENTER">
                   <columnConstraints>

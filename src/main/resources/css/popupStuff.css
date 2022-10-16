@@ -31,6 +31,10 @@
     -fx-border-color: #a9a9a9;
 }
 
+#connectorBackground {
+    -fx-background-color: #FCFCFC;
+}
+
 .Vbox {
     -fx-background-color: #FCFCFC;
     -fx-border-color: #a9a9a9;
