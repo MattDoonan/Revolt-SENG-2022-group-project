@@ -35,3 +35,7 @@
     -fx-background-color: #FCFCFC;
     -fx-border-color: #a9a9a9;
 }
+
+.check-box {
+    -fx-cursor: OPEN_HAND;
+}
