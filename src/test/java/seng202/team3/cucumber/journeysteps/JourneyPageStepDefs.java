@@ -143,8 +143,8 @@ public class JourneyPageStepDefs extends CucumberFxBase {
         SqlInterpreter.getInstance().writeJourney(testJourneyOne);
     }
 
-    @When("The user is on the accountPage")
-    public void onAccountPage() {
+    @When("The user is on the journey page")
+    public void onJourneyPage() {
         clickOn("JOURNEY");
     }
 

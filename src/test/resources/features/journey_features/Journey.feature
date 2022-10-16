@@ -9,12 +9,12 @@ Feature: User planning a journey
 
   Scenario: (AT_24) A user wants to view the journeys they have made
     Given The user has journeys to view
-    When The user is on the accountPage
+    When The user is on the journey page
     Then The user can view a list of previous journeys
 
   Scenario: (AT_25) A user wants to view the journeys they have made
     Given The user has no previous journeys
-    When The user is on the accountPage
+    When The user is on the journey page
     Then The user cant view any journeys
 
   Scenario: (AT_26) A user wants to add a journey

@@ -41,6 +41,7 @@ import seng202.team3.testfx.TestFxBase;
  * @author Angus Kirtlan
  * @version 1.0.0, Oct 22
  */
+@Disabled
 public class JourneyTestFx extends TestFxBase {
 
     private JourneyController journeyController;
