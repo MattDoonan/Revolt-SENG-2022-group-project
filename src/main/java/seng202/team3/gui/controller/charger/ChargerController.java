@@ -414,9 +414,6 @@ public class ChargerController {
             newCharger.setDateOpened(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss")
                     .format(Date.from(Instant.now())));
         } else {
-            Coordinate location = charger.getLocation();
-            coordinate.setLat(location.getLat());
-            coordinate.setLon(location.getLon());
             newCharger.setOwnerId(charger.getOwnerId());
             newCharger.setDateOpened(charger.getDateOpened());
             newCharger.setId(charger.getId());
