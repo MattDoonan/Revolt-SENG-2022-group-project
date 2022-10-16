@@ -316,16 +316,24 @@
 					)
 				);
 			}
-			routeToCharger = L.Routing.control({
-				waypoints: coordinates,
-				serviceUrl: "https://tile.csse.canterbury.ac.nz/route/v1",
-				routeWhileDragging: true,
-				geocoder: new L.Control.Geocoder.Nominatim({
-					geocodingQueryParams: {
-						countrycodes: "nz",
-					},
-				}),
-			}).addTo(map);
+			if (!isJourney) {
+				routeToCharger = L.Routing.control({
+					waypoints: coordinates,
+					serviceUrl: "https://tile.csse.canterbury.ac.nz/route/v1",
+					routeWhileDragging: true,
+					geocoder: new L.Control.Geocoder.Nominatim({
+						geocodingQueryParams: {
+							countrycodes: "nz",
+						},
+					}),
+				}).addTo(map);
+			} else {
+				routeToCharger = L.Routing.control({
+					waypoints: coordinates,
+					serviceUrl: "https://tile.csse.canterbury.ac.nz/route/v1",
+					routeWhileDragging: false,
+				}).addTo(map);
+			}
 		}
 
 		/**

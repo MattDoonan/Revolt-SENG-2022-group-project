@@ -5,6 +5,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Arrays;
 import java.util.List;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -126,7 +127,14 @@ public class JavaScriptBridge {
             HttpResponse<String> response = client.send(request,
                     HttpResponse.BodyHandlers.ofString());
             JSONObject result = (JSONObject) parser.parse(response.body());
-            address += (String) result.get("display_name");
+            String unparsedString = (String) result.get("display_name");
+            List<String> addressArray = Arrays.asList(unparsedString.split(","));
+            if (addressArray.size() > 6) {
+                address += addressArray.get(0) + addressArray.get(1) + ", " + addressArray.get(2)
+                        + ", " + addressArray.get(3) + ", " + addressArray.get(6);
+            } else {
+                address += unparsedString;
+            }
             addLocationName(address);
         } catch (IOException e) {
             logManager.error(e.getMessage());

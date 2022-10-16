@@ -615,14 +615,12 @@ public class JourneyController {
                 nameBox.setText("\nStop:");
             }
             addressBox.setText("\n" + stops.get(i).getLocation().getAddress());
-            nameBox.setWrapText(true);
-            addressBox.setWrapText(true);
 
             VBox text = new VBox(nameBox,
                     addressBox,
                     new Text("\n" + dist + " km Distance"),
                     new Text("\n" + (int) remainingCharge + "% Battery Used\n"));
-            text.setMinHeight(150.0);
+            text.setMinHeight(150);
             journeyChargerTable.getChildren().add(text);
 
             lastStop = stops.get(i);
