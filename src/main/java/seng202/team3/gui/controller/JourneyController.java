@@ -622,7 +622,7 @@ public class JourneyController {
                     addressBox,
                     new Text("\n" + dist + " km Distance"),
                     new Text("\n" + (int) remainingCharge + "% Battery Used\n"));
-
+            text.setMinHeight(150.0);
             journeyChargerTable.getChildren().add(text);
 
             lastStop = stops.get(i);
