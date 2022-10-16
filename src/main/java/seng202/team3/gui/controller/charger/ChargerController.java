@@ -42,6 +42,8 @@ import seng202.team3.gui.util.ErrorHandler;
 import seng202.team3.gui.util.PromptPopUp;
 import seng202.team3.logic.manager.UserManager;
 import seng202.team3.logic.util.GeoLocationHandler;
+import seng202.team3.logic.util.JavaScriptBridge;
+
 
 /**
  * Allows you to edit a charger
@@ -366,7 +368,7 @@ public class ChargerController {
             }
             views.setText("" + charger.getViews());
         } else {
-            address.setText(prevCoordinate.getAddress());
+            address.setText(new JavaScriptBridge().makeLocationName());
             if (GeoLocationHandler.getCoordinate() != GeoLocationHandler.DEFAULT_COORDINATE) {
                 lat.setText(Double.toString(GeoLocationHandler.getCoordinate().getLat()));
                 lon.setText(Double.toString(GeoLocationHandler.getCoordinate().getLon()));
@@ -432,8 +434,8 @@ public class ChargerController {
             errors.show(NAME_NODE);
             name.setBorder(INVALID_STYLE);
             fail = true;
-        } else if (name.getText().length() > 15) {
-            errors.changeMessage(NAME_NODE, "Charger name cannot be longer than 15 characters.");
+        } else if (name.getText().length() > 50) {
+            errors.changeMessage(NAME_NODE, "Charger name cannot be longer than fifty characters.");
             name.setBorder(INVALID_STYLE);
             errors.show(NAME_NODE);
             fail = true;
@@ -446,7 +448,8 @@ public class ChargerController {
 
         try {
             newCharger.setTimeLimit(Double.parseDouble(time.getText()));
-            if (Double.parseDouble(time.getText()) > 1440) {
+            if (Double.parseDouble(time.getText()) > 1440
+                    && Double.parseDouble(time.getText()) != Double.parseDouble("Infinity")) {
                 errors.changeMessage(TIME_NODE, "Time limit cannot be longer than 24 hours.");
                 time.setBorder(INVALID_STYLE);
                 errors.show(TIME_NODE);
