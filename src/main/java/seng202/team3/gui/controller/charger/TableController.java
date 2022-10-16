@@ -264,7 +264,7 @@ public class TableController {
      * Maps charger to the hours open
      */
     @FXML
-    protected final TableColumn<Charger, Boolean> hoursCol = new TableColumn<>("Hours Open");
+    protected final TableColumn<Charger, Boolean> hoursCol = new TableColumn<>("is 24/7");
 
     /**
      * Maps charger to the num parks

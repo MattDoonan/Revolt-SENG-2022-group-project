@@ -120,12 +120,6 @@ public class AccountController {
     private BorderPane chargerTable;
 
     /**
-     * invalid account details error
-     */
-    @FXML
-    private Label invalidUpdateAccount;
-
-    /**
      * Boolean on if it is in administration view
      */
     private boolean isAdminView = false;
@@ -141,6 +135,13 @@ public class AccountController {
      */
     private static final Border INVALID_STYLE = new Border(
             new BorderStroke(Color.RED, BorderStrokeStyle.SOLID,
+                    CornerRadii.EMPTY, BorderWidths.DEFAULT));
+
+    /**
+     * Styling for invalid fields
+     */
+    private static final Border VALID_STYLE = new Border(
+            new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID,
                     CornerRadii.EMPTY, BorderWidths.DEFAULT));
 
     /**
@@ -290,7 +291,6 @@ public class AccountController {
         Boolean fail = checkUserDetails();
 
         if (Boolean.TRUE.equals(fail)) {
-            invalidUpdateAccount.setVisible(true);
             logManager.warn("Incorrect user details");
             return;
         }
@@ -313,6 +313,9 @@ public class AccountController {
                 manage.saveUser(user, UserManager
                         .encryptThisString(accountPassword.getText()));
                 UserManager.setUser(user);
+                accountEmail.setBorder(VALID_STYLE);
+                accountPassword.setBorder(VALID_STYLE);
+                accountName.setBorder(VALID_STYLE);
             }
             editDetails();
         } catch (IOException e) {
@@ -347,6 +350,8 @@ public class AccountController {
             accountEmail.setBorder(INVALID_STYLE);
             errors.show(EMAIL_NODE);
             fail = true;
+        } else {
+            accountEmail.setBorder(VALID_STYLE);
         }
         if (accountName.getText().isEmpty()) {
             accountName.setBorder(INVALID_STYLE);
@@ -357,11 +362,15 @@ public class AccountController {
             accountName.setBorder(INVALID_STYLE);
             errors.show(NAME_NODE);
             fail = true;
+        } else {
+            accountName.setBorder(VALID_STYLE);
         }
         if (accountPassword.getText().length() < 4 && accountPassword.getText().length() > 0) {
             accountPassword.setBorder(INVALID_STYLE);
             errors.show(PASSWORD_NODE);
             fail = true;
+        } else {
+            accountPassword.setBorder(VALID_STYLE);
         }
 
         return fail;
