@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="488.0" prefWidth="808.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.controller.AdminController">
+<BorderPane prefHeight="488.0" prefWidth="808.0" stylesheets="@../css/tableView.css" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.controller.AdminController">
    <top>
       <Label text="Administration Page" BorderPane.alignment="CENTER">
          <BorderPane.margin>
@@ -31,7 +31,7 @@
             <VBox prefHeight="49.0" prefWidth="120.0">
                <children>
                   <Label text="Permission Level:" />
-                  <MenuButton fx:id="menu" mnemonicParsing="false" prefHeight="24.0" prefWidth="150.0" text="Select...">
+                  <MenuButton fx:id="menu" mnemonicParsing="false" prefHeight="30.0" prefWidth="150.0" styleClass="tableMenu" text="Select...">
                     <items>
                       <MenuItem fx:id="user" mnemonicParsing="false" onAction="#updateMenuUser" text="User" />
                       <MenuItem fx:id="chargerOwner" mnemonicParsing="false" onAction="#updateMenuOwner" text="Charger Owner" />

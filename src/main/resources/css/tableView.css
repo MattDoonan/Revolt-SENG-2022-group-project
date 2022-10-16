@@ -38,12 +38,12 @@
 	-fx-font-size: 13px;
 }
 
-#searchCharger {
+.text-field {
 	-fx-background-color: #FFFFFF;
 	-fx-border-color: #a9a9a9;
 }
 
-#searchCharger:hover {
+.text-field:hover {
 	-fx-cursor: TEXT;
 }
 
@@ -56,12 +56,12 @@
 	-fx-cursor: OPEN_HAND;
 }
 
-#update {
+.button {
 	-fx-background-color: #FFFFFF;
 	-fx-border-color: #a9a9a9;
 }
 
-#update:hover {
+.button:hover {
 	-fx-cursor: OPEN_HAND;
 }
 
