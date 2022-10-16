@@ -20,7 +20,7 @@
 }
 
 .button:hover {
-    -fx-cursor: OPEN_HAND;
+    -fx-cursor: hand;
 }
 
 .btn-danger {
@@ -56,7 +56,7 @@
 }
 
 .menu-button:hover {
-    -fx-cursor: OPEN_HAND;
+    -fx-cursor: hand;
 }
 
 .table-view {

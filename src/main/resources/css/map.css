@@ -4,6 +4,6 @@
 }
 
 .button:hover {
-    -fx-cursor: OPEN_HAND;
+    -fx-cursor: hand;
     -fx-background-color: #F4F4F4;
 }

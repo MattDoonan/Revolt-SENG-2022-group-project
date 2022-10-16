@@ -33,7 +33,7 @@
 }
 
 .white-btn:hover {
-	-fx-cursor: OPEN_HAND;
+	-fx-cursor: hand;
 }
 
 .red-btn {
@@ -44,5 +44,5 @@
 }
 
 .red-btn:hover {
-	-fx-cursor: OPEN_HAND;
+	-fx-cursor: hand;
 }

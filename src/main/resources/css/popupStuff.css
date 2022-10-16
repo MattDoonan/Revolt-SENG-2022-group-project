@@ -4,7 +4,7 @@
 }
 
 .button:hover {
-    -fx-cursor: OPEN_HAND;
+    -fx-cursor: hand;
 }
 
 .combo-box {
@@ -14,7 +14,7 @@
 }
 
 .combo-box:hover {
-    -fx-cursor: OPEN_HAND;
+    -fx-cursor: hand;
 }
 
 .text-field {
@@ -41,5 +41,5 @@
 }
 
 .check-box {
-    -fx-cursor: OPEN_HAND;
+    -fx-cursor: hand;
 }

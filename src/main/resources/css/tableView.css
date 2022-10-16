@@ -1,7 +1,7 @@
 /* Adapted from dx.dragan.ba */
 
 .table-view {
-	-fx-background-color: #FFF8EB;
+	-fx-background-color: #fff8eb;
 	-fx-border-color: transparent;
 }
 
@@ -18,7 +18,7 @@
 
 .table-view .placeholder .label {
 	-fx-text-fill: red;
-	padding:30px;
+	padding: 30px;
 	-fx-padding: 30px;
 }
 
@@ -39,7 +39,7 @@
 }
 
 .text-field {
-	-fx-background-color: #FFFFFF;
+	-fx-background-color: #ffffff;
 	-fx-border-color: #a9a9a9;
 }
 
@@ -48,7 +48,7 @@
 }
 
 .tableMenu {
-	-fx-background-color: #FFFFFF;
+	-fx-background-color: #ffffff;
 	-fx-border-color: #a9a9a9;
 }
 
@@ -57,12 +57,11 @@
 }
 
 .button {
-	-fx-background-color: #FFFFFF;
+	-fx-background-color: #ffffff;
 	-fx-border-color: #a9a9a9;
 }
 
 .button:hover {
-	-fx-cursor: OPEN_HAND;
+	-fx-cursor: hand;
 	-fx-font-size: 13px;
 }
-

@@ -1,47 +1,47 @@
 #Inherit {
-    -fx-background-color: #c2313b;
-    -fx-border-color: #000000;
+	-fx-background-color: #c2313b;
+	-fx-border-color: #000000;
 }
 
 #Inherit:hover {
-    -fx-cursor: OPEN_HAND;
+	-fx-cursor: hand;
 }
 
 #mainSidepane {
-    -fx-border-color: transparent, transparent, transparent #a9a9a9;
+	-fx-border-color: transparent, transparent, transparent #a9a9a9;
 }
 
 #chargerListPane {
-    -fx-border-color: #a9a9a9;
+	-fx-border-color: #a9a9a9;
 }
 
 #filters {
-    -fx-background-color: #FFFFFF;
-    -fx-border-color: #a9a9a9;
+	-fx-background-color: #ffffff;
+	-fx-border-color: #a9a9a9;
 }
 
 #filters:hover {
-    -fx-cursor: OPEN_HAND;
+	-fx-cursor: hand;
 }
 
 .slider:hover {
-    -fx-cursor: OPEN_HAND;
+	-fx-cursor: hand;
 }
 
 #executeSearch {
-    -fx-background-color: #FFFFFF;
-    -fx-border-color: #a9a9a9;
+	-fx-background-color: #ffffff;
+	-fx-border-color: #a9a9a9;
 }
 
 #executeSearch:hover {
-    -fx-cursor: OPEN_HAND;
+	-fx-cursor: hand;
 }
 
 .text-field {
-    -fx-background-color: #FFFFFF;
-    -fx-border-color: #a9a9a9;
+	-fx-background-color: #ffffff;
+	-fx-border-color: #a9a9a9;
 }
 
-.text-field:hover{
-    -fx-cursor: Text;
+.text-field:hover {
+	-fx-cursor: Text;
 }
