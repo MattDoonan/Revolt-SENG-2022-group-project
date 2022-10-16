@@ -117,12 +117,6 @@ public class JourneyController {
     private MenuButton vehicles;
 
     /**
-     * Error text if route is invalid
-     */
-    @FXML
-    private Text errorText;
-
-    /**
      * Name for trip
      */
     @FXML
@@ -193,12 +187,6 @@ public class JourneyController {
      */
     @FXML
     private Button loadJourney;
-
-    /**
-     * Label if point is out of vehicle's range
-     */
-    @FXML
-    private Label errorLabel;
 
     /**
      * Handler for error message tooltips
@@ -462,9 +450,9 @@ public class JourneyController {
         if (journeyManager.getSelectedJourney().getEndPosition() != null
                 && journeyManager.getSelectedJourney().getStartPosition() != null) {
             distanceError = journeyManager.checkDistanceBetweenChargers();
-            errorText.setVisible(false);
+            mapController.hideErrorText();
             if (distanceError) {
-                errorText.setVisible(true);
+                mapController.showErrorText();
             }
             mapController.addRouteToScreen();
 
@@ -493,7 +481,7 @@ public class JourneyController {
         startLabel.setText("Start not set");
         endLabel.setText("End not set");
         tripName.clear();
-        errorText.setVisible(false);
+        mapController.hideErrorText();
         distanceError = false;
         rangeSlider.setDisable(false);
         vehicles.setDisable(false);
@@ -511,7 +499,7 @@ public class JourneyController {
     public void addCharger(Charger charger) {
         Stop stop = new Stop(charger);
         Boolean fail = false;
-        errorLabel.setVisible(false);
+        mapController.errorLabelHide();
         deleteJourney.setBorder(Border.EMPTY);
         if (!journeyManager.getSelectedJourney().getStops().isEmpty()) {
             if (journeyManager.getSelectedJourney().getStops()
@@ -523,8 +511,7 @@ public class JourneyController {
                     errors.changeMessage(DELETE_NODE, "Cannot add the same charger consecutively.");
                     deleteJourney.setBorder(INVALID_STYLE);
                     errors.show(DELETE_NODE);
-                    errorLabel.setText("Cannot add the same charger consecutively.");
-                    errorLabel.setVisible(true);
+                    mapController.showErrorLabel("Cannot add the same charger consecutively.");
                     fail = true;
                 }
             }
@@ -547,7 +534,7 @@ public class JourneyController {
      * @param coordinate the stop to be added
      */
     public void addStop(Coordinate coordinate) {
-        errorLabel.setVisible(false);
+        mapController.errorLabelHide();
         makeStart.setBorder(Border.EMPTY);
 
         if (journeyManager.getStart() == null) {
@@ -558,8 +545,7 @@ public class JourneyController {
             errors.changeMessage(START_NODE, "Cannot add the same stop consecutively.");
             makeStart.setBorder(INVALID_STYLE);
             errors.show(START_NODE);
-            errorLabel.setText("Cannot add the same stop consecutively.");
-            errorLabel.setVisible(true);
+            mapController.showErrorLabel("Cannot add the same stop consecutively.");
         } else if (Calculations.calculateDistance(coordinate,
                 journeyManager.getCurrentCoordinate()) <= journeyManager
                         .getDesiredRange()) {
@@ -576,8 +562,7 @@ public class JourneyController {
             errors.changeMessage(START_NODE, "Selected stop is out of range");
             makeStart.setBorder(INVALID_STYLE);
             errors.show(START_NODE);
-            errorLabel.setText("Selected stop is out of range for vehicle.");
-            errorLabel.setVisible(true);
+            mapController.showErrorLabel("Selected stop is out of range for vehicle.");
             logManager.info("Selected Stop is out of range for vehicle. ");
         }
 

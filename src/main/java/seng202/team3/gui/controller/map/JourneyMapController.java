@@ -1,5 +1,8 @@
 package seng202.team3.gui.controller.map;
 
+import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import seng202.team3.data.entity.Charger;
 import seng202.team3.data.entity.Coordinate;
@@ -22,6 +25,18 @@ public class JourneyMapController extends MapHandler {
     private JourneyController journeyController;
 
     /**
+     * Error text if route is invalid
+     */
+    @FXML
+    private Text errorText;
+
+    /**
+     * Label if point is out of vehicle's range
+     */
+    @FXML
+    private Label errorLabel;
+
+    /**
      * Constructor for this class
      */
     public JourneyMapController() {
@@ -41,6 +56,36 @@ public class JourneyMapController extends MapHandler {
         this.journeyController = journeyController;
         initMap();
         this.stage.sizeToScene();
+    }
+
+    /**
+     * Hides the error label
+     */
+    public void errorLabelHide() {
+        errorLabel.setVisible(false);
+    }
+
+    /**
+     * Shows the error table with text
+     * @param text the text
+     */
+    public void showErrorLabel(String text) {
+        errorLabel.setText(text);
+        errorLabel.setVisible(true);
+    }
+
+    /**
+     * Hides the error text
+     */
+    public void hideErrorText() {
+        errorText.setVisible(false);
+    }
+
+    /**
+     * Shows the error text
+     */
+    public void showErrorText() {
+        errorText.setVisible(true);
     }
 
     /**

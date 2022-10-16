@@ -1,10 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.web.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.web.WebView?>
 
 <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.team3.gui.controller.map.JourneyMapController">
-   <bottom>
+   <center>
         <WebView fx:id="webView" prefHeight="1000.0" prefWidth="1000.0" BorderPane.alignment="CENTER" />
-   </bottom>
+   </center>
+   <top>
+      <AnchorPane maxHeight="0.0" minHeight="0.0" prefHeight="0.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+         <children>
+            <Text fx:id="errorText" fill="RED" layoutX="10.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Error" visible="false" wrappingWidth="82.0">
+               <font>
+                  <Font size="32.0" />
+               </font>
+            </Text>
+            <Label fx:id="errorLabel" layoutX="110.0" layoutY="20.0" prefHeight="20.0" prefWidth="308.0" text="Error" textFill="RED" visible="false">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+   </top>
 </BorderPane>
