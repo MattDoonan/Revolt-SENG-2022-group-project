@@ -305,6 +305,7 @@ public class JourneyController {
         errors.add(VEHICLES_NODE, "Please select a vehicle.");
         errors.add(LOAD_NODE, "No journey selected");
         errors.add(DELETE_NODE, "Selected end point is out of range");
+        errors.add(SAVE_NODE, "Some of your locations are out of range of each other");
         journeyManager = new JourneyManager();
         journeyUpdateManager = new JourneyUpdateManager();
         populateTable();
@@ -452,10 +453,6 @@ public class JourneyController {
         if (journeyManager.getSelectedJourney().getEndPosition() != null
                 && journeyManager.getSelectedJourney().getStartPosition() != null) {
             distanceError = journeyManager.checkDistanceBetweenChargers();
-            mapController.hideErrorText();
-            if (distanceError) {
-                mapController.showErrorText();
-            }
             mapController.addRouteToScreen();
 
         }
@@ -483,7 +480,6 @@ public class JourneyController {
         startLabel.setText("Start not set");
         endLabel.setText("End not set");
         tripName.clear();
-        mapController.hideErrorText();
         distanceError = false;
         rangeSlider.setDisable(false);
         vehicles.setDisable(false);
@@ -690,8 +686,7 @@ public class JourneyController {
         makeStart.setBorder(Border.EMPTY);
         makeEnd.setBorder(Border.EMPTY);
         saveJourney.setBorder(Border.EMPTY);
-
-        journeyManager.checkDistanceBetweenChargers();
+        distanceError = journeyManager.checkDistanceBetweenChargers();
         if (!(distanceError) && (journeyManager.getStart() != null)
                 && (journeyManager.getEnd() != null)) {
             journeyManager.getSelectedJourney().setTitle(tripName.getText());

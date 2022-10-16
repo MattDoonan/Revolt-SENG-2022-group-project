@@ -229,11 +229,11 @@ public class MainController {
                 batteryPercent.setText(batteryPercent.getText()
                         .substring(0, batteryPercent.getText().length() - 1));
             } else {
-                changeDistance.setValue(garageManager.getData().get(0).getMaxRange()
+                changeDistance.setValue(garageManager.getSelectedVehicle().getMaxRange()
                         * (Double.parseDouble(batteryPercent.getText()) / 100));
             }
         } else {
-            changeDistance.setValue(garageManager.getData().get(0).getMaxRange());
+            changeDistance.setValue(garageManager.getSelectedVehicle().getMaxRange());
         }
     }
 

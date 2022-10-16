@@ -63,5 +63,6 @@
 
 .button:hover {
 	-fx-cursor: OPEN_HAND;
+	-fx-font-size: 13px;
 }
 
