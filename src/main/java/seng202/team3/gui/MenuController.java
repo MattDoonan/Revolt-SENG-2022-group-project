@@ -356,19 +356,22 @@ public class MenuController {
                 createLoginWindow(LOGIN_PATH, LOGIN_TITLE, null, null);
                 logManager.warn("Must be logged in to access this feature");
             }
-            FXMLLoader journeyLoader = new FXMLLoader(getClass().getResource("/fxml/journey.fxml"));
-            Parent journeyViewParent = journeyLoader.load();
-            menuWindow.setCenter(journeyViewParent);
-            setJourneyController(journeyLoader.getController());
-            journeyController.init(stage);
-            MainWindow.setController(journeyLoader.getController());
-            journeyController.setBorderPane(menuWindow);
-            menuWindow.setCenter(journeyViewParent);
-            logManager.info("Switched to Journeys Screen");
-            homeBox.setStyle(NORMAL_COLOUR);
-            journeyBox.setStyle(ACTIVE_COLOUR);
-            garageBox.setStyle(NORMAL_COLOUR);
-            accountBox.setStyle(NORMAL_COLOUR);
+            if (UserManager.getUser() != UserManager.getGuest()) {
+                FXMLLoader journeyLoader = new FXMLLoader(getClass()
+                        .getResource("/fxml/journey.fxml"));
+                Parent journeyViewParent = journeyLoader.load();
+                menuWindow.setCenter(journeyViewParent);
+                setJourneyController(journeyLoader.getController());
+                journeyController.init(stage);
+                MainWindow.setController(journeyLoader.getController());
+                journeyController.setBorderPane(menuWindow);
+                menuWindow.setCenter(journeyViewParent);
+                logManager.info("Switched to Journeys Screen");
+                homeBox.setStyle(NORMAL_COLOUR);
+                journeyBox.setStyle(ACTIVE_COLOUR);
+                garageBox.setStyle(NORMAL_COLOUR);
+                accountBox.setStyle(NORMAL_COLOUR);
+            }
         } catch (IOException e) {
             logManager.error(e.getMessage());
         }
