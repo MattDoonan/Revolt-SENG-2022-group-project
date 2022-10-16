@@ -939,24 +939,27 @@ public class JourneyController {
      * Handles updates of vehicle range slider
      */
     public void sliderUpdated() {
-        if (journeyManager.getSelectedJourney().getEndPosition() == journeyManager
-                .getCurrentCoordinate() && journeyManager
-                        .getSelectedJourney().getStops().isEmpty()) {
-            journeyManager.setCurrentCoordinate(journeyManager.getStart());
-        }
-        journeyManager.setDesiredRange(rangeSlider.getValue()
-                * journeyManager.getSelectedJourney().getVehicle().getMaxRange() / 100.0);
-        if (journeyManager.getSelectedJourney().getStartPosition() != null) {
-            List<Stop> stops = journeyManager.getSelectedJourney().getStops();
-            if (stops.isEmpty()) {
-                mapController.addChargersOnMap();
-            } else {
-                journeyManager.setCurrentCoordinate(stops.get((stops.size() - 1)).getLocation());
-                journeyManager.makeRangeChargers();
-                mapController.addChargersOnMap();
+        if (journeyManager.getSelectedJourney().getVehicle() != null) {
+            if (journeyManager.getSelectedJourney().getEndPosition() == journeyManager
+                    .getCurrentCoordinate() && journeyManager
+                    .getSelectedJourney().getStops().isEmpty()) {
+                journeyManager.setCurrentCoordinate(journeyManager.getStart());
             }
-            if (journeyManager.getSelectedJourney().getEndPosition() != null) {
-                mapController.addRouteToScreen();
+            journeyManager.setDesiredRange(rangeSlider.getValue()
+                    * journeyManager.getSelectedJourney().getVehicle().getMaxRange() / 100.0);
+            if (journeyManager.getSelectedJourney().getStartPosition() != null) {
+                List<Stop> stops = journeyManager.getSelectedJourney().getStops();
+                if (stops.isEmpty()) {
+                    mapController.addChargersOnMap();
+                } else {
+                    journeyManager.setCurrentCoordinate(stops.get((stops.size() - 1))
+                            .getLocation());
+                    journeyManager.makeRangeChargers();
+                    mapController.addChargersOnMap();
+                }
+                if (journeyManager.getSelectedJourney().getEndPosition() != null) {
+                    mapController.addRouteToScreen();
+                }
             }
         }
     }

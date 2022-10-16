@@ -340,8 +340,8 @@ public class MenuController {
      * Deletes the set user
      */
     public void deleteUser() {
-        loadHome();
         UserManager.deleteCurrentUser();
+        loadHome();
         loginSignout.setText(LOGIN_TITLE);
         logManager.info("The user has been successfully deleted");
     }
