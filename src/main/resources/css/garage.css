@@ -27,23 +27,22 @@
 }
 
 .white-btn {
-	background-color: #ffffff;
 	-fx-background-color: #ffffff;
-	border-color: #2b2d42;
-	-fx-border-color: #2b2d42;
-	border-width: 0.5px;
-	-fx-border-width: 0.5px;
-	border-radius: 1px;
-	-fx-border-radius: 1px;
+	-fx-border-color: #a9a9a9;
+	-fx-font-size: 13px;
 }
 
 .white-btn:hover {
-	background-color: #ffeff2;
-	-fx-background-color: #ffeff2;
-	border-color: #2b2d42;
-	-fx-border-color: #2b2d42;
-	border-width: 0.5px;
-	-fx-border-width: 0.5px;
-	border-radius: 1px;
-	-fx-border-radius: 1px;
+	-fx-cursor: OPEN_HAND;
+}
+
+.red-btn {
+	-fx-background-color: #c2313b;
+	-fx-border-color: #c2313b;
+	-fx-text-fill: #FFFFFF;
+	-fx-font-size: 13px;
+}
+
+.red-btn:hover {
+	-fx-cursor: OPEN_HAND;
 }

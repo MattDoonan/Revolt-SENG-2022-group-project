@@ -61,11 +61,6 @@
 	-fx-background-color: transparent;
 }
 
-#displayInfo {
-	background-color: #d80032;
-	-fx-background-color: #d80032;
-}
-
 /* REVOLT label */
 #REVOLT {
 	font-size: 25px;

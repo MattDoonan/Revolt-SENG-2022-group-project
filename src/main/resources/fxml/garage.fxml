@@ -19,11 +19,11 @@
       <Button fx:id="prevBtn" layoutX="228.0" layoutY="400.0" mnemonicParsing="false" onAction="#prevBtnClicked" prefHeight="40.0" prefWidth="42.0" styleClass="white-btn" text="&lt;&lt;" />
       <AnchorPane fx:id="anchorTwo" layoutX="615.0" layoutY="189.0" prefHeight="416.0" prefWidth="262.0" style="-fx-border-color: black;">
          <children>
-            <Button fx:id="editCarTwo" layoutX="153.0" layoutY="376.0" mnemonicParsing="false" onAction="#setEdit" text="Edit">
+            <Button fx:id="editCarTwo" layoutX="120.0" layoutY="376.0" mnemonicParsing="false" onAction="#setEdit" prefHeight="32.0" prefWidth="65.0" styleClass="white-btn" text="Edit">
                <font>
                   <Font size="14.0" />
                </font></Button>
-            <Button fx:id="deleteCarTwo" layoutX="197.0" layoutY="376.0" mnemonicParsing="false" onAction="#setDelete" text="Delete">
+            <Button fx:id="deleteCarTwo" layoutX="185.0" layoutY="376.0" mnemonicParsing="false" onAction="#setDelete" prefHeight="32.0" prefWidth="65.0" styleClass="red-btn" text="Delete">
                <font>
                   <Font size="14.0" />
                </font></Button>
@@ -43,7 +43,7 @@
                <font>
                   <Font size="14.0" />
                </font></TextArea>
-            <Button fx:id="currEvTwo" layoutX="6.0" layoutY="376.0" mnemonicParsing="false" onAction="#setCurr" text="Select">
+            <Button fx:id="currEvTwo" layoutX="6.0" layoutY="376.0" mnemonicParsing="false" onAction="#setCurr" prefHeight="32.0" prefWidth="65.0" styleClass="red-btn" text="Select">
                <font>
                   <Font size="14.0" />
                </font></Button>
@@ -51,11 +51,11 @@
       </AnchorPane>
       <AnchorPane fx:id="anchorTwo1" layoutX="308.0" layoutY="189.0" prefHeight="416.0" prefWidth="253.0" style="-fx-border-color: black;">
          <children>
-            <Button fx:id="editCarOne" layoutX="153.0" layoutY="376.0" mnemonicParsing="false" onAction="#setEdit" text="Edit">
+            <Button fx:id="editCarOne" layoutX="120.0" layoutY="376.0" mnemonicParsing="false" onAction="#setEdit" prefHeight="32.0" prefWidth="65.0" styleClass="white-btn" text="Edit">
                <font>
                   <Font size="14.0" />
                </font></Button>
-            <Button fx:id="deleteCarOne" layoutX="197.0" layoutY="376.0" mnemonicParsing="false" onAction="#setDelete" text="Delete">
+            <Button fx:id="deleteCarOne" layoutX="185.0" layoutY="376.0" mnemonicParsing="false" onAction="#setDelete" prefHeight="32.0" prefWidth="65.0" styleClass="red-btn" text="Delete">
                <font>
                   <Font size="14.0" />
                </font></Button>
@@ -75,7 +75,7 @@
                <font>
                   <Font size="14.0" />
                </font></TextArea>
-            <Button fx:id="currEvOne" layoutX="5.0" layoutY="376.0" mnemonicParsing="false" onAction="#setCurr" text="Select">
+            <Button fx:id="currEvOne" layoutX="5.0" layoutY="376.0" mnemonicParsing="false" onAction="#setCurr" prefHeight="32.0" prefWidth="65.0" styleClass="red-btn" text="Select">
                <font>
                   <Font size="14.0" />
                </font></Button>
@@ -83,11 +83,11 @@
       </AnchorPane>
       <AnchorPane fx:id="anchorTwo2" layoutX="930.0" layoutY="189.0" prefHeight="416.0" prefWidth="262.0" style="-fx-border-color: black;">
          <children>
-            <Button fx:id="editCarThree" layoutX="153.0" layoutY="376.0" mnemonicParsing="false" onAction="#setEdit" text="Edit">
+            <Button fx:id="editCarThree" layoutX="120.0" layoutY="376.0" mnemonicParsing="false" onAction="#setEdit" prefHeight="32.0" prefWidth="65.0" styleClass="white-btn" text="Edit">
                <font>
                   <Font size="14.0" />
                </font></Button>
-            <Button fx:id="deleteCarThree" layoutX="197.0" layoutY="376.0" mnemonicParsing="false" onAction="#setDelete" text="Delete">
+            <Button fx:id="deleteCarThree" layoutX="185.0" layoutY="376.0" mnemonicParsing="false" onAction="#setDelete" prefHeight="32.0" prefWidth="65.0" styleClass="red-btn" text="Delete">
                <font>
                   <Font size="14.0" />
                </font></Button>
@@ -107,7 +107,7 @@
                <font>
                   <Font size="14.0" />
                </font></TextArea>
-            <Button fx:id="currEvThree" layoutX="6.0" layoutY="376.0" mnemonicParsing="false" onAction="#setCurr" text="Select">
+            <Button fx:id="currEvThree" layoutX="6.0" layoutY="376.0" mnemonicParsing="false" onAction="#setCurr" prefHeight="32.0" prefWidth="65.0" styleClass="red-btn" text="Select">
                <font>
                   <Font size="14.0" />
                </font></Button>
