@@ -316,6 +316,7 @@ public class AccountController {
                 accountEmail.setBorder(VALID_STYLE);
                 accountPassword.setBorder(VALID_STYLE);
                 accountName.setBorder(VALID_STYLE);
+                accountPassword.setText("");
             }
             editDetails();
         } catch (IOException e) {
