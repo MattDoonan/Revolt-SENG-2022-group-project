@@ -225,15 +225,18 @@ public class MainController {
         if (!batteryPercent.getText().isEmpty()) {
             if (!batteryPercent.getText().matches("\\d*")) {
                 batteryPercent.setText(batteryPercent.getText().replaceAll("[^\\d]", ""));
-            } else if (Double.parseDouble(batteryPercent.getText()) > 100) {
+            } else if (Double.parseDouble(batteryPercent.getText()) > 100
+                    || batteryPercent.getText().length() > 3) {
                 batteryPercent.setText(batteryPercent.getText()
                         .substring(0, batteryPercent.getText().length() - 1));
+                changeDistance.setValue(garageManager.getSelectedVehicle().getMaxRange()
+                        * (Double.parseDouble(batteryPercent.getText()) / 100));
             } else {
-                changeDistance.setValue(garageManager.getData().get(0).getMaxRange()
+                changeDistance.setValue(garageManager.getSelectedVehicle().getMaxRange()
                         * (Double.parseDouble(batteryPercent.getText()) / 100));
             }
         } else {
-            changeDistance.setValue(garageManager.getData().get(0).getMaxRange());
+            changeDistance.setValue(garageManager.getSelectedVehicle().getMaxRange());
         }
     }
 
