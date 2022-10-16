@@ -332,7 +332,11 @@ public class MapViewController extends MapHandler {
         }
         this.getUserLocation();
         map.getController().setPosition();
-        makeCoordinate(GeoLocationHandler.getCoordinate());
+        try {
+            makeCoordinate(GeoLocationHandler.getCoordinate());
+        } catch (NullPointerException e) {
+            logManager.warn("Trying to load location before map has initialized");
+        }
     }
 
 }

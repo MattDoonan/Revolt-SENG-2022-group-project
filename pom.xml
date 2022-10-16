@@ -23,7 +23,6 @@
     <prism.text>native</prism.text>
     <java.awt.headless>false</java.awt.headless>
     <headless.geometry>1600x1200-32</headless.geometry>
-    <maxmem>1024m</maxmem>
   </properties>
 
   <dependencies>
@@ -242,7 +241,7 @@
 
           <properties>
           
-
+            <argLine>-Xmx1024m</argLine>
             <!-- Work around. Surefire does not include enough information to
             disambiguate between different examples and scenarios. -->
             <configurationParameters>

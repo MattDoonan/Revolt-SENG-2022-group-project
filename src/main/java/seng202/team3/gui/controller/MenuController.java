@@ -184,10 +184,11 @@ public class MenuController {
      */
     @FXML
     public void loadHome() {
+
+        initHome();
         if (Boolean.TRUE.equals(MapHandler.getLocationAccepted())) {
             MenuController.getController().getMapController().getLocation();
         }
-        initHome();
 
         accountBox.setStyle(NORMAL_COLOUR);
         journeyBox.setStyle(NORMAL_COLOUR);

@@ -41,7 +41,7 @@ import seng202.team3.testfx.TestFxBase;
  * @author Angus Kirtlan
  * @version 1.0.0, Oct 22
  */
-@Disabled
+@Disabled // Tests causing memory heap overflow at 1gb of RAM - temporarily disabled unti leak is found
 public class JourneyTestFx extends TestFxBase {
 
     private JourneyController journeyController;
