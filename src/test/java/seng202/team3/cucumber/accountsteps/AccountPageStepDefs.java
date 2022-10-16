@@ -191,7 +191,7 @@ public class AccountPageStepDefs extends CucumberFxBase {
 
     @Then("I am informed that my email is invalid")
     public void invalidAccountEmail() {
-        verifyThat("#invalidUpdateAccount", Node::isVisible);
+        verifyThat("#confirmAccount", Node::isVisible);
     }
 
     @Then("My account email has changed to {string}")
@@ -208,7 +208,7 @@ public class AccountPageStepDefs extends CucumberFxBase {
 
     @Then("I am informed that my password is invalid")
     public void invalidAccountPassword() {
-        verifyThat("#invalidUpdateAccount", Node::isVisible);
+        verifyThat("#confirmAccount", Node::isVisible);
     }
 
     @Then("I logout of the app")
