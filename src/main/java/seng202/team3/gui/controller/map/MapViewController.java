@@ -61,14 +61,6 @@ public class MapViewController extends MapHandler {
     @FXML
     private Button addButton;
 
-    /** Hover set style */
-    private static final String ON_HOVER = "-fx-background-color:#FFF8EB;"
-            + "-fx-border-color:  #9b9b9b;";
-
-    /** Hover exit style */
-    private static final String EXIT_HOVER = "-fx-background-color:#FFFFFF;"
-            + "-fx-border-color:  #9b9b9b;";
-
     /**
      * JavaScript function to add selected location to route
      */
@@ -96,48 +88,6 @@ public class MapViewController extends MapHandler {
         initMap();
         this.stage.sizeToScene();
 
-    }
-
-    /**
-     * On hover for create route
-     */
-    public void createRouteHoverOn() {
-        routing.setStyle(ON_HOVER);
-    }
-
-    /**
-     * On exit hover for relocate pos
-     */
-    public void createRouteExitHover() {
-        routing.setStyle(EXIT_HOVER);
-    }
-
-    /**
-     * On hover for relocate button
-     */
-    public void relocateHoverOn() {
-        relocatePosBtn.setStyle(ON_HOVER);
-    }
-
-    /**
-     * On exit hover for relocate button
-     */
-    public void relocateExitHover() {
-        relocatePosBtn.setStyle(EXIT_HOVER);
-    }
-
-    /**
-     * On hover for add charger
-     */
-    public void addChargerHoverOn() {
-        addButton.setStyle(ON_HOVER);
-    }
-
-    /**
-     * On exit hover for add charger button
-     */
-    public void addChargerExitHover() {
-        addButton.setStyle(EXIT_HOVER);
     }
 
     /**
@@ -302,13 +252,11 @@ public class MapViewController extends MapHandler {
                     || UserManager.getUser().getLevel() == PermissionLevel.CHARGEROWNER) {
                 addButton.setOpacity(100.0);
             }
-            routing.setText("Create Route");
-            routing.setStyle("-fx-background-color:#FFFFFF; -fx-border-color: #9b9b9b;");
+            routing.setStyle("-fx-background-color:#FFFFFF; -fx-border-color: #a9a9a9;");
         } else {
             addButton.setOpacity(0.0);
             addRouteToCharger();
-            routing.setText("Stop Routing");
-            routing.setStyle("-fx-background-color:#e06666; -fx-border-color: #9b9b9b;");
+            routing.setStyle("-fx-background-color:#c2313b; -fx-border-color: #a9a9a9;");
         }
     }
 

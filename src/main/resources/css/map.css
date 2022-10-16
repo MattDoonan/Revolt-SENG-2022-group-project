@@ -1,0 +1,9 @@
+.button {
+    -fx-background-color: #FCFCFC;
+    -fx-border-color: #a9a9a9;
+}
+
+.button:hover {
+    -fx-cursor: OPEN_HAND;
+    -fx-background-color: #F4F4F4;
+}
