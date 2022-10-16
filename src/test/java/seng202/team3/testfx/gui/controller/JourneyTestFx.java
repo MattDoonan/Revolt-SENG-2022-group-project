@@ -133,7 +133,8 @@ public class JourneyTestFx extends TestFxBase {
     public void startJourneyError() {
         journeyController.getManager().getSelectedJourney().setVehicle(null);
         clickOn("#makeStart");
-        assertFalse(((Button) find("#makeStart")).getBorder().isEmpty());
+        double left_border = ((Button) find("#makeStart")).getBorder().getStrokes().get(0).getWidths().getLeft();
+        assertEquals(1, left_border);
     }
 
     /**
@@ -142,7 +143,8 @@ public class JourneyTestFx extends TestFxBase {
     @Test
     public void endJourneyError() {
         clickOn("#makeEnd");
-        assertFalse(((Button) find("#makeStart")).getBorder().isEmpty());
+        double left_border = ((Button) find("#makeStart")).getBorder().getStrokes().get(0).getWidths().getLeft();
+        assertEquals(1, left_border);
     }
 
     /**
@@ -151,7 +153,8 @@ public class JourneyTestFx extends TestFxBase {
     @Test
     public void saveJourneyError() {
         clickOn("#saveJourney");
-        assertFalse(((Button) find("#makeStart")).getBorder().isEmpty());
+        double left_border = ((Button) find("#makeStart")).getBorder().getStrokes().get(0).getWidths().getLeft();
+        assertEquals(1, left_border);
     }
 
     /**
@@ -161,7 +164,8 @@ public class JourneyTestFx extends TestFxBase {
     @Test
     public void loadJourneyError() {
         clickOn("#loadJourney");
-        assertFalse(((Button) find("#loadJourney")).getBorder().isEmpty());
+        double left_border = ((Button) find("#loadJourney")).getBorder().getStrokes().get(0).getWidths().getLeft();
+        assertEquals(1, left_border);
     }
 
     /**
@@ -171,7 +175,8 @@ public class JourneyTestFx extends TestFxBase {
     @Test
     public void deleteJourneyError() {
         clickOn("#deleteJourney");
-        assertFalse(((Button) find("#deleteJourney")).getBorder().isEmpty());
+        double left_border = ((Button) find("#deleteJourney")).getBorder().getStrokes().get(0).getWidths().getLeft();
+        assertEquals(1, left_border);
     }
 
     /**

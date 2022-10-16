@@ -21,6 +21,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
@@ -201,6 +202,13 @@ public class JourneyController {
                     CornerRadii.EMPTY, BorderWidths.DEFAULT));
 
     /**
+     * Styling for invalid fields
+     */
+    private static final Border VALID_STYLE = new Border(
+            new BorderStroke(Color.DARKGRAY, BorderStrokeStyle.SOLID,
+                    CornerRadii.EMPTY, new BorderWidths(0.5)));
+
+    /**
      * id for journey start node
      */
     private static final String START_NODE = "makeStart";
@@ -300,6 +308,20 @@ public class JourneyController {
      * @param stage Top level container for this window
      */
     public void init(Stage stage) {
+        makeStart.setTooltip(new Tooltip("Select point on map, then set to start"));
+        makeEnd.setTooltip(new Tooltip("Select point on map, then set to end"));
+        loadJourney.setTooltip(new Tooltip("Select journey from table, then load"));
+        deleteJourney.setTooltip(new Tooltip("Select journey from table, then delete"));
+        saveJourney.setTooltip(new Tooltip("Create journey, then save"));
+
+        loadJourney.setBorder(VALID_STYLE);
+        saveJourney.setBorder(VALID_STYLE);
+        deleteJourney.setBorder(VALID_STYLE);
+        makeStart.setBorder(VALID_STYLE);
+        makeEnd.setBorder(VALID_STYLE);
+        vehicles.setBorder(VALID_STYLE);
+        
+
         errors.add(START_NODE, "No starting point selected");
         errors.add(END_NODE, "No end point selected");
         errors.add(VEHICLES_NODE, "Please select a vehicle.");
@@ -349,7 +371,7 @@ public class JourneyController {
      */
     @FXML
     public void setStart() {
-        makeStart.setBorder(Border.EMPTY);
+        makeStart.setBorder(VALID_STYLE);
         journeyManager.setCurrentCoordinate(GeoLocationHandler.getCoordinate());
         Coordinate position = journeyManager.getPosition();
         if (position != null && journeyManager.getSelectedJourney().getVehicle() != null) {
@@ -390,11 +412,11 @@ public class JourneyController {
             prevPoint = journeyManager.getStart();
         }
         Boolean fail = false;
-        makeStart.setBorder(Border.EMPTY);
-        makeEnd.setBorder(Border.EMPTY);
-        vehicles.setBorder(Border.EMPTY);
-        loadJourney.setBorder(Border.EMPTY);
-        deleteJourney.setBorder(Border.EMPTY);
+        makeStart.setBorder(VALID_STYLE);
+        makeEnd.setBorder(VALID_STYLE);
+        vehicles.setBorder(VALID_STYLE);
+        loadJourney.setBorder(VALID_STYLE);
+        deleteJourney.setBorder(VALID_STYLE);
         Coordinate position = journeyManager.getPosition();
 
         if (prevPoint == null) {
@@ -463,12 +485,12 @@ public class JourneyController {
      * Resets the journey entity and GUI
      */
     public void resetJourney() {
-        loadJourney.setBorder(Border.EMPTY);
-        saveJourney.setBorder(Border.EMPTY);
-        deleteJourney.setBorder(Border.EMPTY);
-        makeStart.setBorder(Border.EMPTY);
-        makeEnd.setBorder(Border.EMPTY);
-        vehicles.setBorder(Border.EMPTY);
+        makeStart.setBorder(VALID_STYLE);
+        makeEnd.setBorder(VALID_STYLE);
+        vehicles.setBorder(VALID_STYLE);
+        loadJourney.setBorder(VALID_STYLE);
+        deleteJourney.setBorder(VALID_STYLE);
+        saveJourney.setBorder(VALID_STYLE);
 
         mapController.removeRoute();
         journeyManager.clearChargers();
@@ -500,7 +522,7 @@ public class JourneyController {
         Stop stop = new Stop(charger);
         Boolean fail = false;
         mapController.errorLabelHide();
-        deleteJourney.setBorder(Border.EMPTY);
+        deleteJourney.setBorder(VALID_STYLE);
         if (!journeyManager.getSelectedJourney().getStops().isEmpty()) {
             if (journeyManager.getSelectedJourney().getStops()
                     .get(journeyManager.getSelectedJourney().getStops().size() - 1)
@@ -535,7 +557,7 @@ public class JourneyController {
      */
     public void addStop(Coordinate coordinate) {
         mapController.errorLabelHide();
-        makeStart.setBorder(Border.EMPTY);
+        makeStart.setBorder(VALID_STYLE);
 
         if (journeyManager.getStart() == null) {
             errors.changeMessage(START_NODE, "Please select a start point");
@@ -685,9 +707,9 @@ public class JourneyController {
      */
     @FXML
     public void saveJourney() {
-        makeStart.setBorder(Border.EMPTY);
-        makeEnd.setBorder(Border.EMPTY);
-        saveJourney.setBorder(Border.EMPTY);
+        makeStart.setBorder(VALID_STYLE);
+        makeEnd.setBorder(VALID_STYLE);
+        saveJourney.setBorder(VALID_STYLE);
 
         journeyManager.checkDistanceBetweenChargers();
         if (!(distanceError) && (journeyManager.getStart() != null)
@@ -752,7 +774,7 @@ public class JourneyController {
      * Deletes the journey selected from the table
      */
     public void deleteJourney() {
-        deleteJourney.setBorder(Border.EMPTY);
+        deleteJourney.setBorder(VALID_STYLE);
         if (previousJourneyTable.getSelectionModel()
                 .getSelectedItem() != null) {
             if (deleteWarningPrompt()) {
@@ -772,7 +794,7 @@ public class JourneyController {
      * Loads the journey selected from the table into the map and sidebar
      */
     public void loadJourney() {
-        loadJourney.setBorder(Border.EMPTY);
+        loadJourney.setBorder(VALID_STYLE);
         if (previousJourneyTable.getSelectionModel()
                 .getSelectedItem() != null) {
             mapController.removeRoute();

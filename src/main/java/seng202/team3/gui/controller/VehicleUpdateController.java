@@ -325,9 +325,9 @@ public class VehicleUpdateController {
             makeText.setBorder(INVALID_STYLE);
             errors.show(MAKE_NODE);
             fail = true;
-        } else if (makeText.getText().length() > 20) {
+        } else if (makeText.getText().length() > 30) {
             makeText.setBorder(INVALID_STYLE);
-            errors.changeMessage(MAKE_NODE, "Vehicle make cannot be longer than 20 characters");
+            errors.changeMessage(MAKE_NODE, "Vehicle make cannot be longer than 30 characters");
             errors.show(MAKE_NODE);
             fail = true;
         }
@@ -335,9 +335,9 @@ public class VehicleUpdateController {
             modelText.setBorder(INVALID_STYLE);
             errors.show(MODEL_NODE);
             fail = true;
-        } else if (modelText.getText().length() > 20) {
-            makeText.setBorder(INVALID_STYLE);
-            errors.changeMessage(MODEL_NODE, "Vehicle model cannot be longer than 20 characters");
+        } else if (modelText.getText().length() > 30) {
+            modelText.setBorder(INVALID_STYLE);
+            errors.changeMessage(MODEL_NODE, "Vehicle model cannot be longer than 30 characters");
             errors.show(MODEL_NODE);
             fail = true;
         }
@@ -407,7 +407,7 @@ public class VehicleUpdateController {
                 connectorPopup.setResizable(false);
                 connectorPopup.setTitle("Other Connector");
                 connectorPopup.setScene(new Scene(root, 300, 100));
-            } else {
+            } else if (!connections.contains(connectorType.getValue())) {
                 connections.add(connectorType.getValue());
                 Button button = new Button(DELETE_BUTTON_TEXT);
                 button.setId(connectorType.getValue());
@@ -424,7 +424,10 @@ public class VehicleUpdateController {
                 GridPane.setHalignment(button, HPos.RIGHT);
                 GridPane.setHalignment(label, HPos.LEFT);
                 addedConnections.getItems().add(gridpane);
-
+            } else {
+                errors.changeMessage(CONNECTOR_NODE, "Can only have one type of each connector.");
+                connectorType.setBorder(INVALID_STYLE);
+                errors.show(CONNECTOR_NODE);
             }
         }
 

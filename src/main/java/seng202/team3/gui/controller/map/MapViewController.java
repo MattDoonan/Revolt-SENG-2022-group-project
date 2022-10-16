@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -80,6 +81,8 @@ public class MapViewController extends MapHandler {
      * @param stage a {@link javafx.stage.Stage} object
      */
     public void init(Stage stage, MapManager map) {
+        relocatePosBtn.setTooltip(new Tooltip("Go to current location"));
+        routing.setTooltip(new Tooltip("Route to charger"));
         path = "html/map.html";
         this.stage = stage;
         javaScriptBridge = new JavaScriptBridge();
