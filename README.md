@@ -35,7 +35,7 @@ IntelliJ has built-in support for importing projects directly from Version Contr
 To download and import your project:
 
 - Launch IntelliJ and chose `Get from VCS` from the start-up window.
-- Input the url of your project e.g. `https://eng-git.canterbury.ac.nz/seng202-2022/team-X`.
+- Input the url of your project e.g. `https://eng-git.canterbury.ac.nz/seng202-2022/team-3`.
 
 **Note:** *If you run into dependency issues when running the app or the Maven pop up doesn't appear then open the Maven sidebar and click the Refresh icon labeled 'Reimport All Maven Projects'.*
 
@@ -56,7 +56,7 @@ you’ll need to re-enable it). To import your project:
 ## Run App
 - If you haven't already, Build the project.
 - Open a command line interface inside the project directory and run `cd target` to change into the target directory.
-- Run the command `java -jar revolt-1.0-SNAPSHOT.jar` to open the application.
+- Run the command `java -jar revolt-1.0.jar` to open the application.
 - If this fails in Intellij go to edit configurations then the plus sign or add configuration
 - Then click maven and then in command line type javafx:run and then apply
 - run the configuration
