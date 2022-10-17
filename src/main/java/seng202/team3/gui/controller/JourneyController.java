@@ -321,7 +321,6 @@ public class JourneyController {
         makeEnd.setBorder(VALID_STYLE);
         vehicles.setBorder(VALID_STYLE);
         
-
         errors.add(START_NODE, "No starting point selected");
         errors.add(END_NODE, "No end point selected");
         errors.add(VEHICLES_NODE, "Please select a vehicle.");

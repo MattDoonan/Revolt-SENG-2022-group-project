@@ -16,7 +16,7 @@
       <AnchorPane maxHeight="0.0" maxWidth="400.0" minHeight="0.0" minWidth="400.0" prefHeight="0.0" prefWidth="400.0" BorderPane.alignment="CENTER_LEFT">
          <children>
             <Button fx:id="addButton" layoutX="45.0" layoutY="42.0" mnemonicParsing="false" onMouseClicked="#addCharger" prefHeight="32.0" prefWidth="195.0" text="Add Charger" />
-            <Button fx:id="routing" layoutY="42.0" mnemonicParsing="false" onAction="#toggleRoute" prefHeight="31.0" prefWidth="23.0" textAlignment="CENTER" wrapText="true">
+            <Button fx:id="routing" layoutY="42.0" mnemonicParsing="false" onAction="#toggleRoute" prefHeight="31.0" prefWidth="23.0" textAlignment="CENTER" wrapText="true" styleClass="btn-grey" >
                <graphic>
                   <ImageView fitHeight="21.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -24,7 +24,7 @@
                      </image>
                   </ImageView>
                </graphic></Button>
-            <Button fx:id="relocatePosBtn" alignment="CENTER" layoutY="10.0" mnemonicParsing="false" onMouseClicked="#getLocation" prefHeight="31.0" prefWidth="0.0" textAlignment="CENTER" wrapText="true">
+            <Button fx:id="relocatePosBtn" alignment="CENTER" layoutY="10.0" mnemonicParsing="false" onMouseClicked="#getLocation" prefHeight="31.0" prefWidth="0.0" textAlignment="CENTER" wrapText="true" styleClass="btn-grey" >
                <graphic>
                   <ImageView fitHeight="21.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
                      <image>

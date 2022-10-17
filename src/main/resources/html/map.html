@@ -206,7 +206,7 @@
 			//Allocates the text output on button according to permission level
 			if (isEditable && !isJourney) {
 				textOutput = "<br><button type='button' onclick='javaScriptBridge.loadMoreInfo(" +
-					id + ")'>Edit Charger</button>"
+					id + ")' style='-fx-border-color: #a9a9a9;'>Edit Charger</button>"
 			} else if (isJourney && isEditable) {
 				textOutput = "<br><center><button type='button' style='background: #4CAF50; color: white;"
 					+ " border-radius: 5px;' onclick='javaScriptBridge.addChargerToJourney(" + id +

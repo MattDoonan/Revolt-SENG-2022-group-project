@@ -256,6 +256,13 @@ public class ChargerController {
                     CornerRadii.EMPTY, BorderWidths.DEFAULT));
 
     /**
+     * Styling for invalid fields
+     */
+    private static final Border VALID_STYLE = new Border(
+        new BorderStroke(Color.DARKGRAY, BorderStrokeStyle.SOLID,
+                CornerRadii.EMPTY, new BorderWidths(0.5)));
+
+    /**
      * id for lat node
      */
     private static final String LAT_NODE = "lat";
@@ -310,6 +317,15 @@ public class ChargerController {
         errors.add(TIME_NODE, "Needs a Time Limit. Enter 0 for unlimited time limit");
         errors.add(PARKS_NODE, "A Charger must have a whole number of parks");
         errors.add(CONN_NODE, "A Charger must have at least one Connector!");
+
+        lat.setBorder(VALID_STYLE);
+        lon.setBorder(VALID_STYLE);
+        address.setBorder(VALID_STYLE);
+        name.setBorder(VALID_STYLE);
+        time.setBorder(VALID_STYLE);
+        parks.setBorder(VALID_STYLE);
+        addConnectorButton.setBorder(VALID_STYLE);
+
         this.stage = stage;
         makeConnectors();
         connectorTable.setItems(connectors);
@@ -394,12 +410,12 @@ public class ChargerController {
         Coordinate coordinate = new Coordinate();
 
         errors.hideAll();
-        lat.setBorder(Border.EMPTY);
-        lon.setBorder(Border.EMPTY);
-        name.setBorder(Border.EMPTY);
-        parks.setBorder(Border.EMPTY);
-        address.setBorder(Border.EMPTY);
-        time.setBorder(Border.EMPTY);
+        lat.setBorder(VALID_STYLE);
+        lon.setBorder(VALID_STYLE);
+        name.setBorder(VALID_STYLE);
+        parks.setBorder(VALID_STYLE);
+        address.setBorder(VALID_STYLE);
+        time.setBorder(VALID_STYLE);
 
         Boolean fail = false;
 
