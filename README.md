@@ -70,6 +70,7 @@ you’ll need to re-enable it). To import your project:
 ## Known Bugs
 - When editing a vehicle any journeys attached to the vehicle won't update
 - Cursor indexing bug for car charge percentage on main screen upon overflow
+- Right-clicking on the map or chargers has some unintended functions. For example reload page will unload the map when right-clicking on the map
 
 ## Logins
 Admin:
