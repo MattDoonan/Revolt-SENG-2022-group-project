@@ -4,6 +4,10 @@
 
 .button {
     -fx-background-color: #FFFFFF;
+    /* -fx-border-color: #a9a9a9; */
+}
+
+.btn-grey {
     -fx-border-color: #a9a9a9;
 }
 

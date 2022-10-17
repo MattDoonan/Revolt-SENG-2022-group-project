@@ -162,6 +162,13 @@ public class VehicleUpdateController {
                     CornerRadii.EMPTY, BorderWidths.DEFAULT));
 
     /**
+     * Styling for invalid fields
+     */
+    private static final Border VALID_STYLE = new Border(
+            new BorderStroke(Color.DARKGRAY, BorderStrokeStyle.SOLID,
+                    CornerRadii.EMPTY, new BorderWidths(0.5)));
+
+    /**
      * Default path for images
      */
     private static final String IMGPATH = "/images/";
@@ -239,6 +246,12 @@ public class VehicleUpdateController {
         errors.add(RANGE_NODE, "Max range required");
         errors.add(CONNECTOR_NODE,
                 "A vehicle must have at least one connector.");
+
+        makeText.setBorder(VALID_STYLE);
+        modelText.setBorder(VALID_STYLE);
+        maxRangeText.setBorder(VALID_STYLE);
+        connectorType.setBorder(VALID_STYLE);
+        
         stage = (Stage) inputBox.getScene().getWindow();
         prevController = MainWindow.getController();
         MainWindow.setController(this);
@@ -314,10 +327,10 @@ public class VehicleUpdateController {
     public Boolean checkForErrors() {
         errors.hideAll();
 
-        makeText.setBorder(Border.EMPTY);
-        modelText.setBorder(Border.EMPTY);
-        maxRangeText.setBorder(Border.EMPTY);
-        connectorType.setBorder(Border.EMPTY);
+        makeText.setBorder(VALID_STYLE);
+        modelText.setBorder(VALID_STYLE);
+        maxRangeText.setBorder(VALID_STYLE);
+        connectorType.setBorder(VALID_STYLE);
 
         Boolean fail = false;
 

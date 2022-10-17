@@ -16,7 +16,6 @@
 
 .button {
     -fx-background-color: #ffffff;
-    /* -fx-border-color: #a9a9a9; */
 }
 
 .button:hover {
@@ -25,13 +24,11 @@
 
 .btn-danger {
     -fx-background-color: #c2313b;
-    /* -fx-border-color: #c2313b; */
     -fx-text-fill: #ffffff;
 }
 
 .btn-success {
     -fx-background-color: #FFFFFF;
-    /* -fx-border-color: #a9a9a9; */
 }
 
 #start-box {
@@ -52,7 +49,7 @@
 
 .menu-button {
     -fx-background-color: #ffffff;
-    -fx-border-color: #a9a9a9;
+    /* -fx-border-color: #a9a9a9; */
 }
 
 .menu-button:hover {
