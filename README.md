@@ -1,7 +1,12 @@
 # Revolt
 
 ## Authors
-- Celia Allen, James Billows, Matthew Doonan, Michelle Hsieh, Angus Kirtlan, Harrison Tyson 
+- Celia Allen 
+- James Billows
+- Matthew Doonan
+- Michelle Hsieh
+- Angus Kirtlan
+- Harrison Tyson 
 
 ## Prerequisites
 - JDK >= 17 [click here to get the latest stable OpenJDK release (as of writing this README)](https://jdk.java.net/18/)
@@ -62,27 +67,27 @@ you’ll need to re-enable it). To import your project:
 ## Javadoc
 1. Open a command line interface inside the project directory and run `mvn javadoc:jar` to generate a folder of javadoc. The folder is located at target/apidocs
 
-##Known Bugs
+## Known Bugs
 - When editing a vehicle any journeys attached to the vehicle won't update
 - Cursor indexing bug for car charge percentage on main screen upon overflow
+- Right-clicking on the map or chargers has some unintended functions. For example reload page will unload the map when right-clicking on the map
 
-##Logins
+## Logins
 Admin:
+
 - Username: admin
+
 - Password: admin
 
 Charger Owner:
+
 - Username can be any charger owner eg: ChargeNet NZ
+
 - Password: demo
 
 Normal Users:
+
 - Create own account using signup functionality
 
 ## User Guide
-When oppening the application you should be presented with the home screen. The home screen is made up of an interactive map on the right, a simplified table viewer on the left, and a menu controller along the top which is persistant along all screens. The map can be viewed using the drag to move around and scroll to zoom in and out. Chargers on the map can be edited by hovering over and and clicking 'Edit Charger' where details can be changed in a popout menu. Your current location can be changed by clicking on the map. This may be useful in combination with filters for nearby chargers. There is a small menu along the top which can also be used to show a very simple route between two points, add chargers, edit chargers, and delete chargers. 
-
-On the left the simplified table viewer presents chargers in order of closest to furthest. Filters can be added by using the 'Filters' dropdown menu, selecting the desired filters, and then clicking search. Chargers can also be serached by typing their address into the "Search Charger" field and clicking searching. The advanced table can be accessed by clicking 'Show Table'.
-
-The table viewer has its own screen where it shows all available information of the chargers in tabular form. The table has similar features to the map, where chargers can be added, deleted,and edited, and filteres applied. Columns of data can also be selected and unselected from the table viewer. Updating the table is nescessary after any filters are applied or column selections.  
-
-The menu controller along the top of all screens can be used to return to the home screen at any time. It can also be used to access the 'My Vehicles' screen. From this screen vehicles can be added, removed, and edited.
+The user guide can be found in the `UserManual.pdf` file

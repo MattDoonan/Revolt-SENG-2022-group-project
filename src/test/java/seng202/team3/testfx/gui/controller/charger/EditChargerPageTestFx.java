@@ -1,5 +1,6 @@
 package seng202.team3.testfx.gui.controller.charger;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.io.IOException;
@@ -97,7 +98,8 @@ public class EditChargerPageTestFx extends TestFxBase {
         clickOn("ChardaMo");
         clickOn("#deleteConnectorButton");
         clickOn("#saveButton");
-        assertFalse(((Button) find("#addConnectorButton")).getBorder().isEmpty());
+        assertEquals(1, 
+            (((Button) find("#addConnectorButton")).getBorder().getStrokes().get(0).getWidths().getLeft()));
     }
 
     /**

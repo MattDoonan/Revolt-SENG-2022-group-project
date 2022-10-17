@@ -144,9 +144,8 @@ public class AdminPageTestFx extends TestFxBase {
             release(KeyCode.DOWN);
         }
         clickOn("#updatePermissions");
-        double left_border = ((Button) find("#updatePermissions")).getBorder().getStrokes().get(0).getWidths()
-                .getLeft();
-        assertEquals(1, left_border);
+        assertEquals(1,
+                (((Button) find("#updatePermissions")).getBorder().getStrokes().get(0).getWidths().getLeft()));
     }
 
     /**
@@ -156,8 +155,9 @@ public class AdminPageTestFx extends TestFxBase {
     public void deleteCurrentAdmin() {
         ((TableView<?>) this.find("#table")).getSelectionModel().select(0);
         clickOn("#delete");
-        double left_border = ((Button) find("#delete")).getBorder().getStrokes().get(0).getWidths().getLeft();
-        assertEquals(1, left_border);
+        assertEquals(0.5,
+                (((Button) find("#updatePermissions")).getBorder().getStrokes().get(0).getWidths().getLeft()));
+
     }
 
     /**

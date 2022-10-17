@@ -1,5 +1,6 @@
 package seng202.team3.testfx.gui.controller;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -137,11 +138,14 @@ public class VehiclesPageTestFx extends TestFxBase {
         clickOn();
         clickOn("#addConnectionBtn");
         clickOn("#saveChanges");
-        assertTrue(((Control) find("#connectorType")).getBorder().isEmpty());
-        assertFalse(((Control) find("#makeText")).getBorder().isEmpty());
-        assertFalse(((Control) find("#modelText")).getBorder().isEmpty());
-        assertFalse(((Control) find("#maxRangeText")).getBorder().isEmpty());
-
+        assertEquals(0.5, 
+            (((Control) find("#connectorType")).getBorder().getStrokes().get(0).getWidths().getLeft()));
+        assertEquals(1, 
+            (((Control) find("#makeText")).getBorder().getStrokes().get(0).getWidths().getLeft()));
+        assertEquals(1, 
+            (((Control) find("#modelText")).getBorder().getStrokes().get(0).getWidths().getLeft()));
+        assertEquals(1, 
+            (((Control) find("#maxRangeText")).getBorder().getStrokes().get(0).getWidths().getLeft()));
     }
 
     @Test

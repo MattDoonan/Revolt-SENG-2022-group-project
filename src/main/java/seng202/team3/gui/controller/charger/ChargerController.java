@@ -250,6 +250,13 @@ public class ChargerController {
                     CornerRadii.EMPTY, BorderWidths.DEFAULT));
 
     /**
+     * Styling for invalid fields
+     */
+    private static final Border VALID_STYLE = new Border(
+        new BorderStroke(Color.DARKGRAY, BorderStrokeStyle.SOLID,
+                CornerRadii.EMPTY, new BorderWidths(0.5)));
+
+    /**
      * id for lat node
      */
     private static final String LAT_NODE = "lat";
@@ -301,9 +308,18 @@ public class ChargerController {
         errors.add(LON_NODE, "Coordinate is not valid number");
         errors.add(ADDRESS_NODE, "Needs an address, e.g. 132 Science Road, Christchurch");
         errors.add(NAME_NODE, "Needs a name, e.g. Home");
-        errors.add(TIME_NODE, "Needs a Time Limit");
+        errors.add(TIME_NODE, "Needs a Time Limit. Enter 0 for unlimited time limit");
         errors.add(PARKS_NODE, "A Charger must have a whole number of parks");
         errors.add(CONN_NODE, "A Charger must have at least one Connector!");
+
+        lat.setBorder(VALID_STYLE);
+        lon.setBorder(VALID_STYLE);
+        address.setBorder(VALID_STYLE);
+        name.setBorder(VALID_STYLE);
+        time.setBorder(VALID_STYLE);
+        parks.setBorder(VALID_STYLE);
+        addConnectorButton.setBorder(VALID_STYLE);
+
         this.stage = stage;
         makeConnectors();
         connectorTable.setItems(connectors);
@@ -378,12 +394,12 @@ public class ChargerController {
         Coordinate coordinate = new Coordinate();
 
         errors.hideAll();
-        lat.setBorder(Border.EMPTY);
-        lon.setBorder(Border.EMPTY);
-        name.setBorder(Border.EMPTY);
-        parks.setBorder(Border.EMPTY);
-        address.setBorder(Border.EMPTY);
-        time.setBorder(Border.EMPTY);
+        lat.setBorder(VALID_STYLE);
+        lon.setBorder(VALID_STYLE);
+        name.setBorder(VALID_STYLE);
+        parks.setBorder(VALID_STYLE);
+        address.setBorder(VALID_STYLE);
+        time.setBorder(VALID_STYLE);
 
         Boolean fail = false;
 
@@ -433,22 +449,28 @@ public class ChargerController {
         newCharger.setViews(Integer.parseInt(views.getText()));
 
         try {
-            newCharger.setTimeLimit(Double.parseDouble(time.getText()));
+            if (Double.parseDouble(time.getText()) == 0) {
+                newCharger.setTimeLimit(Double.parseDouble("Infinity"));
+            } else {
+                newCharger.setTimeLimit(Double.parseDouble(time.getText()));
+            }
             if (Double.parseDouble(time.getText()) > 1440
                     && Double.parseDouble(time.getText()) != Double.parseDouble("Infinity")) {
-                errors.changeMessage(TIME_NODE, "Time limit cannot be longer than 24 hours.");
+                errors.changeMessage(TIME_NODE, "Time limit cannot be longer than 24 hours. "
+                        + "Enter 0 for unlimited time limit");
                 time.setBorder(INVALID_STYLE);
                 errors.show(TIME_NODE);
                 fail = true;
             }
         } catch (NullPointerException e) {
             time.setBorder(INVALID_STYLE);
-            errors.changeMessage(TIME_NODE, "Needs a Time Limit");
+            errors.changeMessage(TIME_NODE, "Needs a Time Limit. Enter 0 for unlimited time limit");
             errors.show(TIME_NODE);
             fail = true;
         } catch (NumberFormatException e) {
             time.setBorder(INVALID_STYLE);
-            errors.changeMessage(TIME_NODE, "Time Limit is not a valid number");
+            errors.changeMessage(TIME_NODE, "Time Limit is not a valid number. "
+                    + "Enter 0 for unlimited time limit");
             errors.show(TIME_NODE);
             fail = true;
         }

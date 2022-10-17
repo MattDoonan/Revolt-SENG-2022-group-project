@@ -78,6 +78,13 @@ public class ConnectorEditController {
                     CornerRadii.EMPTY, BorderWidths.DEFAULT));
 
     /**
+     * Styling for invalid fields
+     */
+    private static final Border VALID_STYLE = new Border(
+        new BorderStroke(Color.DARKGRAY, BorderStrokeStyle.SOLID,
+                CornerRadii.EMPTY, new BorderWidths(0.5)));
+
+    /**
      * id for type node
      */
     private static final String TYPE_NODE = "typeField";
@@ -120,6 +127,12 @@ public class ConnectorEditController {
         errors.add(WATT_NODE, "Must have a wattage, e.g. 24 kW");
         errors.add(STATUS_NODE, "Must have a status, e.g. Operative");
         errors.add(TYPE_NODE, "Must have a charger type e.g. CHAdeMO");
+
+        chargingPointsField.setBorder(VALID_STYLE);
+        currentField.setBorder(VALID_STYLE);
+        wattageField.setBorder(VALID_STYLE);
+        statusField.setBorder(VALID_STYLE);
+        typeField.setBorder(VALID_STYLE);
     }
 
     /**
@@ -163,11 +176,11 @@ public class ConnectorEditController {
         int points = 0;
         Boolean fail = false;
         errors.hideAll();
-        chargingPointsField.setBorder(Border.EMPTY);
-        currentField.setBorder(Border.EMPTY);
-        wattageField.setBorder(Border.EMPTY);
-        statusField.setBorder(Border.EMPTY);
-        typeField.setBorder(Border.EMPTY);
+        chargingPointsField.setBorder(VALID_STYLE);
+        currentField.setBorder(VALID_STYLE);
+        wattageField.setBorder(VALID_STYLE);
+        statusField.setBorder(VALID_STYLE);
+        typeField.setBorder(VALID_STYLE);
         try {
             points = Integer.parseInt(chargingPointsField.getText());
         } catch (NumberFormatException e) {

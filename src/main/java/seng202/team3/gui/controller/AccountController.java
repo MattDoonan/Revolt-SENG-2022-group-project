@@ -140,8 +140,8 @@ public class AccountController {
      * Styling for invalid fields
      */
     private static final Border VALID_STYLE = new Border(
-            new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID,
-                    CornerRadii.EMPTY, BorderWidths.DEFAULT));
+            new BorderStroke(Color.DARKGRAY, BorderStrokeStyle.SOLID,
+                    CornerRadii.EMPTY, new BorderWidths(0.5)));
 
     /**
      * The controller
@@ -185,6 +185,11 @@ public class AccountController {
         errors.add(NAME_NODE, "Invalid name.");
         errors.add(EMAIL_NODE, "Email cannot be empty.");
         errors.add(PASSWORD_NODE, "Password must be more than 4 characters.");
+
+        accountName.setBorder(VALID_STYLE);
+        accountEmail.setBorder(VALID_STYLE);
+        accountPassword.setBorder(VALID_STYLE);
+
         User user = UserManager.getUser();
         populateText(user);
         setChargerTable();
@@ -336,9 +341,9 @@ public class AccountController {
     public Boolean checkUserDetails() {
         errors.hideAll();
 
-        accountName.setBorder(Border.EMPTY);
-        accountEmail.setBorder(Border.EMPTY);
-        accountPassword.setBorder(Border.EMPTY);
+        accountName.setBorder(VALID_STYLE);
+        accountEmail.setBorder(VALID_STYLE);
+        accountPassword.setBorder(VALID_STYLE);
 
         Boolean fail = false;
 

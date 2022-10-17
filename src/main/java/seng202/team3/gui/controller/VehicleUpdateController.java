@@ -162,6 +162,13 @@ public class VehicleUpdateController {
                     CornerRadii.EMPTY, BorderWidths.DEFAULT));
 
     /**
+     * Styling for invalid fields
+     */
+    private static final Border VALID_STYLE = new Border(
+            new BorderStroke(Color.DARKGRAY, BorderStrokeStyle.SOLID,
+                    CornerRadii.EMPTY, new BorderWidths(0.5)));
+
+    /**
      * Default path for images
      */
     private static final String IMGPATH = "/images/";
@@ -239,6 +246,12 @@ public class VehicleUpdateController {
         errors.add(RANGE_NODE, "Max range required");
         errors.add(CONNECTOR_NODE,
                 "A vehicle must have at least one connector.");
+
+        makeText.setBorder(VALID_STYLE);
+        modelText.setBorder(VALID_STYLE);
+        maxRangeText.setBorder(VALID_STYLE);
+        connectorType.setBorder(VALID_STYLE);
+        
         stage = (Stage) inputBox.getScene().getWindow();
         prevController = MainWindow.getController();
         MainWindow.setController(this);
@@ -314,10 +327,10 @@ public class VehicleUpdateController {
     public Boolean checkForErrors() {
         errors.hideAll();
 
-        makeText.setBorder(Border.EMPTY);
-        modelText.setBorder(Border.EMPTY);
-        maxRangeText.setBorder(Border.EMPTY);
-        connectorType.setBorder(Border.EMPTY);
+        makeText.setBorder(VALID_STYLE);
+        modelText.setBorder(VALID_STYLE);
+        maxRangeText.setBorder(VALID_STYLE);
+        connectorType.setBorder(VALID_STYLE);
 
         Boolean fail = false;
 
@@ -378,6 +391,7 @@ public class VehicleUpdateController {
      */
     public void addConnection() {
         if (connectorType.getValue() != null) {
+            connectorType.setBorder(VALID_STYLE);
             if (connectorType.getValue().equals("Other...")) {
                 GridPane root = new GridPane();
                 Button save = new Button("Save");
@@ -387,6 +401,7 @@ public class VehicleUpdateController {
                 root.setStyle("-fx-padding: 20;");
                 save.setOnMouseClicked((MouseEvent event) -> {
                     Button button = new Button(DELETE_BUTTON_TEXT);
+                    button.setStyle("-fx-border-color: #a9a9a9;");
                     button.setId(connector.getText());
                     button.setOnAction(this::deleteConnection);
                     Label label = new Label(CONN_PROMPT_TEXT + connector.getText());
@@ -410,6 +425,7 @@ public class VehicleUpdateController {
             } else if (!connections.contains(connectorType.getValue())) {
                 connections.add(connectorType.getValue());
                 Button button = new Button(DELETE_BUTTON_TEXT);
+                button.setStyle("-fx-border-color: #a9a9a9;");
                 button.setId(connectorType.getValue());
                 button.setOnAction(this::deleteConnection);
                 Label label = new Label(CONN_PROMPT_TEXT + connectorType.getValue());
@@ -577,6 +593,7 @@ public class VehicleUpdateController {
             connections = vehicle.getConnectors();
             for (String connection : connections) {
                 Button button = new Button(DELETE_BUTTON_TEXT);
+                button.setStyle("-fx-border-color: #a9a9a9;");
                 button.setId(connection);
                 button.setOnAction(this::deleteConnection);
                 Label label = new Label(CONN_PROMPT_TEXT + connection);

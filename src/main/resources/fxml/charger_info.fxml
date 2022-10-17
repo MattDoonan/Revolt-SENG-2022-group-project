@@ -40,9 +40,9 @@
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                            </columnResizePolicy>
                            </TableView>
-                           <Button fx:id="addConnectorButton" layoutX="7.0" layoutY="231.0" mnemonicParsing="false" onAction="#addConnector" text="Add Connector" />
-                           <Button fx:id="editConnectorButton" layoutX="217.0" layoutY="231.0" mnemonicParsing="false" onAction="#editConnector" text="Edit Connector" />
-                           <Button fx:id="deleteConnectorButton" layoutX="417.0" layoutY="231.0" mnemonicParsing="false" onAction="#deleteConnector" text="Delete Connector" />
+                           <Button fx:id="addConnectorButton" layoutX="7.0" layoutY="231.0" mnemonicParsing="false" onAction="#addConnector" text="Add Connector" styleClass="btn-grey" />
+                           <Button fx:id="editConnectorButton" layoutX="217.0" layoutY="231.0" mnemonicParsing="false" onAction="#editConnector" text="Edit Connector" styleClass="btn-grey" />
+                           <Button fx:id="deleteConnectorButton" layoutX="417.0" layoutY="231.0" mnemonicParsing="false" onAction="#deleteConnector" text="Delete Connector" styleClass="btn-grey" />
                        </children>
                <BorderPane.margin>
                   <Insets />
@@ -71,8 +71,10 @@
          <center>
                   <GridPane prefHeight="461.0" prefWidth="373.0" BorderPane.alignment="CENTER">
                     <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="155.0" minWidth="155.0" prefWidth="155.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="195.0" />
+                      <ColumnConstraints />
+                      <ColumnConstraints />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="155.0" minWidth="155.0" prefWidth="155.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="195.0" />
                     </columnConstraints>
                     <rowConstraints>
                         <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
@@ -91,96 +93,106 @@
                   <RowConstraints />
                     </rowConstraints>
                      <children>
-                        <Label text="Name:" GridPane.rowIndex="1">
+                        <Label text="Name:" GridPane.columnIndex="2" GridPane.rowIndex="1">
                            <padding>
                               <Insets left="6.0" />
                            </padding>
                         </Label>
-                        <Label text="Owner:" GridPane.rowIndex="2">
+                        <Label text="Owner:" GridPane.columnIndex="2" GridPane.rowIndex="2">
                            <padding>
                               <Insets left="6.0" />
                            </padding>
                         </Label>
-                        <Label text="Operator:" GridPane.rowIndex="3">
+                        <Label text="Operator:" GridPane.columnIndex="2" GridPane.rowIndex="3">
                            <padding>
                               <Insets left="6.0" />
                            </padding>
                         </Label>
-                        <Label text="Address:" GridPane.rowIndex="4">
+                        <Label text="Address:" GridPane.columnIndex="2" GridPane.rowIndex="4">
                            <padding>
                               <Insets left="6.0" />
                            </padding>
                         </Label>
-                        <Label text="Is open 24 hours?" GridPane.rowIndex="5">
+                        <Label text="Is open 24 hours?" GridPane.columnIndex="2" GridPane.rowIndex="5">
                            <padding>
                               <Insets left="6.0" />
                            </padding>
                         </Label>
-                        <Label text="No. of carparks:" GridPane.rowIndex="6">
+                        <Label text="No. of carparks:" GridPane.columnIndex="2" GridPane.rowIndex="6">
                            <padding>
                               <Insets left="6.0" />
                            </padding>
                         </Label>
-                        <Label text="Cost to carparks?" GridPane.rowIndex="7">
+                        <Label text="Cost to carparks?" GridPane.columnIndex="2" GridPane.rowIndex="7">
                            <padding>
                               <Insets left="6.0" />
                            </padding>
                         </Label>
-                        <Label text="Maximum Time Limit:" GridPane.rowIndex="8">
+                        <Label text="Maximum Time Limit:" GridPane.columnIndex="2" GridPane.rowIndex="8">
                            <padding>
                               <Insets left="6.0" />
                            </padding>
                         </Label>
-                        <Label text="Tourist Attractions?" GridPane.rowIndex="9">
+                        <Label text="Tourist Attractions?" GridPane.columnIndex="2" GridPane.rowIndex="9">
                            <padding>
                               <Insets left="6.0" />
                            </padding>
                         </Label>
-                        <Label text="Cost to charge?" GridPane.rowIndex="10">
+                        <Label text="Cost to charge?" GridPane.columnIndex="2" GridPane.rowIndex="10">
                            <padding>
                               <Insets left="6.0" />
                            </padding>
                         </Label>
-                        <TextField fx:id="name" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <Label fx:id="owner" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <TextField fx:id="operator" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <TextField fx:id="address" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                        <CheckBox fx:id="open24" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                        <TextField fx:id="parks" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                        <TextField fx:id="time" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-                        <CheckBox fx:id="costParks" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-                        <CheckBox fx:id="attractions" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="9" />
-                        <CheckBox fx:id="cost" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="10" />
-                        <Label text="*" textFill="RED" GridPane.rowIndex="1">
+                        <TextField fx:id="name" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                        <Label fx:id="owner" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                        <TextField fx:id="operator" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                        <TextField fx:id="address" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+                        <CheckBox fx:id="open24" mnemonicParsing="false" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+                        <TextField fx:id="parks" GridPane.columnIndex="3" GridPane.rowIndex="6" />
+                        <TextField fx:id="time" GridPane.columnIndex="3" GridPane.rowIndex="8" />
+                        <CheckBox fx:id="costParks" mnemonicParsing="false" GridPane.columnIndex="3" GridPane.rowIndex="7" />
+                        <CheckBox fx:id="attractions" mnemonicParsing="false" GridPane.columnIndex="3" GridPane.rowIndex="9" />
+                        <CheckBox fx:id="cost" mnemonicParsing="false" GridPane.columnIndex="3" GridPane.rowIndex="10" />
+                        <Label text="*" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="1">
                            <padding>
                               <Insets bottom="2.0" />
                            </padding>
                         </Label>
-                        <Label text="*" textFill="RED" GridPane.rowIndex="4">
+                        <Label text="*" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="4">
                            <padding>
                               <Insets bottom="2.0" />
                            </padding>
                         </Label>
-                        <Label text="*" textFill="RED" GridPane.rowIndex="6">
+                        <Label text="*" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="6">
                            <padding>
                               <Insets bottom="2.0" />
                            </padding>
                         </Label>
-                        <Label text="*" textFill="RED" GridPane.rowIndex="8">
+                        <Label text="*" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="8">
                            <padding>
                               <Insets bottom="2.0" />
                            </padding>
                         </Label>
-                        <Label text="Edit Charger:" textAlignment="RIGHT">
+                        <Label text="Edit Charger:" textAlignment="RIGHT" GridPane.columnIndex="2">
                            <font>
                               <Font size="17.0" />
                            </font>
                         </Label>
-                  <Label text=" Latitude:" GridPane.rowIndex="11" />
-                  <Label text=" Longitude:" GridPane.rowIndex="12" />
-                  <TextField fx:id="lat" GridPane.columnIndex="1" GridPane.rowIndex="11" />
-                  <TextField fx:id="lon" prefWidth="228.0" GridPane.columnIndex="1" GridPane.rowIndex="12" />
-                  <Label fx:id="views" prefHeight="0.0" prefWidth="0.0" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="13" />
+                  <Label text=" Latitude:" GridPane.columnIndex="2" GridPane.rowIndex="11" />
+                  <Label text=" Longitude:" GridPane.columnIndex="2" GridPane.rowIndex="12" />
+                  <TextField fx:id="lat" GridPane.columnIndex="3" GridPane.rowIndex="11" />
+                  <TextField fx:id="lon" prefWidth="228.0" GridPane.columnIndex="3" GridPane.rowIndex="12" />
+                  <Label fx:id="views" prefHeight="0.0" prefWidth="0.0" visible="false" GridPane.columnIndex="3" GridPane.rowIndex="13" />
+                  <Label text="*" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="11">
+                     <padding>
+                        <Insets bottom="2.0" />
+                     </padding>
+                  </Label>
+                  <Label text="*" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="12">
+                     <padding>
+                        <Insets bottom="2.0" />
+                     </padding>
+                  </Label>
                      </children>
                <BorderPane.margin>
                   <Insets bottom="45.0" />
@@ -199,8 +211,8 @@
          <bottom>
             <VBox alignment="TOP_CENTER" prefHeight="92.0" prefWidth="373.0" spacing="20.0" BorderPane.alignment="CENTER">
                <children>
-                      <Button fx:id="saveButton" alignment="CENTER" onAction="#saveChanges" prefHeight="30.0" prefWidth="167.0" text="Save Changes" />
-                  <Button fx:id="deleteButton" mnemonicParsing="false" onMouseClicked="#launchConfirmation" prefHeight="28.0" prefWidth="136.0" text="DELETE Charger" />
+                      <Button fx:id="saveButton" alignment="CENTER" onAction="#saveChanges" prefHeight="30.0" prefWidth="167.0" text="Save Changes" styleClass="btn-grey" />
+                  <Button fx:id="deleteButton" mnemonicParsing="false" onMouseClicked="#launchConfirmation" prefHeight="28.0" prefWidth="136.0" text="DELETE Charger" styleClass="btn-grey" />
                   <Label fx:id="invalidChargerLabel" text="Invalid information entered" textFill="RED" visible="false">
                      <font>
                         <Font size="14.0" />

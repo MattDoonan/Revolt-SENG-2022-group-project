@@ -108,6 +108,13 @@ public class AdminController {
                     CornerRadii.EMPTY, BorderWidths.DEFAULT));
 
     /**
+     * Styling for invalid fields
+     */
+    private static final Border VALID_STYLE = new Border(
+            new BorderStroke(Color.DARKGRAY, BorderStrokeStyle.SOLID,
+                    CornerRadii.EMPTY, new BorderWidths(0.5)));
+
+    /**
      * User select prompt
      */
     private static final String SELECT_USER = "Please select a user";
@@ -143,6 +150,11 @@ public class AdminController {
         errors.add(MENU_NODE, "Select a permission level.");
         errors.add(UPDATE_NODE, SELECT_USER);
         errors.add(DELETE_NODE, "Cannot delete current user");
+
+        menu.setBorder(VALID_STYLE);
+        updatePermissions.setBorder(VALID_STYLE);
+        delete.setBorder(VALID_STYLE);
+
         this.border = border;
         manager = new AdminManager();
         manager.setAdmin(UserManager.getUser());
@@ -207,7 +219,7 @@ public class AdminController {
     @FXML
     public void deleteUser() {
         errors.hideAll();
-        delete.setBorder(Border.EMPTY);
+        delete.setBorder(VALID_STYLE);
         setSelectedUser();
 
         boolean errorOccured = false;
@@ -239,7 +251,7 @@ public class AdminController {
     @FXML
     public void editPermissions() throws SQLException {
         errors.hideAll();
-        updatePermissions.setBorder(Border.EMPTY);
+        updatePermissions.setBorder(VALID_STYLE);
 
         setSelectedUser();
 

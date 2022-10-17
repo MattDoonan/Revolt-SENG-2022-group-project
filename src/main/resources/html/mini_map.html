@@ -98,6 +98,7 @@
             removeCoordinate()
             addCoordinate(e.geocode.name, latlng.lat, latlng.lng)
             name = e.geocode.name
+            map.flyTo([latlng.lat,latlng.lng], 12)
         })
         return searchBar;
     }
