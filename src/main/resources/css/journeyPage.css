@@ -66,3 +66,6 @@
     -fx-cursor: OPEN_HAND;
 }
 
+.name-label {
+    -fx-font-size: 16px;
+}

@@ -527,10 +527,10 @@ public class JourneyController {
                 if (journeyManager.getSelectedJourney().getStops()
                         .get(journeyManager.getSelectedJourney().getStops().size() - 1)
                         .getCharger().getId() == charger.getId()) {
-                    errors.changeMessage(DELETE_NODE, "Cannot add the same charger consecutively.");
+                    errors.changeMessage(DELETE_NODE, "Cannot add consecutively.");
                     deleteJourney.setBorder(INVALID_STYLE);
                     errors.show(DELETE_NODE);
-                    mapController.showErrorLabel("Cannot add the same charger consecutively.");
+                    mapController.showErrorLabel("Cannot add consecutively.");
                     fail = true;
                 }
             }
@@ -561,10 +561,10 @@ public class JourneyController {
             makeStart.setBorder(INVALID_STYLE);
             errors.show(START_NODE);
         } else if (coordinate.equals(journeyManager.getCurrentCoordinate())) {
-            errors.changeMessage(START_NODE, "Cannot add the same stop consecutively.");
+            errors.changeMessage(START_NODE, "Cannot add consecutively.");
             makeStart.setBorder(INVALID_STYLE);
             errors.show(START_NODE);
-            mapController.showErrorLabel("Cannot add the same stop consecutively.");
+            mapController.showErrorLabel("Cannot add consecutively.");
         } else if (Calculations.calculateDistance(coordinate,
                 journeyManager.getCurrentCoordinate()) <= journeyManager
                         .getDesiredRange()) {
@@ -578,11 +578,11 @@ public class JourneyController {
             mapController.addChargersOnMap();
             calculateRoute();
         } else {
-            errors.changeMessage(START_NODE, "Selected stop is out of range");
+            errors.changeMessage(START_NODE, "Selected stop is out of range.");
             makeStart.setBorder(INVALID_STYLE);
             errors.show(START_NODE);
-            mapController.showErrorLabel("Selected stop is out of range for vehicle.");
-            logManager.info("Selected Stop is out of range for vehicle. ");
+            mapController.showErrorLabel("Selected stop is out of range.");
+            logManager.info("Selected Stop is out of range. ");
         }
 
     }
