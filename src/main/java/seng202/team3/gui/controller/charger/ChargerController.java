@@ -307,7 +307,7 @@ public class ChargerController {
         errors.add(LON_NODE, "Coordinate is not valid number");
         errors.add(ADDRESS_NODE, "Needs an address, e.g. 132 Science Road, Christchurch");
         errors.add(NAME_NODE, "Needs a name, e.g. Home");
-        errors.add(TIME_NODE, "Needs a Time Limit");
+        errors.add(TIME_NODE, "Needs a Time Limit. Enter 0 for unlimited time limit");
         errors.add(PARKS_NODE, "A Charger must have a whole number of parks");
         errors.add(CONN_NODE, "A Charger must have at least one Connector!");
         this.stage = stage;
@@ -449,22 +449,28 @@ public class ChargerController {
         newCharger.setViews(Integer.parseInt(views.getText()));
 
         try {
-            newCharger.setTimeLimit(Double.parseDouble(time.getText()));
+            if (Double.parseDouble(time.getText()) == 0) {
+                newCharger.setTimeLimit(Double.parseDouble("Infinity"));
+            } else {
+                newCharger.setTimeLimit(Double.parseDouble(time.getText()));
+            }
             if (Double.parseDouble(time.getText()) > 1440
                     && Double.parseDouble(time.getText()) != Double.parseDouble("Infinity")) {
-                errors.changeMessage(TIME_NODE, "Time limit cannot be longer than 24 hours.");
+                errors.changeMessage(TIME_NODE, "Time limit cannot be longer than 24 hours. "
+                        + "Enter 0 for unlimited time limit");
                 time.setBorder(INVALID_STYLE);
                 errors.show(TIME_NODE);
                 fail = true;
             }
         } catch (NullPointerException e) {
             time.setBorder(INVALID_STYLE);
-            errors.changeMessage(TIME_NODE, "Needs a Time Limit");
+            errors.changeMessage(TIME_NODE, "Needs a Time Limit. Enter 0 for unlimited time limit");
             errors.show(TIME_NODE);
             fail = true;
         } catch (NumberFormatException e) {
             time.setBorder(INVALID_STYLE);
-            errors.changeMessage(TIME_NODE, "Time Limit is not a valid number");
+            errors.changeMessage(TIME_NODE, "Time Limit is not a valid number. "
+                    + "Enter 0 for unlimited time limit");
             errors.show(TIME_NODE);
             fail = true;
         }
