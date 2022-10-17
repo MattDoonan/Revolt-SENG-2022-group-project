@@ -134,8 +134,8 @@ public class JourneyTestFx extends TestFxBase {
     public void startJourneyError() {
         journeyController.getManager().getSelectedJourney().setVehicle(null);
         clickOn("#makeStart");
-        double left_border = ((Button) find("#makeStart")).getBorder().getStrokes().get(0).getWidths().getLeft();
-        assertEquals(1, left_border);
+        assertEquals(1, 
+            (((Button) find("#makeStart")).getBorder().getStrokes().get(0).getWidths().getLeft()));
     }
 
     /**
@@ -144,8 +144,8 @@ public class JourneyTestFx extends TestFxBase {
     @Test
     public void endJourneyError() {
         clickOn("#makeEnd");
-        double left_border = ((Button) find("#makeStart")).getBorder().getStrokes().get(0).getWidths().getLeft();
-        assertEquals(1, left_border);
+        assertEquals(1, 
+            (((Button) find("#makeStart")).getBorder().getStrokes().get(0).getWidths().getLeft()));
     }
 
     /**
@@ -154,8 +154,8 @@ public class JourneyTestFx extends TestFxBase {
     @Test
     public void saveJourneyError() {
         clickOn("#saveJourney");
-        double left_border = ((Button) find("#makeStart")).getBorder().getStrokes().get(0).getWidths().getLeft();
-        assertEquals(1, left_border);
+        assertEquals(1, 
+            (((Button) find("#makeStart")).getBorder().getStrokes().get(0).getWidths().getLeft()));
     }
 
     /**
@@ -165,8 +165,8 @@ public class JourneyTestFx extends TestFxBase {
     @Test
     public void loadJourneyError() {
         clickOn("#loadJourney");
-        double left_border = ((Button) find("#loadJourney")).getBorder().getStrokes().get(0).getWidths().getLeft();
-        assertEquals(1, left_border);
+        assertEquals(1, 
+            (((Button) find("#loadJourney")).getBorder().getStrokes().get(0).getWidths().getLeft()));
     }
 
     /**
@@ -176,8 +176,8 @@ public class JourneyTestFx extends TestFxBase {
     @Test
     public void deleteJourneyError() {
         clickOn("#deleteJourney");
-        double left_border = ((Button) find("#deleteJourney")).getBorder().getStrokes().get(0).getWidths().getLeft();
-        assertEquals(1, left_border);
+        assertEquals(1, 
+            (((Button) find("#deleteJourney")).getBorder().getStrokes().get(0).getWidths().getLeft()));
     }
 
     /**
