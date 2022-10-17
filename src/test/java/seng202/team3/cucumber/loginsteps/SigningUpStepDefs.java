@@ -31,7 +31,6 @@ import seng202.team3.gui.controller.LoginSignupController;
 import seng202.team3.gui.controller.map.MapHandler;
 import seng202.team3.logic.manager.UserManager;
 
-//TODO: find a way to include steps through common file
 /**
  * Cucumber Tests designed to check acceptance tests of searching and filtering
  * COMMON BACKGROUND STEPS ARE DEFINED IN {@link LoggingInStepDefs}

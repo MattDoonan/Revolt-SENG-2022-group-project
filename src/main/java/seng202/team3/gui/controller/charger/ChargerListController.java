@@ -77,6 +77,11 @@ public class ChargerListController {
     private static final int LARGER_VIEW_WRAPPER = 380;
 
     /**
+     * Default font size
+     */
+    private static final String DEFAULT_FONT = "-fx-font-size : 17";
+
+    /**
      * unused
      */
     public ChargerListController() {
@@ -225,12 +230,12 @@ public class ChargerListController {
         VBox display = new VBox(); // Creates Vbox to contain text
 
         Text chargerName = new Text(c.getName());
-        chargerName.setStyle("-fx-font-size : 17");
+        chargerName.setStyle(DEFAULT_FONT);
         chargerName.setWrappingWidth(SMALLER_VIEW_WRAPPER);
         display.getChildren().add(chargerName);
 
         Text chargerAddress = new Text(c.getLocation().getAddress());
-        chargerAddress.setStyle("-fx-font-size : 17");
+        chargerAddress.setStyle(DEFAULT_FONT);
         chargerAddress.setWrappingWidth(SMALLER_VIEW_WRAPPER);
         display.getChildren().add(chargerAddress);
 
@@ -320,7 +325,7 @@ public class ChargerListController {
         largeDisplayInfo.getChildren().add(large3);
 
         Text info = new Text("General Information");
-        info.setStyle("-fx-font-size : 17");
+        info.setStyle(DEFAULT_FONT);
         info.setWrappingWidth(LARGER_VIEW_WRAPPER);
         largeDisplayInfo.getChildren().add(info);
 
@@ -336,7 +341,7 @@ public class ChargerListController {
         largeDisplayInfo.getChildren().add(large4);
 
         Text connector = new Text("Connectors");
-        connector.setStyle("-fx-font-size : 17");
+        connector.setStyle(DEFAULT_FONT);
         largeDisplayInfo.getChildren().add(connector);
         addConnectorsToView(c);
         manage.getManager().setSelectedCharger(c);

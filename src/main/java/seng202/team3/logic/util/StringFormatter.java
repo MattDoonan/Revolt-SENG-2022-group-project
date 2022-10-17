@@ -11,7 +11,7 @@ public class StringFormatter {
     /**
      * Unused constructor
      */
-    public StringFormatter() {
+    private StringFormatter() {
         // unused
     }
 
@@ -23,13 +23,15 @@ public class StringFormatter {
      */
     public static String toTitleCase(String str) {
         String[] words = str.split("\s");
-        String capitalizeWord = "";
+        StringBuilder capitalizeWord = new StringBuilder();
         for (String w : words) {
             String first = w.substring(0, 1);
             String afterfirst = w.substring(1);
-            capitalizeWord += first.toUpperCase() + afterfirst.toLowerCase() + " ";
+            capitalizeWord.append(first.toUpperCase());
+            capitalizeWord.append(afterfirst.toLowerCase());
+            capitalizeWord.append(" ");
         }
-        return capitalizeWord.trim();
+        return capitalizeWord.toString().trim();
     }
 
 }

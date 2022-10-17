@@ -48,7 +48,6 @@ public abstract class CucumberFxBase extends ApplicationTest {
     /**
      * Environment setup for test. IMPORTANT: THE LOCAL CONTROLLER MUST BE SET WITH
      * MainWindow.getController()
-     * TODO: Find a way to assign that here using inheritance abstraction
      * Use with @Before
      * 
      * @throws Exception if test cannot be initialized

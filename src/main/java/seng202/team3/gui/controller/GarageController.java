@@ -223,6 +223,11 @@ public class GarageController {
     private static final String VEHICLE_THREE = "three";
 
     /**
+     * Selected text
+     */
+    private static final String SELECTED_TEXT = "Currently selected";
+
+    /**
      * Initialize the GarageController
      */
     public GarageController() {
@@ -509,7 +514,7 @@ public class GarageController {
                                     + CONNECTIONS_TXT
                                     + vehicleData.get(index).getConnectors().toString());
                     if (vehicleData.get(index).getCurrVehicle()) {
-                        currSelectedOne.setText("Currently selected");
+                        currSelectedOne.setText(SELECTED_TEXT);
                     } else {
                         currSelectedOne.setText("");
                     }
@@ -524,7 +529,7 @@ public class GarageController {
                                     + CONNECTIONS_TXT
                                     + vehicleData.get(index).getConnectors().toString());
                     if (vehicleData.get(index).getCurrVehicle()) {
-                        currSelectedTwo.setText("Currently selected");
+                        currSelectedTwo.setText(SELECTED_TEXT);
                     } else {
                         currSelectedTwo.setText("");
                     }
@@ -538,7 +543,7 @@ public class GarageController {
                                     + CONNECTIONS_TXT
                                     + vehicleData.get(index).getConnectors().toString());
                     if (vehicleData.get(index).getCurrVehicle()) {
-                        currSelectedThree.setText("Currently selected");
+                        currSelectedThree.setText(SELECTED_TEXT);
                     } else {
                         currSelectedThree.setText("");
                     }

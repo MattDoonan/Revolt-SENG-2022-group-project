@@ -1,6 +1,5 @@
 package seng202.team3.logic.manager;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import seng202.team3.data.entity.Charger;
@@ -74,26 +73,24 @@ public class ChargerManager {
      * Returns the list of the closest chargers, in order from closest to furthest
      * away.
      *
-     * @param chargers {@link seng202.team3.data.entity.Charger} An ArrayList of
+     * @param chargers {@link seng202.team3.data.entity.Charger} An List of
      *                 Chargers
      * @param location {@link seng202.team3.data.entity.Coordinate} A coordinate of
      *                 the location to calculate
      *                 distance from
      * @param distance double, the maximum distance to filter chargers by
-     * @return ArrayList of the {@link seng202.team3.data.entity.Charger} chargers
+     * @return List of the {@link seng202.team3.data.entity.Charger} chargers
      *         sorted from closest to
      *         furthest
      */
-    public ArrayList<Charger> getNearbyChargers(ArrayList<Charger> chargers, Coordinate location,
+    public List<Charger> getNearbyChargers(List<Charger> chargers, Coordinate location,
             double distance) {
 
-        List<Charger> sortedChargers = chargers.stream()
+        return chargers.stream()
                 .filter(dist -> Calculations.calculateDistance(dist.getLocation(),
                         location) <= distance)
                 .sorted(Comparator.comparingDouble(dist -> Calculations.calculateDistance(
                         dist.getLocation(), location)))
                 .toList();
-
-        return (new ArrayList<>(sortedChargers));
     }
 }

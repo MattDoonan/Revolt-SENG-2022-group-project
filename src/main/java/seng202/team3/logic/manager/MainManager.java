@@ -1,7 +1,7 @@
 package seng202.team3.logic.manager;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.apache.logging.log4j.LogManager;
@@ -70,7 +70,7 @@ public class MainManager extends ChargerHandler implements ChargerInterface {
      *         are nearby
      */
     public ObservableList<Charger> compareDistance() {
-        ArrayList<Charger> arrayChargers = new ArrayList<>(chargerData);
+        List<Charger> arrayChargers = chargerData;
         if (distance != 0) {
             arrayChargers = chargerManager.getNearbyChargers(
                     arrayChargers, selectedCoordinate, distance);

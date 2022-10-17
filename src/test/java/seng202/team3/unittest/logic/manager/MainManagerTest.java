@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javax.management.InstanceAlreadyExistsException;
@@ -152,14 +154,14 @@ public class MainManagerTest {
         new CsvInterpreter().importChargersToDatabase("/csvtest/filtering.csv");
 
         QueryBuilder q = new QueryBuilderImpl().withSource(EntityType.CHARGER);
-        ArrayList<Charger> chargerList = new ArrayList<>();
+        List<Charger> chargerList = new ArrayList<>();
 
         for (Object o : SqlInterpreter.getInstance().readData(q.build())) {
             chargerList.add((Charger) o);
         }
 
         Coordinate coordinate = new Coordinate(-43.53418, 172.627572);
-        ArrayList<Charger> cc;
+        List<Charger> cc;
 
         cc = charge.getNearbyChargers(chargerList, coordinate, 50.0);
         GeoLocationHandler.setCoordinate(coordinate);
@@ -185,8 +187,8 @@ public class MainManagerTest {
         new CsvInterpreter().importChargersToDatabase("/csvtest/filtering.csv");
 
         QueryBuilder q = new QueryBuilderImpl().withSource(EntityType.CHARGER);
-        ArrayList<Charger> chargerList = new ArrayList<>();
-        ArrayList<Charger> cc;
+        List<Charger> chargerList = new ArrayList<>();
+        List<Charger> cc;
 
         for (Object o : SqlInterpreter.getInstance().readData(q.build())) {
             chargerList.add((Charger) o);

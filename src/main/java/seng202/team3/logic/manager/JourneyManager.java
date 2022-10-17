@@ -42,7 +42,7 @@ public class JourneyManager extends ChargerHandler {
     /**
      * A list of all the chargers in range
      */
-    private ArrayList<Charger> rangeChargers;
+    private List<Charger> rangeChargers;
 
     /**
      * Current coordinate to get chargers in range
@@ -169,7 +169,7 @@ public class JourneyManager extends ChargerHandler {
      */
     public void makeRangeChargers() {
         makeAllChargers();
-        ArrayList<Charger> chargers = new ArrayList<>(getData());
+        List<Charger> chargers = getData();
         rangeChargers = chargers;
         if (currentCoordinate != null) {
             rangeChargers = new ChargerManager().getNearbyChargers(chargers,

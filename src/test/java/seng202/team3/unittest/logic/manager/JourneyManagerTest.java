@@ -116,7 +116,7 @@ public class JourneyManagerTest {
         journeyManager.setCurrentCoordinate(testCoordinateStart);
         journeyManager.setDesiredRange(100.0);
         journeyManager.makeRangeChargers();
-        ArrayList<Charger> result = new ChargerManager().getNearbyChargers(
+        List<Charger> result = new ChargerManager().getNearbyChargers(
                 new ArrayList<Charger>(journeyManager.getData()), testCoordinateStart, 100.0);
         Assertions.assertEquals(result, journeyManager.getRangeChargers());
     }

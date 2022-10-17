@@ -113,14 +113,15 @@ public class ChargerListMainStepDefs extends CucumberFxBase {
 
     @Given("The user has a location tracking on")
     public void locationTracking() {
-        Assertions.assertFalse(GeoLocationHandler.getCoordinate() == GeoLocationHandler.DEFAULT_COORDINATE);
+        Assertions.assertNotSame(GeoLocationHandler.DEFAULT_COORDINATE,
+                GeoLocationHandler.getCoordinate());
     }
 
     @Then("The user is told the distance (in km) between the given location and closest chargers")
     public void checkClosestChargers() throws IOException {
         List<Entity> o = db.readData(new QueryBuilderImpl().withSource(EntityType.CHARGER)
                 .build());
-        ArrayList<Charger> chargers = new ArrayList<>();
+        List<Charger> chargers = new ArrayList<>();
         for (Entity c : o) {
             chargers.add((Charger) c);
         }

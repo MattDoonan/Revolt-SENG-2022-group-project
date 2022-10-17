@@ -44,7 +44,6 @@ import seng202.team3.logic.manager.UserManager;
 import seng202.team3.logic.util.GeoLocationHandler;
 import seng202.team3.logic.util.JavaScriptBridge;
 
-
 /**
  * Allows you to edit a charger
  *
@@ -71,11 +70,6 @@ public class ChargerController {
      * Screen object
      */
     private Stage stage;
-
-    /**
-     * Previous coordinate
-     */
-    private Coordinate prevCoordinate;
 
     /**
      * Connectors attached to the charger
@@ -313,17 +307,7 @@ public class ChargerController {
         this.stage = stage;
         makeConnectors();
         connectorTable.setItems(connectors);
-        prevCoordinate = GeoLocationHandler.getCoordinate();
         displayChargerInfo();
-    }
-
-    /**
-     * Sets the current coordinate
-     *
-     * @param coordinate the current coordinate selected
-     */
-    public void setCoordinate(Coordinate coordinate) {
-        prevCoordinate = coordinate;
     }
 
     /**

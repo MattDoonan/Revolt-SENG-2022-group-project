@@ -33,6 +33,7 @@ import seng202.team3.gui.util.PopUpWindow;
 import seng202.team3.logic.manager.TableManager;
 import seng202.team3.logic.manager.UserManager;
 import seng202.team3.logic.util.JavaScriptBridge;
+import seng202.team3.logic.util.StringFormatter;
 
 /**
  * A TableController class that deals with the display of the table objects
@@ -517,10 +518,14 @@ public class TableController {
                     Double.toString(parkingLot.getValue()), ComparisonType.GREATER_THAN_EQUAL);
         }
         if (withoutCarparkCost.isSelected()) {
-            manage.adjustQuery("hascarparkcost", "False", ComparisonType.EQUAL);
+            manage.adjustQuery("hascarparkcost",
+                    StringFormatter.toTitleCase(Boolean.FALSE.toString()),
+                    ComparisonType.EQUAL);
         }
         if (withCarparkCost.isSelected()) {
-            manage.adjustQuery("hascarparkcost", "True", ComparisonType.EQUAL);
+            manage.adjustQuery("hascarparkcost",
+                    StringFormatter.toTitleCase(Boolean.TRUE.toString()),
+                    ComparisonType.EQUAL);
         }
         if (acButton.isSelected()) {
             manage.adjustQuery("currenttype", "AC", ComparisonType.CONTAINS);
@@ -529,22 +534,33 @@ public class TableController {
             manage.adjustQuery("currenttype", "DC", ComparisonType.CONTAINS);
         }
         if (openAllButton.isSelected()) {
-            manage.adjustQuery("is24hours", "True", ComparisonType.EQUAL);
+            manage.adjustQuery("is24hours",
+                    StringFormatter.toTitleCase(Boolean.TRUE.toString()), ComparisonType.EQUAL);
         }
         if (notOpenAllButton.isSelected()) {
-            manage.adjustQuery("is24hours", "False", ComparisonType.EQUAL);
+            manage.adjustQuery("is24hours",
+                    StringFormatter.toTitleCase(Boolean.FALSE.toString()),
+                    ComparisonType.EQUAL);
         }
         if (attractionButton.isSelected()) {
-            manage.adjustQuery("hastouristattraction", "True", ComparisonType.EQUAL);
+            manage.adjustQuery("hastouristattraction",
+                    StringFormatter.toTitleCase(Boolean.TRUE.toString()),
+                    ComparisonType.EQUAL);
         }
         if (noNearbyAttraction.isSelected()) {
-            manage.adjustQuery("hastouristattraction", "False", ComparisonType.EQUAL);
+            manage.adjustQuery("hastouristattraction",
+                    StringFormatter.toTitleCase(Boolean.FALSE.toString()),
+                    ComparisonType.EQUAL);
         }
         if (chargingCost.isSelected()) {
-            manage.adjustQuery("haschargingcost", "False", ComparisonType.EQUAL);
+            manage.adjustQuery("haschargingcost",
+                    StringFormatter.toTitleCase(Boolean.FALSE.toString()),
+                    ComparisonType.EQUAL);
         }
         if (hasChargingCost.isSelected()) {
-            manage.adjustQuery("haschargingcost", "True", ComparisonType.EQUAL);
+            manage.adjustQuery("haschargingcost",
+                    StringFormatter.toTitleCase(Boolean.TRUE.toString()),
+                    ComparisonType.EQUAL);
         }
         if (searchCharger.getText().length() != 0) {
             manage.adjustQuery("address", searchCharger.getText(), ComparisonType.CONTAINS);

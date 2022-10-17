@@ -37,6 +37,21 @@ public class JourneyMapController extends MapHandler {
     private Label errorLabel;
 
     /**
+     * Javascript function to remove route
+     */
+    private static final String REMOVE_ROUTE = "removeRoute";
+
+    /**
+     * Javascript function to add point
+     */
+    private static final String ADD_POINT = "addPoint";
+
+    /**
+     * Javascript function to add location to route
+     */
+    private static final String ADD_LOCATION_TO_ROUTE = "addLocationToRoute";
+
+    /**
      * Constructor for this class
      */
     public JourneyMapController() {
@@ -67,6 +82,7 @@ public class JourneyMapController extends MapHandler {
 
     /**
      * Shows the error table with text
+     * 
      * @param text the text
      */
     public void showErrorLabel(String text) {
@@ -99,7 +115,7 @@ public class JourneyMapController extends MapHandler {
         }
         javaScriptConnector.call("setJourney");
         javaScriptConnector.call("clearMarkers");
-        javaScriptConnector.call("removeRoute");
+        javaScriptConnector.call(REMOVE_ROUTE);
         journeyController.getManager().makeRangeChargers();
 
         Coordinate start = journeyController.getManager().getStart();
@@ -107,11 +123,11 @@ public class JourneyMapController extends MapHandler {
 
         boolean isEditable = false;
         if (start != null) {
-            javaScriptConnector.call("addPoint", start.getAddress(),
+            javaScriptConnector.call(ADD_POINT, start.getAddress(),
                     start.getLat(), start.getLon());
             isEditable = true;
         } else if (end != null) {
-            javaScriptConnector.call("addPoint", end.getAddress(), end.getLat(), end.getLon());
+            javaScriptConnector.call(ADD_POINT, end.getAddress(), end.getLat(), end.getLon());
         }
         for (Charger charger : journeyController.getManager().getRangeChargers()) {
             javaScriptConnector.call("addMarker", charger.getLocation().getAddress(),
@@ -120,7 +136,7 @@ public class JourneyMapController extends MapHandler {
         }
         for (Stop stop : journeyController.getManager().getStops()) {
 
-            javaScriptConnector.call("addPoint", stop.getLocation().getAddress(),
+            javaScriptConnector.call(ADD_POINT, stop.getLocation().getAddress(),
                     stop.getLocation().getLat(), stop.getLocation().getLon());
         }
         if (journeyController.getManager().getCurrentCoordinate() != null) {
@@ -166,29 +182,29 @@ public class JourneyMapController extends MapHandler {
         if (Boolean.FALSE.equals(MapHandler.isMapRequested())) {
             return;
         }
-        javaScriptConnector.call("removeRoute");
+        javaScriptConnector.call(REMOVE_ROUTE);
 
         Coordinate start = journeyController.getManager().getSelectedJourney().getStartPosition();
         Coordinate end = journeyController.getManager().getSelectedJourney().getEndPosition();
 
         if (start != null && end != null) {
 
-            javaScriptConnector.call("addLocationToRoute", start.getLat(), start.getLon(),
+            javaScriptConnector.call(ADD_LOCATION_TO_ROUTE, start.getLat(), start.getLon(),
                     start.getAddress(), "p", 0);
 
             int i = 1;
             for (Stop stop : journeyController.getManager().getStops()) {
                 if (stop.getCharger() != null) {
-                    javaScriptConnector.call("addLocationToRoute", stop.getLocation().getLat(),
+                    javaScriptConnector.call(ADD_LOCATION_TO_ROUTE, stop.getLocation().getLat(),
                             stop.getLocation().getLon(), stop.getCharger().getId(), "c", i);
                 } else {
-                    javaScriptConnector.call("addLocationToRoute", stop.getLocation().getLat(),
+                    javaScriptConnector.call(ADD_LOCATION_TO_ROUTE, stop.getLocation().getLat(),
                             stop.getLocation().getLon(), stop.getId(), "p", i);
                 }
                 i += 1;
             }
 
-            javaScriptConnector.call("addLocationToRoute",
+            javaScriptConnector.call(ADD_LOCATION_TO_ROUTE,
                     end.getLat(), end.getLon(), end.getAddress(), "p", i);
 
             javaScriptConnector.call("addRoute");
@@ -202,7 +218,7 @@ public class JourneyMapController extends MapHandler {
         if (Boolean.FALSE.equals(MapHandler.isMapRequested())) {
             return;
         }
-        javaScriptConnector.call("removeRoute");
+        javaScriptConnector.call(REMOVE_ROUTE);
         javaScriptConnector.call("removeCircle");
     }
 }

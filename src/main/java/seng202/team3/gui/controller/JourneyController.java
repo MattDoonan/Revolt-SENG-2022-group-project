@@ -294,6 +294,16 @@ public class JourneyController {
     private static final String ADD_VEHICLE = "Add Vehicle...";
 
     /**
+     * Vehicle select
+     */
+    private static final String SELECT_VEHICLE = "Please select a vehicle.";
+
+    /**
+     * No journey
+     */
+    private static final String NO_JOURNEY = "No journey selected";
+
+    /**
      * Gets the logic manager for journeys
      * 
      * @return journeyManager
@@ -320,12 +330,11 @@ public class JourneyController {
         makeStart.setBorder(VALID_STYLE);
         makeEnd.setBorder(VALID_STYLE);
         vehicles.setBorder(VALID_STYLE);
-        
 
         errors.add(START_NODE, "No starting point selected");
         errors.add(END_NODE, "No end point selected");
-        errors.add(VEHICLES_NODE, "Please select a vehicle.");
-        errors.add(LOAD_NODE, "No journey selected");
+        errors.add(VEHICLES_NODE, SELECT_VEHICLE);
+        errors.add(LOAD_NODE, NO_JOURNEY);
         errors.add(DELETE_NODE, "Selected end point is out of range");
         errors.add(SAVE_NODE, "Some of your locations are out of range of each other");
         journeyManager = new JourneyManager();
@@ -390,7 +399,7 @@ public class JourneyController {
             logManager.info("Start position set");
             calculateRoute();
         } else if (journeyManager.getSelectedJourney().getVehicle() == null) {
-            errors.changeMessage(START_NODE, "Please select a vehicle.");
+            errors.changeMessage(START_NODE, SELECT_VEHICLE);
             makeStart.setBorder(INVALID_STYLE);
             errors.show(START_NODE);
             logManager.warn("Vehicle not selected.");
@@ -433,7 +442,7 @@ public class JourneyController {
             errors.show(END_NODE);
             fail = true;
         } else if (journeyManager.getSelectedJourney().getVehicle() == null) {
-            errors.changeMessage(VEHICLES_NODE, "Please select a vehicle.");
+            errors.changeMessage(VEHICLES_NODE, SELECT_VEHICLE);
             vehicles.setBorder(INVALID_STYLE);
             errors.show(VEHICLES_NODE);
             fail = true;
@@ -521,20 +530,17 @@ public class JourneyController {
         Boolean fail = false;
         mapController.errorLabelHide();
         deleteJourney.setBorder(VALID_STYLE);
-        if (!journeyManager.getSelectedJourney().getStops().isEmpty()) {
-            if (journeyManager.getSelectedJourney().getStops()
-                    .get(journeyManager.getSelectedJourney().getStops().size() - 1)
-                    .getCharger() != null) {
-                if (journeyManager.getSelectedJourney().getStops()
-                        .get(journeyManager.getSelectedJourney().getStops().size() - 1)
-                        .getCharger().getId() == charger.getId()) {
-                    errors.changeMessage(DELETE_NODE, "Cannot add the same charger consecutively.");
-                    deleteJourney.setBorder(INVALID_STYLE);
-                    errors.show(DELETE_NODE);
-                    mapController.showErrorLabel("Cannot add the same charger consecutively.");
-                    fail = true;
-                }
-            }
+        Stop lastStop = journeyManager.getSelectedJourney().getStops()
+                .get(journeyManager.getSelectedJourney().getStops().size() - 1);
+
+        if (!journeyManager.getSelectedJourney().getStops().isEmpty()
+                && lastStop.getCharger() != null
+                && lastStop.getCharger().getId() == charger.getId()) {
+            errors.changeMessage(DELETE_NODE, "Cannot add the same charger consecutively.");
+            deleteJourney.setBorder(INVALID_STYLE);
+            errors.show(DELETE_NODE);
+            mapController.showErrorLabel("Cannot add the same charger consecutively.");
+            fail = true;
         }
         if (Boolean.FALSE.equals(fail)) {
             journeyManager.addStop(stop);
@@ -571,7 +577,7 @@ public class JourneyController {
                         .getDesiredRange()) {
             journeyManager.addNoChargerStop(coordinate);
             journeyManager.setCurrentCoordinate(coordinate);
-            logManager.info("Stop added at Coordinate: " + coordinate.getAddress());
+            logManager.info("Stop added at Coordinate: %s", coordinate.getAddress());
             mapController.positionMarker("Stop");
             resetChargerDisplay();
             addWaypointsToDisplay();
@@ -781,7 +787,7 @@ public class JourneyController {
                 populateTable();
             }
         } else {
-            errors.changeMessage(DELETE_NODE, "No journey selected");
+            errors.changeMessage(DELETE_NODE, NO_JOURNEY);
             deleteJourney.setBorder(INVALID_STYLE);
             errors.show(DELETE_NODE);
 
@@ -828,7 +834,7 @@ public class JourneyController {
             maxRange.setText(Integer.toString(journeyManager
                     .getSelectedJourney().getVehicle().getMaxRange()));
         } else {
-            errors.changeMessage(LOAD_NODE, "No journey selected");
+            errors.changeMessage(LOAD_NODE, NO_JOURNEY);
             loadJourney.setBorder(INVALID_STYLE);
             errors.show(LOAD_NODE);
         }
@@ -962,7 +968,7 @@ public class JourneyController {
         if (journeyManager.getSelectedJourney().getVehicle() != null) {
             if (journeyManager.getSelectedJourney().getEndPosition() == journeyManager
                     .getCurrentCoordinate() && journeyManager
-                    .getSelectedJourney().getStops().isEmpty()) {
+                            .getSelectedJourney().getStops().isEmpty()) {
                 journeyManager.setCurrentCoordinate(journeyManager.getStart());
             }
             journeyManager.setDesiredRange(rangeSlider.getValue()

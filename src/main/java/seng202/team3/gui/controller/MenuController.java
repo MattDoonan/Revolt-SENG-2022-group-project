@@ -105,6 +105,11 @@ public class MenuController {
             + "(from 50% 0% to 50% 100%, #c2313b, #9d3d43);";
 
     /**
+     * Log access warning
+     */
+    private static final String ACCESS_WARNING = "Must be logged in to access this feature";
+
+    /**
      * unused constructor
      */
     public MenuController() {
@@ -203,7 +208,7 @@ public class MenuController {
         try {
             if (UserManager.getUser() == UserManager.getGuest()) {
                 createLoginWindow(LOGIN_PATH, LOGIN_TITLE, null, null);
-                logManager.warn("Must be logged in to access this feature");
+                logManager.warn(ACCESS_WARNING);
             }
             if (UserManager.getUser() != UserManager.getGuest()) {
                 FXMLLoader garageLoader = new FXMLLoader(getClass()
@@ -294,7 +299,7 @@ public class MenuController {
         try {
             if (UserManager.getUser() == UserManager.getGuest()) {
                 createLoginWindow(LOGIN_PATH, LOGIN_TITLE, null, null);
-                logManager.warn("Must be logged in to access this feature");
+                logManager.warn(ACCESS_WARNING);
             }
             if (UserManager.getUser() != UserManager.getGuest()) {
                 FXMLLoader accountLoader = new FXMLLoader(getClass()
@@ -354,7 +359,7 @@ public class MenuController {
         try {
             if (UserManager.getUser() == UserManager.getGuest()) {
                 createLoginWindow(LOGIN_PATH, LOGIN_TITLE, null, null);
-                logManager.warn("Must be logged in to access this feature");
+                logManager.warn(ACCESS_WARNING);
             }
             if (UserManager.getUser() != UserManager.getGuest()) {
                 FXMLLoader journeyLoader = new FXMLLoader(getClass()

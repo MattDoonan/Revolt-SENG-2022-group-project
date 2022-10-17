@@ -203,13 +203,13 @@ public class ChargerManagerTest {
         // Coordinate same as hospital
         Coordinate coordinate = new Coordinate(-43.53418, 172.627572);
 
-        ArrayList<Charger> chargerList = new ArrayList<>();
+        List<Charger> chargerList = new ArrayList<>();
         chargerList.add(charge1);
         chargerList.add(charge2);
         chargerList.add(charge3);
         chargerList.add(charge4);
 
-        ArrayList<Charger> filteredChargers = manager.getNearbyChargers(
+        List<Charger> filteredChargers = manager.getNearbyChargers(
                 chargerList, coordinate, distance);
         assertEquals(3, filteredChargers.size());
     }
@@ -222,13 +222,13 @@ public class ChargerManagerTest {
         // Coordinate same as hospital
         Coordinate coordinate = new Coordinate(-43.53418, 172.627572);
 
-        ArrayList<Charger> chargerList = new ArrayList<>();
+        List<Charger> chargerList = new ArrayList<>();
         chargerList.add(charge4);
         chargerList.add(charge3);
         chargerList.add(charge2);
         chargerList.add(charge1);
 
-        ArrayList<Charger> filteredChargers = manager
+        List<Charger> filteredChargers = manager
                 .getNearbyChargers(chargerList, coordinate, distance);
 
         assertTrue(filteredChargers.get(0).equals(charge1)

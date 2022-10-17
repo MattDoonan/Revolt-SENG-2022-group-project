@@ -144,7 +144,8 @@ public class AdminPageTestFx extends TestFxBase {
             release(KeyCode.DOWN);
         }
         clickOn("#updatePermissions");
-        double left_border = ((Button) find("#updatePermissions")).getBorder().getStrokes().get(0).getWidths().getLeft();
+        double left_border = ((Button) find("#updatePermissions")).getBorder().getStrokes().get(0).getWidths()
+                .getLeft();
         assertEquals(1, left_border);
     }
 
@@ -157,7 +158,6 @@ public class AdminPageTestFx extends TestFxBase {
         clickOn("#delete");
         double left_border = ((Button) find("#delete")).getBorder().getStrokes().get(0).getWidths().getLeft();
         assertEquals(1, left_border);
-        //TODO: change to 0.5 when border updated
     }
 
     /**
