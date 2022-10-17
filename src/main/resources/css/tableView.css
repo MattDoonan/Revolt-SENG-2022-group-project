@@ -40,7 +40,6 @@
 
 .text-field {
 	-fx-background-color: #ffffff;
-	/* -fx-border-color: #a9a9a9; */
 }
 
 .text-field:hover {
@@ -49,7 +48,6 @@
 
 .tableMenu {
 	-fx-background-color: #ffffff;
-	/* -fx-border-color: #a9a9a9; */
 }
 
 .tableMenu:hover {
@@ -58,7 +56,6 @@
 
 .button {
 	-fx-background-color: #ffffff;
-	/* -fx-border-color: #a9a9a9; */
 }
 
 .button:hover {

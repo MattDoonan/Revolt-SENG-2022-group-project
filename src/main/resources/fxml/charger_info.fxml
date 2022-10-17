@@ -40,9 +40,9 @@
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                            </columnResizePolicy>
                            </TableView>
-                           <Button fx:id="addConnectorButton" layoutX="7.0" layoutY="231.0" mnemonicParsing="false" onAction="#addConnector" text="Add Connector" />
-                           <Button fx:id="editConnectorButton" layoutX="217.0" layoutY="231.0" mnemonicParsing="false" onAction="#editConnector" text="Edit Connector" />
-                           <Button fx:id="deleteConnectorButton" layoutX="417.0" layoutY="231.0" mnemonicParsing="false" onAction="#deleteConnector" text="Delete Connector" />
+                           <Button fx:id="addConnectorButton" layoutX="7.0" layoutY="231.0" mnemonicParsing="false" onAction="#addConnector" text="Add Connector" styleClass="btn-grey"/>
+                           <Button fx:id="editConnectorButton" layoutX="217.0" layoutY="231.0" mnemonicParsing="false" onAction="#editConnector" text="Edit Connector" styleClass="btn-grey"/>
+                           <Button fx:id="deleteConnectorButton" layoutX="417.0" layoutY="231.0" mnemonicParsing="false" onAction="#deleteConnector" text="Delete Connector" styleClass="btn-grey"/>
                        </children>
                <BorderPane.margin>
                   <Insets />
@@ -143,7 +143,7 @@
                         </Label>
                         <TextField fx:id="name" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <Label fx:id="owner" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <TextField fx:id="operator" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <TextField fx:id="operator" GridPane.columnIndex="1" GridPane.rowIndex="3" styleClass="btn-grey" />
                         <TextField fx:id="address" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                         <CheckBox fx:id="open24" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                         <TextField fx:id="parks" GridPane.columnIndex="1" GridPane.rowIndex="6" />
@@ -199,7 +199,7 @@
          <bottom>
             <VBox alignment="TOP_CENTER" prefHeight="92.0" prefWidth="373.0" spacing="20.0" BorderPane.alignment="CENTER">
                <children>
-                      <Button fx:id="saveButton" alignment="CENTER" onAction="#saveChanges" prefHeight="30.0" prefWidth="167.0" text="Save Changes" />
+                      <Button fx:id="saveButton" alignment="CENTER" onAction="#saveChanges" prefHeight="30.0" prefWidth="167.0" text="Save Changes" styleClass="btn-grey" />
                   <Button fx:id="deleteButton" mnemonicParsing="false" onMouseClicked="#launchConfirmation" prefHeight="28.0" prefWidth="136.0" text="DELETE Charger" />
                   <Label fx:id="invalidChargerLabel" text="Invalid information entered" textFill="RED" visible="false">
                      <font>

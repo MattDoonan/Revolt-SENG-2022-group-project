@@ -42,7 +42,6 @@
 	-fx-background-color: -fx-grey-color, white;
 	-fx-background-insets: 0, 0 0 1 0;
 	-fx-background-radius: 0;
-	-fx-border-color: #a9a9a9;
 }
 .text-field:focused {
 	background-color: -fx-primary-color, white;

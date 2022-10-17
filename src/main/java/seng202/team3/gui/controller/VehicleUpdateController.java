@@ -391,6 +391,7 @@ public class VehicleUpdateController {
      */
     public void addConnection() {
         if (connectorType.getValue() != null) {
+            connectorType.setBorder(VALID_STYLE);
             if (connectorType.getValue().equals("Other...")) {
                 GridPane root = new GridPane();
                 Button save = new Button("Save");
@@ -400,6 +401,7 @@ public class VehicleUpdateController {
                 root.setStyle("-fx-padding: 20;");
                 save.setOnMouseClicked((MouseEvent event) -> {
                     Button button = new Button(DELETE_BUTTON_TEXT);
+                    button.setStyle("-fx-border-color: #a9a9a9;");
                     button.setId(connector.getText());
                     button.setOnAction(this::deleteConnection);
                     Label label = new Label(CONN_PROMPT_TEXT + connector.getText());
@@ -423,6 +425,7 @@ public class VehicleUpdateController {
             } else if (!connections.contains(connectorType.getValue())) {
                 connections.add(connectorType.getValue());
                 Button button = new Button(DELETE_BUTTON_TEXT);
+                button.setStyle("-fx-border-color: #a9a9a9;");
                 button.setId(connectorType.getValue());
                 button.setOnAction(this::deleteConnection);
                 Label label = new Label(CONN_PROMPT_TEXT + connectorType.getValue());
@@ -590,6 +593,7 @@ public class VehicleUpdateController {
             connections = vehicle.getConnectors();
             for (String connection : connections) {
                 Button button = new Button(DELETE_BUTTON_TEXT);
+                button.setStyle("-fx-border-color: #a9a9a9;");
                 button.setId(connection);
                 button.setOnAction(this::deleteConnection);
                 Label label = new Label(CONN_PROMPT_TEXT + connection);

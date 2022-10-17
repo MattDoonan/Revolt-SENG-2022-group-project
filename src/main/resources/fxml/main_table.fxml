@@ -25,8 +25,8 @@
    <top>
       <HBox alignment="CENTER_LEFT" BorderPane.alignment="CENTER_LEFT">
          <children>
-            <TextField id="searchCharger" fx:id="searchCharger" prefHeight="40" promptText="Search Charger" style="-fx-font-size: 20;" />
-            <MenuButton id="filters" fx:id="filters" minHeight="30.0" mnemonicParsing="false" prefWidth="250.0" style="-fx-font-size: 20;" styleClass="tableMenu" text="Filter">
+            <TextField id="searchCharger" fx:id="searchCharger" prefHeight="40" promptText="Search Charger" style="-fx-font-size: 20; -fx-border-color: #a9a9a9;" />
+            <MenuButton id="filters" fx:id="filters" minHeight="30.0" mnemonicParsing="false" prefWidth="250.0" style="-fx-font-size: 20; -fx-border-color: #a9a9a9;" styleClass="tableMenu" text="Filter">
                <items>
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
@@ -126,7 +126,7 @@
                   </Menu>
                </items>
             </MenuButton>
-            <MenuButton id="columnEdit" fx:id="columnEdit" minHeight="30.0" mnemonicParsing="false" prefWidth="250.0" style="-fx-font-size: 20;" styleClass="tableMenu" text="Select Columns">
+            <MenuButton id="columnEdit" fx:id="columnEdit" minHeight="30.0" mnemonicParsing="false" prefWidth="250.0" style="-fx-font-size: 20; -fx-border-color: #a9a9a9;" styleClass="tableMenu" text="Select Columns">
                <items>
                   <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                     <content>
@@ -200,14 +200,14 @@
                   </CustomMenuItem>
                </items>
             </MenuButton>
-            <MenuButton id="modChargers" fx:id="modChargers" minHeight="30.0" mnemonicParsing="false" prefWidth="250.0" style="-fx-font-size: 20;" styleClass="tableMenu" text="Modify Chargers">
+            <MenuButton id="modChargers" fx:id="modChargers" minHeight="30.0" mnemonicParsing="false" prefWidth="250.0" style="-fx-font-size: 20; -fx-border-color: #a9a9a9;" styleClass="tableMenu" text="Modify Chargers">
                <items>
-                  <MenuItem fx:id="addCharger" mnemonicParsing="false" onAction="#addCharger" text="Add Charger" />
-                  <MenuItem fx:id="editCharger" mnemonicParsing="false" onAction="#editCharger" text="Edit Charger" />
-                  <MenuItem fx:id="deleteCharger" mnemonicParsing="false" onAction="#deleteCharger" text="Delete Charger" />
+                  <MenuItem fx:id="addCharger" mnemonicParsing="false" onAction="#addCharger" text="Add Charger" styleClass="btn-grey"/>
+                  <MenuItem fx:id="editCharger" mnemonicParsing="false" onAction="#editCharger" text="Edit Charger" styleClass="btn-grey" />
+                  <MenuItem fx:id="deleteCharger" mnemonicParsing="false" onAction="#deleteCharger" text="Delete Charger" styleClass="btn-grey"/>
                </items>
             </MenuButton>
-            <Button id="update" fx:id="update" minHeight="30.0" mnemonicParsing="false" onAction="#updateTable" prefWidth="240.0" style="-fx-font-size: 20;" text="Update table" />
+            <Button id="update" fx:id="update" minHeight="30.0" mnemonicParsing="false" onAction="#updateTable" prefWidth="240.0" style="-fx-font-size: 20; -fx-border-color: #a9a9a9;" text="Update table" />
          </children>
          <padding>
             <Insets bottom="10.0" right="10.0" top="10.0" />

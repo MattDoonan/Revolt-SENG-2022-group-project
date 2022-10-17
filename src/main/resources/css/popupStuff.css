@@ -1,15 +1,17 @@
 .button {
     -fx-background-color: #FFFFFF;
-    -fx-border-color: #a9a9a9;
 }
 
 .button:hover {
     -fx-cursor: hand;
 }
 
+.btn-grey {
+    -fx-border-color: #a9a9a9;
+}
+
 .combo-box {
     -fx-background-color: #FFFFFF;
-    -fx-border-color: #a9a9a9;
     -fx-font-size: 13px;
 }
 
@@ -19,7 +21,6 @@
 
 .text-field {
     -fx-background-color: #FFFFFF;
-    -fx-border-color: #a9a9a9;
 }
 
 .text-field:hover {
