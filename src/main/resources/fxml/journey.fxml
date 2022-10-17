@@ -75,7 +75,7 @@
                            <font>
                               <Font size="16.0" />
                            </font></TextField>
-                        <Label layoutX="19.0" layoutY="14.0" text="Trip name" AnchorPane.leftAnchor="23.0">
+                        <Label layoutX="19.0" layoutY="14.0" styleClass="name-label" text="Trip name" AnchorPane.leftAnchor="23.0">
                            <font>
                               <Font size="16.0" />
                            </font></Label>
