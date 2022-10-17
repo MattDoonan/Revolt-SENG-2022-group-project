@@ -240,8 +240,6 @@
           </systemPropertyVariables>
 
           <properties>
-          
-            <argLine>-Xmx1024m</argLine>
             <!-- Work around. Surefire does not include enough information to
             disambiguate between different examples and scenarios. -->
             <configurationParameters>
